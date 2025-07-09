@@ -144,7 +144,7 @@ const CardSlider = () => {
               src={card.image}
               alt={card.title}
               className="card-image"
-              effect="blur" // This will apply a blur effect while the image is loading
+              effect="blur" 
             />
             <div className="card-content">
               <h2>{card.title}</h2>

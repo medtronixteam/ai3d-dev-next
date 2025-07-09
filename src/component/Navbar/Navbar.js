@@ -42,9 +42,7 @@ const CustomNavbar = () => {
           <li>
               <a href="#" onClick={handleScheduleMeeting}>Schedule Meeting</a>
             </li>
-            <li>
-              <Link to="/join-list">Join Waitlist</Link>
-            </li>
+            
             <li>
               <a href="#services">Services</a>
             </li>
@@ -54,9 +52,9 @@ const CustomNavbar = () => {
             <li>
               <a href="#team">Leadership</a>
             </li>
-            {/* <li>
-              <a href="#contact">Join Waitlist</a>
-            </li> */}
+            <li>
+              <a href="https://app.ai3dscanning.com/" target="_blank">Join Us</a>
+            </li>
           </ul>
         </nav>
       </div>

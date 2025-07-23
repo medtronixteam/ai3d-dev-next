@@ -53,7 +53,7 @@ const CustomNavbar = () => {
               <a href="#team">Leadership</a>
             </li>
             <li>
-              <a href="https://app.ai3dscanning.com/" target="_blank">Join Us</a>
+              <a href="https://ai3dscanning.com/platform">Paltform</a>
             </li>
           </ul>
         </nav>

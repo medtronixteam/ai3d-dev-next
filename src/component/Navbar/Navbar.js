@@ -53,7 +53,9 @@ const CustomNavbar = () => {
               <a href="#team">Leadership</a>
             </li>
             <li>
-              <a href="https://ai3dscanning.com/platform">Paltform</a>
+              <Link to="https://ai3dscanning.com/platform">
+              Paltform
+              </Link>
             </li>
           </ul>
         </nav>

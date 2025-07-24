@@ -54,7 +54,7 @@ const CustomNavbar = () => {
             </li>
             <li>
               <Link to="https://ai3dscanning.com/platform/">
-              Paltform
+              Platform
               </Link>
             </li>
           </ul>

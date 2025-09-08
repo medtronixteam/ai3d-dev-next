@@ -1,0 +1,59 @@
+      @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap'); */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  
+}
+
+:root {
+  --primary-color: #E6339A;
+  --primary-contrast: #FFFFFF;
+  --logo-bg: #6F6AF8;
+
+  --sidebar-bg: #F9F9F9;
+  --body-bg: #FFFFFF;
+
+  --search-bg: #F0F0F0;
+  --search-placeholder: #616161;
+
+  --divider-color: #E9E9E9;
+
+  --text-primary: #000000;
+  --text-secondary: #616161;
+
+  --icon-inactive: #616161;
+  --icon-active: #000000;
+
+  --active-item-bg: transparent;
+  --active-item-text: #000000;
+}
+
+[data-theme='dark'] {
+  --primary-color: #E6339A;
+  --primary-contrast: #FFFFFF;
+  --logo-bg: #6F6AF8;
+
+  --sidebar-bg: #1A1A1A;
+  --body-bg: #000000;
+
+  --search-bg: #2C2C2C;
+  --search-placeholder: #BDBDBD;
+
+  --divider-color: #2C2C2C;
+
+  --text-primary: #FFFFFF;
+  --text-secondary: #BDBDBD;
+
+  --icon-inactive: #BDBDBD;
+  --icon-active: #FFFFFF;
+
+  --active-item-bg: transparent;
+  --active-item-text: #FFFFFF;
+}
+
+body {
+  background-color: var(--body-bg);
+  color: var(--text-primary);
+}

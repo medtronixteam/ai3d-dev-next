@@ -1,70 +1,39 @@
-# Getting Started with Create React App
+## Base [(Free version)](https://themewagon.github.io/base/)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![license](https://img.shields.io/badge/license-MIT-blue.svg)
 
-## Available Scripts
+> Free React Admin Dashboard made with Material-UI components and React.
 
-In the project directory, you can run:
+![base](https://github.com/user-attachments/assets/b6c35f74-31ba-445d-ac1a-93957039d767)
 
-### `npm start`
+## Demo
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/themewagon/base)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- [Dashboard Page](https://themewagon.github.io/base/)
+- [Sign In Page](https://themewagon.github.io/base/auth/signin)
+- [Sign Up Page](https://themewagon.github.io/base/auth/signup)
+- [Reset Password](https://themewagon.github.io/base/auth/reset-password)
+- [Error 404](https://themewagon.github.io/base/error/404)
 
-### `npm test`
+## Quick start
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- [Download from Github](https://github.com/themewagon/bankdash/archive/refs/heads/main.zip) or clone the repo : `git clone https://github.com/themewagon/bankdash.git`
+- Recommended `Node.js v18.x`.
+- **Install:** `npm install`
+- **Start:** `npm run dev`
+- **Build:** `npm run build`
 
-### `npm run build`
+## License
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Distributed under the MIT License. See [LICENSE](https://github.com/minimal-ui-kit/minimal.free/blob/main/LICENSE.md) for more information.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+<a name="readme-top">
+<div align="center">
+<a align="center" href="https://github.com/themewagon/base/graphs/contributors">
+<img src="https://contrib.rocks/image?repo=themewagon/base" /><br />
+</a></a></div>
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Contact us
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Email: support@themewagon.com

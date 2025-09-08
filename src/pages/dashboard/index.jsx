@@ -1,0 +1,1272 @@
+import React, { useState, useEffect, useRef } from 'react';
+import './SimplePage.css';
+import { FiSearch, FiArrowRight } from 'react-icons/fi';
+import search from '../../assets/images/search.svg';
+import { useLocation } from 'react-router-dom';
+
+import { useAuth } from '../../context/AuthContext';
+import { baseURL } from '../../config';
+import model1 from '../../assets/images/model-1.png';
+import model2 from '../../assets/images/model-2.png';
+import model3 from '../../assets/images/model-3.png';
+import model4 from '../../assets/images/model-4.png';
+import model5 from '../../assets/images/model-5.png';
+import model6 from '../../assets/images/model-6.png';
+import shoesImg from '../../assets/images/shoes.jpg';
+import houseImg from '../../assets/images/products/dslr.png';
+import characterImg from '../../assets/images/products/iPhone.png';
+import carImg from '../../assets/images/products/Nike.png';
+import droneImg from '../../assets/images/products/drone.png';
+import headphoneImg from '../../assets/images/products/parfum.png';
+import { useNavigate } from 'react-router-dom';
+import { FaReact } from 'react-icons/fa';
+import scanImg from '../../assets/images/scan.svg';
+import CustomLoader from '../../components/loader/CustomLoader';
+import { FiTool } from 'react-icons/fi';
+import { FaGamepad } from 'react-icons/fa';
+import { GiVrHeadset, GiFactory } from 'react-icons/gi';
+import { MdStore, MdMonitorHeart } from 'react-icons/md';
+import Starfield from '../../components/effects/Starfield';
+import videoGif from '../../assets/images/video.gif';
+import darkGif from '../../assets/images/dark.gif';
+import icon1 from '../../assets/images/icon1.svg';
+import icon2 from '../../assets/images/icon2.svg';
+import icon3 from '../../assets/images/icon3.svg';
+import icon4 from '../../assets/images/icon4.svg';
+import icon5 from '../../assets/images/icon5.svg';
+import icon6 from '../../assets/images/icon6.svg';
+import loadGif from '../../assets/images/load.gif';
+import { styled } from '@mui/material';
+
+const CATEGORIES = [
+  { label: 'Construction', type: 'construction', icon: icon1 },
+  { label: 'Gaming', type: 'gaming', icon: icon2 },
+  { label: 'VR', type: 'vr', icon: icon3 },
+  { label: 'Retail', type: 'retail', icon: icon4 },
+  { label: 'Manufacturing', type: 'manufacturing', icon: icon5 },
+  { label: 'Health', type: 'health', icon: icon6 },
+];
+
+const getModelImageUrl = (image) => {
+  if (!image) return model1;
+  if (image.startsWith('http')) return image;
+  // If image is relative, prepend the full storage URL
+  return `https://dev-backend.ai3dscanning.com/storage/${image.replace(/^\//, '')}`;
+};
+
+// Helper to get full video URL
+const getFullVideoUrl = (url) => {
+  if (!url) return '';
+  if (url.startsWith('http')) return url;
+  return `https://dev-backend.ai3dscanning.com/storage/${url.replace(/^\/+/, '')}`;
+};
+
+// VideoModal component with loader
+const VideoModal = ({ open, videoUrl, onClose }) => {
+  const [loading, setLoading] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
+  const videoRef = useRef(null);
+  const timeoutRef = useRef(null);
+
+  React.useEffect(() => {
+    if (open) {
+      setLoading(true);
+      setModalVisible(true);
+
+      // Set 10-second timeout
+      timeoutRef.current = setTimeout(() => {
+        if (loading) {
+          setLoading(false);
+          onClose();
+        }
+      }, 10000);
+    } else {
+      setModalVisible(false);
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+    }
+
+    // Cleanup timeout on unmount
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+    };
+  }, [open, videoUrl, loading, onClose]);
+
+  if (!open) return null;
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          zIndex: 9999,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'rgba(0,0,0,0.15)',
+          transition: 'all 0.3s ease',
+        }}
+      >
+        <CustomLoader />
+      </div>
+    );
+  }
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        background: 'rgba(0,0,0,0.95)',
+        zIndex: 9999,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        transition: 'all 0.3s ease',
+        opacity: modalVisible ? 1 : 0,
+        visibility: modalVisible ? 'visible' : 'hidden',
+      }}
+    >
+      <button
+        onClick={onClose}
+        style={{
+          position: 'absolute',
+          top: 24,
+          right: 32,
+          background: '#DE3996',
+          border: 'none',
+          borderRadius: '50%',
+          width: 44,
+          height: 44,
+          color: '#fff',
+          fontSize: 24,
+          cursor: 'pointer',
+          zIndex: 10001,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+        aria-label="Close video"
+      >
+        ×
+      </button>
+      <video
+        ref={videoRef}
+        src={videoUrl}
+        autoPlay
+        loop
+        muted
+        playsInline
+        controls
+        style={{
+          maxWidth: '90vw',
+          maxHeight: '80vh',
+          borderRadius: 16,
+          background: '#000',
+          boxShadow: '0 4px 32px rgba(0,0,0,0.25)',
+          zIndex: 10000,
+          opacity: loading ? 0 : 1,
+          visibility: loading ? 'hidden' : 'visible',
+          transition: 'opacity 0.3s ease',
+        }}
+        onLoadedData={() => {
+          if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+            timeoutRef.current = null;
+          }
+          setLoading(false);
+          setTimeout(() => setModalVisible(true), 100);
+        }}
+        onError={() => {
+          if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+            timeoutRef.current = null;
+          }
+          setLoading(false);
+          console.error('Video failed to load');
+        }}
+      />
+    </div>
+  );
+};
+
+function ModernModal({
+  open,
+  onClose,
+  children,
+  width = 500,
+  maxHeight = '80vh',
+  showStarfield = false,
+}) {
+  if (!open) return null;
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        zIndex: 2000,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'rgba(30,30,40,0.12)',
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
+        transition: 'background 0.3s',
+      }}
+    >
+      <div
+        style={{
+          position: 'relative',
+          background: 'rgba(255,255,255,0.13)',
+          borderRadius: 28,
+          boxShadow: '0 16px 64px 0 rgba(30,30,60,0.22), 0 2px 16px 0 rgba(230,51,154,0.10)',
+          maxWidth: width,
+          width: '95vw',
+          maxHeight,
+          padding: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflow: 'hidden',
+          animation: 'modal-3d-pop-in 0.55s cubic-bezier(.25,1.7,.45,1.32)',
+          transformStyle: 'preserve-3d',
+          perspective: 1200,
+          border: '1.5px solid rgba(230,51,154,0.10)',
+          backdropFilter: 'blur(0px)',
+        }}
+      >
+        {showStarfield && <Starfield />}
+        <button
+          onClick={onClose}
+          style={{
+            position: 'absolute',
+            top: 18,
+            right: 18,
+            zIndex: 10001,
+            background: 'none',
+            border: 'none',
+            borderRadius: '50%',
+            width: 38,
+            height: 38,
+            color: 'black',
+            fontSize: 30,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: 'none',
+          }}
+          aria-label="Close modal"
+        >
+          ×
+        </button>
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            padding: 32,
+            overflowY: 'auto',
+            position: 'relative',
+          }}
+        >
+          {children}
+        </div>
+      </div>
+      <style>{`
+        @keyframes modal-3d-pop-in {
+          0% { transform: scale(0.7) rotateX(18deg) translateY(80px); opacity: 0; }
+          60% { transform: scale(1.08) rotateX(-6deg) translateY(-12px); opacity: 1; }
+          100% { transform: scale(1) rotateX(0deg) translateY(0); opacity: 1; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+// Add ModelCardVideoModal matching Navbar's VideoModal
+function ModelCardVideoModal({ open, videoUrl, onClose }) {
+  const [loading, setLoading] = React.useState(true);
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const timeoutRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (open) {
+      setLoading(true);
+      setModalVisible(true);
+
+      // Set 10-second timeout
+      timeoutRef.current = setTimeout(() => {
+        if (loading) {
+          setLoading(false);
+          onClose();
+        }
+      }, 10000);
+    } else {
+      setModalVisible(false);
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+    }
+
+    // Cleanup timeout on unmount
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+    };
+  }, [open, videoUrl, loading, onClose]);
+
+  if (!open) return null;
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          zIndex: 9999,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'rgba(0,0,0,0.15)',
+          transition: 'all 0.3s ease',
+        }}
+      >
+        <CustomLoader />
+      </div>
+    );
+  }
+
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        zIndex: 9999,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'rgba(30,30,40,0.38)',
+        transition: 'all 0.3s ease',
+        opacity: modalVisible ? 1 : 0,
+        visibility: modalVisible ? 'visible' : 'hidden',
+      }}
+    >
+      <div
+        style={{
+          position: 'relative',
+          background: 'transparent',
+          borderRadius: 28,
+          maxWidth: 720,
+          width: '97vw',
+          maxHeight: '82vh',
+          padding: 0,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          overflow: 'hidden',
+          animation: 'modal-3d-pop-in 0.55s cubic-bezier(.25,1.7,.45,1.32)',
+          transformStyle: 'preserve-3d',
+          perspective: 1200,
+          backdropFilter: 'blur(0px)',
+        }}
+      >
+        <button
+          onClick={onClose}
+          style={{
+            position: 'absolute',
+            top: 18,
+            right: 18,
+            zIndex: 10001,
+            background: 'var(--primary-color)',
+            border: 'none',
+            borderRadius: '50%',
+            width: 38,
+            height: 38,
+            color: '#fff',
+            fontSize: 26,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 2px 12px rgba(0,0,0,0.10)',
+          }}
+          aria-label="Close video"
+        >
+          <svg style={{ fontSize: 22, color: '#fff', margin: 0, padding: 0 }} viewBox="0 0 24 24">
+            <path
+              fill="currentColor"
+              d="M18.3 5.71a1 1 0 0 0-1.41 0L12 10.59 7.11 5.7A1 1 0 0 0 5.7 7.11L10.59 12l-4.89 4.89a1 1 0 1 0 1.41 1.41L12 13.41l4.89 4.89a1 1 0 0 0 1.41-1.41L13.41 12l4.89-4.89a1 1 0 0 0 0-1.4z"
+            />
+          </svg>
+        </button>
+        <video
+          src={videoUrl}
+          autoPlay
+          loop
+          muted
+          playsInline
+          controls={false}
+          style={{
+            maxWidth: '100%',
+            maxHeight: '80vh',
+            borderRadius: 18,
+            background: 'transparent',
+            zIndex: 10000,
+            opacity: loading ? 0 : 1,
+            visibility: loading ? 'hidden' : 'visible',
+            transition: 'opacity 0.3s ease',
+          }}
+          onLoadedData={() => {
+            if (timeoutRef.current) {
+              clearTimeout(timeoutRef.current);
+              timeoutRef.current = null;
+            }
+            setLoading(false);
+            // Small delay to ensure smooth transition
+            setTimeout(() => setModalVisible(true), 100);
+          }}
+          onError={() => {
+            if (timeoutRef.current) {
+              clearTimeout(timeoutRef.current);
+              timeoutRef.current = null;
+            }
+            setLoading(false);
+            console.error('Video failed to load');
+          }}
+        />
+      </div>
+      <style>{`
+        @keyframes modal-3d-pop-in {
+          0% { transform: scale(0.7) rotateX(18deg) translateY(80px); opacity: 0; }
+          60% { transform: scale(1.08) rotateX(-6deg) translateY(-12px); opacity: 1; }
+          100% { transform: scale(1) rotateX(0) translateY(0); opacity: 1; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+const Dashboard = () => {
+
+  const { token } = useAuth();
+  const navigate = useNavigate();
+  const [selectedType, setSelectedType] = useState(CATEGORIES[0].type);
+  const [models, setModels] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [modalModel, setModalModel] = useState(null);
+  const [isVideoModalOpen, setVideoModalOpen] = useState(false);
+  const [videoModalUrl, setVideoModalUrl] = useState('');
+  const [searchText, setSearchText] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+  const [showPromptModal, setShowPromptModal] = useState(false);
+  const [showScanModal, setShowScanModal] = useState(false);
+  const [modelModalOpen, setModelModalOpen] = useState(false);
+  const [modelModalData, setModelModalData] = useState(null);
+  const [modelVideoModalOpen, setModelVideoModalOpen] = React.useState(false);
+  const [modelVideoUrl, setModelVideoUrl] = React.useState('');
+  const [exploreLoading, setExploreLoading] = React.useState(false);
+  const location = useLocation();
+
+  const [currentWord, setCurrentWord] = useState('images');
+  const words = ['images', 'videos', 'prompt'];
+  const [wordIndex, setWordIndex] = useState(0);
+
+  const [isDark, setIsDark] = useState(false);
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.getAttribute('data-theme') === 'dark');
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+    setIsDark(document.documentElement.getAttribute('data-theme') === 'dark');
+    return () => observer.disconnect();
+  }, []);
+
+  const fetchModels = (type) => {
+    setLoading(true);
+    setError('');
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    fetch(`${baseURL}/model/${type}`, {
+      headers,
+    })
+      .then((res) => res.json())
+      .then((res) => setModels(res.models || res.data || []))
+      .catch(() => setError('Failed to load models.'))
+      .finally(() => setLoading(false));
+  };
+
+  const searchModels = async () => {
+    if (!searchText.trim()) return;
+    setIsSearching(true);
+    setLoading(true);
+    setError('');
+    try {
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+      const res = await fetch(`${baseURL}/models/search`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ title: searchText, category: selectedType }),
+      });
+      const data = await res.json();
+      setModels(data.models || data.data || []);
+      if ((data.models && data.models.length === 0) || (data.data && data.data.length === 0)) {
+        setError('No results found.');
+      }
+    } catch (err) {
+      setError('Search failed.');
+    } finally {
+      setLoading(false);
+      setIsSearching(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!isSearching) fetchModels(selectedType);
+    // eslint-disable-next-line
+  }, [selectedType, token, location.key]);
+
+  // Animate words in the hero text
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWordIndex((prevIndex) => (prevIndex + 1) % words.length);
+    }, 5000); // Change word every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [words.length]);
+
+  // Update current word when wordIndex changes
+  useEffect(() => {
+    setCurrentWord(words[wordIndex]);
+  }, [wordIndex, words]);
+
+  // Handle category click
+  const handleCategoryClick = (type) => {
+    setSelectedType(type);
+    setSearchText(''); // Clear search on category change
+    fetchModels(type);
+  };
+
+  // Handle search input
+  const handleInputChange = (e) => {
+    setSearchText(e.target.value);
+    if (e.target.value === '') {
+      fetchModels(selectedType);
+    }
+  };
+
+  // Handle search submit (Enter key or button click)
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchText.trim() !== '') {
+      searchModels();
+    } else {
+      fetchModels(selectedType);
+    }
+  };
+
+  // Track image loading state for each model (robust against cached images)
+  const [imgLoadedArr, setImgLoadedArr] = React.useState([]);
+  React.useEffect(() => {
+    // reset array to current models length
+    setImgLoadedArr(Array(models.length).fill(false));
+    if (models.length === 0) return;
+
+    let cancelled = false;
+    const toStorageUrl = (path) =>
+      `https://dev-backend.ai3dscanning.com/storage/${String(path || '').replace(/^\/+/, '')}`;
+
+    models.forEach((model, idx) => {
+      const url = model?.thumbnail
+        ? toStorageUrl(model.thumbnail)
+        : model?.image
+          ? toStorageUrl(model.image)
+          : model1;
+
+      const img = new Image();
+      const markLoaded = () => {
+        if (cancelled) return;
+        setImgLoadedArr((arr) => {
+          const next = arr.length === models.length ? [...arr] : Array(models.length).fill(false);
+          next[idx] = true;
+          return next;
+        });
+      };
+
+      img.onload = markLoaded;
+      img.onerror = markLoaded; // Hide loader even if image fails
+      img.src = url;
+      // If served from cache, complete may already be true
+      if (img.complete) markLoaded();
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [models]);
+
+  return (
+    <>
+      {/* =================== Hero Section ============= */}
+      <section
+        className="hero-section p-md-5 pb-md-0 py-5"
+        style={{
+          overflow: 'hidden',
+          position: 'relative',
+          background: 'none',
+          minHeight: 320,
+        }}
+      >
+        {/* Video Background */}
+        {!isDark && (
+          <img
+            src={videoGif}
+            alt="Hero Background"
+            className="hero-video-gif"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              zIndex: 0,
+              pointerEvents: 'none',
+              filter: 'brightness(0.85) saturate(1.1) blur(0.5px)',
+              background: 'white',
+            }}
+          />
+        )}
+        {isDark && (
+          <img
+            src={darkGif}
+            alt="Hero Background Dark"
+            className="hero-video-gif"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              zIndex: 0,
+              pointerEvents: 'none',
+              filter: 'none',
+              background: 'black',
+            }}
+          />
+        )}
+        {/* White gradient overlay */}
+        {!isDark && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              zIndex: 1,
+              pointerEvents: 'none',
+              background:
+                'linear-gradient(to bottom, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.85) 60%, #fff 100%)',
+            }}
+          />
+        )}
+        {isDark && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              zIndex: 1,
+              pointerEvents: 'none',
+              // Leave some space at the top, then gradually darken towards the bottom
+              background:
+                'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 15%, rgba(0,0,0,0.28) 38%, rgba(0,0,0,0.55) 62%, rgba(0,0,0,0.78) 82%, #000 100%)',
+            }}
+          />
+        )}
+
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+          <div className="row justify-content-center align-items-center text-center mt-lg-1 mt-3">
+            <div className="col-lg-8">
+              {/* Local styles for opposite flips: rest (top->bottom), word (bottom->top) */}
+              <style>{`
+                .flip-perspective{perspective:1000px}
+                /* Rest of line: top -> bottom */
+                .counter-flip{display:inline-block;backface-visibility:hidden;transform-origin:50% 0%;transform-style:preserve-3d;will-change:transform;animation:flipWordSmooth .9s cubic-bezier(.2,.7,.3,1)}
+                /* Keyframes for top->bottom */
+                @keyframes flipWordSmooth{0%{transform:rotateX(90deg);opacity:.0}55%{transform:rotateX(-10deg);opacity:1}100%{transform:rotateX(0);opacity:1}}
+                /* Keyframes for bottom->top */
+                @keyframes flipCounterSmooth{0%{transform:rotateX(-90deg);opacity:.0}55%{transform:rotateX(10deg);opacity:1}100%{transform:rotateX(0);opacity:1}}
+              `}</style>
+              <h2 className="flip-perspective">
+                <span key={currentWord + ':a'} style={{ color: 'inherit' }}>
+                  Turn
+                </span>{' '}
+                <span
+                  key={currentWord}
+                  style={{
+             
+                    width: '3.2em',
+                    display: 'inline-block',
+                    backfaceVisibility: 'hidden',
+                    transformOrigin: '50% 100%',
+                    animation: 'flipCounterSmooth .9s cubic-bezier(.2,.7,.3,1)',
+                  }}
+                >
+                  {currentWord}
+                </span>{' '}
+                <span
+                  key={currentWord + ':b'}
+                  style={{ color: 'inherit' }}
+                >
+                  into interactive
+                </span>{' '}
+                <span
+                  key={currentWord + ':c'}
+                  style={{ color: 'var(--primary-color)' }}
+                >
+                  3D
+                </span>{' '}
+                <br />
+                <span key={currentWord + ':c2'} style={{ color: 'var(--primary-color)' }}>
+                  Models
+                </span>{' '}
+                <span key={currentWord + ':d'} style={{ color: 'inherit' }}>
+                  - Instantly
+                </span>
+              </h2>
+              <p>The AI engine for scalable 3D asset generation</p>
+            </div>
+          </div>
+          <div className="row justify-content-center">
+            <div
+              className="col-12 col-lg-8 search-container"
+              style={{
+                borderRadius: 16,
+
+                padding: '0.5rem 0.5rem',
+                zIndex: 3,
+              }}
+            >
+              <form className="search-box" onSubmit={handleSearch}>
+  <span className="borders"></span>   {/* <-- add this */}
+  <div className="search-icon">
+    <img src={search} />
+  </div>
+  <input
+    type="text"
+    className="search-input"
+    placeholder="Search 3D Models"
+    value={searchText}
+    onChange={handleInputChange}
+  />
+  <button
+    type="submit"
+    className="arrow-icon"
+    style={{ background: 'none', border: 'none', outline: 'none' }}
+  >
+    <FiArrowRight />
+  </button>
+</form>
+
+            </div>
+          </div>
+          {/* =================== model card section ============= */}
+          <div className="row justify-content-center align-items-center mt-2">
+            <div
+              className="col-lg-8 d-flex justify-content-center"
+              style={{
+                borderRadius: 16,
+                backdropFilter: 'blur(4px)',
+                padding: '0.5rem 0.5rem',
+                zIndex: 3,
+              }}
+            >
+              <div className="category-row">
+                {CATEGORIES.map((cat, idx) => {
+                  const isActive = selectedType === cat.type;
+                  return (
+                    <div
+                      key={cat.type}
+                      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+                    >
+                      <div
+                        className={`category-icon-circle${isActive ? ' active' : ''}`}
+                        onClick={() => handleCategoryClick(cat.type)}
+                      >
+                        <img
+                          src={cat.icon}
+                          alt={cat.label}
+                          className={`category-icon${isActive ? ' active' : ''}`}
+                          style={{
+                            width: 30,
+                            height: 30,
+                            filter: isActive
+                              ? 'invert(36%) sepia(97%) saturate(7492%) hue-rotate(312deg) brightness(97%) contrast(101%)'
+                              : 'none',
+                          }}
+                        />
+                      </div>
+                      <div className={`category-label${isActive ? ' active' : ''}`}>
+                        {cat.label}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+          {/* =================== model card section end ============= */}
+        </div>
+      </section>
+      {/* =================== Hero Section End ============= */}
+      {/* =================== Studio Section  ============= */}
+      <section className="studio-section mb-5" style={{ overflow: 'hidden' }}>
+        <div className="container-section">
+          {loading ? (
+            <div className="text-center my-5">
+              <div
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  border: '3px solid #f3f3f3',
+                  borderTop: '3px solid #e63399',
+                  borderRadius: '50%',
+                  animation: 'spin 1s linear infinite',
+                  margin: '0 auto',
+                }}
+              ></div>
+              <style>{`
+                @keyframes spin {
+                  0% { transform: rotate(0deg); }
+                  100% { transform: rotate(360deg); }
+                }
+              `}</style>
+            </div>
+          ) : error === 'No results found.' ? (
+            <div
+              className="no-models-found-card"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '60px 20px',
+                borderRadius: 16,
+                margin: '40px auto',
+                maxWidth: 420,
+                minHeight: 220,
+                animation: 'fadeIn 0.7s',
+              }}
+            >
+              {/* Removed icon and background/shadow as requested */}
+              <div style={{ fontWeight: 700, fontSize: 26, color: '#22223b', marginBottom: 8 }}>
+                No Models Found
+              </div>
+              <div style={{ color: '#888', fontSize: 17, textAlign: 'center', maxWidth: 340 }}>
+                We couldn't find any 3D models for your search or category.
+                <br />
+                Try adjusting your search or check back later!
+              </div>
+              <style>{`
+                @keyframes fadeIn {
+                  from { opacity: 0; transform: translateY(30px); }
+                  to { opacity: 1; transform: translateY(0); }
+                }
+              `}</style>
+            </div>
+          ) : error ? (
+            <div className="text-center my-5 text-danger">{error}</div>
+          ) : models.length === 0 ? (
+            <div
+              className="no-models-found-card"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '60px 20px',
+                borderRadius: 16,
+                margin: '40px auto',
+                maxWidth: 420,
+                minHeight: 220,
+                animation: 'fadeIn 0.7s',
+              }}
+            >
+              {/* Removed icon and background/shadow as requested */}
+              <div style={{ fontWeight: 700, fontSize: 26, color: '#22223b', marginBottom: 8 }}>
+                No Models Found
+              </div>
+              <div style={{ color: '#888', fontSize: 17, textAlign: 'center', maxWidth: 340 }}>
+                We couldn't find any 3D models for your search or category.
+                <br />
+                Try adjusting your search or check back later!
+              </div>
+              <style>{`
+                @keyframes fadeIn {
+                  from { opacity: 0; transform: translateY(30px); }
+                  to { opacity: 1; transform: translateY(0); }
+                }
+              `}</style>
+            </div>
+          ) : (
+            <div className="model-list-row">
+              {models.map((model, idx) => {
+                const imgUrl = model.thumbnail
+                  ? `https://dev-backend.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
+                  : model.image
+                    ? `https://dev-backend.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
+                    : model1;
+                return (
+                  <div key={model.id} className="model-card">
+                    <div
+                      style={{
+                        position: 'relative',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: 12,
+                      }}
+                    >
+                      <div
+                        style={{
+                          position: 'relative',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        {!imgLoadedArr[idx] && (
+                          <div
+                            style={{
+                              position: 'absolute',
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              zIndex: 1,
+                              background: 'transparent',
+                            }}
+                          >
+                            <span
+                              className="dashboard-thumb-loader"
+                              aria-label="loading thumbnail"
+                            ></span>
+                          </div>
+                        )}
+                        <img
+                          src={imgUrl}
+                          alt={model.title || model.name}
+                          className="model-card-img"
+                          style={{
+                            opacity: imgLoadedArr[idx] ? 1 : 0,
+                            transition: 'opacity 0.5s',
+                            zIndex: 2,
+                          }}
+                          onLoad={() => {
+                            setImgLoadedArr((arr) => {
+                              const newArr = [...arr];
+                              newArr[idx] = true;
+                              return newArr;
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div className="model-card-content">
+                      <div className="model-card-title">{model.title || model.name}</div>
+                      <div className="model-card-desc">
+                        {model.description || 'No description.'}
+                      </div>
+                      {exploreLoading && (
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            background: 'rgba(0,0,0,0.12)',
+                            zIndex: 10,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: 8,
+                          }}
+                        >
+                          <CustomLoader />
+                        </div>
+                      )}
+                      <button
+                        className="model-card-btn"
+                        onClick={() => {
+                          const rawUrl =
+                            model.file_url ||
+                            model.video_url ||
+                            model.url ||
+                            (model.data && (model.data.video_url || model.data.url));
+                          const finalUrl = getFullVideoUrl(rawUrl);
+                          setModelVideoUrl(finalUrl);
+                          setModelVideoModalOpen(true);
+                        }}
+                      >
+                        Explore →
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </section>
+      {/* Model Details Modal (modern style) */}
+      {modelModalOpen && modelModalData && (
+        <ModernModal open={modelModalOpen} onClose={() => setModelModalOpen(false)} width={500}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              textAlign: 'center',
+              width: '100%',
+            }}
+          >
+            {modelModalData.videoUrl && (
+              <video
+                src={modelModalData.videoUrl}
+                autoPlay
+                loop
+                muted
+                playsInline
+                controls
+                style={{
+                  width: '100%',
+                  maxWidth: 320,
+                  borderRadius: 12,
+                  margin: '0 auto',
+                  marginBottom: 12,
+                }}
+              />
+            )}
+          </div>
+        </ModernModal>
+      )}
+      {/* Modal for model details */}
+      {modalModel &&
+        (() => {
+          const [isModalImgLoaded, setModalImgLoaded] = React.useState(false);
+          return (
+            <ModernModal open={!!modalModel} onClose={() => setModalModel(null)} width={500}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: 16,
+                }}
+              >
+                <h4 style={{ margin: 0 }}>{modalModel.title}</h4>
+              </div>
+              <div
+                style={{
+                  position: 'relative',
+                  width: '100%',
+                  minHeight: 180,
+                  marginBottom: 16,
+                  overflow: 'hidden',
+                  borderRadius: 8,
+                }}
+              >
+                <img
+                  src={getModelImageUrl(modalModel.image)}
+                  alt={modalModel.title}
+                  style={{
+                    width: '100%',
+                    borderRadius: 8,
+                    objectFit: 'cover',
+                    maxHeight: 220,
+                    filter: isModalImgLoaded ? 'none' : 'blur(10px) grayscale(0.2)',
+                    transition: 'filter 0.7s',
+                    position: 'relative',
+                    zIndex: 2,
+                  }}
+                  onLoad={() => setModalImgLoaded(true)}
+                />
+                {!isModalImgLoaded && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                      display: 'flex',
+                      cursor: 'pointer',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      zIndex: 3,
+                      background: 'rgba(255,255,255,0.5)',
+                      transition: 'opacity 0.4s',
+                    }}
+                  >
+                    <div style={{ display: 'flex', gap: 10 }}>
+                      <div
+                        className="modal-dot-loader-dot"
+                        style={{
+                          width: 14,
+                          height: 14,
+                          borderRadius: '50%',
+                          background: '#e6339a',
+                          opacity: 0.7,
+                          animation: 'modalDotBounce 1s infinite alternate',
+                        }}
+                      />
+                      <div
+                        className="modal-dot-loader-dot"
+                        style={{
+                          width: 14,
+                          height: 14,
+                          borderRadius: '50%',
+                          background: '#e6339a',
+                          opacity: 0.7,
+                          animation: 'modalDotBounce 1s infinite alternate',
+                          animationDelay: '0.2s',
+                        }}
+                      />
+                      <div
+                        className="modal-dot-loader-dot"
+                        style={{
+                          width: 14,
+                          height: 14,
+                          borderRadius: '50%',
+                          background: '#e6339a',
+                          opacity: 0.7,
+                          animation: 'modalDotBounce 1s infinite alternate',
+                          animationDelay: '0.4s',
+                        }}
+                      />
+                      <div
+                        className="modal-dot-loader-dot"
+                        style={{
+                          width: 14,
+                          height: 14,
+                          borderRadius: '50%',
+                          background: '#e6339a',
+                          opacity: 0.7,
+                          animation: 'modalDotBounce 1s infinite alternate',
+                          animationDelay: '0.6s',
+                        }}
+                      />
+                    </div>
+                    <style>{`
+                    @keyframes modalDotBounce {
+                      0% { opacity: 0.7; transform: translateY(0); }
+                      100% { opacity: 1; transform: translateY(-14px); }
+                    }
+                  `}</style>
+                  </div>
+                )}
+              </div>
+              <div style={{ marginBottom: 8 }}>
+                <strong>Description:</strong> {modalModel.description || 'No description.'}
+              </div>
+            </ModernModal>
+          );
+        })()}
+      {showPromptModal && (
+        <ModernModal
+          open={showPromptModal}
+          onClose={() => setShowPromptModal(false)}
+          width={350}
+          showStarfield
+        >
+          <FaReact
+            style={{
+              fontSize: 48,
+              color: '#DE3996',
+              marginBottom: 18,
+              animation: 'spin 1.2s linear infinite',
+            }}
+          />
+          <h2 style={{ fontWeight: 700, marginBottom: 12 }}>Coming Soon</h2>
+          <div style={{ color: '#555', fontSize: 17, marginBottom: 8 }}>
+            Prompt-based generation will be available soon!
+          </div>
+          <button
+            className="btn btn-create"
+            style={{ marginTop: 18 }}
+            onClick={() => setShowPromptModal(false)}
+          >
+            OK
+          </button>
+          <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
+        </ModernModal>
+      )}
+      {/* Scan Modal */}
+      {showScanModal && (
+        <ModernModal
+          open={showScanModal}
+          onClose={() => setShowScanModal(false)}
+          width={400}
+          showStarfield
+        >
+          <div className="text-center">
+            <img src={scanImg} alt="Scan" style={{ width: 80, marginBottom: 16 }} />
+            <h4>Scan New Model</h4>
+            <p>Upload your images to generate a 3D model. (Coming Soon)</p>
+          </div>
+        </ModernModal>
+      )}
+      {/* Global Video Modal */}
+      <VideoModal
+        open={isVideoModalOpen}
+        videoUrl={videoModalUrl}
+        onClose={() => setVideoModalOpen(false)}
+      />
+      {/* Model Card Video Modal */}
+      <ModelCardVideoModal
+        open={modelVideoModalOpen}
+        videoUrl={modelVideoUrl}
+        onClose={() => setModelVideoModalOpen(false)}
+      />
+    </>
+  );
+};
+
+export default Dashboard;

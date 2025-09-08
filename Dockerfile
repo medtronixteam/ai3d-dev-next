@@ -1,18 +1,21 @@
-# Use Node.js image
-FROM node:18
-
-# Set the working directory inside the container
+FROM node:18-alpine AS build
 WORKDIR /app
-
-# Copy package.json and install dependencies
-COPY package.json ./
-RUN npm install
-
-# Copy all other source files
+COPY package*.json ./
+RUN npm install --legacy-peer-deps
 COPY . .
+RUN npm run build
 
-# Expose port 3000 for React app
-EXPOSE 3000
+# Step 2: Serve with Nginx
+FROM nginx:alpine
 
-# Run the React app
-CMD ["npm", "start"]
+# Remove default config
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Add custom config (you must have nginx.conf in project root)
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# ✅ Correct this line for Vite (dist folder)
+COPY --from=build /app/dist /usr/share/nginx/html
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

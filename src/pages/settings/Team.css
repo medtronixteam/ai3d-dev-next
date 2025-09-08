@@ -1,0 +1,9 @@
+.team-search-container input:focus + .team-search-container,
+.team-search-container:has(input:focus) {
+  box-shadow: 0 0 10px var(--primary-color) !important;
+}
+
+.team-search-container:focus-within{
+  box-shadow: 0 0 10px var(--primary-color) !important;
+
+}

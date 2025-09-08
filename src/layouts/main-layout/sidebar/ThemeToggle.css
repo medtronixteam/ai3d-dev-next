@@ -1,0 +1,83 @@
+.theme-toggle {
+  display: flex;
+  background-color: #bebcbc42;
+  border-radius: 8px;
+}
+
+.sidebar.collapsed .theme-toggle {
+  flex-direction: row !important;
+  align-items: center;
+  justify-content: center;
+  background-color: #E6E3DC !important;
+  /* padding: 4px 0; */
+  /* opacity: 1; */
+  height: auto;
+  overflow: visible;
+  gap: 0px;
+  padding: 3px;
+  width: 85% !important;
+}
+
+.sidebar.collapsed .theme-toggle .toggle-btn {
+  flex: none;
+  width: 35px;
+  height: 35px;
+  padding: 0 8px;
+  margin: 0px;
+  justify-content: center;
+}
+
+.sidebar.collapsed .theme-toggle .toggle-btn span {
+  display: none;
+}
+
+.toggle-btn {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  background-color: transparent !important;
+  color: #757575 !important;
+  cursor: pointer;
+  border-radius: 12px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 600;
+  transition: background-color 0.2s, color 0.2s;
+  box-shadow: none;
+}
+
+.toggle-btn .iconify {
+  font-size: 26px !important;
+  color: #757575 !important;
+  transition: color 0.2s;
+}
+
+.toggle-btn.active {
+  background-color: var(--primary-color) !important;
+  color: #fff !important;
+  border-radius: 9px !important;
+}
+
+.toggle-btn.active .iconify {
+  color: #fff !important;
+}
+
+
+[data-theme="dark"] .sidebar-content {
+  background-color: black !important;
+  color: #fff !important;
+}
+
+[data-theme="dark"] .sidebar-bottom-fixed {
+  background-color: black !important;
+}
+
+.sidebar-bottom-fixed {
+  background-color: white !important;
+}
+
+.sidebar {
+  border: none !important;
+}

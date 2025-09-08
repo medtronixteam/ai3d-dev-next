@@ -1,0 +1,54 @@
+.api-sdk-container {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* background: linear-gradient(135deg, #f8f6ff 0%, #fff 100%); */
+}
+
+.api-sdk-card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(222,57,150,0.10);
+  padding: 48px;
+  text-align: center;
+  border: 2px solid #DE3996;
+  max-width: 400px;
+}
+
+.api-sdk-title {
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #222;
+}
+
+.api-sdk-desc {
+  color: #555;
+  font-size: 17px;
+  margin-bottom: 8px;
+}
+
+.api-sdk-icon {
+  font-size: 54px !important;
+  color: #DE3996;
+  margin-bottom: 18px;
+  animation: spin 1.2s linear infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+[data-theme='dark'] .api-sdk-container {
+  background:black !important;
+}
+[data-theme='dark'] .api-sdk-card {
+  background: #000000 !important;
+  color: #fff !important;
+}
+[data-theme='dark'] .api-sdk-title {
+  color: #fff !important;
+}
+[data-theme='dark'] .api-sdk-desc {
+  color: #ccc !important;
+} 

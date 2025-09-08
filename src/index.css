@@ -1,0 +1,262 @@
+/* @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap'); */
+*/ * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+
+  overflow-x: hidden;
+}
+
+body {
+  scrollbar-width: thin;
+  scrollbar-color: #FED8E4 white;
+  overflow-x: hidden;
+
+}
+/* ===== Light Mode ===== */
+/* ===== Light Mode ===== */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  background-color: #ffffff !important; /* White background */
+  -webkit-text-fill-color: #000 !important; /* Black text for light mode */
+  -webkit-box-shadow: 0 0 0px 1000px #fff inset !important;
+  box-shadow: 0 0 0px 1000px #fff inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* ===== Dark Mode ===== */
+[data-theme="dark"] input:-webkit-autofill,
+[data-theme="dark"] input:-webkit-autofill:hover,
+[data-theme="dark"] input:-webkit-autofill:focus,
+[data-theme="dark"] input:-webkit-autofill:active {
+  background-color: #110e1f !important;
+  -webkit-text-fill-color: #fff !important; /* White text for dark mode */
+  -webkit-box-shadow: 0 0 0px 1000px #110e1f inset !important; /* Dark background */
+  box-shadow: 0 0 0px 1000px #110e1f inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+
+
+
+[data-theme='dark'] body {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(171, 9, 90) black;
+  overflow-x: hidden;
+
+}
+
+input.form-control:focus,
+select.form-control:focus {
+  /* border-color: #ff4ecb; */
+  box-shadow: none !important;
+  outline: none !important;
+  /* border: 1px solid #ff4ecb !important; */
+}
+
+input.form-control:focus,
+select.form-control:focus {
+  /* border-color: #ff4ecb; */
+  box-shadow: none !important;
+  outline: none !important;
+  /* border: 1px solid #ff4ecb !important; */
+}
+/* Chrome, Safari, Edge */
+input:-webkit-autofill,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+input:-webkit-autofill:hover {
+  -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+  box-shadow: 0 0 0px 1000px transparent inset !important;
+  background-color: transparent !important;
+  color: inherit !important;
+}
+
+/* Firefox */
+input:-moz-autofill {
+  box-shadow: 0 0 0px 1000px transparent inset !important;
+  background-color: transparent !important;
+  color: inherit !important;
+}
+
+textarea.form-control:focus {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Light mode */
+body::-webkit-scrollbar {
+  width: 8px;
+}
+
+body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: #E6339A;
+  border-radius: 4px;
+}
+
+/* Dark mode */
+html[data-theme='dark'] body::-webkit-scrollbar-track {
+  background: #1A1A1A !important;
+}
+
+html[data-theme='dark'] body::-webkit-scrollbar-thumb {
+  background: #000000 !important;
+  border-radius: 4px;
+}
+
+
+/* Dark mode */
+[data-theme='dark']::-webkit-scrollbar-track {
+  background: #1A1A1A !important;
+}
+
+[data-theme='dark']::-webkit-scrollbar-thumb {
+  background: #000000 !important;
+  border-radius: 4px;
+}
+
+:root {
+  --primary-color: #E6339A;
+  --primary-contrast: #FFFFFF;
+  --logo-bg: #6F6AF8;
+
+  --sidebar-bg: #F9F9F9;
+  --body-bg: #FFFFFF;
+
+  --search-bg: #F0F0F0;
+  --search-placeholder: #616161;
+
+  --divider-color: #E9E9E9;
+
+  --text-primary: #000000;
+  --text-secondary: #616161;
+
+  --icon-inactive: #616161;
+  --icon-active: #000000;
+
+  --active-item-bg: transparent;
+  --active-item-text: #000000;
+  --default-family: 'DM Sans', sans-serif;
+  --secondary-family: 'Exo 2', sans-serif;
+
+  /* Theme toggle variables */
+  --bg-color: #FFFFFF;
+  --border-color: #E0E0E0;
+  --hover-bg: rgba(0,0,0,0.05);
+  --dropdown-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+[data-theme='dark'] {
+  --primary-color: #E6339A;
+  --primary-contrast: #FFFFFF;
+  --logo-bg: #6F6AF8;
+
+  --sidebar-bg: #1A1A1A;
+  --body-bg: #000000;
+
+  --search-bg: #2C2C2C;
+  --search-placeholder: #BDBDBD;
+
+  --divider-color: #2C2C2C;
+
+  --text-primary: #FFFFFF;
+  --text-secondary: #BDBDBD;
+
+  --icon-inactive: #BDBDBD;
+  --icon-active: #FFFFFF;
+
+  --active-item-bg: transparent;
+  --active-item-text: #FFFFFF;
+
+  /* Theme toggle variables for dark mode */
+  --bg-color: #1A1A1A;
+  --border-color: #2C2C2C;
+  --hover-bg: rgba(255,255,255,0.05);
+  --dropdown-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+label,
+a,
+button,
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+textarea,
+select,
+option,
+ul,
+ol,
+li,
+blockquote,
+figcaption,
+td,
+th,
+small,
+code,
+pre,
+mark,
+ins,
+del,
+abbr,
+cite,
+dfn {
+  font-family: 'DM Sans', sans-serif;
+}
+
+textarea {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+
+/* Custom Scrollbar for Webkit Browsers */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f7f7f7;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #e0e0e0;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #cccccc;
+}
+
+[data-theme='dark'] ::-webkit-scrollbar-track {
+  background-color: #2c2c2c;
+}
+
+[data-theme='dark'] ::-webkit-scrollbar-thumb {
+  background-color: #555555;
+}
+
+[data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
+  background-color: #777777;
+}
+
+
+ol,
+ul {
+  padding-left: 1rem !important;
+}

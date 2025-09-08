@@ -1,0 +1,1 @@
+export const baseURL = "https://dev-backend.ai3dscanning.com/api"; 

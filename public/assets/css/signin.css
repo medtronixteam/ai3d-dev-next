@@ -1,0 +1,251 @@
+
+
+ .signin-form a {
+     text-decoration: none;
+     color: var(--primary-color);
+ }
+
+ .signin-form .robot-img {
+     width: 100%;
+     height: 90vh;
+     object-fit: cover;
+     display: block;
+     animation: fadeIn 1.5s ease-in-out;
+ }
+
+ .signin-form .logo-animated {
+     max-width: 100px;
+     margin: 20px;
+     animation: fadeInLogo 1.2s ease-in-out;
+ }
+
+ .signin-form .card {
+     border-radius: 10px;
+     box-shadow: 0 0 20px rgba(0, 0, 0, 0.08) !important;
+     padding: 20px 50px;
+     animation: slideIn 1s ease-out;
+ }
+
+ .signin-form .card p a {
+     color: var(--primary-color);
+     text-decoration: none;
+     font-weight: 600;
+ }
+
+ .signin-form .form-control {
+     background-color: transparent;
+     font-size: 14px;
+     transition: all 0.4s ease;
+     padding: 25px 10px;
+     border-color: var(--text-secondary);
+     border-radius: 10px;
+     animation: fadeInUp 0.6s forwards;
+ }
+
+ .signin-form .form-control:focus {
+     border-color: var(--primary-color);
+     box-shadow: 0 0 0 0.15rem rgba(222, 57, 150, 0.25);
+     outline: none;
+ }
+ .form-control:focus{
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 0.15rem rgba(222, 57, 150, 0.25) !important;
+    outline: none !important;
+    box-shadow: none !important;
+ }
+ .signin-form .btn-primary {
+     background-color: var(--primary-color);
+     border: none;
+     border-radius: 50px;
+     padding: 8px 30px;
+     font-size: 15px;
+     display: inline-block;
+ }
+
+ .signin-form .btn-primary:hover {
+     background-color: var(--primary-color);
+ }
+
+ .signin-form .input-group-icon {
+     position: relative;
+ }
+
+ .signin-form .input-group-icon i {
+     position: absolute;
+     right: 15px;
+     top: 70%;
+     font-size: 20px;
+     transform: translateY(-50%);
+     cursor: pointer;
+     color: var( --text-secondary);
+ }
+
+
+ .signin-form .or-divider {
+     display: flex;
+     align-items: center;
+     text-align: center;
+     margin: 1px 0;
+ }
+
+ .signin-form .or-divider::before,
+ .signin-form .or-divider::after {
+     content: '';
+     flex: 1;
+     border-bottom: 1px solid var(--text-secondary);
+ }
+
+ .signin-form .or-divider:not(:empty)::before {
+     margin-right: .75em;
+ }
+
+ .signin-form .or-divider:not(:empty)::after {
+     margin-left: .75em;
+ }
+
+ .signin-form .form-check input[type="checkbox"] {
+     height: 15px;
+     width: 15px;
+     border-radius: 3px;
+     appearance: none;
+     -webkit-appearance: none;
+     background-color: rgba(128, 128, 128, 0.911);
+     border: 1px solid var( --text-secondary);
+     cursor: pointer;
+     /* position: relative;  */
+     transition: all 0.2s ease;
+ }
+
+ .signin-form .form-check input[type="checkbox"]:checked {
+     border-color: var(--primary-color);
+     color: var(--primary-color);
+     background-color: rgba(255, 255, 255, 0.897);
+     /* background-color: var( --primary-color); */
+ }
+
+ .signin-form .form-check input[type="checkbox"]:checked::before {
+     content: "✓";
+     position: absolute;
+     color: var(--primary-color);
+     font-size: 10px;
+     font-weight: bold;
+     left: 50%;
+     top: 50%;
+     transform: translate(-50%, -50%);
+ }
+
+ .signin-form .form-check-input:checked {
+     background-color: rgba(255, 255, 255, 0.87);
+ }
+
+
+ .signin-form label {
+     font-weight: 500;
+     color: var( --text-secondary);
+ }
+
+ .signin-form .checkbox-center {
+     text-align: center;
+ }
+
+
+ /* ======================= social buttons =========================== */
+ .signin-form .social-buttons-container {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     gap: 12px;
+     width: 100%;
+ }
+
+ .signin-form .social-btn {
+     display: flex;
+     align-items: center;
+     width: 100%;
+     max-width: 280px;
+     padding: 10px 15px;
+     border-radius: 50px;
+     font-weight: 500;
+ }
+
+ .signin-form .social-btn:nth-child(1) {
+     border: 1px solid var(--primary-color);
+     box-shadow: 0 0 10px rgba(0, 0, 0, 0.377);
+ }
+
+ .signin-form .social-btn:hover {
+     border: 1px solid var(--primary-color);
+     box-shadow: 0 0 10px rgba(0, 0, 0, 0.377);
+ }
+
+ .signin-form .social-icon {
+     display: inline-flex;
+     width: 24px;
+     justify-content: center;
+     margin-right: 12px;
+ }
+
+ .signin-form .social-icon img {
+     width: 20px;
+     height: 20px;
+     object-fit: contain;
+ }
+
+ .signin-form .social-text {
+     flex-grow: 1;
+     text-align: left;
+ }
+
+ /* ======================= social buttons end =========================== */
+ @keyframes fadeInLogo {
+     from {
+         opacity: 0;
+         transform: translateY(-20px);
+     }
+
+     to {
+         opacity: 1;
+         transform: translateY(0);
+     }
+ }
+
+ @keyframes fadeIn {
+     from {
+         opacity: 0;
+         transform: scale(0.9);
+     }
+
+     to {
+         opacity: 1;
+         transform: scale(1);
+     }
+ }
+
+ @keyframes slideIn {
+     from {
+         opacity: 0;
+         transform: translateX(100px);
+     }
+
+     to {
+         opacity: 1;
+         transform: translateX(0);
+     }
+ }
+
+ @media (max-width: 767.98px) {
+     .signin-form .robot-img {
+         height: auto;
+         max-height: 400px;
+         margin: 0 auto 20px;
+         display: block;
+     }
+
+     .signin-form .btn-primary {
+         width: 100%;
+     }
+
+     .signin-form .card {
+         padding: 20px;
+     }
+ }

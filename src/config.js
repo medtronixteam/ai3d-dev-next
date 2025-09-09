@@ -1,1 +1,1 @@
-export const baseURL = "https://dev-backend.ai3dscanning.com/api"; 
+export const baseURL = "https://app.ai3dscanning.com/api"; 

@@ -164,7 +164,7 @@
     z-index: 1;
     box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.2);
     white-space: nowrap;
-    transition: all 0.3s ease;
+    /* transition: all 0.3s ease; */
 }
 
 .pricing-container .popular-card:hover .popular-tag {
@@ -345,7 +345,7 @@
     padding: 0.3125rem;
     /* 5px */
     cursor: pointer;
-    transition: all 0.3s ease;
+    /* transition: all 0.3s ease; */
     margin: 1.875rem 0 1.25rem 0 !important;
     /* 30px 0 20px 0 */
     opacity: 1;

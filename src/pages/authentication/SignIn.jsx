@@ -124,7 +124,7 @@ const SignIn = () => {
                       checked={rememberMe}
                       onChange={(e) => setRememberMe(e.target.checked)}
                     />
-                    <label className="form-check-label mx-1 mt-1" style={{fontSize: '15px'}} htmlFor="rememberMe">
+                    <label className="form-check-label mx-1 mt-1" style={{fontSize: '15px !importamt'}} htmlFor="rememberMe">
                       Remember me
                     </label>
                   </div>
@@ -160,7 +160,7 @@ const SignIn = () => {
                     type="button"
                     className="btn social-btn"
                     onClick={() => {
-                      window.location.href = 'https://dev-backend.ai3dscanning.com/auth/google';
+                      window.location.href = 'https://app.ai3dscanning.com/auth/google';
                     }}
                   >
                     <span className="social-icon">
@@ -172,7 +172,7 @@ const SignIn = () => {
                     type="button"
                     className="btn social-btn"
                     onClick={() => {
-                      window.location.href = 'https://dev-backend.ai3dscanning.com/auth/facebook';
+                      window.location.href = 'https://app.ai3dscanning.com/auth/facebook';
                     }}
                   >
                     <span className="social-icon">

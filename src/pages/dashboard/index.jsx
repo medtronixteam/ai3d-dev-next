@@ -3,7 +3,6 @@ import './SimplePage.css';
 import { FiSearch, FiArrowRight } from 'react-icons/fi';
 import search from '../../assets/images/search.svg';
 import { useLocation } from 'react-router-dom';
-
 import { useAuth } from '../../context/AuthContext';
 import { baseURL } from '../../config';
 import model1 from '../../assets/images/model-1.png';
@@ -36,7 +35,6 @@ import icon4 from '../../assets/images/icon4.svg';
 import icon5 from '../../assets/images/icon5.svg';
 import icon6 from '../../assets/images/icon6.svg';
 import loadGif from '../../assets/images/load.gif';
-import { styled } from '@mui/material';
 
 const CATEGORIES = [
   { label: 'Construction', type: 'construction', icon: icon1 },
@@ -50,30 +48,161 @@ const CATEGORIES = [
 const getModelImageUrl = (image) => {
   if (!image) return model1;
   if (image.startsWith('http')) return image;
-  // If image is relative, prepend the full storage URL
-  return `https://dev-backend.ai3dscanning.com/storage/${image.replace(/^\//, '')}`;
+  return `https://app.ai3dscanning.com/storage/${image.replace(/^\//, '')}`;
 };
 
-// Helper to get full video URL
 const getFullVideoUrl = (url) => {
   if (!url) return '';
   if (url.startsWith('http')) return url;
-  return `https://dev-backend.ai3dscanning.com/storage/${url.replace(/^\/+/, '')}`;
+  return `https://app.ai3dscanning.com/storage/${url.replace(/^\/+/, '')}`;
 };
 
-// VideoModal component with loader
+function VideoModalWithLoader({ videoUrl, onClose }) {
+  const [loading, setLoading] = React.useState(true);
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const [errorState, setErrorState] = React.useState(null); // New state for error type
+  const timeoutRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (loading) {
+      timeoutRef.current = setTimeout(() => {
+        if (loading && !errorState) {
+          setLoading(false);
+          setErrorState('timeout'); 
+          onClose();
+        }
+      }, 4000);
+    }
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+    };
+  }, [loading, errorState, onClose]);
+
+  if (!videoUrl) return null;
+
+  const safeUrl = getFullVideoUrl(videoUrl);
+
+  return (
+    <div
+      style={{
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: '16px auto',
+        borderRadius: 12,
+        overflow: 'hidden',
+        background: '#000',
+      }}
+    >
+      {loading ? (
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 10,
+            background: 'rgba(0,0,0,0.7)',
+          }}
+        >
+          <CustomLoader />
+        </div>
+      ) : errorState ? (
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'rgba(0,0,0,0.8)',
+            color: 'white',
+            zIndex: 11,
+            padding: 20,
+            textAlign: 'center',
+          }}
+        >
+          <p style={{ fontSize: 18, fontWeight: 500, marginBottom: 10 }}>
+            🚫 Video Could Not Be Played
+          </p>
+          <p style={{ fontSize: 16, opacity: 0.9, maxWidth: 300, lineHeight: 1.5 }}>
+            {errorState === 'timeout'
+              ? 'The video took too long to load. Please try again.'
+              : 'The video file may be corrupted, or the server is not serving it correctly.'}
+          </p>
+          <p style={{ fontSize: 14, opacity: 0.7, marginTop: 12, fontStyle: 'italic' }}>
+            URL: {safeUrl.substring(0, 80)}...
+          </p>
+          <button
+            onClick={onClose}
+            style={{
+              marginTop: 16,
+              padding: '8px 16px',
+              backgroundColor: '#DE3996',
+              color: 'white',
+              border: 'none',
+              borderRadius: 8,
+              cursor: 'pointer',
+              fontSize: 16,
+            }}
+          >
+            Close
+          </button>
+        </div>
+      ) : (
+        <video
+          src={safeUrl}
+          autoPlay
+          loop
+          muted
+          playsInline
+          controls={false}
+          style={{
+            maxWidth: '100%',
+            maxHeight: '80vh',
+            borderRadius: 12,
+            objectFit: 'cover',
+            zIndex: 5,
+          }}
+          onLoadedData={() => {
+            setLoading(false);
+            setTimeout(() => setModalVisible(true), 100);
+          }}
+          onError={(err) => {
+            console.error('Video failed to load:', err);
+            setLoading(false);
+            setErrorState('corrupted'); // Mark as file corruption/server misconfig
+          }}
+        />
+      )}
+    </div>
+  );
+}
 const VideoModal = ({ open, videoUrl, onClose }) => {
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const videoRef = useRef(null);
   const timeoutRef = useRef(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (open) {
       setLoading(true);
       setModalVisible(true);
-
-      // Set 10-second timeout
       timeoutRef.current = setTimeout(() => {
         if (loading) {
           setLoading(false);
@@ -88,7 +217,6 @@ const VideoModal = ({ open, videoUrl, onClose }) => {
       }
     }
 
-    // Cleanup timeout on unmount
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
@@ -120,6 +248,7 @@ const VideoModal = ({ open, videoUrl, onClose }) => {
       </div>
     );
   }
+
   return (
     <div
       style={{
@@ -164,7 +293,7 @@ const VideoModal = ({ open, videoUrl, onClose }) => {
       </button>
       <video
         ref={videoRef}
-        src={videoUrl}
+        src={getFullVideoUrl(videoUrl)} // ✅ Fixed: Use correct URL
         autoPlay
         loop
         muted
@@ -202,104 +331,7 @@ const VideoModal = ({ open, videoUrl, onClose }) => {
   );
 };
 
-function ModernModal({
-  open,
-  onClose,
-  children,
-  width = 500,
-  maxHeight = '80vh',
-  showStarfield = false,
-}) {
-  if (!open) return null;
-  return (
-    <div
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100vw',
-        height: '100vh',
-        zIndex: 2000,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: 'rgba(30,30,40,0.12)',
-        backdropFilter: 'blur(8px)',
-        WebkitBackdropFilter: 'blur(8px)',
-        transition: 'background 0.3s',
-      }}
-    >
-      <div
-        style={{
-          position: 'relative',
-          background: 'rgba(255,255,255,0.13)',
-          borderRadius: 28,
-          boxShadow: '0 16px 64px 0 rgba(30,30,60,0.22), 0 2px 16px 0 rgba(230,51,154,0.10)',
-          maxWidth: width,
-          width: '95vw',
-          maxHeight,
-          padding: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'hidden',
-          animation: 'modal-3d-pop-in 0.55s cubic-bezier(.25,1.7,.45,1.32)',
-          transformStyle: 'preserve-3d',
-          perspective: 1200,
-          border: '1.5px solid rgba(230,51,154,0.10)',
-          backdropFilter: 'blur(0px)',
-        }}
-      >
-        {showStarfield && <Starfield />}
-        <button
-          onClick={onClose}
-          style={{
-            position: 'absolute',
-            top: 18,
-            right: 18,
-            zIndex: 10001,
-            background: 'none',
-            border: 'none',
-            borderRadius: '50%',
-            width: 38,
-            height: 38,
-            color: 'black',
-            fontSize: 30,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: 'none',
-          }}
-          aria-label="Close modal"
-        >
-          ×
-        </button>
-        <div
-          style={{
-            width: '100%',
-            height: '100%',
-            padding: 32,
-            overflowY: 'auto',
-            position: 'relative',
-          }}
-        >
-          {children}
-        </div>
-      </div>
-      <style>{`
-        @keyframes modal-3d-pop-in {
-          0% { transform: scale(0.7) rotateX(18deg) translateY(80px); opacity: 0; }
-          60% { transform: scale(1.08) rotateX(-6deg) translateY(-12px); opacity: 1; }
-          100% { transform: scale(1) rotateX(0deg) translateY(0); opacity: 1; }
-        }
-      `}</style>
-    </div>
-  );
-}
-
-// Add ModelCardVideoModal matching Navbar's VideoModal
+// Model Card Video Modal (for Explore → button)
 function ModelCardVideoModal({ open, videoUrl, onClose }) {
   const [loading, setLoading] = React.useState(true);
   const [modalVisible, setModalVisible] = React.useState(false);
@@ -309,14 +341,12 @@ function ModelCardVideoModal({ open, videoUrl, onClose }) {
     if (open) {
       setLoading(true);
       setModalVisible(true);
-
-      // Set 10-second timeout
       timeoutRef.current = setTimeout(() => {
         if (loading) {
           setLoading(false);
           onClose();
         }
-      }, 10000);
+      }, 4000);
     } else {
       setModalVisible(false);
       if (timeoutRef.current) {
@@ -325,7 +355,6 @@ function ModelCardVideoModal({ open, videoUrl, onClose }) {
       }
     }
 
-    // Cleanup timeout on unmount
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
@@ -424,8 +453,9 @@ function ModelCardVideoModal({ open, videoUrl, onClose }) {
             />
           </svg>
         </button>
+
         <video
-          src={videoUrl}
+          src={getFullVideoUrl(videoUrl)}
           autoPlay
           loop
           muted
@@ -447,7 +477,6 @@ function ModelCardVideoModal({ open, videoUrl, onClose }) {
               timeoutRef.current = null;
             }
             setLoading(false);
-            // Small delay to ensure smooth transition
             setTimeout(() => setModalVisible(true), 100);
           }}
           onError={() => {
@@ -457,9 +486,13 @@ function ModelCardVideoModal({ open, videoUrl, onClose }) {
             }
             setLoading(false);
             console.error('Video failed to load');
+            setTimeout(() => {
+              onClose();
+            }, 4000);
           }}
         />
       </div>
+
       <style>{`
         @keyframes modal-3d-pop-in {
           0% { transform: scale(0.7) rotateX(18deg) translateY(80px); opacity: 0; }
@@ -471,8 +504,107 @@ function ModelCardVideoModal({ open, videoUrl, onClose }) {
   );
 }
 
-const Dashboard = () => {
+// Modern Modal Component
+function ModernModal({
+  open,
+  onClose,
+  children,
+  width = 500,
+  maxHeight = '80vh',
+  showStarfield = false,
+}) {
+  if (!open) return null;
 
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        zIndex: 2000,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'rgba(30,30,40,0.12)',
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
+        transition: 'background 0.3s',
+      }}
+    >
+      <div
+        style={{
+          position: 'relative',
+          background: 'rgba(255,255,255,0.13)',
+          borderRadius: 28,
+          boxShadow: '0 16px 64px 0 rgba(30,30,60,0.22), 0 2px 16px 0 rgba(230,51,154,0.10)',
+          maxWidth: width,
+          width: '95vw',
+          maxHeight,
+          padding: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflow: 'hidden',
+          animation: 'modal-3d-pop-in 0.55s cubic-bezier(.25,1.7,.45,1.32)',
+          transformStyle: 'preserve-3d',
+          perspective: 1200,
+          border: '1.5px solid rgba(230,51,154,0.10)',
+          backdropFilter: 'blur(0px)',
+        }}
+      >
+        {showStarfield && <Starfield />}
+        <button
+          onClick={onClose}
+          style={{
+            position: 'absolute',
+            top: 18,
+            right: 18,
+            zIndex: 10001,
+            background: 'none',
+            border: 'none',
+            borderRadius: '50%',
+            width: 38,
+            height: 38,
+            color: 'black',
+            fontSize: 30,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: 'none',
+          }}
+          aria-label="Close modal"
+        >
+          ×
+        </button>
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            padding: 32,
+            overflowY: 'auto',
+            position: 'relative',
+          }}
+        >
+          {children}
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes modal-3d-pop-in {
+          0% { transform: scale(0.7) rotateX(18deg) translateY(80px); opacity: 0; }
+          60% { transform: scale(1.08) rotateX(-6deg) translateY(-12px); opacity: 1; }
+          100% { transform: scale(1) rotateX(0deg) translateY(0); opacity: 1; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+const Dashboard = () => {
   const { token } = useAuth();
   const navigate = useNavigate();
   const [selectedType, setSelectedType] = useState(CATEGORIES[0].type);
@@ -492,12 +624,11 @@ const Dashboard = () => {
   const [modelVideoUrl, setModelVideoUrl] = React.useState('');
   const [exploreLoading, setExploreLoading] = React.useState(false);
   const location = useLocation();
-
   const [currentWord, setCurrentWord] = useState('images');
   const words = ['images', 'videos', 'prompt'];
   const [wordIndex, setWordIndex] = useState(0);
-
   const [isDark, setIsDark] = useState(false);
+
   useEffect(() => {
     const observer = new MutationObserver(() => {
       setIsDark(document.documentElement.getAttribute('data-theme') === 'dark');
@@ -554,28 +685,23 @@ const Dashboard = () => {
     // eslint-disable-next-line
   }, [selectedType, token, location.key]);
 
-  // Animate words in the hero text
   useEffect(() => {
     const interval = setInterval(() => {
       setWordIndex((prevIndex) => (prevIndex + 1) % words.length);
-    }, 5000); // Change word every 5 seconds
-
+    }, 5000);
     return () => clearInterval(interval);
   }, [words.length]);
 
-  // Update current word when wordIndex changes
   useEffect(() => {
     setCurrentWord(words[wordIndex]);
   }, [wordIndex, words]);
 
-  // Handle category click
   const handleCategoryClick = (type) => {
     setSelectedType(type);
-    setSearchText(''); // Clear search on category change
+    setSearchText('');
     fetchModels(type);
   };
 
-  // Handle search input
   const handleInputChange = (e) => {
     setSearchText(e.target.value);
     if (e.target.value === '') {
@@ -583,7 +709,6 @@ const Dashboard = () => {
     }
   };
 
-  // Handle search submit (Enter key or button click)
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchText.trim() !== '') {
@@ -593,24 +718,19 @@ const Dashboard = () => {
     }
   };
 
-  // Track image loading state for each model (robust against cached images)
   const [imgLoadedArr, setImgLoadedArr] = React.useState([]);
   React.useEffect(() => {
-    // reset array to current models length
     setImgLoadedArr(Array(models.length).fill(false));
     if (models.length === 0) return;
-
     let cancelled = false;
     const toStorageUrl = (path) =>
-      `https://dev-backend.ai3dscanning.com/storage/${String(path || '').replace(/^\/+/, '')}`;
-
+      `https://app.ai3dscanning.com/storage/${String(path || '').replace(/^\/+/, '')}`;
     models.forEach((model, idx) => {
       const url = model?.thumbnail
         ? toStorageUrl(model.thumbnail)
         : model?.image
           ? toStorageUrl(model.image)
           : model1;
-
       const img = new Image();
       const markLoaded = () => {
         if (cancelled) return;
@@ -620,18 +740,19 @@ const Dashboard = () => {
           return next;
         });
       };
-
       img.onload = markLoaded;
-      img.onerror = markLoaded; // Hide loader even if image fails
+      img.onerror = markLoaded;
       img.src = url;
-      // If served from cache, complete may already be true
       if (img.complete) markLoaded();
     });
-
     return () => {
       cancelled = true;
     };
   }, [models]);
+
+
+// console.log("safeUrl",safeUrl);
+
 
   return (
     <>
@@ -645,7 +766,6 @@ const Dashboard = () => {
           minHeight: 320,
         }}
       >
-        {/* Video Background */}
         {!isDark && (
           <img
             src={videoGif}
@@ -684,7 +804,7 @@ const Dashboard = () => {
             }}
           />
         )}
-        {/* White gradient overlay */}
+
         {!isDark && (
           <div
             style={{
@@ -710,7 +830,6 @@ const Dashboard = () => {
               height: '100%',
               zIndex: 1,
               pointerEvents: 'none',
-              // Leave some space at the top, then gradually darken towards the bottom
               background:
                 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 15%, rgba(0,0,0,0.28) 38%, rgba(0,0,0,0.55) 62%, rgba(0,0,0,0.78) 82%, #000 100%)',
             }}
@@ -720,14 +839,10 @@ const Dashboard = () => {
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <div className="row justify-content-center align-items-center text-center mt-lg-1 mt-3">
             <div className="col-lg-8">
-              {/* Local styles for opposite flips: rest (top->bottom), word (bottom->top) */}
               <style>{`
                 .flip-perspective{perspective:1000px}
-                /* Rest of line: top -> bottom */
                 .counter-flip{display:inline-block;backface-visibility:hidden;transform-origin:50% 0%;transform-style:preserve-3d;will-change:transform;animation:flipWordSmooth .9s cubic-bezier(.2,.7,.3,1)}
-                /* Keyframes for top->bottom */
                 @keyframes flipWordSmooth{0%{transform:rotateX(90deg);opacity:.0}55%{transform:rotateX(-10deg);opacity:1}100%{transform:rotateX(0);opacity:1}}
-                /* Keyframes for bottom->top */
                 @keyframes flipCounterSmooth{0%{transform:rotateX(-90deg);opacity:.0}55%{transform:rotateX(10deg);opacity:1}100%{transform:rotateX(0);opacity:1}}
               `}</style>
               <h2 className="flip-perspective">
@@ -737,7 +852,6 @@ const Dashboard = () => {
                 <span
                   key={currentWord}
                   style={{
-             
                     width: '3.2em',
                     display: 'inline-block',
                     backfaceVisibility: 'hidden',
@@ -747,16 +861,10 @@ const Dashboard = () => {
                 >
                   {currentWord}
                 </span>{' '}
-                <span
-                  key={currentWord + ':b'}
-                  style={{ color: 'inherit' }}
-                >
+                <span key={currentWord + ':b'} style={{ color: 'inherit' }}>
                   into interactive
                 </span>{' '}
-                <span
-                  key={currentWord + ':c'}
-                  style={{ color: 'var(--primary-color)' }}
-                >
+                <span key={currentWord + ':c'} style={{ color: 'var(--primary-color)' }}>
                   3D
                 </span>{' '}
                 <br />
@@ -775,35 +883,33 @@ const Dashboard = () => {
               className="col-12 col-lg-8 search-container"
               style={{
                 borderRadius: 16,
-
                 padding: '0.5rem 0.5rem',
                 zIndex: 3,
               }}
             >
               <form className="search-box" onSubmit={handleSearch}>
-  <span className="borders"></span>   {/* <-- add this */}
-  <div className="search-icon">
-    <img src={search} />
-  </div>
-  <input
-    type="text"
-    className="search-input"
-    placeholder="Search 3D Models"
-    value={searchText}
-    onChange={handleInputChange}
-  />
-  <button
-    type="submit"
-    className="arrow-icon"
-    style={{ background: 'none', border: 'none', outline: 'none' }}
-  >
-    <FiArrowRight />
-  </button>
-</form>
-
+                <span className="borders"></span>
+                <div className="search-icon">
+                  <img src={search} />
+                </div>
+                <input
+                  type="text"
+                  className="search-input"
+                  placeholder="Search 3D Models"
+                  value={searchText}
+                  onChange={handleInputChange}
+                />
+                <button
+                  type="submit"
+                  className="arrow-icon"
+                  style={{ background: 'none', border: 'none', outline: 'none' }}
+                >
+                  <FiArrowRight />
+                </button>
+              </form>
             </div>
           </div>
-          {/* =================== model card section ============= */}
+
           <div className="row justify-content-center align-items-center mt-2">
             <div
               className="col-lg-8 d-flex justify-content-center"
@@ -848,10 +954,9 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-          {/* =================== model card section end ============= */}
         </div>
       </section>
-      {/* =================== Hero Section End ============= */}
+
       {/* =================== Studio Section  ============= */}
       <section className="studio-section mb-5" style={{ overflow: 'hidden' }}>
         <div className="container-section">
@@ -891,7 +996,6 @@ const Dashboard = () => {
                 animation: 'fadeIn 0.7s',
               }}
             >
-              {/* Removed icon and background/shadow as requested */}
               <div style={{ fontWeight: 700, fontSize: 26, color: '#22223b', marginBottom: 8 }}>
                 No Models Found
               </div>
@@ -925,7 +1029,6 @@ const Dashboard = () => {
                 animation: 'fadeIn 0.7s',
               }}
             >
-              {/* Removed icon and background/shadow as requested */}
               <div style={{ fontWeight: 700, fontSize: 26, color: '#22223b', marginBottom: 8 }}>
                 No Models Found
               </div>
@@ -945,9 +1048,9 @@ const Dashboard = () => {
             <div className="model-list-row">
               {models.map((model, idx) => {
                 const imgUrl = model.thumbnail
-                  ? `https://dev-backend.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
+                  ? `https://app.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
                   : model.image
-                    ? `https://dev-backend.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
+                    ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
                     : model1;
                 return (
                   <div key={model.id} className="model-card">
@@ -1055,6 +1158,7 @@ const Dashboard = () => {
           )}
         </div>
       </section>
+
       {/* Model Details Modal (modern style) */}
       {modelModalOpen && modelModalData && (
         <ModernModal open={modelModalOpen} onClose={() => setModelModalOpen(false)} width={500}>
@@ -1068,25 +1172,15 @@ const Dashboard = () => {
             }}
           >
             {modelModalData.videoUrl && (
-              <video
-                src={modelModalData.videoUrl}
-                autoPlay
-                loop
-                muted
-                playsInline
-                controls
-                style={{
-                  width: '100%',
-                  maxWidth: 320,
-                  borderRadius: 12,
-                  margin: '0 auto',
-                  marginBottom: 12,
-                }}
+              <VideoModalWithLoader
+                videoUrl={modelModalData.videoUrl}
+                onClose={() => setModelModalOpen(false)}
               />
             )}
           </div>
         </ModernModal>
       )}
+
       {/* Modal for model details */}
       {modalModel &&
         (() => {
@@ -1195,11 +1289,11 @@ const Dashboard = () => {
                       />
                     </div>
                     <style>{`
-                    @keyframes modalDotBounce {
-                      0% { opacity: 0.7; transform: translateY(0); }
-                      100% { opacity: 1; transform: translateY(-14px); }
-                    }
-                  `}</style>
+                      @keyframes modalDotBounce {
+                        0% { opacity: 0.7; transform: translateY(0); }
+                        100% { opacity: 1; transform: translateY(-14px); }
+                      }
+                    `}</style>
                   </div>
                 )}
               </div>
@@ -1209,6 +1303,7 @@ const Dashboard = () => {
             </ModernModal>
           );
         })()}
+
       {showPromptModal && (
         <ModernModal
           open={showPromptModal}
@@ -1238,6 +1333,7 @@ const Dashboard = () => {
           <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
         </ModernModal>
       )}
+
       {/* Scan Modal */}
       {showScanModal && (
         <ModernModal
@@ -1253,12 +1349,14 @@ const Dashboard = () => {
           </div>
         </ModernModal>
       )}
+
       {/* Global Video Modal */}
       <VideoModal
         open={isVideoModalOpen}
         videoUrl={videoModalUrl}
         onClose={() => setVideoModalOpen(false)}
       />
+
       {/* Model Card Video Modal */}
       <ModelCardVideoModal
         open={modelVideoModalOpen}

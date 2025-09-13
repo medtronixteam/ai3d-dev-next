@@ -28,7 +28,7 @@
   color: #bbb !important;
 }
 
-[data-theme='dark'] .form-control,
+[data-theme='dark'],
 [data-theme='dark'] select.form-control {
   background: #15151b !important;
   color: #fff !important;
@@ -169,6 +169,11 @@
 
 .card-icons-group {
   position: relative;
+  width: 100%;
+}
+
+.card-icons-group .form-control {
+ padding-right: 120px !important;
 }
 
 .card-icons-inside {

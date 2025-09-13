@@ -53,6 +53,8 @@
   font-size: 20px;
   font-weight: 700;
   color: var(--text-primary);
+  padding-top: 12px;
+  padding-left: 12px;
 }
 
 .close-popup-btn {
@@ -72,9 +74,9 @@
   transition: background-color 0.2s;
   background-color: var(--body-bg);
 }
-.user-info-section:hover {
+/* .user-info-section:hover {
     background-color: var(--search-bg);
-}
+} */
 
 .user-avatar {
   width: 50px;

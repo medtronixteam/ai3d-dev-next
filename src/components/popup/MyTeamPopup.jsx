@@ -27,9 +27,9 @@ const MyTeamPopup = ({ onClose, user, teams }) => {
   // Profile image logic
   let profileImg = '';
   if (user?.avatar) {
-    profileImg = user.avatar.startsWith('http') ? user.avatar : `https://dev-backend.ai3dscanning.com/storage/${user.avatar.replace(/^\//, '')}`;
+    profileImg = user.avatar.startsWith('http') ? user.avatar : `https://app.ai3dscanning.com/storage/${user.avatar.replace(/^\//, '')}`;
   } else if (user?.image) {
-    profileImg = user.image.startsWith('http') ? user.image : `https://dev-backend.ai3dscanning.com/storage/${user.image.replace(/^\//, '')}`;
+    profileImg = user.image.startsWith('http') ? user.image : `https://app.ai3dscanning.com/storage/${user.image.replace(/^\//, '')}`;
   }
 
   useEffect(() => {
@@ -126,7 +126,8 @@ const MyTeamPopup = ({ onClose, user, teams }) => {
         </div>
       </div>
       {isTeamSettingsOpen && <TeamSettingsPopup onClose={() => setTeamSettingsOpen(false)} team_id={selectedTeamId} initialTeamName={teamsState.find(t => t.id === selectedTeamId)?.name || ''} />}
-      {isCreateTeamOpen && <CreateTeamPopup onClose={() => setCreateTeamOpen(false)} />}
+      {isCreateTeamOpen && <CreateTeamPopup 
+      onClose={() => setCreateTeamOpen(false)} />}
       <ConfirmModal
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}

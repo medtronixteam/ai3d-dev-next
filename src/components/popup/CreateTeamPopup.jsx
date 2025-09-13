@@ -5,6 +5,7 @@ import axios from 'axios';
 import { baseURL } from '../../config';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../context/AuthContext';
+import SuccessImg from '../../assets/images/success-img.png'
 
 const CreateTeamPopup = ({ onClose }) => {
   const [step, setStep] = useState(1);
@@ -87,7 +88,7 @@ const CreateTeamPopup = ({ onClose }) => {
       </div>
        <div className="popup-body success-step">
         <div className="success-icon">
-            <FiCheckCircle/>
+            <img src={SuccessImg} alt="success-img" />
         </div>
         <h3>Team created successfully</h3>
         <p>You can now manage your team or invite members.</p>

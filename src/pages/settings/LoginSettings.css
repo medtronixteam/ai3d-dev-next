@@ -16,7 +16,7 @@
 }
 
 [data-theme='dark'] .settings-note {
-  background: #110E20 !important;
+  background: #110e20 !important;
   color: white !important;
   border: 1px solid #333 !important;
 }
@@ -27,13 +27,13 @@
   color: white;
 }
 
-[data-theme='dark'] .note-icon{
-  border:1px solid #474747 !important;
+[data-theme='dark'] .note-icon {
+  border: 1px solid #474747 !important;
 }
-[data-theme='dark'] .sidebar-link{
+[data-theme='dark'] .sidebar-link {
   color: white !important;
 }
-[data-theme='dark'] .sidebar-svg-icon{
+[data-theme='dark'] .sidebar-svg-icon {
   filter: brightness(0) saturate(100%) invert(1) !important;
 }
 [data-theme='dark'].note-title,
@@ -41,12 +41,12 @@
   color: white !important;
   border: none !important;
 }
-[data-theme='dark'] .modal-actions .cancel-btn{
+[data-theme='dark'] .modal-actions .cancel-btn {
   background-color: white !important;
   color: black !important;
 }
 [data-theme='dark'] .note-icon {
-  background-color: #110E20 !important;
+  background-color: #110e20 !important;
   color: white !important;
 }
 
@@ -80,44 +80,63 @@
   font-size: 22px;
 }
 
-@media (min-width:992px) {
+@media (min-width: 992px) {
   .note-icon {
     width: 73px;
     height: 73px;
   }
 }
 
-@media (max-width:768px) {
+@media (max-width: 768px) {
   .note-icon {
     width: 190px !important;
     height: 80px !important;
   }
 }
 
-@media (max-width:576px) {
-  
-     .forgot-modal-content{
-      min-width: 340px !important;
-     }
+@media (max-width: 576px) {
+
+  .forgot-modal-content {
+    min-width: 380px !important;
+  }
   .note-icon {
-     width: 100% !important;
+    width: 100% !important;
     max-width: 100% !important;
   }
   [data-theme='dark'] .settings-note {
     padding: 10px 18px !important;
   }
-  .note-content{
+  .note-content {
     max-width: 100% !important;
     width: 100% !important;
     padding: 3px !important;
   }
-  .note-text{
+  .note-text {
     width: 100% !important;
   }
-  .team-search-container{
-    margin-top:0 !important;
+  .team-search-container {
+    margin-top: 0 !important;
   }
 }
+
+@media (max-width: 412px) {
+  .forgot-modal-content {
+    min-width: 360px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .forgot-modal-content {
+    min-width: 330px !important;
+  }
+}
+
+@media (max-width: 330px) {
+  .forgot-modal-content {
+    min-width: 300px !important;
+  }
+}
+
 .team-search-container input:focus + .team-search-container,
 .team-search-container:has(input:focus) {
   box-shadow: 0 0 10px var(--primary-color) !important;
@@ -176,9 +195,9 @@
 }
 
 .settings-btn-login {
-  background: #F9F9F9 !important;
+  background: #f9f9f9 !important;
   color: #000000 !important;
-  border: 0.5px solid #A8A8A8;
+  border: 0.5px solid #a8a8a8;
   border-radius: 8px !important;
   padding: 10px 20px !important;
   font-weight: 500 !important;
@@ -186,7 +205,6 @@
   margin-top: 18px !important;
   cursor: pointer;
   box-shadow: none !important;
-
 }
 
 .settings-btn-danger {
@@ -228,13 +246,12 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0,0,0,0.2);
+  background: rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 9999;
 }
-
 
 /* Forgot modal styling */
 .forgot-modal-backdrop {
@@ -243,7 +260,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0,0,0,0.3);
+  background: rgba(0, 0, 0, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -258,7 +275,7 @@
   min-width: 400px;
   max-width: 500px;
   position: relative;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
   animation: forgotModalSlideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -289,7 +306,7 @@
   display: block;
   padding-right: -3px !important;
 }
-.close-btn svg{
+.close-btn svg {
   display: block;
   padding-top: 2px !important;
 }
@@ -303,31 +320,34 @@
   }
 }
 
-
 /* Forgot modal animations */
 @keyframes forgotModalBackdropIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes forgotModalSlideIn {
-  0% { 
-    opacity: 0; 
-    transform: translateY(-50px) scale(0.9); 
+  0% {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.9);
   }
-  60% { 
-    opacity: 1; 
-    transform: translateY(10px) scale(1.02); 
+  60% {
+    opacity: 1;
+    transform: translateY(10px) scale(1.02);
   }
-  100% { 
-    opacity: 1; 
-    transform: translateY(0) scale(1); 
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
 /* Form styling for forgot modal */
 .forgot-modal-content h4 {
-  color: #DE3996;
+  color: #de3996;
   font-weight: 600;
   margin-bottom: 16px;
   font-size: 20px;
@@ -358,12 +378,12 @@
 
 .forgot-modal-content .form-control:focus {
   outline: none;
-  border-color: #DE3996;
+  border-color: #de3996;
   box-shadow: 0 0 0 3px rgba(222, 57, 150, 0.1);
 }
 
 .forgot-modal-content .btn {
-  background: #DE3996;
+  background: #de3996;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -386,7 +406,7 @@
 
 .forgot-modal-content .btn-link {
   background: none;
-  color: #DE3996;
+  color: #de3996;
   text-decoration: underline;
   border: none;
   cursor: pointer;
@@ -425,7 +445,7 @@
 }
 
 [data-theme='dark'] .forgot-modal-content .form-control:focus {
-  border-color: #DE3996;
+  border-color: #de3996;
 }
 
 [data-theme='dark'] .forgot-modal-content p {

@@ -53,6 +53,11 @@ const CardPayment = () => {
     window.location.href = '/platform/subscription';
   };
 
+  const handleTouchStart = (e) => {
+  e.preventDefault(); // Prevent default touch behavior
+  handleBack();
+};
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setShowSuccess(true);
@@ -108,6 +113,7 @@ const CardPayment = () => {
             <div className="card py-4 px-md-5 px-4" style={{ position: 'relative' }}>
               <button
                 onClick={handleBack}
+                onTouchStart={handleTouchStart}
                 aria-label="Go back"
                 style={{
                   position: 'absolute',
@@ -123,6 +129,16 @@ const CardPayment = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
+                  // Mobile-specific fixes
+                  touchAction: 'manipulation',
+                  WebkitTapHighlightColor: 'transparent',
+                  WebkitTouchCallout: 'none',
+                  WebkitUserSelect: 'none',
+                  userSelect: 'none',
+                  // Better touch target
+                  minWidth: '38px',
+                  minHeight: '38px',
+                  zIndex: 1000,
                 }}
               >
                 <FiArrowLeft size={18} />
@@ -161,7 +177,7 @@ const CardPayment = () => {
                 </div>
                 {/* Right: Form */}
                 <div className="col-12 col-md-6">
-                  <h5 className="mb-4 text-center font-weight-bold">Pay with card</h5>
+                  <h5 className="mb-4 text-center font-weight-bold mt-4 mt-md-2 mt-lg-0">Pay with card</h5>
                   <form onSubmit={handleSubmit} autoComplete="off">
                     <div className="form-group">
                       <label className="label-text">Email</label>
@@ -176,7 +192,7 @@ const CardPayment = () => {
                       <label className="label-text">Card information</label>
                       <div className="card-icons-group">
                         <input
-                          type="text"
+                          type="number"
                           className="form-control"
                           placeholder="1234 1234 1234 1234"
                           required

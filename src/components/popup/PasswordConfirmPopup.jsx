@@ -19,7 +19,7 @@ const PasswordConfirmPopup = ({ open, onClose, onConfirm, loading, error, label 
 
   return open ? (
     <div className={`login-popup-overlay${visible ? ' visible' : ''}`} onClick={onClose}>
-      <div className={`login-popup-content${visible ? ' visible' : ''}`} onClick={e => e.stopPropagation()} style={{ maxWidth: 380 }}>
+      <div className={`login-popup-content${visible ? ' visible' : ''}`} onClick={e => e.stopPropagation()} style={{ maxWidth: 380 , marginLeft : "10px" , marginRight : "10px"}}>
         <button className="close-btn" onClick={onClose}><FiX /></button>
         <div className="login-form-container" style={{ paddingTop: 8 }}>
           <div style={{ textAlign: 'center', marginBottom: 12 }}>

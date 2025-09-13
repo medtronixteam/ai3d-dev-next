@@ -1,0 +1,303 @@
+.profile-detail-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 110vh;
+  background-color: rgba(0, 0, 0, 0.2); /* halka sa dark shade */
+  backdrop-filter: blur(6px); /* blur effect */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+  overflow: hidden;
+  animation: overlay-fade-in 0.3s ease-out forwards;
+}
+
+@keyframes overlay-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.custom-modal-dialog {
+  width: 90%;
+  max-width: 1200px;
+  max-height: 90vh;
+}
+
+.custom-modal-content {
+  height: 80vh;
+  overflow: hidden;
+  border-radius: 0px;
+  border: none;
+  padding: 15px;
+}
+
+.custom-modal-body {
+  max-height: 78vh;
+  overflow-y: auto;
+  padding-bottom: 2rem;
+  scrollbar-width: none;
+}
+
+.parent-modal-content {
+  padding: 3.25rem;
+  background: linear-gradient(90deg, #e1e1ff, #fccadb, #e1e1ff);
+  background-size: 300% 300%;
+  animation: gradientMove 8s ease infinite;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  outline: 0;
+}
+
+.custom-modal-content {
+  background-color: white;
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Close button on left */
+.close-left {
+  background: #de3996 !important;
+  color: #fff !important;
+  border-radius: 50% !important;
+  border: 2px solid #dddddd !important;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+  height: 40px !important;
+  width: 40px !important;
+  font-size: 1rem !important;
+  cursor: pointer !important;
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+}
+
+.profile-detail-modal {
+  margin-top: -50px;
+  scrollbar-width: none;
+}
+
+/* Container for profile + border + quote */
+.styled-img-container {
+  position: relative !important;
+  display: inline-block !important;
+  width: 100% !important;
+}
+
+/* Main profile image */
+.styled-img-container img.profile-img {
+  width: 90% !important;
+  height: 90% !important;
+  display: block !important;
+  border-radius: 0 !important;
+  position: relative !important;
+  z-index: 2 !important;
+  margin: 0 auto;
+}
+
+/* Quotation icon */
+.styled-img-container img.quote-img {
+  position: absolute !important;
+  top: -50px !important;
+  left: -20px !important;
+  width: 80px !important;
+  height: auto !important;
+  z-index: 3 !important;
+}
+
+/* Linkedin button color */
+.btn-linkedin {
+  width: 100% !important;
+  background: #de3996 !important;
+  border: 1px solid #de3996 !important;
+  color: white !important;
+}
+
+ul.custom-list {
+  list-style: none !important;
+  padding-left: 0 !important;
+}
+
+ul.custom-list li {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-bottom: 6px !important;
+  font-family: DM Sans !important;
+  font-weight: 500 !important;
+  font-style: Medium !important;
+  line-height: 24px !important;
+  letter-spacing: 0% !important;
+  font-size: 15px !important;
+}
+
+ul.custom-list li img {
+  width: 18px !important;
+  height: auto !important;
+}
+
+.profile-detail-modal .text-title,
+.profile-detail-modal .text-para {
+  font-family: DM Sans !important;
+  font-weight: 700 !important;
+  font-style: Bold !important;
+  line-height: 24px !important;
+  letter-spacing: 0% !important;
+}
+
+.profile-detail-modal .discription {
+  font-family: DM Sans !important;
+  font-weight: 500 !important;
+  font-style: Medium !important;
+  line-height: 24px !important;
+  letter-spacing: 0% !important;
+  font-size: 15px !important;
+}
+
+@media (max-width: 1200px) {
+  .styled-img-container img.profile-img {
+    width: 100% !important;
+    height: 100% !important;
+    margin-top: -15px;
+  }
+  .styled-img-container img.quote-img {
+    left: -25px !important;
+    width: 70px !important;
+    top: -55px !important;
+  }
+  .profile-detail-modal .text-title {
+    font-size: 1.5rem !important;
+    margin-top: -15px;
+  }
+  .profile-detail-modal .text-para {
+    font-size: 1.2rem !important;
+  }
+  .profile-detail-modal .discription {
+    font-size: 15px !important;
+  }
+  ul.custom-list li {
+    font-size: 15px !important;
+  }
+}
+
+@media (max-width: 914px) {
+  .parent-modal-content {
+    padding: 3rem !important;
+  }
+
+  .close-left {
+    height: 32px !important;
+    width: 32px !important;
+    font-size: 0.75rem !important;
+    top: 15px;
+    left: 15px;
+    z-index: 2;
+  }
+
+  .profile-detail-modal .text-title {
+    margin-top: 1rem;
+    font-size: 1.6rem !important;
+  }
+  .profile-detail-modal .text-para {
+    font-size: 1.25rem !important;
+  }
+  .profile-detail-modal .discription {
+    font-size: 1rem !important;
+  }
+  ul.custom-list li {
+    font-size: 1rem !important;
+  }
+  .profile-detail-modal {
+    margin-top: 0px;
+  }
+}
+
+@media (max-width: 540px) {
+  .profile-detail-modal .text-title {
+    margin-top: 1rem;
+    font-size: 1.25rem !important;
+  }
+  .profile-detail-modal .text-para {
+    font-size: 0.85rem !important;
+  }
+  .profile-detail-modal .discription {
+    font-size: 12px !important;
+  }
+  ul.custom-list li {
+    font-size: 12px !important;
+  }
+  .profile-detail-modal {
+    margin-top: 0px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .styled-img-container img.profile-img {
+    width: 90% !important;
+    height: 90% !important;
+    margin-top: -15px;
+  }
+  .styled-img-container img.quote-img {
+    left: 0px !important;
+    width: 70px !important;
+    top: -55px !important;
+  }
+  .profile-detail-modal {
+    margin-top: 0px;
+  }
+}
+
+@media (max-width: 500px) {
+  .styled-img-container img.profile-img {
+    width: 90% !important;
+    height: 90% !important;
+    margin-top: -15px;
+  }
+
+  /* Quotation icon */
+  .styled-img-container img.quote-img {
+    left: 0px !important;
+    width: 50px !important;
+    top: -45px !important;
+  }
+  .profile-detail-modal {
+    margin-top: 0px;
+  }
+}
+
+@media (max-width: 600px) {
+  .parent-modal-content {
+    padding: 2rem !important;
+  }
+
+  .close-left {
+    background: #de3996 !important;
+    color: white !important;
+    border-radius: 50% !important;
+    border: none !important;
+    height: 28px !important;
+    width: 28px !important;
+    font-size: 0.75rem !important;
+    cursor: pointer !important;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    z-index: 2;
+  }
+}

@@ -139,7 +139,8 @@ const Profile = () => {
   const [shareUrl, setShareUrl] = useState('');
 
   useEffect(() => {
-    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://app.ai3dscanning.com';
+    const origin =
+      typeof window !== 'undefined' ? window.location.origin : 'https://app.ai3dscanning.com';
     setShareUrl(`${origin}/profile/share-demo`);
   }, []);
 
@@ -251,11 +252,11 @@ const Profile = () => {
   if (user.avatar) {
     profileImg = user.avatar.startsWith('http')
       ? user.avatar
-      : `https://dev-backend.ai3dscanning.com/storage/${user.avatar.replace(/^\//, '')}`;
+      : `https://app.ai3dscanning.com/storage/${user.avatar.replace(/^\//, '')}`;
   } else if (user.image) {
     profileImg = user.image.startsWith('http')
       ? user.image
-      : `https://dev-backend.ai3dscanning.com/storage/${user.image.replace(/^\//, '')}`;
+      : `https://app.ai3dscanning.com/storage/${user.image.replace(/^\//, '')}`;
   }
 
   return (
@@ -331,9 +332,9 @@ const Profile = () => {
             margin: 0 8px !important;
           }
           
-          .navbar-icon-btn {
-            flex-shrink: 0 !important;
-          }
+          // .navbar-icon-btn {
+          //   flex-shrink: 0 !important;
+          // }
         }
         
         /* Dark mode for menu button */
@@ -366,11 +367,11 @@ const Profile = () => {
             font-size: 18px !important;
           }
           
-          .navbar-icon-btn {
-            width: 40px !important;
-            height: 40px !important;
-            font-size: 18px !important;
-          }
+          // .navbar-icon-btn {
+          //   width: 40px !important;
+          //   height: 40px !important;
+          //   font-size: 18px !important;
+          // }
         }
         
         @media (max-width: 600px) {
@@ -389,11 +390,11 @@ const Profile = () => {
             font-size: 16px !important;
           }
           
-          .navbar-icon-btn {
-            width: 38px !important;
-            height: 38px !important;
-            font-size: 18px !important;
-          }
+          // .navbar-icon-btn {
+          //   width: 38px !important;
+          //   height: 38px !important;
+          //   font-size: 18px !important;
+          // }
         }
         
         @media (max-width: 480px) {
@@ -412,11 +413,11 @@ const Profile = () => {
             font-size: 15px !important;
           }
           
-          .navbar-icon-btn {
-            width: 36px !important;
-            height: 36px !important;
-            font-size: 18px !important;
-          }
+          // .navbar-icon-btn {
+          //   width: 36px !important;
+          //   height: 36px !important;
+          //   font-size: 18px !important;
+          // }
         }
         
         .profile-sidebar-toggle svg {
@@ -429,19 +430,175 @@ const Profile = () => {
         }
         
         /* Ensure notification dropdown is properly positioned on mobile */
-        @media (max-width: 768px) {
-          .notif-dropdown {
-            position: fixed !important;
-            top: 31% !important;
-            left: 50% !important;
-            transform: translate(-50%, -50%) !important;
-            margin-top: 0 !important;
-            width: 90vw !important;
-            max-width: 90vw !important;
-            min-width: 90vw !important;
-            z-index: 1001 !important;
-          }
-        }
+      //   @media (max-width: 768px) {
+      //     .notif-dropdown {
+      //       position: fixed !important;
+      //       top: 30% ;
+      //       left: 50% ;
+      //       transform: translate(-50%, -50%) ;
+      //       margin-top: 0 !important;
+      //       width: 90vw !important;
+      //       max-width: 90vw !important;
+      //       min-width: 90vw !important;
+      //       z-index: 1001 !important;
+      //     }
+      // }
+
+      //     @media (max-width: 600px) {
+      //     .notif-dropdown {
+      //       position: fixed !important;
+      //       top: 20% ;
+      //       left: 50% !important;
+      //       transform: translate(-50%, -50%) !important;
+      //       margin-top: 0 !important;
+      //       width: 90vw !important;
+      //       max-width: 90vw !important;
+      //       min-width: 90vw !important;
+      //       z-index: 1001 !important;
+      //     }
+      //   }
+
+      //   @media (max-width: 540px) {
+      //     .notif-dropdown {
+      //       position: fixed !important;
+      //       top: 18% ;
+      //       left: 50% !important;
+      //       transform: translate(-50%, -50%) !important;
+      //       margin-top: 0 !important;
+      //       width: 90vw !important;
+      //       max-width: 90vw !important;
+      //       min-width: 90vw !important;
+      //       z-index: 1001 !important;
+      //     }
+      //   }
+
+      //    @media (max-width: 450px) {
+      //     .notif-dropdown {
+      //       position: fixed !important;
+      //       top: 14% ;
+      //       left: 50% !important;
+      //       transform: translate(-50%, -50%) !important;
+      //       margin-top: 0 !important;
+      //       width: 90vw !important;
+      //       max-width: 90vw !important;
+      //       min-width: 90vw !important;
+      //       z-index: 1001 !important;
+      //     }
+      // }
+
+      // @media (max-width: 426px) {
+      //     .notif-dropdown {
+      //       position: fixed !important;
+      //       top: 26%;
+      //       left: 50% !important;
+      //       transform: translate(-50%, -50%) !important;
+      //       margin-top: 0 !important;
+      //       width: 90vw !important;
+      //       max-width: 90vw !important;
+      //       min-width: 90vw !important;
+      //       z-index: 1001 !important;
+      //     }
+      // }
+
+      // @media (max-width: 420px) {
+      //     .notif-dropdown {
+      //       position: fixed !important;
+      //       top: 14%;
+      //       left: 50% !important;
+      //       transform: translate(-50%, -50%) !important;
+      //       margin-top: 0 !important;
+      //       width: 90vw !important;
+      //       max-width: 90vw !important;
+      //       min-width: 90vw !important;
+      //       z-index: 1001 !important;
+      //     }
+      // }
+
+      //    @media (max-width: 390px) {
+      //     .notif-dropdown {
+      //       position: fixed !important;
+      //       top: 15% ;
+      //       left: 50% !important;
+      //       transform: translate(-50%, -50%) !important;
+      //       margin-top: 0 !important;
+      //       width: 90vw !important;
+      //       max-width: 90vw !important;
+      //       min-width: 90vw !important;
+      //       z-index: 1001 !important;
+      //     }
+      // }
+
+      // @media (max-width: 380px) {
+      //     .notif-dropdown {
+      //       position: fixed !important;
+      //       top: 26% ;
+      //       left: 50% !important;
+      //       transform: translate(-50%, -50%) !important;
+      //       margin-top: 0 !important;
+      //       width: 90vw !important;
+      //       max-width: 90vw !important;
+      //       min-width: 90vw !important;
+      //       z-index: 1001 !important;
+      //     }
+      // }
+
+      // @media (max-width: 360px) {
+      //     .notif-dropdown {
+      //       position: fixed !important;
+      //       top: 17% ;
+      //       left: 50% !important;
+      //       transform: translate(-50%, -50%) !important;
+      //       margin-top: 0 !important;
+      //       width: 90vw !important;
+      //       max-width: 90vw !important;
+      //       min-width: 90vw !important;
+      //       z-index: 1001 !important;
+      //     }
+      // }
+
+      // @media (max-width: 350px) {
+      //     .notif-dropdown {
+      //       position: fixed !important;
+      //       top: 14% ;
+      //       left: 50% !important;
+      //       transform: translate(-50%, -50%) !important;
+      //       margin-top: 0 !important;
+      //       width: 90vw !important;
+      //       max-width: 90vw !important;
+      //       min-width: 90vw !important;
+      //       z-index: 1001 !important;
+      //     }
+      // }
+
+      // @media (max-width: 345px) {
+      //     .notif-dropdown {
+      //       position: fixed !important;
+      //       top: 15%;
+      //       left: 50% !important;
+      //       transform: translate(-50%, -50%) !important;
+      //       margin-top: 0 !important;
+      //       width: 90vw !important;
+      //       max-width: 90vw !important;
+      //       min-width: 90vw !important;
+      //       z-index: 1001 !important;
+      //     }
+      // }
+
+      // @media (max-width: 340px) {
+      //     .notif-dropdown {
+      //       position: fixed !important;
+      //       top: 26% ;
+      //       left: 50% !important;
+      //       transform: translate(-50%, -50%) !important;
+      //       margin-top: 0 !important;
+      //       width: 90vw !important;
+      //       max-width: 90vw !important;
+      //       min-width: 90vw !important;
+      //       z-index: 1001 !important;
+      //     }
+      // }
+
+
       `}</style>
 
       {/* Search and Notification Header */}
@@ -453,7 +610,10 @@ const Profile = () => {
             onClose={() => setShowEditModal(false)}
             user={user}
             setUser={setUser}
-            onChangePassword={() => { closeAllModals(); setShowChangePassword(true); }}
+            onChangePassword={() => {
+              closeAllModals();
+              setShowChangePassword(true);
+            }}
             onSuccess={() => {
               closeAllModals();
               setShowSuccess(true);
@@ -519,29 +679,31 @@ const Profile = () => {
       {showShareModal && (
         <div className="share-modal-backdrop" onClick={() => setShowShareModal(false)}>
           <div className="share-modal" onClick={(e) => e.stopPropagation()}>
-         <button
-  className="share-close"
-  onClick={() => setShowShareModal(false)}
-  aria-label="Close"
->
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="white"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <line x1="18" y1="6" x2="6" y2="18" />
-    <line x1="6" y1="6" x2="18" y2="18" />
-  </svg>
-</button>
+            <button
+              className="share-close"
+              onClick={() => setShowShareModal(false)}
+              aria-label="Close"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="white"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
 
             <h3 className="share-title">Share your profile</h3>
-            <p className="share-subtitle">Copy the secure link below to quickly share your profile with teammates or clients. </p>
+            <p className="share-subtitle">
+              Copy the secure link below to quickly share your profile with teammates or clients.{' '}
+            </p>
             <div className="share-input-row">
               <input className="share-input" type="text" readOnly value={shareUrl} />
               <button className="share-copy-btn" onClick={copyShareUrl} aria-label="Copy">
@@ -717,143 +879,137 @@ const Profile = () => {
             </div>
 
             {/* Notification Icon */}
-            <div style={{ position: 'relative', display: 'inline-block' }} ref={notifBtnRef}>
-              <button
-                className="navbar-icon-btn notification-btn"
-                onClick={() => setNotifOpen((o) => !o)}
-                aria-label="Show notifications"
-                style={{ position: 'relative' }}
-              >
-                <FiBell />
-                {unreadCount > 0 && (
-                  <span
-                    style={{
-                      position: 'absolute',
-                      top: 7,
-                      right: 7,
-                      width: 10,
-                      height: 10,
-                      borderRadius: '50%',
-                      background: 'rgb(255, 214, 0)',
-                      border: '2.5px solid rgb(255, 214, 0)',
-                      display: 'block',
-                      zIndex: 2,
-                      animation: 'notif-dot-pop 0.5s cubic-bezier(.4,1.7,.6,1)',
-                    }}
-                  />
-                )}
-              </button>
-
-              {/* Notification Dropdown */}
-              {notifOpen && (
-                <div className="notif-dropdown">
-                  <div className="notif-dropdown-header">
-                    <span>Notifications</span>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      {unreadCount > 0 && (
-                        <button
-                          className="notif-mark-all-btn"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            markAllAsRead();
-                          }}
-                          disabled={markAllLoading}
-                          style={{
-                            background: 'none',
-                            color: 'black',
-                            textDecoration: 'underline',
-                            borderRadius: 'none',
-                            boxShadow: 'none',
-                            fontWeight: '700',
-                            fontSize: '12px',
-                            padding: '6px 10px',
-                            cursor: markAllLoading ? 'not-allowed' : 'pointer',
-                            transition: 'background 0.2s, color 0.2s',
-                            minWidth: '0',
-                            minHeight: '0',
-                            lineHeight: '1',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '4px',
-                          }}
-                        >
-                          {markAllLoading ? (
-                            <>
-                              <div
-                                className="loading-spinner"
-                                style={{
-                                  width: '10px',
-                                  height: '10px',
-                                  border: '2px solid #fff',
-                                  borderTop: '2px solid transparent',
-                                }}
-                              ></div>
-                              Marking...
-                            </>
-                          ) : (
-                            'Mark all as read'
-                          )}
-                        </button>
+            {token && (
+              <div style={{ position: 'relative', display: 'inline-block' }} ref={notifBtnRef}>
+                <button
+                  className="navbar-icon-btn notification-btn"
+                  onClick={() => setNotifOpen((o) => !o)}
+                  aria-label="Show notifications"
+                  style={{ position: 'relative' }}
+                >
+                  <FiBell />
+                  {unreadCount > 0 && (
+                    <span
+                      style={{
+                        position: 'absolute',
+                        top: 7,
+                        right: 7,
+                        width: 10,
+                        height: 10,
+                        borderRadius: '50%',
+                        background: 'rgb(255, 214, 0)',
+                        border: '2.5px solid rgb(255, 214, 0)',
+                        display: 'block',
+                        zIndex: 2,
+                        animation: 'notif-dot-pop 0.5s cubic-bezier(.4,1.7,.6,1)',
+                      }}
+                    />
+                  )}
+                </button>
+                {notifOpen && (
+                  <div className="notif-dropdown">
+                    <div className="notif-dropdown-header">
+                      <span>Notifications</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        {unreadCount > 0 && (
+                          <button
+                            className="notif-mark-all-btn"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              markAllAsRead();
+                            }}
+                            disabled={markAllLoading}
+                            style={{
+                              background: 'none',
+                              color: 'black',
+                              // borderBottom: '1px solid black',
+                              textDecoration: 'underline',
+                              borderRadius: 'none',
+                              boxShadow: 'none',
+                              fontWeight: '700',
+                              fontSize: '12px',
+                              padding: '6px 10px',
+                              cursor: markAllLoading ? 'not-allowed' : 'pointer',
+                              transition: 'background 0.2s, color 0.2s',
+                              minWidth: '0',
+                              minHeight: '0',
+                              lineHeight: '1',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                            }}
+                          >
+                            {markAllLoading ? (
+                              <>
+                                <div
+                                  className="loading-spinner"
+                                  style={{
+                                    width: '10px',
+                                    height: '10px',
+                                    border: '2px solid #fff',
+                                    borderTop: '2px solid transparent',
+                                  }}
+                                ></div>
+                                Marking...
+                              </>
+                            ) : (
+                              'Mark all as read'
+                            )}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    {/* <div style={{ 
+                              fontSize: '11px', 
+                              color: '#888', 
+                              padding: '8px 16px', 
+                              borderBottom: '1px solid #f3e6f3',
+                              fontStyle: 'italic'
+                            }}>
+                              Click to toggle read/unread status
+                            </div> */}
+                    <div className="notif-dropdown-list">
+                      {notifications && notifications.length > 0 ? (
+                        notifications.map((notif, idx) => {
+                          const isToggling = togglingNotifications.has(notif.id);
+                          return (
+                            <div
+                              key={notif.id || idx}
+                              className={`notif-item${notif.read_at ? ' read' : ' unread'}${isToggling ? ' toggling' : ''}`}
+                              onClick={() => !isToggling && toggleNotificationRead(notif.id)}
+                              style={{ cursor: isToggling ? 'not-allowed' : 'pointer' }}
+                            >
+                              {/* Dot, Tick, or Loading icon */}
+                              {isToggling ? (
+                                <span className="notif-status-icon notif-loading">
+                                  <div className="loading-spinner"></div>
+                                </span>
+                              ) : notif.read_at ? (
+                                <span className="notif-status-icon notif-tick">
+                                  <FiCheck />
+                                </span>
+                              ) : (
+                                <span className="notif-status-icon notif-dot"></span>
+                              )}
+                              <div className="notif-message">
+                                {notif.data?.message ||
+                                  notif.message ||
+                                  notif.text ||
+                                  notif.title ||
+                                  'New notification'}
+                              </div>
+                            </div>
+                          );
+                        })
+                      ) : (
+                        <div className="notif-empty">No notifications</div>
                       )}
                     </div>
                   </div>
-                  <div className="notif-dropdown-list">
-                    {notifications && notifications.length > 0 ? (
-                      notifications.map((notif, idx) => {
-                        const isToggling = togglingNotifications.has(notif.id);
-                        return (
-                          <div
-                            key={notif.id || idx}
-                            className={`notif-item${notif.read_at ? ' read' : ' unread'}${isToggling ? ' toggling' : ''}`}
-                            onClick={() => !isToggling && toggleNotificationRead(notif.id)}
-                            style={{ cursor: isToggling ? 'not-allowed' : 'pointer' }}
-                          >
-                            {/* Dot, Tick, or Loading icon */}
-                            {isToggling ? (
-                              <span className="notif-status-icon notif-loading">
-                                <div className="loading-spinner"></div>
-                              </span>
-                            ) : notif.read_at ? (
-                              <span className="notif-status-icon notif-tick">
-                                <FiCheck />
-                              </span>
-                            ) : (
-                              <span className="notif-status-icon notif-dot"></span>
-                            )}
-                            <div className="notif-message">
-                              {notif.data?.message ||
-                                notif.message ||
-                                notif.text ||
-                                notif.title ||
-                                'New notification'}
-                            </div>
-                          </div>
-                        );
-                      })
-                    ) : (
-                      <div className="notif-empty">No notifications</div>
-                    )}
-                  </div>
-                </div>
-              )}
-              <style>{`
-            @keyframes notif-dot-pop {
-              0% { transform: scale(0.2); opacity: 0; }
-              60% { transform: scale(1.2); opacity: 1; }
-              100% { transform: scale(1); opacity: 1; }
-            }
-            @keyframes notif-dropdown-in {
-              0% { opacity: 0; transform: translateY(-18px) scale(0.95) rotateX(18deg); }
-              60% { opacity: 1; transform: translateY(6px) scale(1.04) rotateX(-6deg); }
-              100% { opacity: 1; transform: translateY(0) scale(1) rotateX(0deg); }
-            }
-            @keyframes notif-item-in {
-              0% { opacity: 0; transform: translateY(18px) scale(0.95); }
-              60% { opacity: 1; transform: translateY(-2px) scale(1.04); }
-              100% { opacity: 1; transform: translateY(0) scale(1); }
-            }
-          `}</style>
-            </div>
+                )}
+              </div>
+            )}
+
           </div>
         </div>
 
@@ -940,7 +1096,10 @@ const Profile = () => {
                 alignItems: 'center',
                 gap: 8,
               }}
-              onClick={() => { closeAllModals(); setShowEditModal(true); }}
+              onClick={() => {
+                closeAllModals();
+                setShowEditModal(true);
+              }}
             >
               <span className="btn-label">Edit Profile</span> <FiArrowRight color="#ffffff" />
             </button>
@@ -1032,8 +1191,7 @@ const Profile = () => {
         </div> */}
         {/* Logout Button - Bottom Right */}
         <button
-         className="profile-logout-btn "
-
+          className="profile-logout-btn "
           onClick={handleLogout}
           style={{
             // marginLeft: 'auto',
@@ -1237,47 +1395,44 @@ const EditProfileModal = ({ onClose, user, setUser, onChangePassword, onSuccess 
       `}</style>
       <div className="edit-modal-backdrop">
         <div className="edit-modal">
- <button
-  onClick={onClose}
-  style={{
-    position: 'absolute',
-    top: window.innerWidth <= 768 ? '22px' : '42px', 
-    right: '37px',
-    background: '#DE3996',
-    color: '#fff',
-    border: 'none',
-    cursor: 'pointer',
-    width: '35px', // Updated button size
-    height: '35px', // Updated button size
-    borderRadius: '50%', // Perfect circle
-    display: 'flex', // Flexbox for perfect centering
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 0, // No extra padding
-    transition: 'all 0.3s ease',
-  }}
->
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="16" // Adjusted SVG size for 35x35 button
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="white"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    style={{
-      display: 'block', // Removes any inline space
-    }}
-  >
-    <line x1="18" y1="6" x2="6" y2="18" />
-    <line x1="6" y1="6" x2="18" y2="18" />
-  </svg>
-</button>
-
-
-
+          <button
+            onClick={onClose}
+            style={{
+              position: 'absolute',
+              top: window.innerWidth <= 768 ? '22px' : '42px',
+              right: '37px',
+              background: '#DE3996',
+              color: '#fff',
+              border: 'none',
+              cursor: 'pointer',
+              width: '35px', // Updated button size
+              height: '35px', // Updated button size
+              borderRadius: '50%', // Perfect circle
+              display: 'flex', // Flexbox for perfect centering
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: 0, // No extra padding
+              transition: 'all 0.3s ease',
+            }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16" // Adjusted SVG size for 35x35 button
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{
+                display: 'block', // Removes any inline space
+              }}
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
 
           <h2>Edit Profile</h2>
           {/* Error box at top */}
@@ -1308,7 +1463,7 @@ const EditProfileModal = ({ onClose, user, setUser, onChangePassword, onSuccess 
                 src={
                   imgUrl.startsWith('http')
                     ? imgUrl
-                    : `https://dev-backend.ai3dscanning.com/storage/${imgUrl.replace(/^\//, '')}`
+                    : `https://app.ai3dscanning.com/storage/${imgUrl.replace(/^\//, '')}`
                 }
                 alt="Profile"
               />
@@ -1594,19 +1749,7 @@ const ChangePasswordModal = ({ onClose, onSuccess, onForgotPassword }) => {
     <>
       <style>{keyframes}</style>
       <div style={modalBackdrop}>
-        <div
-          className="change-password-modal"
-          style={{
-            backgroundColor: '#fff',
-            borderRadius: 16,
-            padding: 40,
-            minWidth: 400,
-            maxWidth: 520,
-            minHeight: 340,
-            position: 'relative',
-            ...modalAnim,
-          }}
-        >
+        <div className="change-password-modal">
           {/* <button onClick={onClose} style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', fontSize: 22, cursor: 'pointer' }}>&times;</button> */}
           <h3 style={{ fontWeight: 600, fontSize: 24, marginBottom: 28 }}>Change Your Password</h3>
           <div style={{ marginBottom: 20 }}>
@@ -1659,7 +1802,7 @@ const ChangePasswordModal = ({ onClose, onSuccess, onForgotPassword }) => {
                 maxLength={30}
               />
               <span className="password-eye" onClick={() => setShowNew((s) => !s)}>
-                {showNew ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                {showNew ? <FiEyeOff size={18} /> : <FiEye size={18} />}
               </span>
             </div>
           </div>
@@ -1746,7 +1889,9 @@ const ForgotPasswordModal = ({ onClose }) => {
     return () => clearInterval(timer);
   }, [step, otpTimer]);
 
-  useEffect(() => { if (step === 2) setOtpTimer(120); }, [step]);
+  useEffect(() => {
+    if (step === 2) setOtpTimer(120);
+  }, [step]);
 
   const handleOtpChange = (index, value) => {
     if (value.length <= 1) {
@@ -1769,7 +1914,9 @@ const ForgotPasswordModal = ({ onClose }) => {
       setStep(2);
     } catch (err) {
       setError(err?.response?.data?.message || 'Failed to send OTP');
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   };
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
@@ -1785,7 +1932,9 @@ const ForgotPasswordModal = ({ onClose }) => {
       setStep(3);
     } catch (err) {
       setError(err?.response?.data?.message || 'Invalid OTP');
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   };
   const handleResendOtp = async () => {
     setLoading(true);
@@ -1796,7 +1945,9 @@ const ForgotPasswordModal = ({ onClose }) => {
       setOtp(['', '', '', '', '', '']);
     } catch (err) {
       setError(err?.response?.data?.message || 'Failed to resend OTP');
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   };
   const handleResetPassword = async (e) => {
     e.preventDefault();
@@ -1811,100 +1962,228 @@ const ForgotPasswordModal = ({ onClose }) => {
       setStep(4);
     } catch (err) {
       setError(err?.response?.data?.message || 'Failed to reset password');
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
-    
       <div className="forgot-modal-backdrop">
         <div className="forgot-modal-content">
           <button className="forgot-modal-close" onClick={onClose}>
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="white"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <line x1="18" y1="6" x2="6" y2="18" />
-    <line x1="6" y1="6" x2="18" y2="18" />
-  </svg>
-</button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
 
-        {step === 1 && (
-          <form onSubmit={handleSendOtp}>
-            <h4 className="mb-3" style={{ color: themeColor }}>Forget Password</h4>
-            <p className="mb-3">Enter your email to receive an OTP.</p>
-            <div className="mb-3">
-              <label className="form-label">Email address</label>
-              <input type="email" className="form-control" placeholder="Enter your email" required value={email} onChange={(e) => setEmail(e.target.value)} />
-            </div>
-            {error && <div style={{ color: '#DE3996', marginBottom: 14, fontWeight: 500 }}>{error}</div>}
+          {step === 1 && (
+            <form onSubmit={handleSendOtp}>
+              <h4 className="mb-3" style={{ color: themeColor }}>
+                Forget Password
+              </h4>
+              <p className="mb-3">Enter your email to receive an OTP.</p>
+              <div className="mb-3">
+                <label className="form-label">Email address</label>
+                <input
+                  type="email"
+                  className="form-control"
+                  placeholder="Enter your email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              {error && (
+                <div style={{ color: '#DE3996', marginBottom: 14, fontWeight: 500 }}>{error}</div>
+              )}
+              <div className="text-center">
+                <button
+                  className="btn"
+                  style={{ background: themeColor, color: '#fff', width: 150, padding: '10px 0' }}
+                  disabled={loading}
+                >
+                  {loading ? 'Sending OTP...' : 'Send OTP'}
+                </button>
+              </div>
+            </form>
+          )}
+          {step === 2 && (
+            <form onSubmit={handleVerifyOtp}>
+              <h4 className="mb-3" style={{ color: themeColor }}>
+                Verify OTP
+              </h4>
+              <p className="mb-3">Enter the OTP sent to your email.</p>
+              <div className="mb-3">
+                <label className="form-label">OTP</label>
+                <div style={{ display: 'flex', gap: 8, justifyContent: 'space-between' }}>
+                  {otp.map((digit, index) => (
+                    <input
+                      key={index}
+                      ref={(el) => (otpRefs.current[index] = el)}
+                      type="text"
+                      className="form-control"
+                      style={{ width: 45, height: 45, textAlign: 'center', fontSize: 18 }}
+                      maxLength={1}
+                      value={digit}
+                      onChange={(e) => handleOtpChange(index, e.target.value)}
+                      onKeyDown={(e) => handleOtpKeyDown(index, e)}
+                      onFocus={(e) => e.target.select()}
+                    />
+                  ))}
+                </div>
+              </div>
+              <div className="mb-2" style={{ textAlign: 'center', color: '#888', fontSize: 15 }}>
+                {otpTimer > 0
+                  ? `Resend available in ${Math.floor(otpTimer / 60)}:${(otpTimer % 60).toString().padStart(2, '0')}`
+                  : ''}
+              </div>
+              {error && (
+                <div
+                  style={{
+                    color: '#DE3996',
+                    marginBottom: 14,
+                    fontWeight: 500,
+                    textAlign: 'center',
+                  }}
+                >
+                  {error}
+                </div>
+              )}
+              <div className="text-center mb-2">
+                <button
+                  className="btn mb-2"
+                  style={{ background: themeColor, color: '#fff', width: 150, padding: '10px 0' }}
+                  disabled={loading}
+                >
+                  {loading ? 'Verifying...' : 'Verify OTP'}
+                </button>
+              </div>
+              <div className="text-center">
+                <button
+                  type="button"
+                  className="btn btn-link"
+                  style={{ color: themeColor, width: 150, padding: '10px 0' }}
+                  onClick={handleResendOtp}
+                  disabled={loading || otpTimer > 0}
+                >
+                  Resend OTP
+                </button>
+              </div>
+            </form>
+          )}
+          {step === 3 && (
+            <form onSubmit={handleResetPassword}>
+              <h4 className="mb-3" style={{ color: themeColor }}>
+                Reset Password
+              </h4>
+              <div className="mb-3">
+                <label className="form-label">New Password</label>
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    className="form-control"
+                    placeholder="New password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    maxLength={30}
+                  />
+                  <span
+                    style={{
+                      position: 'absolute',
+                      right: 12,
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => setShowPassword((s) => !s)}
+                  >
+                    {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                  </span>
+                </div>
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Confirm Password</label>
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type={showCPassword ? 'text' : 'password'}
+                    className="form-control"
+                    placeholder="Confirm new password"
+                    required
+                    value={cPassword}
+                    onChange={(e) => setCPassword(e.target.value)}
+                    maxLength={30}
+                  />
+                  <span
+                    style={{
+                      position: 'absolute',
+                      right: 12,
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => setShowCPassword((s) => !s)}
+                  >
+                    {showCPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                  </span>
+                </div>
+              </div>
+              {error && (
+                <div style={{ color: '#DE3996', marginBottom: 14, fontWeight: 500 }}>{error}</div>
+              )}
+              <div className="text-center">
+                <button
+                  className="btn"
+                  style={{ background: themeColor, color: '#fff', width: 150, padding: '10px 0' }}
+                  disabled={loading}
+                >
+                  {loading ? 'Resetting...' : 'Reset Password'}
+                </button>
+              </div>
+            </form>
+          )}
+          {step === 4 && (
             <div className="text-center">
-              <button className="btn" style={{ background: themeColor, color: '#fff', width: 150, padding: '10px 0' }} disabled={loading}>{loading ? 'Sending OTP...' : 'Send OTP'}</button>
-            </div>
-          </form>
-        )}
-        {step === 2 && (
-          <form onSubmit={handleVerifyOtp}>
-            <h4 className="mb-3" style={{ color: themeColor }}>Verify OTP</h4>
-            <p className="mb-3">Enter the OTP sent to your email.</p>
-            <div className="mb-3">
-              <label className="form-label">OTP</label>
-              <div style={{ display: 'flex', gap: 8, justifyContent: 'space-between' }}>
-                {otp.map((digit, index) => (
-                  <input key={index} ref={(el) => (otpRefs.current[index] = el)} type="text" className="form-control" style={{ width: 42, height: 42, textAlign: 'center', fontSize: 18 }} maxLength={1} value={digit} onChange={(e) => handleOtpChange(index, e.target.value)} onKeyDown={(e) => handleOtpKeyDown(index, e)} onFocus={(e) => e.target.select()} />
-                ))}
+              <img
+                src={SuccessImg}
+                alt="Success"
+                style={{
+                  width: 127,
+                  height: 120,
+                  objectFit: 'cover',
+                  margin: '0 auto 20px',
+                  display: 'block',
+                }}
+              />
+              <h4 className="mb-3" style={{ color: themeColor, fontWeight: 'bold' }}>
+                Password Changed Successfully!
+              </h4>
+              <p className="mb-4" style={{ color: '#666', fontSize: 14, lineHeight: 1.5 }}>
+                Your password has been changed successfully.
+              </p>
+              <div className="text-center">
+                <button
+                  className="btn"
+                  style={{ background: themeColor, color: '#fff', width: 150, padding: '10px 0' }}
+                  onClick={onClose}
+                >
+                  Close
+                </button>
               </div>
             </div>
-            <div className="mb-2" style={{ textAlign: 'center', color: '#888', fontSize: 15 }}>
-              {otpTimer > 0 ? `Resend available in ${Math.floor(otpTimer / 60)}:${(otpTimer % 60).toString().padStart(2, '0')}` : ''}
-            </div>
-            {error && <div style={{ color: '#DE3996', marginBottom: 14, fontWeight: 500, textAlign: 'center' }}>{error}</div>}
-            <div className="text-center mb-2">
-              <button className="btn mb-2" style={{ background: themeColor, color: '#fff', width: 150, padding: '10px 0' }} disabled={loading}>{loading ? 'Verifying...' : 'Verify OTP'}</button>
-            </div>
-            <div className="text-center">
-              <button type="button" className="btn btn-link" style={{ color: themeColor, width: 150, padding: '10px 0' }} onClick={handleResendOtp} disabled={loading || otpTimer > 0}>Resend OTP</button>
-            </div>
-          </form>
-        )}
-        {step === 3 && (
-          <form onSubmit={handleResetPassword}>
-            <h4 className="mb-3" style={{ color: themeColor }}>Reset Password</h4>
-            <div className="mb-3">
-              <label className="form-label">New Password</label>
-              <div style={{ position: 'relative' }}>
-                <input type={showPassword ? 'text' : 'password'} className="form-control" placeholder="New password" required value={password} onChange={(e) => setPassword(e.target.value)} maxLength={30} />
-                <span style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', cursor: 'pointer' }} onClick={() => setShowPassword((s) => !s)}>{showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}</span>
-              </div>
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Confirm Password</label>
-              <div style={{ position: 'relative' }}>
-                <input type={showCPassword ? 'text' : 'password'} className="form-control" placeholder="Confirm new password" required value={cPassword} onChange={(e) => setCPassword(e.target.value)} maxLength={30} />
-                <span style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', cursor: 'pointer' }} onClick={() => setShowCPassword((s) => !s)}>{showCPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}</span>
-              </div>
-            </div>
-            {error && <div style={{ color: '#DE3996', marginBottom: 14, fontWeight: 500 }}>{error}</div>}
-            <div className="text-center">
-              <button className="btn" style={{ background: themeColor, color: '#fff', width: 150, padding: '10px 0' }} disabled={loading}>{loading ? 'Resetting...' : 'Reset Password'}</button>
-            </div>
-          </form>
-        )}
-        {step === 4 && (
-          <div className="text-center">
-            <img src={SuccessImg} alt="Success" style={{ width: 127, height: 120, objectFit: 'cover', margin: '0 auto 20px', display: 'block' }} />
-            <h4 className="mb-3" style={{ color: themeColor, fontWeight: 'bold' }}>Password Changed Successfully!</h4>
-            <p className="mb-4" style={{ color: '#666', fontSize: 14, lineHeight: 1.5 }}>Your password has been changed successfully.</p>
-            <div className="text-center"><button className="btn" style={{ background: themeColor, color: '#fff', width: 150, padding: '10px 0' }} onClick={onClose}>Close</button></div>
-          </div>
-        )}
+          )}
         </div>
       </div>
     </>
@@ -1933,67 +2212,37 @@ const SuccessModal = ({ onClose, message }) => {
     return () => observer.disconnect();
   }, []);
 
-  const emailMatch = typeof message === 'string' && message.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+  const emailMatch =
+    typeof message === 'string' && message.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
   const emailText = emailMatch ? emailMatch[0] : '';
 
- return (
-    <div className={`umail-backdrop ${isDarkMode ? "dark" : "light"}`}>
+  return (
+    <div className={`umail-backdrop ${isDarkMode ? 'dark' : 'light'}`}>
       <div className="umail-container">
         {/* Header */}
         <div className="umail-header">
-          <div className="umail-icon">
+          <img src={SuccessImg} alt="" />
+          <button className="forgot-modal-close" onClick={onClose}>
             <svg
-              width="26"
-              height="26"
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
               viewBox="0 0 24 24"
               fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+              stroke="white"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
-              <path
-                d="M4 6h16v12H4z"
-                stroke="#DE3996"
-                strokeWidth="1.8"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M4 7l8 6 8-6"
-                stroke="#DE3996"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
-          </div>
-          <h2 className="umail-title">Email Sent</h2>
+          </button>
         </div>
 
         {/* Message */}
-        <p className="umail-message">
-          We have sent you an email
-          {emailText ? " at " : " "}
-          <strong>{emailText}</strong>.
-          <br />
-          Check your inbox and follow the instructions to complete verification.
-        </p>
-
-        {/* Resend Email */}
-        <div className="umail-resend">
-          Did not receive the email?{" "}
-          <a
-            href="#"
-            onClick={(e) => e.preventDefault()}
-            className="umail-resend-link"
-          >
-            Resend Email
-          </a>
-        </div>
-
-        {/* Close Button */}
-        <div className="umail-footer">
-          <button className="umail-close-btn" onClick={onClose}>
-            Close
-          </button>
-        </div>
+        <h2 className="umail-title">Profile Updated Successfully!</h2>
+        <p className="umail-message">Your profile changes have been saved successfully. </p>
       </div>
     </div>
   );

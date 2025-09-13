@@ -190,7 +190,7 @@ const ResetPassword = () => {
               <input
                     key={index}
                     ref={el => otpRefs.current[index] = el}
-                type="text"
+                type="tel"
                 className="form-control"
                     style={{ 
                       width: 45, 
@@ -270,6 +270,7 @@ const ResetPassword = () => {
               </span>
               </div>
             </div>
+
             <div className="mb-3" style={{ position: 'relative' }}>
               <label className="form-label">Confirm Password</label>
               <div style={{ position: 'relative' }}>
@@ -283,6 +284,7 @@ const ResetPassword = () => {
                     fontSize: 18
                   }} 
                 />
+                
               <input
                 type={showCPassword ? 'text' : 'password'}
                 className="form-control"
@@ -311,6 +313,8 @@ const ResetPassword = () => {
               </span>
             </div>
             </div>
+
+            
             <div className="text-center">
               <button className="btn" style={{ background: themeColor, color: '#fff', width: '150px', padding: '10px 0' }} disabled={loading}>
               {loading ? 'Resetting...' : 'Reset Password'}

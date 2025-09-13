@@ -35,7 +35,7 @@
   --divider-color: #e0e0e0;
 }
 
-[data-theme="dark"] {
+[data-theme='dark'] {
   --modal-bg: #1a1a1a;
   --modal-text: #ffffff;
   --modal-border: #333333;
@@ -66,6 +66,7 @@
   padding: 40px;
   box-sizing: border-box;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  scrollbar-width: none;
 }
 
 .subscription-modal-close {
@@ -91,8 +92,6 @@
   background: #d42a8a;
   transform: scale(1.1);
 }
-
-
 
 .subscription-modal-header {
   text-align: center;
@@ -202,19 +201,18 @@
   padding: 30px;
   position: relative;
   border: 2px solid var(--modal-border);
-  box-shadow: 0px -1px 4px 0px #DE3996 !important;
+  box-shadow: 0px -1px 4px 0px #de3996 !important;
 }
 
 [data-theme='dark'] .subscription-modal-card {
-  background: #110E20 !important;
+  background: #110e20 !important;
   color: #f3f3fa !important;
   border: 2px solid #333 !important;
-  box-shadow: 0px -1px 4px 0px #DE3996 !important;
+  box-shadow: 0px -1px 4px 0px #de3996 !important;
   backdrop-filter: blur(52.38954544067383px);
 }
 
 [data-theme='dark'] .subscription-modal-header {
-
   color: #f3f3fa !important;
 }
 
@@ -226,11 +224,9 @@
   border: none !important;
 }
 [data-theme='dark'] .my-team-popup {
-  
   border: 1px solid #454545 !important;
   backdrop-filter: blur(52.38954544067383px);
 }
-
 
 .subscription-modal-card:hover {
   transform: scale(1.1);
@@ -238,7 +234,12 @@
   background-color: #000;
   color: white;
   backdrop-filter: blur(3.8408rem);
-  box-shadow: 0 0.48rem 0.8644rem rgba(255, 255, 255, 0.1), 0 -0.3844rem 0.3844rem rgba(222, 57, 150, 0.8) inset, -0.3538rem 0 0.3538rem rgba(222, 57, 150, 0.8) inset, 0 0.3538rem 0.3538rem rgba(222, 57, 150, 0.8) inset, 0.3538rem 0 0.3538rem rgba(222, 57, 150, 0.8) inset !important;
+  box-shadow:
+    0 0.48rem 0.8644rem rgba(255, 255, 255, 0.1),
+    0 -0.3844rem 0.3844rem rgba(222, 57, 150, 0.8) inset,
+    -0.3538rem 0 0.3538rem rgba(222, 57, 150, 0.8) inset,
+    0 0.3538rem 0.3538rem rgba(222, 57, 150, 0.8) inset,
+    0.3538rem 0 0.3538rem rgba(222, 57, 150, 0.8) inset !important;
 }
 
 .subscription-modal-card.popular-card {
@@ -258,8 +259,8 @@
 }
 
 .subscription-modal-card:hover .plan-button {
-  background: #E6339A;
-  color: #FFFFFF;
+  background: #e6339a;
+  color: #ffffff;
   box-shadow: 0 0.25rem 0.9375rem rgba(230, 51, 154, 0.3);
 }
 
@@ -268,7 +269,7 @@
   top: -12px;
   left: 50%;
   transform: translateX(-50%);
-  background: #E6339A;
+  background: #e6339a;
   color: white;
   padding: 5px 35px;
   border-radius: 20px;
@@ -350,7 +351,6 @@
   padding-left: 0px !important;
 }
 
-
 .features h2 {
   font-size: 18px;
   font-weight: 600;
@@ -391,14 +391,14 @@
 
 .plan-button {
   background: linear-gradient(0deg, #141414, #626262);
-  box-shadow: 0 0 0.3275rem #991B1B inset;
+  box-shadow: 0 0 0.3275rem #991b1b inset;
   /* 5.24px */
   color: white;
   border: none;
   padding: 0.3125rem;
   /* 5px */
   cursor: pointer;
-  transition: all 0.3s ease;
+  /* transition: all 0.3s ease; */
   margin: 1.875rem 0 1.25rem 0 !important;
   /* 30px 0 20px 0 */
   opacity: 1;
@@ -428,13 +428,12 @@
     padding: 20px;
     max-height: 95vh;
     overflow-x: hidden;
-
   }
-  [data-theme='dark'].personal-account-item{
+  [data-theme='dark'].personal-account-item {
     color: white !important;
   }
 
-  .my-team-popup .popup-header{
+  .my-team-popup .popup-header {
     padding: 5px 7px !important;
   }
 
@@ -451,10 +450,10 @@
     padding: 25px;
     margin: 0.5rem auto;
   }
-  #generateBtn{
+  #generateBtn {
     width: 90% !important;
   }
-  #profile-logout-btn{
+  #profile-logout-btn {
     margin-left: 1rem !important;
   }
 
@@ -468,12 +467,22 @@
     background-color: #000;
     color: white;
     backdrop-filter: blur(3.8408rem);
-    box-shadow:
-      0 0.48rem 0.8644rem rgba(255, 255, 255, 0.1),
-      0 -0.3844rem 0.3844rem rgba(222, 57, 150, 0.8) inset,
-      -0.3538rem 0 0.3538rem rgba(222, 57, 150, 0.8) inset,
-      0 0.3538rem 0.3538rem rgba(222, 57, 150, 0.8) inset,
-      0.3538rem 0 0.3538rem rgba(222, 57, 150, 0.8) inset;
+    /* box-shadow: none !important; */
+    box-shadow: 0 0.48rem 0.8644rem rgba(255, 255, 255, 0.1),
+        0 -0.3844rem 0.3844rem rgba(222, 57, 150, 0.8) inset,
+        -0.3538rem 0 0.3538rem rgba(222, 57, 150, 0.8) inset,
+        0 0.3538rem 0.3538rem rgba(222, 57, 150, 0.8) inset,
+        0.3538rem 0 0.3538rem rgba(222, 57, 150, 0.8) inset;
+  }
+
+  .subscription-modal-card:hover .card-header .title,
+  .subscription-modal-card:hover .price,
+  .subscription-modal-card:hover .sub-class,
+  .subscription-modal-card:hover .features h2,
+  .subscription-modal-card:hover .features li,
+  .subscription-modal-card:hover .card-footer,
+  .subscription-modal-card:hover .para-text {
+    color: white;
   }
 
   .subscription-modal-card.popular-card:hover .popular-tag {
@@ -508,11 +517,16 @@
 
 @media (max-width: 480px) {
   .subscription-modal-overlay {
-    padding: 10px;
+    padding: 0px;
   }
 
   .subscription-modal-content {
     padding: 15px;
+    border-radius: 0px;
+    max-width: none;
+    width: 100%;
+    height: 100%;
+    max-height: none;
   }
 
   .subscription-modal-header h2 {
@@ -527,7 +541,6 @@
     font-size: 28px;
   }
 }
-
 
 .subscription-modal-card {
   flex: 1;
@@ -551,12 +564,10 @@
   /* margin: 1rem 0; */
 }
 
+[data-theme='dark'] .account-name {
+  color: white;
+}
 
-  [data-theme='dark'] .account-name{
-   color: white;
-  }
-
-
-  [data-theme='dark'].dropdown-item.active img{
-filter: brightness(5) saturate(100%) invert(1) !important;
-  }
+[data-theme='dark'].dropdown-item.active img {
+  filter: brightness(5) saturate(100%) invert(1) !important;
+}

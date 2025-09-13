@@ -138,7 +138,7 @@ body, .signin-form {
 }
 
 .signin-form .form-check input[type="checkbox"]:focus {
-  box-shadow: 0 0 0 2px rgba(222, 57, 150, 0.18);
+  box-shadow: none;
 }
 
 .form-check{

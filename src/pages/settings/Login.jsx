@@ -618,7 +618,7 @@ const ForgotPasswordModal = ({ onClose }) => {
   return (
     <>
       <div className="forgot-modal-backdrop">
-        <div className="forgot-modal-content" style={{ position: 'relative' }}>
+        <div className="forgot-modal-content" style={{ position: 'relative', marginLeft : "10px", marginRight : "10px" }}>
 <button className="forgot-modal-close" onClick={onClose}>
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -659,7 +659,7 @@ const ForgotPasswordModal = ({ onClose }) => {
               <label className="form-label">OTP</label>
               <div style={{ display: 'flex', gap: 8, justifyContent: 'space-between' }}>
                 {otp.map((digit, index) => (
-                  <input key={index} ref={(el) => (otpRefs.current[index] = el)} type="text" className="form-control" style={{ width: 42, height: 42, textAlign: 'center', fontSize: 18 }} maxLength={1} value={digit} onChange={(e) => handleOtpChange(index, e.target.value)} onKeyDown={(e) => handleOtpKeyDown(index, e)} onFocus={(e) => e.target.select()} />
+                  <input key={index} ref={(el) => (otpRefs.current[index] = el)} type="tel" className="form-control" style={{ width: 45, height: 45, textAlign: 'center', fontSize: 18 }} maxLength={1} value={digit} onChange={(e) => handleOtpChange(index, e.target.value)} onKeyDown={(e) => handleOtpKeyDown(index, e)} onFocus={(e) => e.target.select()} />
                 ))}
               </div>
             </div>
@@ -687,7 +687,7 @@ const ForgotPasswordModal = ({ onClose }) => {
             </div>
             <div className="mb-3">
               <label className="form-label">Confirm Password</label>
-              <div style={{ position: 'relative' }}>
+              <div style={{ position: 'relative' , width: '100%' }}>
                 <input type={showCPassword ? 'text' : 'password'} className="form-control" placeholder="Confirm new password" required value={cPassword} onChange={(e) => setCPassword(e.target.value)} maxLength={30} />
                 <span style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', cursor: 'pointer' }} onClick={() => setShowCPassword((s) => !s)}>{showCPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}</span>
               </div>

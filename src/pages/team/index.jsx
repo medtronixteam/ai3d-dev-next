@@ -136,7 +136,8 @@ const Team = () => {
 
 }
         .team-search-input { border: none; outline: none; background: transparent; font-size: 15px; color: #232334; width: 100%; }
-        @media (max-width: 992px) { .team-header-inner { justify-content: flex-start; } .team-sidebar-toggle { display: inline-flex; } .team-search-container { margin-left: 8px; max-width: none; } }
+        @media (max-width: 992px) {.team-header-inner { justify-content: flex-start; } .team-sidebar-toggle { display: inline-flex; } .team-search-container { margin-left: 8px; max-width: none; } }
+        @media (max-width: 500px) {.team-page-header {padding: 16px 10px 0 5px;} }
         [data-theme='dark'] .team-sidebar-toggle, .dark .team-sidebar-toggle { background: #232334 !important; color: #DE3996 !important; border: 1px solid #39395a !important; }
         [data-theme='dark'] .team-search-container, .dark .team-search-container { background: #232334 !important; }
         [data-theme='dark'] .team-search-input, .dark .team-search-input { color: #f3f3fa !important; }
@@ -145,22 +146,23 @@ const Team = () => {
         <button className="team-sidebar-toggle" onClick={handleSidebarToggle} aria-label="Open sidebar"><RxHamburgerMenu /></button>
         <div className="team-search-container">
           <FiSearch style={{ color: '#999', fontSize: 16, marginRight: 10 }} />
-          <input className="team-search-input" placeholder="Search" value={search} onChange={(e)=>setSearch(e.target.value)} />
+          <input className="team-search-input" placeholder="Search"  />
+          {/* value={search} onChange={(e)=>setSearch(e.target.value)} */}
         </div>
       </div>
     </div>
       <div className="team-section-card">
         
         {/* Header */}
-        <h2 className="font-weight-bold" style={{ marginBottom: 24 }}>Your Teams</h2>
+        <h2 className="font-weight-bold your-team" style={{ marginBottom: 24 }}>Your Teams</h2>
         {/* Modern Filter Row */}
-        <div className="team-filters" style={{ display: 'flex', gap: 16, alignItems: 'center', borderRadius: 12, padding: 18, marginBottom: 28, justifyContent: 'flex-start' }}>
+        <div className="team-filters">
             <input
               type="search"
               className="form-control"
               placeholder="Search teams..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
+              // value={search}
+              // onChange={e => setSearch(e.target.value)}
             style={{
              backgroundColor: 'rgba(255,237,247,1)',
               border: '1px solid #eee',
@@ -204,9 +206,11 @@ const Team = () => {
           </div>
           <style>{`
             @media (max-width: 700px) {
-              .team-filters { flex-direction: column !important; gap: 10px !important; padding: 10px !important; }
               .team-filters input, .team-filters .team-role-select { width: 100% !important; min-width: 0 !important; }
               .team-filters > div, .team-filters > input { width: 100% !important; }
+            }
+              @media (max-width: 500px) {
+              .team-filters { flex-direction: column !important; gap: 10px !important; padding: 10px !important; }
             }
           `}</style>
         </div>
@@ -218,10 +222,13 @@ const Team = () => {
             <div className="col-12 text-center py-5">No teams found.</div>
           ) : (
             filteredTeams.map((team, idx) => (
-              <div className="col-md-6 col-lg-4 mb-4" key={team.id} style={filteredTeams.length === 1 ? { minWidth: 300, maxWidth: 340, width: '100%' } : { maxWidth: 340 }}>
+              <div className="col-md-6 col-lg-4 mb-4 padding" key={team.id} 
+              // style={filteredTeams.length === 1 ? { minWidth: 300, maxWidth: 340, width: '100%' } : { maxWidth: 340 }}
+              >
                 <div className="team-card card-gradient-1" style={{ background: 'white', position: 'relative', color: '#222', minHeight: filteredTeams.length === 1 ? 180 : undefined }}>
                   <div className="gradient-header" style={{ background: gradients[idx % gradients.length], height: 80, borderTopLeftRadius: 14, borderTopRightRadius: 14 }} />
                   <div className="card-content" style={{ display: 'flex', alignItems: 'center', padding: 20, background: 'white', borderBottomLeftRadius: 14, borderBottomRightRadius: 14 }}>
+
                     {/* Avatar and Name */}
                     <img
                       src={team.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(team.name)}&background=DE3996&color=fff&size=128`}

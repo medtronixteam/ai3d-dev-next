@@ -13,12 +13,19 @@
 }
 
 .my-team-popup {
+  /* padding: 5px 8px; */
   background-color: var(--body-bg);
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
   width: 380px;
   max-width: 90vw;
   animation: popup-scale-in 0.3s ease-out forwards;
+}
+
+@media (max-width : 768px) {
+  .my-team-popup {
+    padding: 5px 8px;
+  }
 }
 
 .my-team-popup .popup-header {

@@ -56,8 +56,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPauseCircle } from '@fortawesome/free-solid-svg-icons';
 import { FaLinkedin } from 'react-icons/fa';
 import rainbowImg from './images/rainbow.png';
-import ArslanImg from './images/Arslanbhi.png';
-import CeoImg from './images/ceo.png';
+import ArslanImg from '../assets/images/Arslan.svg';
+import CeoImg from '../assets/images/Ceo.svg';
 import girImg from './images/gir.png';
 import girtImg from './images/girt.png';
 import mangImg from './images/mang.png';
@@ -91,16 +91,45 @@ import client1 from '../assets/images/client1.png';
 import client2 from '../assets/images/client2.jpg';
 
 // Managers Images
-import hiraImg from '../assets/images/hira.png';
-import samiaImg from '../assets/images/samia.png';
-import osamaImg from '../assets/images/osama.png';
-import sajeelImg from '../assets/images/sajeel.png';
-import mudassarImg from '../assets/images/mudassar.png';
-import shehrozImg from '../assets/images/shehroz.png';
+import HiraMam from '../assets/images/HiraMam.svg';
+import SamiaMam from '../assets/images/SamiaMam.svg';
+import UsamaSir from '../assets/images/UsamaSir.svg';
+import MudassarSir from '../assets/images/MudassarSir.svg';
+import ArslanSir from '../assets/images/ArslanSir.svg';
+import CeoSir from '../assets/images/CeoSir.svg';
+import SajeelSir from '../assets/images/SajeelSir.svg';
+import SehrozSir from '../assets/images/shehroz.png';
+
+import hiraImg from '../assets/images/HiraImg.svg';
+import samiaImg from '../assets/images/SamiaImg.svg';
+import osamaImg from '../assets/images/Person1.svg';
+import sajeelImg from '../assets/images/Sajeel.svg';
+import mudassarImg from '../assets/images/Mudassar.svg';
+import shehrozImg from '../assets/images/ShahrozImg.svg';
 import FrameWiseImg from '../assets/images/FrameWise-Logo.png';
 import { useMediaQuery } from 'react-responsive';
+import SubscriptionModal from '../components/popup/SubscriptionModal';
+import LandingPageModal from '../components/popup/LandingPageModal';
+import LoginPopup from '../components/popup/LoginPopup';
+import CustomInfoModal from '../components/popup/CustomInfoModal';
+
 const LandingPage = () => {
   const { pathname, hash, key } = useLocation();
+  const [subscriptionModalOpen, setSubscriptionModalOpen] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
+  const handleOpenLogin = () => {
+    setSubscriptionModalOpen(false); // subscription modal close
+    setShowLoginModal(true); // login modal open
+  };
+
+  const flagColors = {
+    USA: '#B22234',
+    Spain: '#AA151B',
+    Singapore: '#ED2939',
+    'United States': '#B22234',
+    Australia: '#00008B',
+  };
 
   const testimonials = [
     {
@@ -148,6 +177,7 @@ const LandingPage = () => {
   ];
 
   const [activeIndex, setActiveIndex] = useState(1);
+  const [scaledIndex, setScaledIndex] = useState(null);
 
   const next = () => {
     setActiveIndex((prev) => (prev + 1) % testimonials.length);
@@ -164,20 +194,52 @@ const LandingPage = () => {
   };
 
   useEffect(() => {
+    setScaledIndex(null);
+    const timer = setTimeout(() => {
+      setScaledIndex(activeIndex);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [activeIndex]);
+
+  useEffect(() => {
     const interval = setInterval(() => {
       next();
-    }, 3000);
+    }, 4000);
     return () => clearInterval(interval);
   }, [activeIndex]);
 
   const visibleCards = getVisibleCards();
+
+  // hide scrollbar
+    useEffect(() => {
+    const css = `
+      html, body { 
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important; 
+      }
+      html::-webkit-scrollbar, 
+      body::-webkit-scrollbar { 
+        display: none !important; 
+      }
+    `;
+    
+    const style = document.createElement('style');
+    style.innerHTML = css;
+    document.head.appendChild(style);
+    
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   const pills = [
-    { label: 'Construction', icon: rightarrow },
-    { label: 'Gaming', icon: rightarrow },
-    { label: 'VR', icon: rightarrow },
-    { label: 'Retail', icon: rightarrow },
-    { label: 'Manufacturing', icon: rightarrow },
-    { label: 'Health', icon: rightarrow },
+    { label: 'Construction', icon: rightarrow, target: '3d-Sample' },
+    { label: 'Gaming', icon: rightarrow, target: '3d-Sample' },
+    { label: 'VR', icon: rightarrow, target: '3d-Sample' },
+    { label: 'Retail', icon: rightarrow, target: '3d-Sample' },
+    { label: 'Manufacturing', icon: rightarrow, target: '3d-Sample' },
+    { label: 'Health', icon: rightarrow, target: '3d-Sample' },
   ];
 
   const pillsRef = useRef(null);
@@ -648,6 +710,7 @@ const LandingPage = () => {
       // Optional: You can define more detailed data (like expertise, philosophy) in an object
       const fullDataMap = {
         'Arslan Ahmad': {
+          Image : ArslanImg,
           title: 'Founder - CEO & Product Lead',
           desc: [
             'Arslan drives the vision and product innovation at AI 3D Scanning Solutions Inc., leading end-to-end product development from concept to deployment. With a focus on cutting-edge AI and LLM integration, he spearheads strategic partnerships oversees market positioning, and ensures the platform delivers transformative value to global industries.',
@@ -666,6 +729,7 @@ const LandingPage = () => {
         },
 
         'Dr. Joel Hillier': {
+          Image : CeoImg,
           title: 'Growth Co-Founder – Business & AI Strategy Advisor',
 
           desc: [
@@ -681,6 +745,7 @@ const LandingPage = () => {
           philosophy: '.........',
         },
         'Shehroz Shabbir': {
+          Image : shehrozImg,
           title: 'Web Development Manager',
           desc: [
             'As the Full Stack Developer at AI3D Scanning Solutions, Shehroz Shabbir is the technical backbone behind the company’s innovative platforms. Skilled in both front-end and back-end development, he ensures that every digital product delivers a seamless, high-performance user experience.',
@@ -698,6 +763,7 @@ const LandingPage = () => {
             '"Great technology isn’t just built — it’s crafted with precision, creativity, and purpose."',
         },
         'Hira Aziz': {
+          Image : hiraImg,
           title: 'Creative Media Manager & Video Editor',
 
           desc: [
@@ -717,6 +783,7 @@ const LandingPage = () => {
         },
         // Add others as needed
         'Usama Ahmad': {
+          Image : osamaImg,
           title: 'Finance Manager',
 
           desc: [
@@ -736,6 +803,7 @@ const LandingPage = () => {
             '"A strong financial foundation is the backbone of innovation. My mission is to ensure every number tells a story that drives the company forward.”',
         },
         'Sajeel Nisar': {
+          Image : sajeelImg,
           title: 'AI Lead',
 
           desc: [
@@ -755,6 +823,7 @@ const LandingPage = () => {
             '"The future belongs to intelligent systems — and I believe in building AI that makes technology more human."',
         },
         'Mudassar Farooq': {
+          Image : mudassarImg,
           title: 'HR & Business Development Manager',
           desc: [
             'Mudassar is a dynamic professional at AI3D Scanning Solutions, combining strategic business development expertise with a strong foundation in human resources. In his business development role, he focuses on identifying growth opportunities, building partnerships, and expanding the company’s reach in the AI and 3D scanning industry.',
@@ -773,6 +842,7 @@ const LandingPage = () => {
             '"Success is built on strong relationships — both with clients and within the team."',
         },
         'Samia Rasheed': {
+          Image : samiaImg,
           title: 'Social Media Manager & Associate HR',
 
           desc: [
@@ -805,28 +875,7 @@ const LandingPage = () => {
         name: name,
         ...detailed,
       });
-
-      // Show modal
-      const modalEl = document.getElementById('extraLargeModal');
-      if (modalEl && window.bootstrap) {
-        // Store current scroll position before opening modal
-        const currentScrollY = window.scrollY;
-
-        const modal = new window.bootstrap.Modal(modalEl, {
-          backdrop: 'static',
-          keyboard: false,
-        });
-
-        modal.show();
-
-        document.body.style.overflow = 'hidden';
-
-        modalEl.addEventListener('hidden.bs.modal', () => {
-          document.body.style.overflow = 'auto';
-          window.scrollTo(0, currentScrollY);
-        });
       }
-    };
 
     const buttons = document.querySelectorAll('.learn-more, .learn-m');
     buttons.forEach((btn) => btn.addEventListener('click', handler));
@@ -838,7 +887,7 @@ const LandingPage = () => {
 
   return (
     <>
-      <div className="ai_3d_landing">
+      <div className="landing-page-section ai_3d_landing">
         <div className="main_head" style={{ backgroundColor: '#FFEDF7' }}>
           <main className="container py-sm-4 pt-4">
             {/* ========================= navbar ======================= */}
@@ -1022,7 +1071,17 @@ const LandingPage = () => {
                   }}
                 >
                   {pills.map((pill, idx) => (
-                    <div className="a3d-pill" key={pill.label} style={{ minWidth: 'auto' }}>
+                    <div
+                      className="a3d-pill"
+                      key={pill.label}
+                      style={{ minWidth: 'auto' }}
+                      onClick={() => {
+                        const target = document.getElementById(pill.target);
+                        if (target) {
+                          target.scrollIntoView({ behavior: 'smooth' });
+                        }
+                      }}
+                    >
                       <span>{pill.label}</span>
                       <img src={pill.icon} alt="" style={{ paddingTop: 2 }} />
                     </div>
@@ -1036,14 +1095,15 @@ const LandingPage = () => {
                   <Link to="/platform/">
                     <button className="a3d-join-btn">Join For Free</button>
                   </Link>
-                  <Link to="/platform/subscription">
-                    <button
-                      className="btn btn-warning text-white"
-                      style={{ backgroundColor: '#FF9C3E' }}
-                    >
-                      See Plans
-                    </button>
-                  </Link>
+                  {/* <Link to="/platform/subscription"> */}
+                  <button
+                    className="btn btn-warning text-white"
+                    style={{ backgroundColor: '#FF9C3E' }}
+                    onClick={() => setSubscriptionModalOpen(true)}
+                  >
+                    See Plans
+                  </button>
+                  {/* </Link> */}
 
                   <a href="#video">
                     <div className="a3d-play-circle">
@@ -1190,7 +1250,12 @@ const LandingPage = () => {
                       </p>
                       <div className="footer-wrapper">
                         <div className="service-footer">
-                          <Link to="/platform/" className="circle-btn" aria-label="arrow">
+                          <Link
+                            to="#"
+                            className="disabled-circle-btn"
+                            aria-label="arrow"
+                            onClick={(e) => e.preventDefault()}
+                          >
                             <svg
                               viewBox="0 0 24 24"
                               width={18}
@@ -1210,7 +1275,7 @@ const LandingPage = () => {
                               fontStyle: 'Medium',
                             }}
                           >
-                            Browse Design
+                            Coming soon
                           </div>
                         </div>
                         <div className="card-icon" aria-hidden="true">
@@ -1819,7 +1884,7 @@ const LandingPage = () => {
                 <div className="team-card-container col-12 col-md-4 col-3 mb-0 mt-3">
                   <div className="team-slide">
                     <div className="img-container Hillier">
-                      <img src={ArslanImg} alt="Arslan Ahmad" />
+                      <img src={ArslanSir} alt="Arslan Ahmad" />
                     </div>
 
                     <div className="team-card team-cads">
@@ -1846,7 +1911,7 @@ const LandingPage = () => {
                 <div className="team-card-container col-12 col-md-4 col-3 mb-0 mt-3">
                   <div className="team-slide">
                     <div className="img-container Hillier">
-                      <img src={CeoImg} alt="Dr. Joel Hillier" />
+                      <img src={CeoSir} alt="Dr. Joel Hillier" />
                     </div>
 
                     <div className="team-card team-cads">
@@ -1871,6 +1936,11 @@ const LandingPage = () => {
                     </div>
                   </div>
                 </div>
+
+{modalData && (
+        <CustomInfoModal modalData={modalData} onClose={() => setModalData(null)} />
+      )}
+
               </div>
 
               {/* Splide Slider for Team Members */}
@@ -1880,26 +1950,26 @@ const LandingPage = () => {
                   <ul className="splide__list">
                     {[
                       {
-                        img: shehrozImg,
+                        img: SehrozSir,
                         name: 'Shehroz Shabbir',
                         role: 'Web Development Manager',
                         desc: 'Expertise spans coding, system architecture, and database management, enabling him to translate complex business needs into functional, efficient, and scalable solutions. His work powers the AI-driven and 3D scanning technologies that define the company’s cutting-edge services.',
                       },
 
                       {
-                        img: mudassarImg,
+                        img: MudassarSir,
                         name: 'Mudassar Farooq',
                         role: 'HR & Business Development Manager',
                         desc: 'Drives recruitment, culture, and leads business growth and client outreach efforts.',
                       },
                       {
-                        img: hiraImg,
+                        img: HiraMam,
                         name: 'Hira Aziz',
                         role: 'Creative Media Manager',
                         desc: 'Leads visual communication, brand identity, and product design direction.',
                       },
                       {
-                        img: samiaImg,
+                        img: SamiaMam,
                         name: 'Samia Rasheed',
                         role: 'HR Associate & Social Media Manager',
                         desc: 'Supports hiring processes while managing brand voice and engagement across platforms.',
@@ -1907,13 +1977,13 @@ const LandingPage = () => {
                       // Repeat for loop effect (optional)
 
                       {
-                        img: osamaImg,
+                        img: UsamaSir,
                         name: 'Usama Ahmad',
                         role: 'Admin & Finance Manager',
                         desc: 'Manages company finances, budgeting, and administrative operations with precision and compliance.',
                       },
                       {
-                        img: sajeelImg,
+                        img: SajeelSir,
                         name: 'Sajeel Nisar',
                         role: 'AI Lead',
                         desc: 'Architecting and training core AI models driving 2D-to-3D transformation at AI3D.',
@@ -2008,7 +2078,9 @@ const LandingPage = () => {
                     return (
                       <div
                         key={index}
-                        className={`testimonial-card ${isActive ? 'active' : ''}`}
+                        className={`testimonial-card
+                           ${isActive ? 'active' : ''} ${index === scaledIndex ? 'scaled' : ''}
+                           `}
                         style={{ padding: '0 15px', margin: '0 20px' }}
                       >
                         {item.image ? (
@@ -2016,7 +2088,10 @@ const LandingPage = () => {
                         ) : (
                           <b
                             className="testimonial-img d-flex text-center align-items-center justify-content-center"
-                            style={{ backgroundColor: '#DE3996', color: 'white' }}
+                            style={{
+                              background: flagColors[item.role] || '#DE3996',
+                              color: 'white',
+                            }}
                           >
                             {item.name[0]}
                           </b>
@@ -2711,80 +2786,99 @@ const LandingPage = () => {
       </div>
 
       {/* XL Modal */}
-      <div
+      {/* <div
         className="modal fade profile-detail-modal"
         id="extraLargeModal"
         tabIndex={-1}
         aria-hidden="true"
       >
         <div className="modal-dialog modal-dialog-centered modal-xl">
-          <div className="modal-content position-relative">
-            <div className="p-3">
+          <div className="parent-modal-content modal-content position-relative">
+            <div>
               <button
                 type="button"
                 className="close-left"
                 data-bs-dismiss="modal"
                 aria-label="Close"
-                onClick={() => setModalData(null)} // Clear data on close
+                onClick={() => setModalData(null)} 
               >
                 <i className="bx bx-arrow-back" />
               </button>
             </div>
-            <div className="modal-body pt-3 px-5">
-              {modalData && (
-                <div className="row g-4 mt-4">
-                  {/* Left: Image */}
-                  <div className="col-12 col-md-4 text-center">
-                    <div className="styled-img-container">
-                      <img src={modalQuoteImg} className="quote-img" alt="Quote Icon" />
-                      <img src={modalData.img} className="profile-img" alt={modalData.name} />
-                      <img src={modalBorderImg} className="border-img" alt="Decorative Border" />
-                    </div>
-                    <div className="mt-3">
-                      <a
-                        href={modalData.linkedin}
-                        className="btn btn-linkedin w-100 d-inline-flex align-items-center justify-content-center gap-2"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <FaLinkedin size={18} /> Linkedin
-                      </a>
-                    </div>
-                  </div>
-
-                  {/* Right: Details */}
-                  <div className="col-12 col-md-8">
-                    <h2 className="text-title">{modalData.name}</h2>
-                    <p className="text-para mb-0">{modalData.title}</p>
-                    <div>
-                      <img src={modalTextSlideImg} alt="" />
+            <div className="modal-content position-relative">
+              <div className="modal-body pt-3 px-lg-5">
+                {modalData && (
+                  <div className="row g-4 mt-4">
+                    
+                    <div className="col-12 col-lg-4 text-center">
+                      <div className="styled-img-container">
+                        <img src={modalQuoteImg} className="quote-img" alt="Quote Icon" />
+                        <img src={modalData.img} className="profile-img" alt={modalData.name} />
+                      </div>
+                      <div className="mt-3">
+                        <a
+                          href={modalData.linkedin}
+                          className="btn btn-linkedin w-100 d-inline-flex align-items-center justify-content-center gap-2"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <FaLinkedin size={18} /> Linkedin
+                        </a>
+                      </div>
                     </div>
 
-                    {/* Multi-line Description */}
-                    {modalData.desc.map((line, idx) => (
-                      <p key={idx} className="discription">
-                        {line}
-                      </p>
-                    ))}
+                    
+                    <div className="col-12 col-lg-8">
+                      <h2 className="text-title">{modalData.name}</h2>
+                      <p className="text-para mb-0">{modalData.title}</p>
+                      <div>
+                        <img src={modalTextSlideImg} alt="" />
+                      </div>
 
-                    <h5 className="mt-4 text-title">Key Expertise:</h5>
-                    <ul className="custom-list">
-                      {modalData.expertise.map((item, idx) => (
-                        <li key={idx}>
-                          <img src={modalBulletImg} alt="" /> {item}
-                        </li>
+                      
+                      {modalData.desc.map((line, idx) => (
+                        <p key={idx} className="discription">
+                          {line}
+                        </p>
                       ))}
-                    </ul>
 
-                    <h5 className="mt-4 text-title">Professional Philosophy:</h5>
-                    <p className="discription">{modalData.philosophy}</p>
+                      <h5 className="mt-4 text-title">Key Expertise:</h5>
+                      <ul className="custom-list">
+                        {modalData.expertise.map((item, idx) => (
+                          <li key={idx}>
+                            <img src={modalBulletImg} alt="" /> {item}
+                          </li>
+                        ))}
+                      </ul>
+
+                      <h5 className="mt-4 text-title">Professional Philosophy:</h5>
+                      <p className="discription">{modalData.philosophy}</p>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
+
+      {/* Subscription Modal */}
+      <LandingPageModal
+        open={subscriptionModalOpen}
+        onClose={() => setSubscriptionModalOpen(false)}
+        onRequireLogin={handleOpenLogin}
+      />
+
+      {/* ==== Login Modal ==== */}
+      {showLoginModal && ( // 👈 ab conditional render, refresh par auto open nahi hoga
+        <LoginPopup
+          onClose={() => setShowLoginModal(false)}
+          onSuccess={() => {
+            setShowLoginModal(false);
+            // yahan redirect ya subscription continue kar sakti ho
+          }}
+        />
+      )}
     </>
   );
 };

@@ -21,16 +21,20 @@ import AiImg from './images/ai.png';
 import AppImg from './images/app.jpg';
 import GraphicImg from './images/graphic.png';
 import DesktopImg from './images/desktop.png';
+import LeftArrow from '../assets/images/left-arrow.svg';
+import HalfEllipse from '../assets/images/HalfEllipse.svg';
 import { useMediaQuery } from 'react-responsive';
+import Cards from '../components/Cards/Cards';
+import Circle from './Animation/Circle';
 const Service = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const { pathname, hash, key } = useLocation();
   const pills = [
-    { label: 'AI Development', icon: rightarrow },
-    { label: 'Flutter App', icon: rightarrow },
-    { label: 'Website Development', icon: rightarrow },
-    { label: 'Desktop App', icon: rightarrow },
+    { label: 'AI Development', icon: rightarrow, target : "AI-Development" },
+    { label: 'Flutter App', icon: rightarrow, target : "Flutter" },
+    { label: 'Website Development', icon: rightarrow , target : "Website-Development" },
+    { label: 'Desktop App', icon: rightarrow, target : "Desktop-App" },
     // { label: 'Manufacturing', icon: rightarrow },
     // { label: 'Health', icon: rightarrow },
   ];
@@ -109,10 +113,18 @@ const Service = () => {
 
   return (
     <>
-      <div className="ai_3d_landing">
+      <div className="service-section-page ai_3d_landing">
         <div className="main_head" style={{ backgroundColor: '#FFEDF7' }}>
-          <main className="container py-4">
-            {/* ========================= navbar ======================= */}
+          {/* <main className="container"> */}
+          {/* </main> */}
+
+          {/* ========================= Hero Section ======================= */}
+
+          <section className="service-herosection">
+
+            <main className="container py-4">
+
+              {/* ========================= navbar ======================= */}
 
             <header className="a3d-header container-fluid bg-white mb-4 a3d-fade-in">
               <div className="d-flex justify-content-between align-items-center">
@@ -238,156 +250,57 @@ const Service = () => {
             {/* Overlay for background click */}
 
             {isOpen && <div className="overlay" onClick={() => setIsOpen(false)}></div>}
-          </main>
+            
+            </main>
 
-          {/* ========================= Hero Section ======================= */}
+            <h1 className="service-herosection-title">
+              Our Full Range of AI &{' '}
+              <span>
+                Software Services
+                <img src={HalfEllipse} alt="icon" className="service-title-img" />
+              </span>
+            </h1>
 
-          <div className="container" style={{ paddingBottom: 20 }}>
-            <div className="row align-items-center">
-              <div className="col-lg-8">
-                {/* <h1 className="a3d-title a3d-slide-up" style={{ marginTop: 30 }}>
-                  <span className="perfect-heading">
-                    Perf
-                    <span className="ec-wrapper">
-                      ec
-                      <img src={elipse} alt="Ellipse" className="ellipse-img" />
-                    </span>
-                    t
-                  </span>
+            <p className="service-herosection-description">
+              From concept to deployment, AI3D Scanning Solutions delivers end-to-end technology
+              services that combine innovation, precision and scalability. Our expert team transform
+              ideas into reality with cutting-edge design, development and customization solutions
+              tailored to your business goals.
+            </p>
 
-                  <span className="a3d-gradient-text">
-                    {' '}
-                    place where
-                    <span className="d-none d-lg-inline">
-                      <br />
-                    </span>
-                    Innovation Meet 3D{' '}
-                    <span className="d-none d-lg-inline">
-                      <br />
-                    </span>
-                    Model Creation
-                  </span>
-                </h1> */}
-
-                <h1 className="a3d-title a3d-slide-up">
-                  Our Full Range of {''}
-                  <span className="highlight-ai">
-                    {' '}
-                    AI
-                    <img src={elipse} alt="rainbow" className="services-rainbow-above" />
-                  </span>
-                  <br className="d-none d-lg-block" /> & Software Services
-                </h1>
-
-                <p
-                  className="a3d-description mt-1 a3d-slide-up service-hero-des"
-                  style={{ animationDelay: '0.2s' }}
+            <div
+              className="a3d-pills-scroll-service d-flex gap-3 my-4 a3d-slide-up"
+              id="pillSlider"
+              ref={pillsRef}
+              style={{
+                overflowX: isMobile ? 'auto' : 'visible',
+                minHeight: 48,
+                scrollBehavior: 'smooth',
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
+              }}
+            >
+              {pills.map((pill, idx) => (
+                <div className="a3d-pill" key={pill.label} style={{ minWidth: 'auto' }}
+                onClick={() => {
+                    const target = document.getElementById(pill.target)
+                    if(target){
+                      target.scrollIntoView({ behavior : "smooth" })
+                  }
+                }}
                 >
-                  From concept to deployment, AI 3D Scanning Solutions delivers end-to-end
-                  technology services that combine innovation, precision, and scalability. Our
-                  expert team transforms ideas into reality with cutting-edge design, development,
-                  and customization solutions tailored to your business goals.
-                </p>
-
-                <div
-                  className="a3d-pills-scroll d-flex gap-3 my-4 a3d-slide-up"
-                  id="pillSlider"
-                  ref={pillsRef}
-                  style={{
-                    overflowX: isMobile ? 'auto' : 'visible',
-                    minHeight: 48,
-                    scrollBehavior: 'smooth',
-                    scrollbarWidth: 'none',
-                    msOverflowStyle: 'none',
-                  }}
-                >
-                  {pills.map((pill, idx) => (
-                    <div className="a3d-pill" key={pill.label} style={{ minWidth: 'auto' }}>
-                      <span>{pill.label}</span>
-                      <img src={pill.icon} alt="" style={{ paddingTop: 2 }} />
-                    </div>
-                  ))}
+                  <span>{pill.label}</span>
+                  <img src={pill.icon} alt="" style={{ paddingTop: 2 }} />
                 </div>
-
-                <div
-                  className="a3d-btn d-flex align-items-center gap-3 flex-wrap a3d-slide-up"
-                  style={{ animationDelay: '0.2s' }}
-                >
-                  <Link to="/platform/">
-                    <button className="a3d-join-btn">Join For Free</button>
-                  </Link>
-                  <Link to="/platform/subscription">
-                    <button
-                      className="btn btn-warning text-white"
-                      style={{ backgroundColor: '#FF9C3E' }}
-                    >
-                      See Plans
-                    </button>
-                  </Link>
-
-                  <a href="#video">
-                    <div className="a3d-play-circle">
-                      <img src={arrow2} alt="" style={{ width: '34%', marginLeft: 6 }} />
-                    </div>
-                  </a>
-                </div>
-              </div>
-
-              <div className="col-lg-4 text-center" style={{ height: 300 }}>
-                {/* {{-- <div> --}} */}
-
-                <img
-                  src={robot}
-                  alt="3D Robot"
-                  className="img-fluid main-image a3d-pulse-animation"
-                  style={{
-                    maxWidth: 580,
-
-                    position: 'absolute',
-
-                    top: '8.5rem',
-
-                    right: '1rem',
-                  }}
-                />
-
-                {/* {{--
-        
-                              </div> --}} */}
-              </div>
+              ))}
             </div>
 
-            <div className="row">
-              <div className="col-12 col-md-8">
-                <div
-                  className="a3d-trusted d-flex align-items-center gap-1 a3d-slide-up"
-                  style={{ animationDelay: '0.2s', marginTop: 70 }}
-                >
-                  <span className="trusted-label" style={{ fontSize: 14, marginRight: 10 }}>
-                    Trusted by:
-                  </span>
-                  <div
-                    className="a3d-trusted-scroll"
-                    ref={trustedLogosRef}
-                    style={{
-                      display: 'flex',
-                      gap: 10,
-                      overflowX: isMobile ? 'auto' : 'visible',
-                      scrollBehavior: 'smooth',
-                      scrollbarWidth: 'none',
-                      msOverflowStyle: 'none',
-                      alignItems: 'center',
-                      minHeight: 40,
-                    }}
-                  >
-                    {trustedLogos.map((logo, idx) => (
-                      <img key={idx} src={logo.src} alt={logo.alt} style={logo.style} />
-                    ))}
-                  </div>
-                </div>
-              </div>
+            <div className="circle-cards-wrapper">
+              <Cards position="top" />
+              <Circle />
+              <Cards position="bottom" />
             </div>
-          </div>
+          </section>
 
           {/* ========================= Hero Section End ======================= */}
         </div>
@@ -395,7 +308,7 @@ const Service = () => {
         {/* ========================= Service Content Section ======================= */}
 
         <section className="services-section">
-          {/* <h3 className="services-title a3d-slide-up">
+          <h3 className="services-section2-title a3d-slide-up text-center">
             Our Full Range of {''}
             <span className="highlight-ai">
               {' '}
@@ -405,16 +318,23 @@ const Service = () => {
             <br /> & Software Services
           </h3>
 
-          <p className="services-description a3d-slide-up">
-           
-          </p>
+          <p className="service-herosection2-description">
+              From concept to deployment, AI3D Scanning Solutions delivers end-to-end technology
+              services that combine innovation, precision and scalability. Our expert team transform
+              ideas into reality with cutting-edge design, development and customization solutions
+              tailored to your business goals.
+            </p>
+
           <h6 className="services-description-sub a3d-slide-up text-center">
             We don't just build, we partner with you to create future ready products that drive
             growth and efficiency.
-          </h6> */}
+          </h6>
+
+           {/* ========================= Service Content Section End ======================= */}
+
           <div className="container">
             {/* =================== AI Development ===================== */}
-            <div className="row align-items-center mb-5 py-2">
+            <div className="row align-items-center mb-5 py-2" id='AI-Development'>
               {/* Left content */}
               <div className="col-lg-6 mb-lg-0 mb-4">
                 <h2 className="services-title">AI Development &amp; Solutions</h2>
@@ -446,7 +366,7 @@ const Service = () => {
                 <img src={AppImg} alt="App Development Image" />
               </div>
               {/* Right content */}
-              <div className="col-lg-6 mb-4 mb-lg-0 offset-lg-1 order-lg-2 order-1">
+              <div className="col-lg-6 mb-4 mb-lg-0 offset-lg-1 order-lg-2 order-1" id='Flutter'>
                 <h2 className="services-title">Flutter App Development</h2>
                 <ul className="service-list">
                   <li>
@@ -465,7 +385,7 @@ const Service = () => {
               </div>
             </div>
             {/* =================== Website Development ===================== */}
-            <div className="row align-items-center mt-lg-5 mt-3 py-lg-5 mt-3">
+            <div className="row align-items-center mt-lg-5 mt-3 py-lg-5 mt-3" id='Website-Development'>
               {/* Left content */}
               <div className="col-lg-6 mb-4 mb-lg-0">
                 <h2 className="services-title">Website Development</h2>
@@ -491,7 +411,7 @@ const Service = () => {
               </div>
             </div>
             {/* =================== Desktop App Development ===================== */}
-            <div className="row align-items-center mt-lg-5 mt-3 py-lg-5 mt-3">
+            <div className="row align-items-center mt-lg-5 mt-3 py-lg-5 mt-3" id='Desktop-App'>
               {/* Left image */}
               <div className="col-lg-5 services-img text-center text-lg-end order-lg-1 order-2 mb-lg-0 mb-4">
                 <img src={DesktopImg} alt="Desktop App Services Image" />

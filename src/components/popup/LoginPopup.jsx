@@ -120,9 +120,7 @@ const LoginPopup = ({ onClose, onLoginSuccess }) => {
             <div className="or-divider">OR</div>
             <div className="social-buttons-container mt-3">
               <button type="button" className="btn social-btn" onClick={() => {
-                // For social login, we'll need to handle the redirect back
-                // For now, just redirect and let the main app handle the success
-                window.location.href = 'https://dev-backend.ai3dscanning.com/auth/google';
+                window.location.href = 'https://app.ai3dscanning.com/auth/google';
               }}>
                 <span className="social-icon">
                   <img src={Google} alt="Google" />
@@ -132,7 +130,7 @@ const LoginPopup = ({ onClose, onLoginSuccess }) => {
               <button type="button" className="btn social-btn" onClick={() => {
                 // For social login, we'll need to handle the redirect back
                 // For now, just redirect and let the main app handle the success
-                window.location.href = 'https://dev-backend.ai3dscanning.com/auth/facebook';
+                window.location.href = 'https://app.ai3dscanning.com/auth/facebook';
               }}>
                 <span className="social-icon">
                   <img src={Facebook} alt="Facebook" />

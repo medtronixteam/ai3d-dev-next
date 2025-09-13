@@ -157,7 +157,7 @@ const TeamSettings = () => {
             type="text"
             placeholder="Search in team settings..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            // onChange={(e) => setSearchQuery(e.target.value)}
             className="team-search-input"
           />
         </div>

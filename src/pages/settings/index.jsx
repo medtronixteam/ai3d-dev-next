@@ -8,7 +8,7 @@ const SettingsPage = () => {
       style={{ display: 'flex', minHeight: '100vh' }}
     >
       {/* The custom sidebar will be rendered by MainLayout logic */}
-      <div style={{ flex: 1 }}>
+      <div style={{ flex: 1}}>
         <Outlet />
       </div>
     </div>

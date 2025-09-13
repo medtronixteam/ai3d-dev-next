@@ -59,9 +59,9 @@ const ProfilePopup = ({ onClose, successMessage }) => {
   // Profile image logic
   let profileImg = '';
   if (profile?.avatar) {
-    profileImg = profile.avatar.startsWith('http') ? profile.avatar : `https://dev-backend.ai3dscanning.com/storage/${profile.avatar.replace(/^\//, '')}`;
+    profileImg = profile.avatar.startsWith('http') ? profile.avatar : `https://app.ai3dscanning.com/storage/${profile.avatar.replace(/^\//, '')}`;
   } else if (profile?.image) {
-    profileImg = profile.image.startsWith('http') ? profile.image : `https://dev-backend.ai3dscanning.com/storage/${profile.image.replace(/^\//, '')}`;
+    profileImg = profile.image.startsWith('http') ? profile.image : `https://app.ai3dscanning.com/storage/${profile.image.replace(/^\//, '')}`;
   }
 
   const handleOpenCreateTeam = () => setCreateTeamOpen(true);

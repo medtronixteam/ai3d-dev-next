@@ -3,7 +3,7 @@ import './CustomInfoModal.css'
 import modalTextSlideImg from '../../pages/images/text-slide.png'
 import modalBulletImg from '../../pages/images/bullet-point.png'
 import modalQuoteImg from '../../pages/images/quation.png'
-import { FaLinkedin } from 'react-icons/fa'
+import { FaArrowLeft, FaBackspace, FaBackward, FaBlackTie, FaLinkedin } from 'react-icons/fa'
 
 const CustomInfoModal = ({ modalData, onClose }) => {
    useEffect(() => {
@@ -29,7 +29,8 @@ const CustomInfoModal = ({ modalData, onClose }) => {
               className="close-left"
               onClick={onClose}
             >
-              <i className="bx bx-arrow-back" />
+              <FaArrowLeft size={18} />
+              {/* <i className="bx bx-arrow-back"/> */}
             </button>
           </div>
           <div className="custom-modal-content">

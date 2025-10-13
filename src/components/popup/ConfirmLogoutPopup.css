@@ -182,18 +182,22 @@
 
 .btn-cancel.confirm-btn:hover {
   background: #ececec;
+  color: #222;
 }
 
 .confirm-modal-error {
-  background: #ffebee;
-  color: #c0392b;
-  border-radius: 8px;
-  padding: 10px 16px;
-  margin-bottom: 16px;
+  background: rgba(222, 57, 150, 1);
+  color: #fff;
+  /* border-radius: 8px; */
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  /* margin-top: 50px; */
+  padding: 1rem 1rem;
+  /* margin-bottom: 16px; */
   font-weight: 600;
   width: 100%;
   text-align: center;
-  border: 1px solid #ffcdd2;
+  /* border: 1px solid #ffcdd2; */
   box-sizing: border-box;
 }
 

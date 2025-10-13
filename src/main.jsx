@@ -9,6 +9,10 @@ import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AuthProvider } from './context/AuthContext';
 import { NotificationProvider } from './context/NotificationContext';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_YourPublishableKeyHere');
 
 // =============================
 // Theme Initialization
@@ -46,8 +50,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <AuthProvider>
       <NotificationProvider>
-        <ToastContainer position="top-right" autoClose={3000} />
-        <RouterProvider router={router} />
+        <Elements stripe={stripePromise}>
+          <ToastContainer position="top-right" autoClose={3000} />
+          <RouterProvider router={router} />
+        </Elements>
       </NotificationProvider>
     </AuthProvider>
   </React.StrictMode>

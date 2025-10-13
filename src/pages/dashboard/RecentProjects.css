@@ -8,6 +8,10 @@
 
 }
 
+/* [data-theme='dark'] body , .recent-projects-modern-container {
+  background-color: #191919;
+} */
+
 /* .card:hover {
     transform: scale(1.02);
   } */
@@ -340,7 +344,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
   gap: 24px;
-  padding: 0 8px;
+  padding: 0 15px;
 }
 
 .rp-grid:last-child {
@@ -489,19 +493,19 @@
   border-top-right-radius: 18px;
 }
 
-.rp-fav-btn {
+.rec-rp-fav-btn {
   position: absolute;
   top: 12px;
   right: 12px;
   background: #fff;
   border: none;
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #000; /* light mode: black icon */
+  color: #DE3996;
   font-size: 18px;
   box-shadow: 0 2px 8px rgba(230, 51, 154, 0.10);
   cursor: pointer;
@@ -509,22 +513,21 @@
   z-index: 2;
 }
 
-.rp-fav-btn:hover {
-  background: #000;
+.rec-rp-fav-btn:hover {
+  background: #DE3996;
   color: #fff;
 }
 
 /* Dark mode: white icon */
-[data-theme='dark'] .rp-fav-btn {
-  background: #232334;
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+[data-theme='dark'] .rec-rp-fav-btn {
+  background: #DE3996 !important;
+  color: #fff !important;
 }
 
-[data-theme='dark'] .rp-fav-btn:hover {
-  background: #fff;
-  color: #000;
-}
+/* [data-theme='dark'] .rp-fav-btn:hover {
+  background: #DE3996 !important;
+  color: #fff !important;
+} */
 
 .rp-card-body {
   padding: 18px 18px 14px 18px;
@@ -609,7 +612,7 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
-  padding: 0 8px;
+  padding: 0 15px;
 }
 
 .rp-list-group {
@@ -629,14 +632,14 @@
 .rp-list-item {
   background: #F9F9F9;
   border-radius: 6px;
-  box-shadow: 0 2px 12px rgba(230, 51, 154, 0.06) !important;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.17) !important;
   display: flex;
   align-items: center;
   padding: 6px;
   margin-bottom: 20px;
   position: relative;
   gap: 16px;
-  border: 1px solid #8b8b8b !important;
+  border: 1px solid #F9F9F9 !important;
   transition: box-shadow 0.2s;
 }
 
@@ -836,9 +839,14 @@
 }
 
 [data-theme='dark'] .rp-list-item {
-  background: #23232a !important;
+  background: #110E20 !important;
   color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 1) !important;
 }
+
+/* [data-theme='dark'] .recent-projects-modern-container {
+  background-color: #191919;
+} */
 
 [data-theme='dark'] .rp-list-title {
   color: #fff !important;

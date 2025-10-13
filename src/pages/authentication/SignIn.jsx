@@ -18,7 +18,7 @@ const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [updatesCheck, setUpdatesCheck] = useState(true);
-  const { login, token } = useAuth();
+  const { login, tokens, user } = useAuth();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -26,37 +26,83 @@ const SignIn = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      // Demo user (frontend only)
       if (email === 'demo@demo.com' && password === 'demo123') {
-        login('demo-token', { email: 'demo@demo.com', name: 'Demo User' });
+        const demoUser = { email: 'demo@demo.com', name: 'Demo User' };
+        login('demo-token', demoUser);
+        
+        // Login ke baad wait karte hain ke state update ho jaye
+        setTimeout(() => {
+          const inviteToken = localStorage.getItem('invite_token');
+          if (inviteToken) {
+            navigate(`/platform/team/invite/accept/${inviteToken}`);
+          } else {
+            navigate('/platform/');
+          }
+        }, 100);
+        
         setLoading(false);
         return;
       }
+
       const res = await axios.post(
         `${baseURL}/login`,
         { email, password },
         { skipAuthInterceptor: true },
       );
-      login(res.data.token, res.data.user);
-      const inviteToken = localStorage.getItem('invite_token');
-      if (inviteToken) {
-        navigate(`/platform/team/invite/accept/${inviteToken}`);
-      } else {
-        navigate('/platform/');
+      
+      // Debug: Response ko check karte hain
+      console.log('API Response:', res.data);
+      console.log('Token:', res.data.token);
+      console.log('User data:', res.data.user);
+      
+      // Check karte hain ke response mein proper data hai ya nahi
+      if (!res.data.token) {
+        throw new Error('Token not received from server');
       }
+      
+      // User data ko validate aur format karte hain
+      let userData = res.data.user;
+      if (!userData || !userData.email) {
+        // Fallback: agar user object nahi mila to email se basic object banate hain
+        userData = {
+          email: email,
+          name: res.data.name || email.split('@')[0], // Default name
+          ...res.data // Baaki jo bhi data hai wo merge kar dete hain
+        };
+      }
+      
+      console.log('Formatted user data:', userData);
+      
+      // Login function call karte hain
+      login(res.data.token, userData);
+      
+      // Login ke baad wait karte hain ke state update ho jaye
+      setTimeout(() => {
+        const inviteToken = localStorage.getItem('invite_token');
+        if (inviteToken) {
+          navigate(`/platform/team/invite/accept/${inviteToken}`);
+        } else {
+          navigate('/platform/');
+        }
+      }, 100);
+      
     } catch (err) {
-      toast.error(err?.response?.data?.message || '');
+      toast.error(err?.response?.data?.message || 'Login failed');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    const inviteToken = localStorage.getItem('invite_token');
-    if (token && inviteToken) {
-      navigate(`/platform/team/invite/accept/${inviteToken}`);
+    // Sirf tab navigate karte hain jab user already logged in ho
+    if (user && user.email) {
+      const inviteToken = localStorage.getItem('invite_token');
+      if (inviteToken) {
+        navigate(`/platform/team/invite/accept/${inviteToken}`);
+      }
     }
-  }, [token, navigate]);
+  }, []); 
+
 
   return (
     <>
@@ -101,6 +147,9 @@ const SignIn = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     maxLength={30}
+                    autoComplete="off"
+                    onCopy={(e) => e.preventDefault()}
+                    onPaste={(e) => e.preventDefault()}
                   />
                   <span
                     style={{
@@ -112,7 +161,7 @@ const SignIn = () => {
                     }}
                     onClick={() => setShowPassword((s) => !s)}
                   >
-                    {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                    {showPassword ? <FiEye size={20} /> : <FiEyeOff size={20} />}
                   </span>
                 </div>
                 <div className="d-flex justify-content-between align-items-center mb-3">

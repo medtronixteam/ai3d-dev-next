@@ -21,7 +21,7 @@ export default defineConfig({
   },
 
   // ✅ Add this to support .lottie files
-  assetsInclude: ['**/*.lottie'],
+  assetsInclude: ['**/*.lottie' , '**/*.glb', '**/*.gltf'],
 
   server: {
     host: '0.0.0.0',

@@ -39,6 +39,73 @@
   color: white !important;
 }
 
+.single-scanning-container {
+  border-radius: 35px;
+  background: linear-gradient(to right, 
+              #9688EDB2, 
+              #D1C9FF, 
+              #DDD8FC, 
+              #FDC7D9, 
+              #FF92B6B2);
+  display: flex;
+  /* flex-direction: column; */
+  justify-content: center;
+  align-items: center;
+  padding: 30px 20px;
+  margin-top: 2rem;
+  gap: 20px;
+}
+
+[data-theme = 'dark'] .single-scanning-container {
+  background-image: url('../../assets/images/dark.gif');
+}
+
+.single-scanning-container h2 {
+  color: #DE3996;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.single-scanning-container p {
+  color: #333743;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 2;
+  margin: 0;
+}
+
+[data-theme = 'dark'] .single-scanning-container p {
+  color: #DADADA;
+}
+
+.single-scanning-input-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 300px;
+  margin-top: 0.5rem;
+  padding: 8px 12px;
+  border-radius: 25px;
+  background: transparent;
+}
+
+.single-scanning-input-field::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 25px;
+  padding: 1.5px;
+  background: linear-gradient(to right, #DE3996, #D4CDFE);
+  -webkit-mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
 .prompt-box:focus-within {
   outline: none;
   box-shadow:
@@ -116,7 +183,7 @@
     position: relative;
     user-select: none;
     width: 100% !important;
-    padding: 30px 20px 80px;
+    padding: 30px 20px 30px;
     box-sizing: border-box;
   }
 
@@ -192,7 +259,7 @@
   position: relative;
   user-select: none;
   width: 100% !important;
-  padding: 30px 20px 80px;
+  padding: 30px 20px 30px;
   box-sizing: border-box;
 }
 
@@ -284,15 +351,22 @@
 }
 
 .highlight {
-  color: #ff4ecb;
-  text-decoration: underline;
+  background-color: #DE3996;
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 12px;
   user-select: none;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  gap: 8px;
 }
 
 .image-preview-slider-container {
   position: relative;
-  margin-top: 20px;
   width: 100%;
   max-width: 100%;
   justify-content: center;
@@ -436,7 +510,7 @@ border: 2px solid #4D4C4C73
 #generateBtn1 {
   position: absolute;
   bottom: 20px;
-  right: 15%;
+  right: 12%;
   transform: translateX(-50%);
   background-color: #DE3996;
   color: white;

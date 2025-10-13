@@ -231,6 +231,7 @@
     /* 14px */
     font-weight: 400;
     line-height: 1.5;
+    margin-top: 0;
 }
 
 .pricing-container .price-section {
@@ -243,7 +244,6 @@
     font-weight: 500;
     font-size: 0.875rem;
     /* 14px */
-    line-height: 1.8125rem;
     /* 29px */
 }
 

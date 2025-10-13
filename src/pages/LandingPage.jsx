@@ -54,7 +54,7 @@ import videoSrc from './images/3dModal.mp4';
 import videoIcon from './images/video_icon.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPauseCircle } from '@fortawesome/free-solid-svg-icons';
-import { FaLinkedin } from 'react-icons/fa';
+import { FaChevronDown, FaLinkedin } from 'react-icons/fa';
 import rainbowImg from './images/rainbow.png';
 import ArslanImg from '../assets/images/Arslan.svg';
 import CeoImg from '../assets/images/Ceo.svg';
@@ -112,11 +112,26 @@ import SubscriptionModal from '../components/popup/SubscriptionModal';
 import LandingPageModal from '../components/popup/LandingPageModal';
 import LoginPopup from '../components/popup/LoginPopup';
 import CustomInfoModal from '../components/popup/CustomInfoModal';
+import Robot_Loader from '../assets/images/RobotLoader.png';
+import { FiArrowRight } from 'react-icons/fi';
+import { baseURL } from '../config';
+import { useAuth } from '../context/AuthContext';
+// import MiniBotViewer from '../components/MiniBotViewer';
+// import Mini_bot from '../../public/assets/images/mini_bot.glb'
 
 const LandingPage = () => {
   const { pathname, hash, key } = useLocation();
   const [subscriptionModalOpen, setSubscriptionModalOpen] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleOpenLogin = () => {
     setSubscriptionModalOpen(false); // subscription modal close
@@ -212,7 +227,7 @@ const LandingPage = () => {
   const visibleCards = getVisibleCards();
 
   // hide scrollbar
-    useEffect(() => {
+  useEffect(() => {
     const css = `
       html, body { 
         scrollbar-width: none !important;
@@ -223,11 +238,11 @@ const LandingPage = () => {
         display: none !important; 
       }
     `;
-    
+
     const style = document.createElement('style');
     style.innerHTML = css;
     document.head.appendChild(style);
-    
+
     return () => {
       document.head.removeChild(style);
     };
@@ -318,33 +333,62 @@ const LandingPage = () => {
 
   const [openIndex, setOpenIndex] = useState(null);
 
+  const [models, setModels] = useState([]);
+
   const [showAllModels, setShowAllModels] = useState(false);
 
-  const modelCards = [
-    { img: carImg, label: 'Car', price: '23K' },
+  const [error, setError] = useState('');
 
-    { img: homeImg, label: 'Home', price: '23K' },
+  const { token } = useAuth();
 
-    { img: shoesImg, label: 'Shoes', price: '23K' },
+  useEffect(() => {
+    const fetchModels = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        const response = await fetch(`${baseURL}/home/models`, { headers });
+        const data = await response.json();
+        console.log('Full model API response:', data);
 
-    { img: astronautImg, label: 'Space Robot', price: '23K' },
+        setModels(data.models || data);
+      } catch (error) {
+        console.error('Error fetching models:', error);
+        setError('Failed to load models.');
+        setModels([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    { img: headphonesImg, label: 'Headphones', price: '23K' },
+    fetchModels();
+  }, []);
 
-    { img: car2Img, label: 'Car', price: '23K' },
+  // const modelCards = [
+  //   { img: carImg, label: 'Car', price: '23K' },
 
-    { img: car3Img, label: 'Car', price: '23K' },
+  //   { img: homeImg, label: 'Home', price: '23K' },
 
-    { img: ninjaImg, label: 'Character', price: '23K' },
+  //   { img: shoesImg, label: 'Shoes', price: '23K' },
 
-    { img: homeImg, label: 'Exterior', price: '23K' },
+  //   { img: astronautImg, label: 'Space Robot', price: '23K' },
 
-    { img: homeImg, label: 'Home', price: '23K' },
+  //   { img: headphonesImg, label: 'Headphones', price: '23K' },
 
-    { img: shoesImg, label: 'Shoes', price: '23K' },
+  //   { img: car2Img, label: 'Car', price: '23K' },
 
-    { img: carImg, label: 'Car', price: '23K' },
-  ];
+  //   { img: car3Img, label: 'Car', price: '23K' },
+
+  //   { img: ninjaImg, label: 'Character', price: '23K' },
+
+  //   { img: homeImg, label: 'Exterior', price: '23K' },
+
+  //   { img: homeImg, label: 'Home', price: '23K' },
+
+  //   { img: shoesImg, label: 'Shoes', price: '23K' },
+
+  //   { img: carImg, label: 'Car', price: '23K' },
+  // ];
 
   //  useEffect(() => {
 
@@ -710,7 +754,7 @@ const LandingPage = () => {
       // Optional: You can define more detailed data (like expertise, philosophy) in an object
       const fullDataMap = {
         'Arslan Ahmad': {
-          Image : ArslanImg,
+          Image: ArslanImg,
           title: 'Founder - CEO & Product Lead',
           desc: [
             'Arslan drives the vision and product innovation at AI 3D Scanning Solutions Inc., leading end-to-end product development from concept to deployment. With a focus on cutting-edge AI and LLM integration, he spearheads strategic partnerships oversees market positioning, and ensures the platform delivers transformative value to global industries.',
@@ -729,7 +773,7 @@ const LandingPage = () => {
         },
 
         'Dr. Joel Hillier': {
-          Image : CeoImg,
+          Image: CeoImg,
           title: 'Growth Co-Founder – Business & AI Strategy Advisor',
 
           desc: [
@@ -745,7 +789,7 @@ const LandingPage = () => {
           philosophy: '.........',
         },
         'Shehroz Shabbir': {
-          Image : shehrozImg,
+          Image: shehrozImg,
           title: 'Web Development Manager',
           desc: [
             'As the Full Stack Developer at AI3D Scanning Solutions, Shehroz Shabbir is the technical backbone behind the company’s innovative platforms. Skilled in both front-end and back-end development, he ensures that every digital product delivers a seamless, high-performance user experience.',
@@ -763,7 +807,7 @@ const LandingPage = () => {
             '"Great technology isn’t just built — it’s crafted with precision, creativity, and purpose."',
         },
         'Hira Aziz': {
-          Image : hiraImg,
+          Image: hiraImg,
           title: 'Creative Media Manager & Video Editor',
 
           desc: [
@@ -783,7 +827,7 @@ const LandingPage = () => {
         },
         // Add others as needed
         'Usama Ahmad': {
-          Image : osamaImg,
+          Image: osamaImg,
           title: 'Finance Manager',
 
           desc: [
@@ -803,7 +847,7 @@ const LandingPage = () => {
             '"A strong financial foundation is the backbone of innovation. My mission is to ensure every number tells a story that drives the company forward.”',
         },
         'Sajeel Nisar': {
-          Image : sajeelImg,
+          Image: sajeelImg,
           title: 'AI Lead',
 
           desc: [
@@ -823,7 +867,7 @@ const LandingPage = () => {
             '"The future belongs to intelligent systems — and I believe in building AI that makes technology more human."',
         },
         'Mudassar Farooq': {
-          Image : mudassarImg,
+          Image: mudassarImg,
           title: 'HR & Business Development Manager',
           desc: [
             'Mudassar is a dynamic professional at AI3D Scanning Solutions, combining strategic business development expertise with a strong foundation in human resources. In his business development role, he focuses on identifying growth opportunities, building partnerships, and expanding the company’s reach in the AI and 3D scanning industry.',
@@ -842,7 +886,7 @@ const LandingPage = () => {
             '"Success is built on strong relationships — both with clients and within the team."',
         },
         'Samia Rasheed': {
-          Image : samiaImg,
+          Image: samiaImg,
           title: 'Social Media Manager & Associate HR',
 
           desc: [
@@ -875,7 +919,7 @@ const LandingPage = () => {
         name: name,
         ...detailed,
       });
-      }
+    };
 
     const buttons = document.querySelectorAll('.learn-more, .learn-m');
     buttons.forEach((btn) => btn.addEventListener('click', handler));
@@ -1024,19 +1068,32 @@ const LandingPage = () => {
           {/* ========================= Hero Section ======================= */}
 
           <div className="container" style={{ paddingBottom: 20 }}>
-            <div className="row align-items-center">
-              <div className="col-lg-8">
+            <div
+              className="row align-items-center"
+              style={{ marginTop: isMobile ? '-2.5rem' : '-4rem' }}
+            >
+              <div
+                className="col-lg-7"
+                // style={{ marginTop: isMobile ? '0rem' : '-2rem' }}
+              >
                 <h1 className="a3d-title a3d-slide-up" style={{ marginTop: 30 }}>
-                  <span className="perfect-heading">
+                  {/* <span className="perfect-heading">
                     Perf
                     <span className="ec-wrapper">
                       ec
                       <img src={elipse} alt="Ellipse" className="ellipse-img" />
                     </span>
                     t
+                  </span> */}
+                  <span className="a3d-gradient-span-text">
+                    <img src={elipse} alt="Ellipse" className="ellipse-img-ec" />
+                    Perfect place where
+                    <br />
+                    <span>Innovation Meet 3D</span>
+                    <br />
+                    <span>Model Creation</span>
                   </span>
-
-                  <span className="a3d-gradient-text">
+                  {/* <span className="a3d-gradient-text">
                     {' '}
                     place where
                     <span className="d-none d-lg-inline">
@@ -1047,7 +1104,8 @@ const LandingPage = () => {
                       <br />
                     </span>
                     Model Creation
-                  </span>
+                  </span> */}
+                  <span></span>
                 </h1>
 
                 <p className="a3d-description mt-4 a3d-slide-up" style={{ animationDelay: '0.2s' }}>
@@ -1113,10 +1171,10 @@ const LandingPage = () => {
                 </div>
               </div>
 
-              <div className="col-lg-4 text-center" style={{ height: 300 }}>
+              <div className="col-lg-5">
                 {/* {{-- <div> --}} */}
 
-                <img
+                {/* <img
                   src={robot}
                   alt="3D Robot"
                   className="img-fluid main-image a3d-pulse-animation"
@@ -1129,7 +1187,44 @@ const LandingPage = () => {
 
                     right: '1rem',
                   }}
-                />
+                /> */}
+
+                {/* <MiniBotViewer modelPath="/assets/images/mini_fixed.glb" /> */}
+
+                <div style={{ position: 'relative', width: '100%', height: '500px' }}>
+                  {/* Loader */}
+                  {loading && (
+                    <div className="loader-robot-container">
+                      <img src={Robot_Loader} alt="Loading..." className="loader-robot-image" />
+                    </div>
+                  )}
+
+                  {/* Model */}
+                  {!loading && (
+                    <model-viewer
+                      src="/assets/images/mini_fixed.glb"
+                      ar
+                      ar-modes="webxr scene-viewer quick-look"
+                      camera-controls
+                      disable-zoom
+                      tone-mapping="neutral"
+                      // camera-target=""
+                      shadow-intensity="1"
+                      autoplay
+                      // camera-orbit="35deg 85deg 9m"
+                      camera-orbit="0deg 90deg 9m"
+                      field-of-view="29.68deg"
+                      reveal="auto"
+                      loading="eager"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'transparent',
+                        // marginTop: isMobile ? '0' : '-4rem',
+                      }}
+                    />
+                  )}
+                </div>
 
                 {/* {{--
 
@@ -1141,7 +1236,7 @@ const LandingPage = () => {
               <div className="col-12 col-md-8">
                 <div
                   className="a3d-trusted d-flex align-items-center gap-1 a3d-slide-up"
-                  style={{ animationDelay: '0.2s', marginTop: 70 }}
+                  style={{ animationDelay: '0.2s', marginTop: window.innerWidth < 768 ? 0 : 40 }}
                 >
                   <span className="trusted-label" style={{ fontSize: 14, marginRight: 10 }}>
                     Trusted by:
@@ -1177,12 +1272,12 @@ const LandingPage = () => {
         <section className="service-cards a3d-fade-in mt-5 pt-md-0 pt-3">
           <div className="container">
             <div className="text-center mb-1">
-              <h2 className="section-title">
+              <h2 className="section-title" style={{ fontSize: isMobile ? '29px' : '38px' }}>
                 How it{' '}
                 <span className="perfect-heading">
                   <span className="wr-wrapper">
                     wo
-                    <img src={elipse} alt="Ellipse" className="ellipse-img" />r
+                    <img src={elipse} alt="Ellipse" className="ellipse-img-work" />r
                   </span>
                   ks
                 </span>
@@ -1197,7 +1292,7 @@ const LandingPage = () => {
               </p>
             </div>
 
-            <section className="py-5 services-cards">
+            <section className="py-3 py-lg-4 services-cards">
               <div className="container">
                 <div className="row g-4">
                   {/* Card */}
@@ -1357,7 +1452,7 @@ const LandingPage = () => {
               </p>
             </div> */}
 
-            <div className="business-section">
+            <div className="business-section" id="aboutus">
               <div className="text-center mb-4">
                 <div className="business-title">Our Services for Businesses</div>
 
@@ -1570,7 +1665,7 @@ const LandingPage = () => {
                   Scanning Features
                 </div>
 
-                <p className="scan_description" style={{ width: '95%' }}>
+                <p className="scan_description" style={{ width: '95%', color: '#1A1A40B2' }}>
                   AI3D combines cutting-edge AI algorithms with powerful cloud infrastructure to
                   deliver studio-quality 3D scanning that's fast, accurate, and secure. Whether
                   you're creating for gaming, e-commerce, design, or enterprise use, our features
@@ -1719,7 +1814,7 @@ const LandingPage = () => {
               </div>
 
               <button className="search_button">
-                <img src={rightarrow} alt="Go" />
+                <FiArrowRight size={18} />
               </button>
             </div>
           </div>
@@ -1730,25 +1825,35 @@ const LandingPage = () => {
         <section className="model_section py-4 ai_3d_landing">
           <div className="container">
             <div className="row g-md-4">
-              {(showAllModels ? modelCards : modelCards.slice(0, 6)).map((card, idx) => (
-                <div className="col-12 col-sm-6 col-lg-4" key={idx}>
-                  <div className="model_card">
-                    <img src={card.img} className="model_image" alt={card.label} />
+              {(showAllModels ? models : models.slice(0, 6)).map((card, idx) => {
+                const imgUrl = card.image
+                  ? `https://app.ai3dscanning.com/storage/${card.image.replace(/^\/+/, '')}`
+                  : modelFallback;
 
-                    <div className="model_footer">
-                      <div className="model_label">
-                        {card.label}
+                return (
+                  <div className="col-12 col-sm-6 col-lg-4" key={card.id || idx}>
+                    <div className="model_card">
+                      <img
+                        src={imgUrl}
+                        className="model_image"
+                        alt={card.title}
+                        onError={(e) => (e.target.src = modelFallback)}
+                      />
 
-                        <span className="model_price">{card.price}</span>
+                      <div className="model_footer">
+                        <div className="model_label">
+                          {card.title}
+                          <span className="model_price">23K</span>
+                        </div>
+
+                        <a href="#" className="model_card_button">
+                          <img src={modelButtonIcon} alt="Go" />
+                        </a>
                       </div>
-
-                      <a href="#" className="model_card_button">
-                        <img src={modelButtonIcon} alt="Go" />
-                      </a>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
 
               <div className="col-12 d-flex justify-content-end">
                 <button
@@ -1760,15 +1865,10 @@ const LandingPage = () => {
                     alt=""
                     style={{
                       width: 18,
-
                       marginTop: 6,
-
                       marginBottom: 4,
-
                       marginLeft: 1,
-
                       transform: showAllModels ? 'rotate(180deg)' : 'none',
-
                       transition: 'transform 0.2s',
                     }}
                   />
@@ -1818,7 +1918,7 @@ const LandingPage = () => {
           </div>
         </div>
 
-        <section className="video_section py-4 mb-3" id="video">
+        <section className="video_section py-lg-4 py-1 mb-3" id="video">
           <div className="container">
             <div className="row justify-content-center g-0 px-0">
               <div className="col-12 col-lg-12 col-xxl-10">
@@ -1937,10 +2037,9 @@ const LandingPage = () => {
                   </div>
                 </div>
 
-{modalData && (
-        <CustomInfoModal modalData={modalData} onClose={() => setModalData(null)} />
-      )}
-
+                {modalData && (
+                  <CustomInfoModal modalData={modalData} onClose={() => setModalData(null)} />
+                )}
               </div>
 
               {/* Splide Slider for Team Members */}
@@ -2246,7 +2345,7 @@ const LandingPage = () => {
             </div>
           </section>
 
-          <section className="dropdown">
+          <section className="dropdown" id="FAQs">
             <div className="container">
               {/* Heading */}
 
@@ -2276,19 +2375,27 @@ const LandingPage = () => {
                         {faq.question}
 
                         <span className="icon-container">
-                          <img
+                          {/* <img
                             src={plusIcon}
                             alt="Plus"
                             className="icon-plus"
                             style={{ display: openIndex === index ? 'none' : 'inline' }}
-                          />
+                          /> */}
+                          <i
+                            className="fa-solid fa-plus icon-plus"
+                            style={{ display: openIndex === index ? 'none' : 'inline' }}
+                          ></i>
 
-                          <img
+                          {/* <img
                             src={minusIcon}
                             alt="Minus"
                             className="icon-minus"
                             style={{ display: openIndex === index ? 'inline' : 'none' }}
-                          />
+                          /> */}
+                          <i
+                            className="fa-solid fa-minus icon-minus"
+                            style={{ display: openIndex === index ? 'inline' : 'none' }}
+                          ></i>
                         </span>
                       </button>
                     </h2>
@@ -2305,120 +2412,15 @@ const LandingPage = () => {
               </div>
             </div>
           </section>
-
-          {/* <section className="subscribe-section">
-
-      <div className="container subscribe-container">
-
-        <div className="subscribe-card card">
-
-          <div className="row align-items-center">
-
-            
-
-            <div className="col-lg-7 subscribe-content colfirst">
-
-              <h3>
-
-                <span className="highlight-letters">
-
-                  Subscribe
-
-                  <img
-
-                    src={elipse}
-
-                    alt="rainbow"
-
-                    className="rainbow-above"
-
-                  />
-
-                  to update
-
-                </span>
-
-              </h3>
-
-              
-
-              <div className="center">
-
-                <p>
-
-                  Join our newsletter to stay informed about new
-
-                  <br className="d-lg-block d-md-block d-sm-block d-none" />
-
-                  features and product updates.
-
-                </p>
-
-              </div>
-
-
-
-              <form className="form-wrapper">
-
-                <input
-
-                  type="email"
-
-                  className="form-control with-button"
-
-                  placeholder="Enter email address*"
-
-                  required
-
-                />
-
-                <button type="submit" className="btn btn-subscribe-inside">
-
-                  Subscribe
-
-                </button>
-
-              </form>
-
-            </div>
-
-
-
-            <div className="col-lg-5 colsecond">
-
-    
-
-                <img
-
-                  src={manImage}
-
-                  alt="Subscribe Person"
-
-                  className="subscribe-image"
-
-                />
-
-           
-
-            </div>
-
-
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section> */}
-          <section className="subscribe-section position-relative ">
+          
+          <section className="subscribe-section position-relative " id="help">
             <div className="container-fluid ">
               <div className="row align-items-center">
                 <div className="col-md-7 card-data">
-                  <h3 class="subscribe-title position-relative">
-                    <span class="highlight-letters">
+                  <h3 className="subscribe-title position-relative">
+                    <span className="highlight-letters">
                       Subscribe
-                      <img src={elipse} alt="rainbow" class="rainbow-above" /> to update
+                      <img src={elipse} alt="rainbow" className="rainbow-above" /> to update
                     </span>
                   </h3>
                   <p className="subscribe-description">
@@ -2480,13 +2482,14 @@ const LandingPage = () => {
 
                     <div className="dropdown btn-wrapper d-lg-none d-md-none d-sm-none d-block">
                       <button
-                        className="btn dropdown-toggle english"
+                        className="btn english"
                         type="button"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
                       >
                         <img src={world} alt="World" style={{ width: 18, marginRight: 6 }} />
                         English
+                        <FaChevronDown size={12} className="ms-2" />
                       </button>
 
                       <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
@@ -2502,12 +2505,13 @@ const LandingPage = () => {
 
                     <div className="dropdown btn-wrapper d-lg-none d-md-none d-sm-none d-block">
                       <button
-                        className="btn dropdown-toggle usd"
+                        className="btn usd"
                         type="button"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
                       >
                         $USD
+                        <FaChevronDown size={12} className="ms-2" />
                       </button>
 
                       <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
@@ -2524,13 +2528,14 @@ const LandingPage = () => {
                     <div className="d-flex gap-2 none">
                       <div className="dropdown btn-wrapper none">
                         <button
-                          className="btn dropdown-toggle english"
+                          className="btn english"
                           type="button"
                           data-bs-toggle="dropdown"
                           aria-expanded="false"
                         >
                           <img src={world} alt="World" style={{ width: 18, marginRight: 6 }} />
                           English
+                          <FaChevronDown size={12} className="ms-2" />
                         </button>
 
                         <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
@@ -2544,12 +2549,13 @@ const LandingPage = () => {
 
                       <div className="dropdown btn-wrapper none">
                         <button
-                          className="btn dropdown-toggle usd"
+                          className="btn usd"
                           type="button"
                           data-bs-toggle="dropdown"
                           aria-expanded="false"
                         >
                           $USD
+                          <FaChevronDown size={12} className="ms-2" />
                         </button>
 
                         <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
@@ -2577,12 +2583,20 @@ const LandingPage = () => {
                   <ul className="mt-1">
                     {['Home', 'About us', 'Pricing'].map((item) => (
                       <li key={item}>
-                        <a href={item === 'Pricing' ? '/platform/subscription' : '#'}>
+                        <a
+                          href={
+                            item === 'Pricing'
+                              ? '/platform/subscription'
+                              : item === 'About us'
+                                ? '#aboutus'
+                                : '#'
+                          }
+                        >
                           <img
                             className="iconsize me-1"
                             src={arrow}
                             alt="Arrow"
-                            style={{ verticalAlign: 'middle' }}
+                            style={{ verticalAlign: 'middle', marginTop: '-3px' }}
                           />
                           {item}
                         </a>
@@ -2605,12 +2619,12 @@ const LandingPage = () => {
                   <ul className="mt-1">
                     {['Help Center', 'FAQ'].map((item) => (
                       <li key={item}>
-                        <a href="#">
+                        <a href={item === 'FAQ' ? '#FAQs' : '#help'}>
                           <img
                             className="iconsize me-1"
                             src={arrow}
                             alt="Arrow"
-                            style={{ verticalAlign: 'middle' }}
+                            style={{ verticalAlign: 'middle', marginTop: '-3px' }}
                           />
 
                           {item}
@@ -2656,7 +2670,7 @@ const LandingPage = () => {
                             className="iconsize me-1"
                             src={arrow}
                             alt="Arrow"
-                            style={{ verticalAlign: 'middle' }}
+                            style={{ verticalAlign: 'middle', marginTop: '-2px' }}
                           />
                           {item.name}
                         </a>
@@ -2785,83 +2799,6 @@ const LandingPage = () => {
         </div>
       </div>
 
-      {/* XL Modal */}
-      {/* <div
-        className="modal fade profile-detail-modal"
-        id="extraLargeModal"
-        tabIndex={-1}
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-dialog-centered modal-xl">
-          <div className="parent-modal-content modal-content position-relative">
-            <div>
-              <button
-                type="button"
-                className="close-left"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-                onClick={() => setModalData(null)} 
-              >
-                <i className="bx bx-arrow-back" />
-              </button>
-            </div>
-            <div className="modal-content position-relative">
-              <div className="modal-body pt-3 px-lg-5">
-                {modalData && (
-                  <div className="row g-4 mt-4">
-                    
-                    <div className="col-12 col-lg-4 text-center">
-                      <div className="styled-img-container">
-                        <img src={modalQuoteImg} className="quote-img" alt="Quote Icon" />
-                        <img src={modalData.img} className="profile-img" alt={modalData.name} />
-                      </div>
-                      <div className="mt-3">
-                        <a
-                          href={modalData.linkedin}
-                          className="btn btn-linkedin w-100 d-inline-flex align-items-center justify-content-center gap-2"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <FaLinkedin size={18} /> Linkedin
-                        </a>
-                      </div>
-                    </div>
-
-                    
-                    <div className="col-12 col-lg-8">
-                      <h2 className="text-title">{modalData.name}</h2>
-                      <p className="text-para mb-0">{modalData.title}</p>
-                      <div>
-                        <img src={modalTextSlideImg} alt="" />
-                      </div>
-
-                      
-                      {modalData.desc.map((line, idx) => (
-                        <p key={idx} className="discription">
-                          {line}
-                        </p>
-                      ))}
-
-                      <h5 className="mt-4 text-title">Key Expertise:</h5>
-                      <ul className="custom-list">
-                        {modalData.expertise.map((item, idx) => (
-                          <li key={idx}>
-                            <img src={modalBulletImg} alt="" /> {item}
-                          </li>
-                        ))}
-                      </ul>
-
-                      <h5 className="mt-4 text-title">Professional Philosophy:</h5>
-                      <p className="discription">{modalData.philosophy}</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */}
-
       {/* Subscription Modal */}
       <LandingPageModal
         open={subscriptionModalOpen}
@@ -2869,13 +2806,11 @@ const LandingPage = () => {
         onRequireLogin={handleOpenLogin}
       />
 
-      {/* ==== Login Modal ==== */}
-      {showLoginModal && ( // 👈 ab conditional render, refresh par auto open nahi hoga
+      {showLoginModal && ( 
         <LoginPopup
           onClose={() => setShowLoginModal(false)}
           onSuccess={() => {
             setShowLoginModal(false);
-            // yahan redirect ya subscription continue kar sakti ho
           }}
         />
       )}

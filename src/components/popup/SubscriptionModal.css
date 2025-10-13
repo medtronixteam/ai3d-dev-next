@@ -66,7 +66,7 @@
   padding: 40px;
   box-sizing: border-box;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  scrollbar-width: none;
+  /* scrollbar-width: none; */
 }
 
 .subscription-modal-close {
@@ -97,6 +97,27 @@
   text-align: center;
   margin-bottom: 30px;
   position: relative;
+  background-image: url('../../assets/images/video.gif'); /* apna correct path dalna */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 60px;
+  margin: -40px -40px 30px -40px;
+  position: relative;
+}
+
+[data-theme = 'dark'] .subscription-modal-header {
+  background-image: url('../../assets/images/dark.gif'); /* apna correct path dalna */
+}
+
+[data-theme='dark'] .subscription-modal-header h2,
+.subscription-modal-header p {
+ color: white;
+}
+
+[data-theme ='dark'] 
+.subscription-modal-header p{
+  color: white;
 }
 
 /* .subscription-modal-header::before {
@@ -414,7 +435,7 @@
 
 .plan-button:hover {
   background: #333333;
-  transform: translateY(-2px);
+  /* transform: translateY(-2px); */
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
 }
 
@@ -450,9 +471,9 @@
     padding: 25px;
     margin: 0.5rem auto;
   }
-  #generateBtn {
+  /* #generateBtn {
     width: 90% !important;
-  }
+  } */
   #profile-logout-btn {
     margin-left: 1rem !important;
   }
@@ -560,7 +581,7 @@
   width: 100%;
   /* full width */
   height: 1px;
-  background: #ddd;
+  background: #DE399680;
   /* margin: 1rem 0; */
 }
 

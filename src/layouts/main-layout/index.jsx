@@ -89,6 +89,40 @@ const MainLayout = ({ children }) => {
     }
   }, [isMobile992, isCollapsed]);
 
+  useEffect(() => {
+    document.body.style.overflow = 'auto';
+    document.documentElement.style.overflow = 'auto';
+    
+    const style = document.createElement('style');
+    style.id = 'hide-scrollbar-style';
+    style.innerHTML = `
+      html, body { 
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important; 
+      }
+      html::-webkit-scrollbar, 
+      body::-webkit-scrollbar { 
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+      }
+    `;
+    
+    const existingStyle = document.getElementById('hide-scrollbar-style');
+    if (existingStyle) {
+      existingStyle.remove();
+    }
+    
+    document.head.appendChild(style);
+  
+    return () => {
+      const styleToRemove = document.getElementById('hide-scrollbar-style');
+      if (styleToRemove) {
+        styleToRemove.remove();
+      }
+    };
+  }, [])
+
   return (
     <div className="main-layout">
       {shouldShowMainSidebar && (

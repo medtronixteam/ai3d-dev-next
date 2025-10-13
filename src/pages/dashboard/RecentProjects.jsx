@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from 'react';
 import {
   FaPen,
   FaUpload,
@@ -8,12 +8,12 @@ import {
   FaHeart,
   FaEye,
   FaCube,
-} from "react-icons/fa";
-import { BiSortAZ } from "react-icons/bi";
-import img1 from "../../assets/images/products/drone.png";
-import img2 from "../../assets/images/products/dslr.png";
-import img3 from "../../assets/images/products/laptop.png";
-import "./RecentProjects.css";
+} from 'react-icons/fa';
+import { BiSortAZ } from 'react-icons/bi';
+import img1 from '../../assets/images/products/drone.png';
+import img2 from '../../assets/images/products/dslr.png';
+import img3 from '../../assets/images/products/laptop.png';
+import './RecentProjects.css';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import { baseURL } from '../../config';
@@ -26,89 +26,89 @@ import GridIcon from '../../assets/images/grid-icon.svg';
 import CardIcon from '../../assets/images/card-icon.svg';
 import sorticon from '../../assets/images/sort-icon.svg';
 
-const FILTERS = ["All", "Recent Project", "Favourite Project"];
+const FILTERS = ['All', 'Recent Project', 'Favourite Project'];
 
 const projects = [
   {
     id: 1,
-    title: "Brightwoods Cabin",
-    date: "April 20,2025",
+    title: 'Brightwoods Cabin',
+    date: 'April 20,2025',
     image: img1,
     favorite: true,
-    group: "Today",
-    time: "11:14 AM",
+    group: 'Today',
+    time: '11:14 AM',
   },
   {
     id: 2,
-    title: "Urban Loft",
-    date: "May 20,2023",
+    title: 'Urban Loft',
+    date: 'May 20,2023',
     image: img2,
     favorite: false,
-    group: "Today",
-    time: "10:10 AM",
+    group: 'Today',
+    time: '10:10 AM',
   },
   {
     id: 3,
-    title: "Forestville Cottages",
-    date: "June 20,2024",
+    title: 'Forestville Cottages',
+    date: 'June 20,2024',
     image: img3,
     favorite: false,
-    group: "Earlier",
-    time: "June 20,2025",
+    group: 'Earlier',
+    time: 'June 20,2025',
   },
   {
     id: 4,
-    title: "Missisuaga Aistream",
-    date: "June 20,2024",
+    title: 'Missisuaga Aistream',
+    date: 'June 20,2024',
     image: img1,
     favorite: false,
-    group: "Earlier",
-    time: "April 20,2025",
+    group: 'Earlier',
+    time: 'April 20,2025',
   },
   {
     id: 5,
-    title: "Niagara Homes",
-    date: "May 20,2023",
+    title: 'Niagara Homes',
+    date: 'May 20,2023',
     image: img2,
     favorite: true,
-    group: "Earlier",
-    time: "March 20,2023",
+    group: 'Earlier',
+    time: 'March 20,2023',
   },
   {
     id: 6,
-    title: "Sunny Estate",
-    date: "May 20,2023",
+    title: 'Sunny Estate',
+    date: 'May 20,2023',
     image: img3,
     favorite: false,
-    group: "Earlier",
-    time: "May 20,2023",
+    group: 'Earlier',
+    time: 'May 20,2023',
   },
   {
     id: 7,
-    title: "Simcoe Lake Lodge",
-    date: "May 20,2023",
+    title: 'Simcoe Lake Lodge',
+    date: 'May 20,2023',
     image: img1,
     favorite: false,
-    group: "Earlier",
-    time: "May 20,2023",
+    group: 'Earlier',
+    time: 'May 20,2023',
   },
   {
     id: 8,
-    title: "Wasaga Beach Home",
-    date: "May 20,2023",
+    title: 'Wasaga Beach Home',
+    date: 'May 20,2023',
     image: img2,
     favorite: true,
-    group: "Earlier",
-    time: "May 20,2023",
+    group: 'Earlier',
+    time: 'May 20,2023',
   },
   {
     id: 9,
-    title: "Banff Hills",
-    date: "May 20,2023",
+    title: 'Banff Hills',
+    date: 'May 20,2023',
     image: img3,
     favorite: false,
-    group: "Earlier",
-    time: "May 20,2023",
+    group: 'Earlier',
+    time: 'May 20,2023',
   },
 ];
 
@@ -116,9 +116,9 @@ const RecentProjects = () => {
   const { token } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [viewMode, setViewMode] = useState("grid");
-  const [activeFilter, setActiveFilter] = useState("All");
-  const [sortOption, setSortOption] = useState("Default");
+  const [viewMode, setViewMode] = useState('grid');
+  const [activeFilter, setActiveFilter] = useState('All');
+  const [sortOption, setSortOption] = useState('Default');
   const [dropdownOpen, setDropdownOpen] = useState(null);
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
   const [projects, setProjects] = useState([]);
@@ -133,41 +133,122 @@ const RecentProjects = () => {
   // Track image loaded state per project id for loader overlay
   const [imgLoadedById, setImgLoadedById] = useState({});
 
-  const getProjectKey = (p) => (p?.id ?? p?.token ?? p?.name ?? p?.title ?? Math.random());
+  const getProjectKey = (p) => p?.id ?? p?.token ?? p?.name ?? p?.title ?? Math.random();
 
   // Fetch projects from API
+  // const fetchProjects = async (filter) => {
+  //   setLoading(true);
+  //   let url = `${baseURL}/project`;
+  //   if (filter === 'Recent Project') url += '?recent=recent';
+  //   if (filter === 'Favourite Project') url += '?favorite=favorite';
+  //   console.log('API CALL:', { filter, url, token }); // Debug log
+  //   try {
+  //     const res = await axios.get(url, {
+  //       headers: { Authorization: `Bearer ${token}` }
+  //     });
+  //     setProjects(Array.isArray(res.data.data?.data) ? res.data.data.data : []);
+  //   } catch (err) {
+  //     setProjects([]);
+  //     console.error('API ERROR:', err); // Debug log
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const fetchProjects = async (filter) => {
     setLoading(true);
-    let url = `${baseURL}/project`;
-    if (filter === 'Recent Project') url += '?recent=recent';
-    if (filter === 'Favourite Project') url += '?favorite=favorite';
-    console.log('API CALL:', { filter, url, token }); // Debug log
     try {
-      const res = await axios.get(url, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setProjects(Array.isArray(res.data.data?.data) ? res.data.data.data : []);
+      let finalProjects = [];
+
+      if (filter === 'All') {
+        // Parallel call: All + Recent
+        const [allRes, recentRes] = await Promise.all([
+          axios.get(`${baseURL}/project`, { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get(`${baseURL}/project?recent=recent`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
+
+        const allProjects = Array.isArray(allRes.data?.data?.data) ? allRes.data.data.data : [];
+        const recentProjects = Array.isArray(recentRes.data?.data?.data)
+          ? recentRes.data.data.data
+          : [];
+
+        // Merge: recent ko priority do
+        finalProjects = [
+          ...recentProjects,
+          ...allProjects.filter((ap) => !recentProjects.some((rp) => rp.id === ap.id)),
+        ];
+      } else if (filter === 'Recent Project') {
+        const res = await axios.get(`${baseURL}/project?recent=recent`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        finalProjects = Array.isArray(res.data?.data?.data) ? res.data.data.data : [];
+      } else if (filter === 'Favourite Project') {
+        const res = await axios.get(`${baseURL}/project?favorite=favorite`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        finalProjects = Array.isArray(res.data?.data?.data) ? res.data.data.data : [];
+      }
+
+      // Sort latest first
+      finalProjects.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+      setProjects(finalProjects);
     } catch (err) {
       setProjects([]);
-      console.error('API ERROR:', err); // Debug log
+      console.error('API ERROR:', err);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-  function handleClickOutside(e) {
-    if (!e.target.closest(".rp-card-menu-btn") && !e.target.closest(".rp-card-menu")) {
-      setDropdownOpen(null);
+    document.body.style.overflow = 'auto';
+    document.documentElement.style.overflow = 'auto';
+
+    const style = document.createElement('style');
+    style.id = 'hide-scrollbar-style';
+    style.innerHTML = `
+    html, body { 
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important; 
     }
-  }
-  if (dropdownOpen !== null) {
-    document.addEventListener("mousedown", handleClickOutside);
-  }
-  return () => {
-    document.removeEventListener("mousedown", handleClickOutside);
-  };
-}, [dropdownOpen]);
+    html::-webkit-scrollbar, 
+    body::-webkit-scrollbar { 
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+  `;
+
+    const existingStyle = document.getElementById('hide-scrollbar-style');
+    if (existingStyle) {
+      existingStyle.remove();
+    }
+
+    document.head.appendChild(style);
+
+    return () => {
+      const styleToRemove = document.getElementById('hide-scrollbar-style');
+      if (styleToRemove) {
+        styleToRemove.remove();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (!e.target.closest('.rp-card-menu-btn') && !e.target.closest('.rp-card-menu')) {
+        setDropdownOpen(null);
+      }
+    }
+    if (dropdownOpen !== null) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dropdownOpen]);
   useEffect(() => {
     fetchProjects(activeFilter);
   }, [activeFilter, location.pathname]);
@@ -191,32 +272,29 @@ const RecentProjects = () => {
   // Click outside to close sort dropdown
   useEffect(() => {
     function handleClickOutside(e) {
-      if (
-        sortBtnRef.current &&
-        !sortBtnRef.current.contains(e.target)
-      ) {
+      if (sortBtnRef.current && !sortBtnRef.current.contains(e.target)) {
         setSortDropdownOpen(false);
       }
     }
     if (sortDropdownOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener('mousedown', handleClickOutside);
     } else {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     }
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [sortDropdownOpen]);
 
   // Filtered and sorted projects
   let filtered = projects;
-  
+
   // Apply frontend sorting
-  if (sortOption === "Name") {
+  if (sortOption === 'Name') {
     filtered = [...filtered].sort((a, b) => a.name.localeCompare(b.name));
-  } else if (sortOption === "Date") {
+  } else if (sortOption === 'Date') {
     filtered = [...filtered].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-  } else if (sortOption === "Size") {
+  } else if (sortOption === 'Size') {
     // Sort by file size if available, otherwise by date
     filtered = [...filtered].sort((a, b) => {
       if (a.file_size && b.file_size) {
@@ -246,7 +324,7 @@ const RecentProjects = () => {
       await axios.post(
         `${baseURL}/project/rename`,
         { token: renameProjectId, name: newProjectName },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
       setRenameModalOpen(false);
       fetchProjects(activeFilter);
@@ -259,17 +337,21 @@ const RecentProjects = () => {
 
   const handleFavoriteToggle = async (project) => {
     // Optimistically update UI
-    setProjects((prev) => prev.map(p => p.id === project.id ? { ...p, favorite: !p.favorite } : p));
+    setProjects((prev) =>
+      prev.map((p) => (p.id === project.id ? { ...p, favorite: !p.favorite } : p)),
+    );
     try {
       await axios.post(
         `${baseURL}/project/favorite`,
         { token: project.id },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
       // Optionally refetch projects or handle response
     } catch (err) {
       // Revert UI if API fails
-      setProjects((prev) => prev.map(p => p.id === project.id ? { ...p, favorite: project.favorite } : p));
+      setProjects((prev) =>
+        prev.map((p) => (p.id === project.id ? { ...p, favorite: project.favorite } : p)),
+      );
     }
   };
 
@@ -289,7 +371,7 @@ const RecentProjects = () => {
     setLoading(true);
     try {
       await axios.delete(`${baseURL}/project/delete/${deleteProjectId}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
       setDeleteModalOpen(false);
       setDeleteProjectId(null);
@@ -313,14 +395,14 @@ const RecentProjects = () => {
         }
       `}</style>
       {/* Filter Pills */}
-     
+
       {/* Header Row */}
       <div className="recent-projects-header d-flex flex-wrap">
         <div className="rp-filter-bar">
           {FILTERS.map((filter) => (
             <button
               key={filter}
-              className={`rp-filter-pill${activeFilter === filter ? " active" : ""}`}
+              className={`rp-filter-pill${activeFilter === filter ? ' active' : ''}`}
               onClick={() => setActiveFilter(filter)}
             >
               {filter}
@@ -330,49 +412,57 @@ const RecentProjects = () => {
         <div className="recent-projects-header-spacer" />
         <div className="recent-projects-header-actions">
           <div className="rp-toggle-group">
-                         <button
-               className={`rp-view-toggle${viewMode === "grid" ? " active" : ""}`}
-               onClick={() => setViewMode("grid")}
-               aria-label="Grid view"
-             >
-               <img src={GridIcon} alt="Grid view" />
-             </button>
-             <button
-               className={`rp-view-toggle${viewMode === "list" ? " active" : ""}`}
-               onClick={() => setViewMode("list")}
-               aria-label="List view"
-             >
-               <img src={CardIcon} alt="List view" />
-             </button>
+            <button
+              className={`rp-view-toggle${viewMode === 'grid' ? ' active' : ''}`}
+              onClick={() => setViewMode('grid')}
+              aria-label="Grid view"
+            >
+              <img src={GridIcon} alt="Grid view" />
+            </button>
+            <button
+              className={`rp-view-toggle${viewMode === 'list' ? ' active' : ''}`}
+              onClick={() => setViewMode('list')}
+              aria-label="List view"
+            >
+              <img src={CardIcon} alt="List view" />
+            </button>
           </div>
-       {/* Custom Sort Dropdown */}
-<div className="rp-sort-dropdown" ref={sortBtnRef}>
-  <button
-    className={`rp-sort-btn${sortDropdownOpen ? " open" : ""}`}
-    type="button"
-    onClick={() => setSortDropdownOpen((open) => !open)}
-    aria-label="Sort"
-  >
-  <img src={sorticon} alt="Sort" style={{width:18, height:18,}} className="rp-sort-icon"/>
-  </button>
-  {sortDropdownOpen && (
-      <ul className="dropdown-menu dropdown-menu-end show" style={{display:'block'}}>
+          {/* Custom Sort Dropdown */}
+          <div className="rp-sort-dropdown" ref={sortBtnRef}>
+            <button
+              className={`rp-sort-btn${sortDropdownOpen ? ' open' : ''}`}
+              type="button"
+              onClick={() => setSortDropdownOpen((open) => !open)}
+              aria-label="Sort"
+            >
+              <img
+                src={sorticon}
+                alt="Sort"
+                style={{ width: 18, height: 18 }}
+                className="rp-sort-icon"
+              />
+            </button>
+            {sortDropdownOpen && (
+              <ul className="dropdown-menu dropdown-menu-end show" style={{ display: 'block' }}>
                 <li className="dropdown-header">
                   <div className="sort-title">Sort by:</div>
                 </li>
-                {["Default", "Name", "Date", "Size"].map((option) => (
+                {['Default', 'Name', 'Date', 'Size'].map((option) => (
                   <li key={option}>
                     <button
-                      className={`dropdown-item${sortOption === option ? " active" : ""}`}
-                      onClick={() => { setSortOption(option); setSortDropdownOpen(false); }}
+                      className={`dropdown-item${sortOption === option ? ' active' : ''}`}
+                      onClick={() => {
+                        setSortOption(option);
+                        setSortDropdownOpen(false);
+                      }}
                     >
                       {option}
                     </button>
                   </li>
                 ))}
               </ul>
-  )}
-</div>
+            )}
+          </div>
         </div>
       </div>
       {/* Grid View */}
@@ -385,79 +475,124 @@ const RecentProjects = () => {
           <div style={{ fontSize: 48, marginBottom: 12 }}>📂</div>
           No projects found
         </div>
-      ) : viewMode === "grid" ? (
+      ) : viewMode === 'grid' ? (
         <div className="rp-grid">
           {filtered.map((project) => {
             const pKey = getProjectKey(project);
             return (
-            <div className="rp-card" key={pKey}>
-              <div className="rp-card-img-wrap">
-                <div className="rp-card-img-clip" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-                  {(!project.thumbnail && (project.type === 'text_to_3d' || project.type === 'prompt_to_3d')) ? (
-                    <div style={{ 
-                      width: 120, 
-                      height: 90, 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'center'
-                    }}>
-                      <span style={{ 
-                        fontSize: '22px', 
-                        color: '#e63399', 
-                        fontWeight: '600',
-                        textAlign: 'center',
-                        lineHeight: '1.2'
-                      }}>
-                        Text to 3d
-                      </span>
-                    </div>
-                  ) : (
-                    <>
-                      {!imgLoadedById[pKey] && (
-                        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, background: 'transparent' }}>
-                          <span className="rp-img-loader" aria-label="loading thumbnail"></span>
-                        </div>
-                      )}
-                      <img
-                        src={project.thumbnail ? `${project.thumbnail}` : img1}
-                        alt={project.name}
-                        className="rp-card-img"
-                        style={{ opacity: imgLoadedById[pKey] ? 1 : 0, transition: 'opacity 0.5s', zIndex: 2 }}
-                        onLoad={() => markImageLoaded(pKey)}
-                        onError={() => markImageLoaded(pKey)}
-                      />
-                    </>
-                  )}
-                  <button className="rp-fav-btn" onClick={() => handleFavoriteToggle(project)}>
-                    {project.favorite ? <FaHeart /> : <FaRegHeart />}
-                  </button>
-                </div>
-              </div>
-              <div className="rp-card-body">
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-                  <div>
-                    <div className="rp-card-title">{project.name}</div>
-                    <div className="rp-card-date">
-                      {project.created_at ? new Date(project.created_at).toLocaleDateString() : ''}
-                    </div>
-                  </div>
-                  <button
-                    className="rp-card-menu-btn"
-                    onClick={() => setDropdownOpen(dropdownOpen === project.id ? null : project.id)}
+              <div className="rp-card" key={pKey}>
+                <div className="rp-card-img-wrap">
+                  <div
+                    className="rp-card-img-clip"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      position: 'relative',
+                    }}
                   >
-                    <FaEllipsisV />
-                  </button>
-                </div>
-                {dropdownOpen === project.id && (
-                  <div className="rp-card-menu">
-                    <button onClick={() => handleRenameClick(project)}><FaPen /> Rename</button>
-                    <button onClick={() => handleViewProject(project)}><FaEye /> View</button>
-                    <button onClick={() => handleDeleteClick(project)}><FaTrash /> Remove</button>
+                    {!project.thumbnail &&
+                    (project.type === 'text_to_3d' || project.type === 'prompt_to_3d') ? (
+                      <div
+                        style={{
+                          width: 120,
+                          height: 90,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontSize: '22px',
+                            color: '#e63399',
+                            fontWeight: '600',
+                            textAlign: 'center',
+                            lineHeight: '1.2',
+                          }}
+                        >
+                          Text to 3d
+                        </span>
+                      </div>
+                    ) : (
+                      <>
+                        {!imgLoadedById[pKey] && (
+                          <div
+                            style={{
+                              position: 'absolute',
+                              inset: 0,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              zIndex: 1,
+                              background: 'transparent',
+                            }}
+                          >
+                            <span className="rp-img-loader" aria-label="loading thumbnail"></span>
+                          </div>
+                        )}
+                        <img
+                          src={project.thumbnail ? `${project.thumbnail}` : img1}
+                          alt={project.name}
+                          className="rp-card-img"
+                          style={{
+                            opacity: imgLoadedById[pKey] ? 1 : 0,
+                            transition: 'opacity 0.5s',
+                            zIndex: 2,
+                          }}
+                          onLoad={() => markImageLoaded(pKey)}
+                          onError={() => markImageLoaded(pKey)}
+                        />
+                      </>
+                    )}
+                    <button className="rec-rp-fav-btn" onClick={() => handleFavoriteToggle(project)}>
+                      {project.favorite ? <FaHeart size={14} /> : <FaRegHeart size={14} />}
+                    </button>
                   </div>
-                )}
+                </div>
+                <div className="rp-card-body">
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: 8,
+                    }}
+                  >
+                    <div>
+                      <div className="rp-card-title">{project.name}</div>
+                      <div className="rp-card-date">
+                        {project.created_at
+                          ? new Date(project.created_at).toLocaleDateString()
+                          : ''}
+                      </div>
+                    </div>
+                    <button
+                      className="rp-card-menu-btn"
+                      onClick={() =>
+                        setDropdownOpen(dropdownOpen === project.id ? null : project.id)
+                      }
+                    >
+                      <FaEllipsisV />
+                    </button>
+                  </div>
+                  {dropdownOpen === project.id && (
+                    <div className="rp-card-menu">
+                      <button onClick={() => handleRenameClick(project)}>
+                        <FaPen /> Rename
+                      </button>
+                      <button onClick={() => handleViewProject(project)}>
+                        <FaEye /> View
+                      </button>
+                      <button onClick={() => handleDeleteClick(project)}>
+                        <FaTrash /> Remove
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          )})}
+            );
+          })}
         </div>
       ) : (
         <div className="rp-list-view">
@@ -466,65 +601,105 @@ const RecentProjects = () => {
               {items.map((project) => {
                 const pKey = getProjectKey(project);
                 return (
-                <div className="rp-list-item" key={pKey}>
-                  {(!project.thumbnail && (project.type === 'text_to_3d' || project.type === 'prompt_to_3d')) ? (
-                    <div style={{ 
-                      width: 70, 
-                      height: 70, 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'center'
-                    }}>
-                      <span style={{ 
-                        fontSize: '14px', 
-                        color: '#e63399', 
-                        fontWeight: '600',
-                        textAlign: 'center',
-                        lineHeight: '1.2'
-                      }}>
-                        Text to 3d
-                      </span>
+                  <div className="rp-list-item" key={pKey}>
+                    {!project.thumbnail &&
+                    (project.type === 'text_to_3d' || project.type === 'prompt_to_3d') ? (
+                      <div
+                        style={{
+                          width: 90,
+                          height: 70,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontSize: '14px',
+                            color: '#e63399',
+                            fontWeight: '600',
+                            textAlign: 'center',
+                            lineHeight: '1.2',
+                          }}
+                        >
+                          Text to 3d
+                        </span>
+                      </div>
+                    ) : (
+                      <div
+                        style={{
+                          position: 'relative',
+                          width: 90,
+                          height: 70,
+                          overflow: 'hidden',
+                          flexShrink: 0,
+                        }}
+                      >
+                        {!imgLoadedById[pKey] && (
+                          <div
+                            style={{
+                              position: 'absolute',
+                              inset: 0,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              zIndex: 1,
+                              background: 'transparent',
+                            }}
+                          >
+                            <span
+                              className="rp-img-loader rp-sm"
+                              aria-label="loading thumbnail"
+                            ></span>
+                          </div>
+                        )}
+                        <img
+                          src={project.thumbnail ? `${project.thumbnail}` : img1}
+                          alt={project.name}
+                          className="rp-list-img"
+                          style={{
+                            opacity: imgLoadedById[pKey] ? 1 : 0,
+                            transition: 'opacity 0.4s',
+                            zIndex: 2,
+                          }}
+                          onLoad={() => markImageLoaded(pKey)}
+                          onError={() => markImageLoaded(pKey)}
+                        />
+                      </div>
+                    )}
+                    <div className="rp-list-info">
+                      <div className="rp-list-title">{project.name}</div>
+                      <div className="rp-list-date">
+                        {project.created_at
+                          ? new Date(project.created_at).toLocaleDateString()
+                          : ''}
+                      </div>
                     </div>
-                  ) : (
-                    <div style={{ position: 'relative', width: 90, height: 70,  overflow: 'hidden', flexShrink: 0 }}>
-                      {!imgLoadedById[pKey] && (
-                        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, background: 'transparent' }}>
-                          <span className="rp-img-loader rp-sm" aria-label="loading thumbnail"></span>
-                        </div>
-                      )}
-                      <img
-                        src={project.thumbnail ? `${project.thumbnail}` : img1}
-                        alt={project.name}
-                        className="rp-list-img"
-                        style={{ opacity: imgLoadedById[pKey] ? 1 : 0, transition: 'opacity 0.4s', zIndex: 2 }}
-                        onLoad={() => markImageLoaded(pKey)}
-                        onError={() => markImageLoaded(pKey)}
-                      />
-                    </div>
-                  )}
-                  <div className="rp-list-info">
-                    <div className="rp-list-title">{project.name}</div>
-                    <div className="rp-list-date">
-                      {project.created_at ? new Date(project.created_at).toLocaleDateString() : ''}
-                    </div>
+                    <button className="rp-fav-btn" onClick={() => handleFavoriteToggle(project)}>
+                      {project.favorite ? <FaHeart /> : <FaRegHeart />}
+                    </button>
+                    <button
+                      className="rp-card-menu-btn"
+                      onClick={() =>
+                        setDropdownOpen(dropdownOpen === project.id ? null : project.id)
+                      }
+                    >
+                      <FaEllipsisV />
+                    </button>
+                    {dropdownOpen === project.id && (
+                      <div className="rp-card-menu">
+                        <button onClick={() => handleRenameClick(project)}>
+                          <FaPen /> Rename
+                        </button>
+                        <button onClick={() => handleViewProject(project)}>
+                          <FaEye /> View
+                        </button>
+                        <button onClick={() => handleDeleteClick(project)}>
+                          <FaTrash /> Remove
+                        </button>
+                      </div>
+                    )}
                   </div>
-                  <button className="rp-fav-btn" onClick={() => handleFavoriteToggle(project)}>
-                    {project.favorite ? <FaHeart /> : <FaRegHeart />}
-                  </button>
-                  <button
-                    className="rp-card-menu-btn"
-                    onClick={() => setDropdownOpen(dropdownOpen === project.id ? null : project.id)}
-                  >
-                    <FaEllipsisV />
-                  </button>
-                  {dropdownOpen === project.id && (
-                    <div className="rp-card-menu">
-                      <button onClick={() => handleRenameClick(project)}><FaPen /> Rename</button>
-                      <button onClick={() => handleViewProject(project)}><FaEye /> View</button>
-                      <button onClick={() => handleDeleteClick(project)}><FaTrash /> Remove</button>
-                    </div>
-                  )}
-                </div>
                 );
               })}
             </div>
@@ -536,7 +711,9 @@ const RecentProjects = () => {
           <div className="create-team-popup">
             <div className="popup-header">
               <h4>Rename Project</h4>
-              <button className="close-popup-btn" onClick={() => setRenameModalOpen(false)}><FiX /></button>
+              <button className="close-popup-btn" onClick={() => setRenameModalOpen(false)}>
+                <FiX />
+              </button>
             </div>
             <div className="popup-body">
               <div className="form-group">
@@ -545,14 +722,20 @@ const RecentProjects = () => {
                   type="text"
                   id="renameProjectName"
                   value={newProjectName}
-                  onChange={e => setNewProjectName(e.target.value)}
+                  onChange={(e) => setNewProjectName(e.target.value)}
                   placeholder="Enter new project name"
                 />
               </div>
             </div>
             <div className="popup-footer">
-              <button className="btn btn-cancel" onClick={() => setRenameModalOpen(false)}>Cancel</button>
-              <button className="btn btn-create" onClick={handleRenameSave} disabled={renameLoading || !newProjectName.trim()}>
+              <button className="btn btn-cancel" onClick={() => setRenameModalOpen(false)}>
+                Cancel
+              </button>
+              <button
+                className="btn btn-create"
+                onClick={handleRenameSave}
+                disabled={renameLoading || !newProjectName.trim()}
+              >
                 {renameLoading ? 'Saving...' : 'Save'}
               </button>
             </div>
@@ -573,4 +756,4 @@ const RecentProjects = () => {
   );
 };
 
-export default RecentProjects; 
+export default RecentProjects;

@@ -55,6 +55,40 @@ const LoginSettings = () => {
     }
   };
 
+   useEffect(() => {
+    document.body.style.overflow = 'auto';
+    document.documentElement.style.overflow = 'auto';
+    
+    const style = document.createElement('style');
+    style.id = 'hide-scrollbar-style';
+    style.innerHTML = `
+      html, body { 
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important; 
+      }
+      html::-webkit-scrollbar, 
+      body::-webkit-scrollbar { 
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+      }
+    `;
+    
+    const existingStyle = document.getElementById('hide-scrollbar-style');
+    if (existingStyle) {
+      existingStyle.remove();
+    }
+    
+    document.head.appendChild(style);
+  
+    return () => {
+      const styleToRemove = document.getElementById('hide-scrollbar-style');
+      if (styleToRemove) {
+        styleToRemove.remove();
+      }
+    };
+  }, [])
+
   return (
     <div className="settings-login-bg">
       <style>{`
@@ -125,7 +159,7 @@ const LoginSettings = () => {
         @media (max-width: 992px) {
           .team-header-section {
             justify-content: flex-start;
-            padding: 0 1rem;
+            padding: 0 0rem;
           }
           
           .team-sidebar-toggle {
@@ -190,32 +224,55 @@ const LoginSettings = () => {
       `}</style>
 
       {/* Header with Search Bar */}
-     
 
       <div
-        className="settings-login-container"
+        className="settings-login-container profile-main-card"
         style={{ display: 'flex', flexDirection: 'column', gap: 0 }}
       >
-         <div className="team-header-section">
-        <button
-          className="team-sidebar-toggle"
-          onClick={handleSidebarToggle}
-          aria-label="Open sidebar"
-        >
-          <RxHamburgerMenu />
-        </button>
-         <div className="team-search-container">
-          <FiSearch style={{ color: '#999', fontSize: '18px', marginRight: '12px' }} />
-          <input
-            type="text"
-            placeholder="Search"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="team-search-input"
-          />
+        <div className="team-header-section">
+          <button
+            className="team-sidebar-toggle"
+            onClick={handleSidebarToggle}
+            aria-label="Open sidebar"
+          >
+            <RxHamburgerMenu />
+          </button>
+          <div
+            className="profile-search-containers"
+            // style={{
+            //   position: 'relative',
+            //   display: 'flex',
+            //   alignItems: 'center',
+            //   background: 'rgba(255, 237, 247, 1)',
+            //   border: 'none',
+            //   borderRadius: '8px',
+            //   padding: '8px 16px',
+            //   minWidth: '265px',
+            //   boxShadow: '0 1px 4px rgba(0, 0, 0, 0.03)',
+            //   flex: 1,
+            //   maxWidth: '360px',
+            //   width: '100%',
+            // }}
+          >
+            <FiSearch style={{ color: '#999', fontSize: '18px', marginRight: '12px' }} />
+            <input
+              type="text"
+              placeholder="Search in profile..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className='profile-search-form-control'
+              // style={{
+              //   border: 'none',
+              //   background: 'transparent',
+              //   outline: 'none',
+              //   fontSize: '16px',
+              //   color: '#232334',
+              //   width: '100%',
+              // }}
+            />
+          </div>
         </div>
-      </div>
-       
+
         <div className="settings-note py-3">
           <div className="note-icon" aria-hidden="true">
             <FiLock />
@@ -223,15 +280,17 @@ const LoginSettings = () => {
 
           <div className="note-content">
             <div className="note-title">Password</div>
-         <div class="note-text">
-             To add a password to your account for the first time, you will need to use the {" "}
-             {/* <a onClick={() => setShowChangePassword(true)} */}
-             <a 
-              style={{ color: '#DE3996', cursor: 'pointer', textDecoration: 'underline' }}
-              onClick={() => setShowForgotPassword(true)}
-              >password reset</a> page so we can verify your identity.
+            <div className="note-text">
+              To add a password to your account for the first time, you will need to use the{' '}
+              {/* <a onClick={() => setShowChangePassword(true)} */}
+              <a
+                style={{ color: '#DE3996', cursor: 'pointer', textDecoration: 'underline' }}
+                onClick={() => setShowForgotPassword(true)}
+              >
+                password reset
+              </a>{' '}
+              page so we can verify your identity.
             </div>
-            
           </div>
         </div>
 
@@ -239,8 +298,8 @@ const LoginSettings = () => {
           <div className="settings-heading">Security</div>
           <div className="settings-subheading">Sign out from all devices</div>
           <p className="settings-desc">
-            Logged in on a shared device but forgot to sign out? End all sessions by sign out
-            from all devices.
+            Logged in on a shared device but forgot to sign out? End all sessions by sign out from
+            all devices.
           </p>
           <button
             className="settings-btn-login"
@@ -408,7 +467,7 @@ const ChangePasswordModal = ({ onClose, onSuccess, onForgotPassword }) => {
           <h3 style={{ fontWeight: 600, fontSize: 24, marginBottom: 28 }}>Change Your Password</h3>
           <div style={{ marginBottom: 20 }}>
             <label>Old Password</label>
-            <div style={{ display: 'flex', alignItems: 'center' }} className='password'>
+            <div style={{ display: 'flex', alignItems: 'center' }} className="password">
               <input
                 name="oldPassword"
                 type={showOld ? 'text' : 'password'}
@@ -418,12 +477,13 @@ const ChangePasswordModal = ({ onClose, onSuccess, onForgotPassword }) => {
                 placeholder="Please enter your old password"
                 required
                 maxLength={30}
-                
+                autoComplete="off"
+                onCopy={(e) => e.preventDefault()}
+                onPaste={(e) => e.preventDefault()}
               />
-               <span className="password-eye" onClick={() => setShowOld((s) => !s)}>
-                {showOld ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+              <span className="password-eye" onClick={() => setShowOld((s) => !s)}>
+                {showOld ? <FiEye size={20} /> : <FiEyeOff size={20} />}
               </span>
-             
             </div>
             <button
               type="button"
@@ -456,9 +516,12 @@ const ChangePasswordModal = ({ onClose, onSuccess, onForgotPassword }) => {
                 className="form-control"
                 required
                 maxLength={30}
+                autoComplete="off"
+                onCopy={(e) => e.preventDefault()}
+                onPaste={(e) => e.preventDefault()}
               />
               <span className="password-eye" onClick={() => setShowNew((s) => !s)}>
-                {showNew ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                {showNew ? <FiEye size={20} /> : <FiEyeOff size={20} />}
               </span>
             </div>
           </div>
@@ -474,9 +537,12 @@ const ChangePasswordModal = ({ onClose, onSuccess, onForgotPassword }) => {
                 className="form-control"
                 required
                 maxLength={30}
+                autoComplete="off"
+                onCopy={(e) => e.preventDefault()}
+                onPaste={(e) => e.preventDefault()}
               />
               <span className="password-eye" onClick={() => setShowConfirm((s) => !s)}>
-                {showConfirm ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                {showConfirm ? <FiEye size={20} /> : <FiEyeOff size={20} />}
               </span>
             </div>
           </div>
@@ -547,7 +613,9 @@ const ForgotPasswordModal = ({ onClose }) => {
     return () => clearInterval(timer);
   }, [step, otpTimer]);
 
-  useEffect(() => { if (step === 2) setOtpTimer(120); }, [step]);
+  useEffect(() => {
+    if (step === 2) setOtpTimer(120);
+  }, [step]);
 
   const handleOtpChange = (index, value) => {
     if (value.length <= 1) {
@@ -570,7 +638,9 @@ const ForgotPasswordModal = ({ onClose }) => {
       setStep(2);
     } catch (err) {
       setError(err?.response?.data?.message || 'Failed to send OTP');
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   };
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
@@ -586,7 +656,9 @@ const ForgotPasswordModal = ({ onClose }) => {
       setStep(3);
     } catch (err) {
       setError(err?.response?.data?.message || 'Invalid OTP');
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   };
   const handleResendOtp = async () => {
     setLoading(true);
@@ -597,7 +669,9 @@ const ForgotPasswordModal = ({ onClose }) => {
       setOtp(['', '', '', '', '', '']);
     } catch (err) {
       setError(err?.response?.data?.message || 'Failed to resend OTP');
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   };
   const handleResetPassword = async (e) => {
     e.preventDefault();
@@ -612,100 +686,237 @@ const ForgotPasswordModal = ({ onClose }) => {
       setStep(4);
     } catch (err) {
       setError(err?.response?.data?.message || 'Failed to reset password');
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
       <div className="forgot-modal-backdrop">
-        <div className="forgot-modal-content" style={{ position: 'relative', marginLeft : "10px", marginRight : "10px" }}>
-<button className="forgot-modal-close" onClick={onClose}>
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="white"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <line x1="18" y1="6" x2="6" y2="18" />
-    <line x1="6" y1="6" x2="18" y2="18" />
-  </svg>
-</button>
+        <div
+          className="forgot-modal-content"
+          style={{ position: 'relative', marginLeft: '10px', marginRight: '10px' }}
+        >
+          <button className="forgot-modal-close" onClick={onClose}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
 
-
-        {step === 1 && (
-          <form onSubmit={handleSendOtp}>
-            <h4 className="mb-3" style={{ color: themeColor }}>Forgot Password</h4>
-            <p className="mb-3">Enter your email to receive an OTP.</p>
-            <div className="mb-3">
-              <label className="form-label">Email address</label>
-              <input type="email" className="form-control" placeholder="Enter your email" required value={email} onChange={(e) => setEmail(e.target.value)} />
-            </div>
-            {error && <div style={{ color: '#DE3996', marginBottom: 14, fontWeight: 500 }}>{error}</div>}
+          {step === 1 && (
+            <form onSubmit={handleSendOtp}>
+              <h4 className="mb-3" style={{ color: themeColor }}>
+                Forgot Password
+              </h4>
+              <p className="mb-3">Enter your email to receive an OTP.</p>
+              <div className="mb-3">
+                <label className="form-label">Email address</label>
+                <input
+                  type="email"
+                  className="form-control"
+                  placeholder="Enter your email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              {error && (
+                <div style={{ color: '#DE3996', marginBottom: 14, fontWeight: 500 }}>{error}</div>
+              )}
+              <div className="text-center">
+                <button
+                  className="btn"
+                  style={{ background: themeColor, color: '#fff', width: 150, padding: '10px 0' }}
+                  disabled={loading}
+                >
+                  {loading ? 'Sending OTP...' : 'Send OTP'}
+                </button>
+              </div>
+            </form>
+          )}
+          {step === 2 && (
+            <form onSubmit={handleVerifyOtp}>
+              <h4 className="mb-3" style={{ color: themeColor }}>
+                Verify OTP
+              </h4>
+              <p className="mb-3">Enter the OTP sent to your email.</p>
+              <div className="mb-3">
+                <label className="form-label">OTP</label>
+                <div style={{ display: 'flex', gap: 8, justifyContent: 'space-between' }}>
+                  {otp.map((digit, index) => (
+                    <input
+                      key={index}
+                      ref={(el) => (otpRefs.current[index] = el)}
+                      type="tel"
+                      className="form-control"
+                      style={{ width: 45, height: 45, textAlign: 'center', fontSize: 18 }}
+                      maxLength={1}
+                      value={digit}
+                      onChange={(e) => handleOtpChange(index, e.target.value)}
+                      onKeyDown={(e) => handleOtpKeyDown(index, e)}
+                      onFocus={(e) => e.target.select()}
+                    />
+                  ))}
+                </div>
+              </div>
+              <div className="mb-2" style={{ textAlign: 'center', color: '#888', fontSize: 15 }}>
+                {otpTimer > 0
+                  ? `Resend available in ${Math.floor(otpTimer / 60)}:${(otpTimer % 60).toString().padStart(2, '0')}`
+                  : ''}
+              </div>
+              {error && (
+                <div
+                  style={{
+                    color: '#DE3996',
+                    marginBottom: 14,
+                    fontWeight: 500,
+                    textAlign: 'center',
+                  }}
+                >
+                  {error}
+                </div>
+              )}
+              <div className="text-center mb-2">
+                <button
+                  className="btn mb-2"
+                  style={{ background: themeColor, color: '#fff', width: 150, padding: '10px 0' }}
+                  disabled={loading}
+                >
+                  {loading ? 'Verifying...' : 'Verify OTP'}
+                </button>
+              </div>
+              <div className="text-center">
+                <button
+                  type="button"
+                  className="btn btn-link"
+                  style={{ color: themeColor, width: 150, padding: '10px 0' }}
+                  onClick={handleResendOtp}
+                  disabled={loading || otpTimer > 0}
+                >
+                  Resend OTP
+                </button>
+              </div>
+            </form>
+          )}
+          {step === 3 && (
+            <form onSubmit={handleResetPassword}>
+              <h4 className="mb-3" style={{ color: themeColor }}>
+                Reset Password
+              </h4>
+              <div className="mb-3">
+                <label className="form-label">New Password</label>
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    className="form-control"
+                    placeholder="New password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    maxLength={30}
+                    autoComplete="off"
+                    onCopy={(e) => e.preventDefault()}
+                    onPaste={(e) => e.preventDefault()}
+                  />
+                  <span
+                    style={{
+                      position: 'absolute',
+                      right: 12,
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => setShowPassword((s) => !s)}
+                  >
+                    {showPassword ? <FiEye size={20} /> : <FiEyeOff size={20} />}
+                  </span>
+                </div>
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Confirm Password</label>
+                <div style={{ position: 'relative', width: '100%' }}>
+                  <input
+                    type={showCPassword ? 'text' : 'password'}
+                    className="form-control"
+                    placeholder="Confirm new password"
+                    required
+                    value={cPassword}
+                    onChange={(e) => setCPassword(e.target.value)}
+                    maxLength={30}
+                    autoComplete="off"
+                    onCopy={(e) => e.preventDefault()}
+                    onPaste={(e) => e.preventDefault()}
+                  />
+                  <span
+                    style={{
+                      position: 'absolute',
+                      right: 12,
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => setShowCPassword((s) => !s)}
+                  >
+                    {showCPassword ? <FiEye size={20} /> : <FiEyeOff size={20} />}
+                  </span>
+                </div>
+              </div>
+              {error && (
+                <div style={{ color: '#DE3996', marginBottom: 14, fontWeight: 500 }}>{error}</div>
+              )}
+              <div className="text-center">
+                <button
+                  className="btn"
+                  style={{ background: themeColor, color: '#fff', width: 150, padding: '10px 0' }}
+                  disabled={loading}
+                >
+                  {loading ? 'Resetting...' : 'Reset Password'}
+                </button>
+              </div>
+            </form>
+          )}
+          {step === 4 && (
             <div className="text-center">
-              <button className="btn" style={{ background: themeColor, color: '#fff', width: 150, padding: '10px 0' }} disabled={loading}>{loading ? 'Sending OTP...' : 'Send OTP'}</button>
-            </div>
-          </form>
-        )}
-        {step === 2 && (
-          <form onSubmit={handleVerifyOtp}>
-            <h4 className="mb-3" style={{ color: themeColor }}>Verify OTP</h4>
-            <p className="mb-3">Enter the OTP sent to your email.</p>
-            <div className="mb-3">
-              <label className="form-label">OTP</label>
-              <div style={{ display: 'flex', gap: 8, justifyContent: 'space-between' }}>
-                {otp.map((digit, index) => (
-                  <input key={index} ref={(el) => (otpRefs.current[index] = el)} type="tel" className="form-control" style={{ width: 45, height: 45, textAlign: 'center', fontSize: 18 }} maxLength={1} value={digit} onChange={(e) => handleOtpChange(index, e.target.value)} onKeyDown={(e) => handleOtpKeyDown(index, e)} onFocus={(e) => e.target.select()} />
-                ))}
+              <img
+                src={SuccessImg}
+                alt="Success"
+                style={{
+                  width: 127,
+                  height: 120,
+                  objectFit: 'cover',
+                  margin: '0 auto 20px',
+                  display: 'block',
+                }}
+              />
+              <h4 className="mb-3" style={{ color: themeColor, fontWeight: 'bold' }}>
+                Password Changed Successfully!
+              </h4>
+              <p className="mb-4" style={{ color: '#666', fontSize: 14, lineHeight: 1.5 }}>
+                Your password has been changed successfully.
+              </p>
+              <div className="text-center">
+                <button
+                  className="btn"
+                  style={{ background: themeColor, color: '#fff', width: 150, padding: '10px 0' }}
+                  onClick={onClose}
+                >
+                  Close
+                </button>
               </div>
             </div>
-            <div className="mb-2" style={{ textAlign: 'center', color: '#888', fontSize: 15 }}>
-              {otpTimer > 0 ? `Resend available in ${Math.floor(otpTimer / 60)}:${(otpTimer % 60).toString().padStart(2, '0')}` : ''}
-            </div>
-            {error && <div style={{ color: '#DE3996', marginBottom: 14, fontWeight: 500, textAlign: 'center' }}>{error}</div>}
-            <div className="text-center mb-2">
-              <button className="btn mb-2" style={{ background: themeColor, color: '#fff', width: 150, padding: '10px 0' }} disabled={loading}>{loading ? 'Verifying...' : 'Verify OTP'}</button>
-            </div>
-            <div className="text-center">
-              <button type="button" className="btn btn-link" style={{ color: themeColor, width: 150, padding: '10px 0' }} onClick={handleResendOtp} disabled={loading || otpTimer > 0}>Resend OTP</button>
-            </div>
-          </form>
-        )}
-        {step === 3 && (
-          <form onSubmit={handleResetPassword}>
-            <h4 className="mb-3" style={{ color: themeColor }}>Reset Password</h4>
-            <div className="mb-3">
-              <label className="form-label">New Password</label>
-              <div style={{ position: 'relative' }}>
-                <input type={showPassword ? 'text' : 'password'} className="form-control" placeholder="New password" required value={password} onChange={(e) => setPassword(e.target.value)} maxLength={30} />
-                <span style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', cursor: 'pointer' }} onClick={() => setShowPassword((s) => !s)}>{showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}</span>
-              </div>
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Confirm Password</label>
-              <div style={{ position: 'relative' , width: '100%' }}>
-                <input type={showCPassword ? 'text' : 'password'} className="form-control" placeholder="Confirm new password" required value={cPassword} onChange={(e) => setCPassword(e.target.value)} maxLength={30} />
-                <span style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', cursor: 'pointer' }} onClick={() => setShowCPassword((s) => !s)}>{showCPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}</span>
-              </div>
-            </div>
-            {error && <div style={{ color: '#DE3996', marginBottom: 14, fontWeight: 500 }}>{error}</div>}
-            <div className="text-center">
-              <button className="btn" style={{ background: themeColor, color: '#fff', width: 150, padding: '10px 0' }} disabled={loading}>{loading ? 'Resetting...' : 'Reset Password'}</button>
-            </div>
-          </form>
-        )}
-        {step === 4 && (
-          <div className="text-center">
-            <img src={SuccessImg} alt="Success" style={{ width: 127, height: 120, objectFit: 'cover', margin: '0 auto 20px', display: 'block' }} />
-            <h4 className="mb-3" style={{ color: themeColor, fontWeight: 'bold' }}>Password Changed Successfully!</h4>
-            <p className="mb-4" style={{ color: '#666', fontSize: 14, lineHeight: 1.5 }}>Your password has been changed successfully.</p>
-            <div className="text-center"><button className="btn" style={{ background: themeColor, color: '#fff', width: 150, padding: '10px 0' }} onClick={onClose}>Close</button></div>
-          </div>
-        )}
+          )}
         </div>
       </div>
     </>

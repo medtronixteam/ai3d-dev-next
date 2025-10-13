@@ -53,8 +53,8 @@
   font-size: 20px;
   font-weight: 700;
   color: var(--text-primary);
-  padding-top: 12px;
-  padding-left: 12px;
+  /* padding-top: 12px;
+  padding-left: 12px; */
 }
 
 .close-popup-btn {
@@ -114,6 +114,7 @@
 }
 .arrow-icon {
     color: var(--icon-inactive);
+    cursor: pointer;
 }
 
 .teams-section {

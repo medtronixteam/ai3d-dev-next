@@ -1,6 +1,6 @@
 import React from 'react';
 import './ConfirmLogoutPopup.css';
-import { FiTrash2, FiCheckCircle, FiAlertTriangle } from 'react-icons/fi';
+import { FiTrash2, FiCheckCircle, FiAlertTriangle, FiRefreshCw } from 'react-icons/fi';
 
 const ConfirmModal = ({ open, onClose, onConfirm, title, message, confirmText = 'Yes', cancelText = 'No', error, iconType }) => {
   if (!open) return null;
@@ -13,6 +13,8 @@ const ConfirmModal = ({ open, onClose, onConfirm, title, message, confirmText = 
             <FiCheckCircle size={38} color="#27ae60" />
           ) : iconType === 'warning' ? (
             <FiAlertTriangle size={38} color="#e6339a" />
+          ) : iconType === 'info' ? (
+            <FiRefreshCw size={38} color="#e6339a" />
           ) : (
             <FiTrash2 size={38} color="#e6339a" />
           )}

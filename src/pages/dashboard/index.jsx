@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import './SimplePage.css';
-import { FiSearch, FiArrowRight } from 'react-icons/fi';
+import { FiSearch, FiArrowRight, FiX } from 'react-icons/fi';
 import search from '../../assets/images/search.svg';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -18,7 +18,7 @@ import carImg from '../../assets/images/products/Nike.png';
 import droneImg from '../../assets/images/products/drone.png';
 import headphoneImg from '../../assets/images/products/parfum.png';
 import { useNavigate } from 'react-router-dom';
-import { FaReact } from 'react-icons/fa';
+import { FaCross, FaHeart, FaReact, FaRegHeart } from 'react-icons/fa';
 import scanImg from '../../assets/images/scan.svg';
 import CustomLoader from '../../components/loader/CustomLoader';
 import { FiTool } from 'react-icons/fi';
@@ -35,14 +35,21 @@ import icon4 from '../../assets/images/icon4.svg';
 import icon5 from '../../assets/images/icon5.svg';
 import icon6 from '../../assets/images/icon6.svg';
 import loadGif from '../../assets/images/load.gif';
+import Paid from '../../assets/icon/Paid.svg';
+import Fav from '../../assets/icon/Fav.svg';
+import FavModels from '../../assets/icon/FavModels.svg';
+import axios from 'axios';
+import LoginPopup from '../../components/popup/LoginPopup';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 const CATEGORIES = [
-  { label: 'Construction', type: 'construction', icon: icon1 },
-  { label: 'Gaming', type: 'gaming', icon: icon2 },
-  { label: 'VR', type: 'vr', icon: icon3 },
-  { label: 'Retail', type: 'retail', icon: icon4 },
-  { label: 'Manufacturing', type: 'manufacturing', icon: icon5 },
-  { label: 'Health', type: 'health', icon: icon6 },
+  { label: 'Construction', type: 'construction', icon: icon1, favorite: true },
+  { label: 'Gaming', type: 'gaming', icon: icon2, favorite: true },
+  { label: 'VR', type: 'vr', icon: icon3, favorite: true },
+  { label: 'Retail', type: 'retail', icon: icon4, favorite: true },
+  { label: 'Manufacturing', type: 'manufacturing', icon: icon5, favorite: true },
+  { label: 'Health', type: 'health', icon: icon6, favorite: true },
 ];
 
 const getModelImageUrl = (image) => {
@@ -68,10 +75,10 @@ function VideoModalWithLoader({ videoUrl, onClose }) {
       timeoutRef.current = setTimeout(() => {
         if (loading && !errorState) {
           setLoading(false);
-          setErrorState('timeout'); 
+          setErrorState('timeout');
           onClose();
         }
-      }, 4000);
+      }, 8000);
     }
 
     return () => {
@@ -335,20 +342,32 @@ const VideoModal = ({ open, videoUrl, onClose }) => {
 function ModelCardVideoModal({ open, videoUrl, onClose }) {
   const [loading, setLoading] = React.useState(true);
   const [modalVisible, setModalVisible] = React.useState(false);
+  const [videoError, setVideoError] = React.useState(false);
   const timeoutRef = React.useRef(null);
+  const videoRef = React.useRef(null);
 
   React.useEffect(() => {
-    if (open) {
+    if (open && videoUrl) {
+      console.log('Modal opening with URL:', videoUrl);
       setLoading(true);
       setModalVisible(true);
+      setVideoError(false);
+
+      // Clear any existing timeout
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+
+      // Set timeout for loading
       timeoutRef.current = setTimeout(() => {
-        if (loading) {
-          setLoading(false);
-          onClose();
-        }
-      }, 4000);
-    } else {
+        console.log('Video loading timeout');
+        setLoading(false);
+        setVideoError(true);
+      }, 30000);
+    } else if (!open) {
       setModalVisible(false);
+      setLoading(true);
+      setVideoError(false);
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
         timeoutRef.current = null;
@@ -361,31 +380,52 @@ function ModelCardVideoModal({ open, videoUrl, onClose }) {
         timeoutRef.current = null;
       }
     };
-  }, [open, videoUrl, loading, onClose]);
+  }, [open, videoUrl]);
 
-  if (!open) return null;
+  const handleVideoLoad = () => {
+    console.log('Video loaded successfully in modal');
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    setLoading(false);
+    setVideoError(false);
+  };
 
-  if (loading) {
-    return (
-      <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100vw',
-          height: '100vh',
-          zIndex: 9999,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'rgba(0,0,0,0.15)',
-          transition: 'all 0.3s ease',
-        }}
-      >
-        <CustomLoader />
-      </div>
-    );
-  }
+  const handleVideoError = (err) => {
+    console.error('Video error in modal:', err);
+    console.error('Video URL:', videoUrl);
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    setLoading(false);
+    setVideoError(true);
+  };
+
+  if (!open || !videoUrl) return null;
+
+  // if (loading) {
+  //   return (
+  //     <div
+  //       style={{
+  //         position: 'fixed',
+  //         top: 0,
+  //         left: 0,
+  //         width: '100vw',
+  //         height: '100vh',
+  //         zIndex: 9999,
+  //         display: 'flex',
+  //         alignItems: 'center',
+  //         justifyContent: 'center',
+  //         background: 'rgba(0,0,0,0.15)',
+  //         transition: 'all 0.3s ease',
+  //       }}
+  //     >
+  //       <CustomLoader />
+  //     </div>
+  //   );
+  // }
 
   return (
     <div
@@ -403,6 +443,12 @@ function ModelCardVideoModal({ open, videoUrl, onClose }) {
         transition: 'all 0.3s ease',
         opacity: modalVisible ? 1 : 0,
         visibility: modalVisible ? 'visible' : 'hidden',
+      }}
+      onClick={(e) => {
+        // Click outside video to close
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
       }}
     >
       <div
@@ -446,51 +492,99 @@ function ModelCardVideoModal({ open, videoUrl, onClose }) {
           }}
           aria-label="Close video"
         >
-          <svg style={{ fontSize: 22, color: '#fff', margin: 0, padding: 0 }} viewBox="0 0 24 24">
-            <path
-              fill="currentColor"
-              d="M18.3 5.71a1 1 0 0 0-1.41 0L12 10.59 7.11 5.7A1 1 0 0 0 5.7 7.11L10.59 12l-4.89 4.89a1 1 0 1 0 1.41 1.41L12 13.41l4.89 4.89a1 1 0 0 0 1.41-1.41L13.41 12l4.89-4.89a1 1 0 0 0 0-1.4z"
-            />
-          </svg>
+          <FiX size={18} />
         </button>
 
-        <video
-          src={getFullVideoUrl(videoUrl)}
-          autoPlay
-          loop
-          muted
-          playsInline
-          controls={false}
-          style={{
-            maxWidth: '100%',
-            maxHeight: '80vh',
-            borderRadius: 18,
-            background: 'transparent',
-            zIndex: 10000,
-            opacity: loading ? 0 : 1,
-            visibility: loading ? 'hidden' : 'visible',
-            transition: 'opacity 0.3s ease',
-          }}
-          onLoadedData={() => {
-            if (timeoutRef.current) {
-              clearTimeout(timeoutRef.current);
-              timeoutRef.current = null;
-            }
-            setLoading(false);
-            setTimeout(() => setModalVisible(true), 100);
-          }}
-          onError={() => {
-            if (timeoutRef.current) {
-              clearTimeout(timeoutRef.current);
-              timeoutRef.current = null;
-            }
-            setLoading(false);
-            console.error('Video failed to load');
-            setTimeout(() => {
-              onClose();
-            }, 4000);
-          }}
-        />
+        {/* Loading state */}
+        {loading && !videoError && (
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100vw',
+              height: '100vh',
+              zIndex: 9999,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'rgba(0,0,0,0.15)',
+              transition: 'all 0.3s ease',
+            }}
+          >
+            <CustomLoader />
+          </div>
+        )}
+
+        {/* Error state */}
+        {videoError && (
+          <div
+            style={{
+              textAlign: 'center',
+              color: 'white',
+              maxWidth: '400px',
+              padding: '20px',
+            }}
+          >
+            <h3>Video Loading Failed</h3>
+            <p>The video file is too large or server is slow</p>
+            <button
+              onClick={onClose}
+              style={{
+                background: '#DE3996',
+                color: 'white',
+                border: 'none',
+                padding: '10px 20px',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                marginTop: '10px',
+              }}
+            >
+              Close
+            </button>
+          </div>
+        )}
+
+        {!videoError && (
+          <video
+            ref={videoRef}
+            src={videoUrl}
+            autoPlay={true}
+            loop
+            muted
+            playsInline
+            controls={true}
+            style={{
+              maxWidth: '100%',
+              maxHeight: '80vh',
+              borderRadius: 18,
+              background: 'transparent',
+              zIndex: 10000,
+              opacity: loading ? 0 : 1,
+              visibility: loading ? 'hidden' : 'visible',
+              transition: 'opacity 0.3s ease',
+            }}
+            onLoadStart={() => {
+              console.log('Video load started in modal');
+            }}
+            onLoadedMetadata={() => {
+              console.log('Video metadata loaded in modal');
+              handleVideoLoad();
+            }}
+            onLoadedData={() => {
+              console.log('Video data loaded in modal');
+              handleVideoLoad();
+            }}
+            onCanPlay={() => {
+              console.log('Video can play in modal');
+              handleVideoLoad();
+            }}
+            onError={handleVideoError}
+            onPlay={() => {
+              console.log('Video started playing in modal');
+            }}
+          />
+        )}
       </div>
 
       <style>{`
@@ -628,6 +722,27 @@ const Dashboard = () => {
   const words = ['images', 'videos', 'prompt'];
   const [wordIndex, setWordIndex] = useState(0);
   const [isDark, setIsDark] = useState(false);
+  const [favoriteModels, setFavoriteModels] = useState([]);
+  const [isFavoriteModeActive, setIsFavoriteModeActive] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState({
+    current_page: 1,
+    last_page: 1,
+  });
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const loaderRef = React.useRef(null);
+
+  useEffect(() => {
+    // Add class to body
+    document.body.classList.add('dashboard-active');
+
+    return () => {
+      // Remove class when leaving dashboard
+      document.body.classList.remove('dashboard-active');
+    };
+  }, []);
 
   useEffect(() => {
     const observer = new MutationObserver(() => {
@@ -641,18 +756,186 @@ const Dashboard = () => {
     return () => observer.disconnect();
   }, []);
 
-  const fetchModels = (type) => {
-    setLoading(true);
+  const fetchModels = useCallback(async (type, pageNum = 1, append = false) => {
+    
+    if (append) {
+      setIsLoadingMore(true);
+    } else {
+      setLoading(true);
+    }
     setError('');
-    const headers = token ? { Authorization: `Bearer ${token}` } : {};
-    fetch(`${baseURL}/model/${type}`, {
-      headers,
-    })
-      .then((res) => res.json())
-      .then((res) => setModels(res.models || res.data || []))
-      .catch(() => setError('Failed to load models.'))
-      .finally(() => setLoading(false));
+    try {
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+      // 1. Get all models
+      const response = await fetch(`${baseURL}/model/${type}?page=${pageNum}`, { headers });
+      const data = await response.json();
+      // console.log('Full model API response:', data);
+      const rawModels = data.models?.data || [];
+
+      setPagination({
+        current_page: data.models?.current_page || 1,
+        last_page: data.models?.last_page || 1,
+        total: data.models?.total || 0,
+      });
+
+      // Check if there are more pages
+      const morePages = data.models?.current_page < data.models?.last_page;
+      setHasMore(morePages);
+
+      // 2. Get favorite models (sirf agar logged in ho)
+      let favorites = [];
+      if (token) {
+        const favRes = await fetch(`${baseURL}/favorite/models`, { headers });
+        const favData = await favRes.json();
+        favorites = favData['favorite models'] || [];
+      }
+
+      // 3. Merge: mark models as favorite
+      const modelsWithFavorites = rawModels.map((model) => ({
+        ...model,
+        is_favorite: favorites.some((fav) => fav.id === model.id),
+      }));
+
+      // Append or replace models
+      if (append) {
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+        setModels((prevModels) => {
+          const newList = [...prevModels, ...modelsWithFavorites];
+          return newList;
+        });
+      } else {
+        // console.log('Replacing models with new list');
+        setModels(modelsWithFavorites);
+      }
+    } catch (err) {
+      console.error('Error fetching models:', err);
+      setError('Failed to load models.');
+      if (!append) {
+        setModels([]);
+      }
+    } finally {
+      if (append) {
+        setIsLoadingMore(false);
+      } else {
+        setLoading(false);
+      }
+    }
+  }, [token]);
+
+  const handleNext = useCallback(() => {
+    // console.log('handleNext called');
+    // console.log('Current state:', { hasMore, isLoadingMore, page });
+    
+    if (hasMore && !isLoadingMore) {
+      const nextPage = page + 1;
+      setPage(nextPage);
+      fetchModels(selectedType, nextPage, true);
+    }
+  }, [hasMore, isLoadingMore, page, selectedType]);
+
+  // Fetch favourite models from API
+  const fetchFavoriteModels = async () => {
+    if (!token) return;
+    setLoading(true);
+    try {
+      const response = await axios.get(`${baseURL}/favorite/models`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const favorites = response.data['favorite models'] || [];
+      // Mark all as favorites
+      const favoritesWithFlag = favorites.map((model) => ({
+        ...model,
+        is_favorite: true,
+      }));
+
+      setFavoriteModels(favoritesWithFlag);
+    } catch (error) {
+      console.error('Failed to fetch favorite models:', error);
+      setFavoriteModels([]);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const handleModelFavoriteToggle = async (model) => {
+    if (!token) {
+      setShowLoginModal(true);
+      return;
+    }
+
+    const isCurrentlyFav = model.is_favorite;
+
+    // Optimistic update (models + favoriteModels dono update karo)
+    setModels((prev) =>
+      prev.map((m) => (m.id === model.id ? { ...m, is_favorite: !isCurrentlyFav } : m)),
+    );
+
+    setFavoriteModels((prev) => {
+      if (isCurrentlyFav) {
+        return prev.filter((m) => m.id !== model.id);
+      } else {
+        return [...prev, { ...model, is_favorite: true }];
+      }
+    });
+
+    try {
+      await axios.post(
+        `${baseURL}/favorite/models`,
+        { model_id: model.id },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      // console.log('Favorite status updated successfully');
+    } catch (err) {
+      console.error('Failed to toggle favorite:', err);
+
+      // Revert changes agar API fail ho jaye
+      setModels((prev) =>
+        prev.map((m) => (m.id === model.id ? { ...m, is_favorite: isCurrentlyFav } : m)),
+      );
+
+      setFavoriteModels((prev) => {
+        if (isCurrentlyFav) {
+          // tha fav pehle → wapis add karo
+          return [...prev, { ...model, is_favorite: true }];
+        } else {
+          // tha unfav pehle → remove karo
+          return prev.filter((m) => m.id !== model.id);
+        }
+      });
+
+      toast.error('Failed to update favorite. Please try again.');
+    }
+  };
+
+  const handleFavoriteModelsClick = () => {
+    if (isFavoriteModeActive) {
+      setIsFavoriteModeActive(false);
+      setPage(1);
+      setHasMore(true);
+      fetchModels(selectedType, 1, false);
+    } else {
+      setIsFavoriteModeActive(true);
+      fetchFavoriteModels();
+    }
+  };
+
+  useEffect(() => {
+    if (!isFavoriteModeActive) {
+      setPage(1);
+      setHasMore(true);
+      fetchModels(selectedType, 1, false);
+    }
+  }, [selectedType, token, isFavoriteModeActive]);
+
+  // Current models to display (either regular or favorites)
+  const currentModels = useMemo(() => {
+    if (isFavoriteModeActive) {
+      return favoriteModels.filter((m) => m.category === selectedType);
+    }
+    return models;
+  }, [isFavoriteModeActive, favoriteModels, models, selectedType]);
 
   const searchModels = async () => {
     if (!searchText.trim()) return;
@@ -681,7 +964,11 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (!isSearching) fetchModels(selectedType);
+    if (!isSearching) {
+      setPage(1);
+      setHasMore(true);
+      fetchModels(selectedType, 1, false);
+    }
     // eslint-disable-next-line
   }, [selectedType, token, location.key]);
 
@@ -696,16 +983,50 @@ const Dashboard = () => {
     setCurrentWord(words[wordIndex]);
   }, [wordIndex, words]);
 
+  // Infinite Scroll Effect using Intersection Observer
+  useEffect(() => {
+    
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const firstEntry = entries[0];
+        
+        if (firstEntry.isIntersecting && hasMore && !isLoadingMore && !loading && !isFavoriteModeActive) {
+          handleNext();
+        }
+      },
+      {
+        root: null,
+        rootMargin: '200px',
+        threshold: 0.1,
+      }
+    );
+
+    const currentLoader = loaderRef.current;
+    if (currentLoader) {
+      observer.observe(currentLoader);
+    }
+
+    return () => {
+      if (currentLoader) {
+        observer.unobserve(currentLoader);
+      }
+    };
+  }, [hasMore, isLoadingMore, loading, isFavoriteModeActive, handleNext]);
+
   const handleCategoryClick = (type) => {
     setSelectedType(type);
     setSearchText('');
-    fetchModels(type);
+    setPage(1);
+    setHasMore(true);
+    fetchModels(type, 1, false);
   };
 
   const handleInputChange = (e) => {
     setSearchText(e.target.value);
     if (e.target.value === '') {
-      fetchModels(selectedType);
+      setPage(1);
+      setHasMore(true);
+      fetchModels(selectedType, 1, false);
     }
   };
 
@@ -714,7 +1035,9 @@ const Dashboard = () => {
     if (searchText.trim() !== '') {
       searchModels();
     } else {
-      fetchModels(selectedType);
+      setPage(1);
+      setHasMore(true);
+      fetchModels(selectedType, 1, false);
     }
   };
 
@@ -749,10 +1072,6 @@ const Dashboard = () => {
       cancelled = true;
     };
   }, [models]);
-
-
-// console.log("safeUrl",safeUrl);
-
 
   return (
     <>
@@ -954,11 +1273,25 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
+
+          <div className="Fav-models-box mt-3 ms-auto">
+            <button
+              className="Fav-models-btn d-flex align-items-center gap-2"
+              onClick={handleFavoriteModelsClick}
+            >
+              {isFavoriteModeActive ? (
+                <FaHeart fill="#DE3996" size={14} />
+              ) : (
+                <FaRegHeart fill="#DE3996" size={14} />
+              )}
+              <span>Favorite Models</span>
+            </button>
+          </div>
         </div>
       </section>
 
       {/* =================== Studio Section  ============= */}
-      <section className="studio-section mb-5" style={{ overflow: 'hidden' }}>
+      <section className="studio-section" style={{ overflow: 'hidden' }}>
         <div className="container-section">
           {loading ? (
             <div className="text-center my-5">
@@ -974,79 +1307,58 @@ const Dashboard = () => {
                 }}
               ></div>
               <style>{`
-                @keyframes spin {
-                  0% { transform: rotate(0deg); }
-                  100% { transform: rotate(360deg); }
-                }
-              `}</style>
-            </div>
-          ) : error === 'No results found.' ? (
-            <div
-              className="no-models-found-card"
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: '60px 20px',
-                borderRadius: 16,
-                margin: '40px auto',
-                maxWidth: 420,
-                minHeight: 220,
-                animation: 'fadeIn 0.7s',
-              }}
-            >
-              <div style={{ fontWeight: 700, fontSize: 26, color: '#22223b', marginBottom: 8 }}>
-                No Models Found
-              </div>
-              <div style={{ color: '#888', fontSize: 17, textAlign: 'center', maxWidth: 340 }}>
-                We couldn't find any 3D models for your search or category.
-                <br />
-                Try adjusting your search or check back later!
-              </div>
-              <style>{`
-                @keyframes fadeIn {
-                  from { opacity: 0; transform: translateY(30px); }
-                  to { opacity: 1; transform: translateY(0); }
-                }
-              `}</style>
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
             </div>
           ) : error ? (
             <div className="text-center my-5 text-danger">{error}</div>
-          ) : models.length === 0 ? (
-            <div
-              className="no-models-found-card"
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: '60px 20px',
-                borderRadius: 16,
-                margin: '40px auto',
-                maxWidth: 420,
-                minHeight: 220,
-                animation: 'fadeIn 0.7s',
-              }}
-            >
-              <div style={{ fontWeight: 700, fontSize: 26, color: '#22223b', marginBottom: 8 }}>
-                No Models Found
+          ) : currentModels.length === 0 ? (
+            // Check if we're on favorites tab or general models
+            isFavoriteModeActive ? (
+              <div style={{ textAlign: 'center', padding: 60, color: '#888', fontSize: 20 }}>
+                <div style={{ fontSize: 48, marginBottom: 12 }}>
+                  <FaHeart size={35} style={{ color: 'rgba(222, 57, 150, 1)' }} />
+                </div>
+                No Favorite's found
               </div>
-              <div style={{ color: '#888', fontSize: 17, textAlign: 'center', maxWidth: 340 }}>
-                We couldn't find any 3D models for your search or category.
-                <br />
-                Try adjusting your search or check back later!
+            ) : (
+              <div
+                className="no-models-found-card"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '60px 20px',
+                  borderRadius: 16,
+                  margin: '40px auto',
+                  maxWidth: 420,
+                  minHeight: 220,
+                  animation: 'fadeIn 0.7s',
+                }}
+              >
+                <div style={{ fontWeight: 700, fontSize: 26, color: '#22223b', marginBottom: 8 }}>
+                  No Models Found
+                </div>
+                <div style={{ color: '#888', fontSize: 17, textAlign: 'center', maxWidth: 340 }}>
+                  We couldn't find any 3D models for your search or category.
+                  <br />
+                  Try adjusting your search or check back later!
+                </div>
+                <style>{`
+            @keyframes fadeIn {
+              from { opacity: 0; transform: translateY(30px); }
+              to { opacity: 1; transform: translateY(0); }
+            }
+          `}</style>
               </div>
-              <style>{`
-                @keyframes fadeIn {
-                  from { opacity: 0; transform: translateY(30px); }
-                  to { opacity: 1; transform: translateY(0); }
-                }
-              `}</style>
-            </div>
+            )
           ) : (
             <div className="model-list-row">
-              {models.map((model, idx) => {
+              {currentModels.map((model, idx) => {
                 const imgUrl = model.thumbnail
                   ? `https://app.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
                   : model.image
@@ -1109,9 +1421,26 @@ const Dashboard = () => {
                             });
                           }}
                         />
+                        <button
+                          className="rp-fav-btn"
+                          onClick={() => handleModelFavoriteToggle(model)}
+                        >
+                          {model.is_favorite ? <FaHeart size={12} /> : <FaRegHeart size={12} />}
+                        </button>
                       </div>
                     </div>
-                    <div className="model-card-content">
+                    <div className="model-card-content" style={{ position: 'relative' }}>
+                      <img
+                        src={Paid}
+                        alt="paid"
+                        style={{
+                          position: 'absolute',
+                          top: '-2px',
+                          right: '8px',
+                          width: '16px',
+                          height: '16px',
+                        }}
+                      />
                       <div className="model-card-title">{model.title || model.name}</div>
                       <div className="model-card-desc">
                         {model.description || 'No description.'}
@@ -1143,7 +1472,13 @@ const Dashboard = () => {
                             model.video_url ||
                             model.url ||
                             (model.data && (model.data.video_url || model.data.url));
+
+                          if (!rawUrl) {
+                            alert('Video URL not found');
+                            return;
+                          }
                           const finalUrl = getFullVideoUrl(rawUrl);
+                          console.log('Final URL for modal:', finalUrl);
                           setModelVideoUrl(finalUrl);
                           setModelVideoModalOpen(true);
                         }}
@@ -1156,8 +1491,37 @@ const Dashboard = () => {
               })}
             </div>
           )}
+          
+          {/* Intersection Observer Target */}
+          {!loading && !isFavoriteModeActive && currentModels.length > 0 && (
+            <div 
+              ref={loaderRef} 
+              style={{ 
+                height: '20px', 
+                width: '100%',
+                margin: '20px 0'
+              }}
+            />
+          )}
         </div>
       </section>
+
+      {/* Infinite Scroll Loading Indicator */}
+      {isLoadingMore && (
+        <div className="text-center my-4">
+          <div
+            style={{
+              width: '40px',
+              height: '40px',
+              border: '3px solid #f3f3f3',
+              borderTop: '3px solid #e63399',
+              borderRadius: '50%',
+              animation: 'spin 1s linear infinite',
+              margin: '-6rem auto 0 auto',
+            }}
+          ></div>
+        </div>
+      )}
 
       {/* Model Details Modal (modern style) */}
       {modelModalOpen && modelModalData && (
@@ -1363,6 +1727,15 @@ const Dashboard = () => {
         videoUrl={modelVideoUrl}
         onClose={() => setModelVideoModalOpen(false)}
       />
+
+      {showLoginModal && (
+        <LoginPopup
+          onClose={() => setShowLoginModal(false)}
+          onSuccess={() => {
+            setShowLoginModal(false);
+          }}
+        />
+      )}
     </>
   );
 };

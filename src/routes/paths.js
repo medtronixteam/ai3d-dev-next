@@ -21,5 +21,8 @@ export default {
   simple: '/platform/simple',
   subscription: '/platform/subscription',
   team: '/platform/settings/team',
+  referal: '/platform/settings/referal',
+  aimodal: '/platform/settings/aimodal',
+  project: '/platform/settings/project'
   
 };

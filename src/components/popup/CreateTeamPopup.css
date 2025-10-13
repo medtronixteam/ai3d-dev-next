@@ -57,6 +57,7 @@
   font-size: 18px;
   font-weight: 700;
   color: var(--text-primary);
+  padding-left: 0px !important;
 }
 .create-team-popup .close-popup-btn,
 .profile-popup .close-popup-btn {
@@ -88,13 +89,18 @@
 }
 .form-group input {
   width: 100%;
-  padding: 12px;
+  padding: 10px;
   border: 1px solid var(--divider-color);
   border-radius: 8px;
   font-size: 15px;
   background: var(--body-bg);
   color: var(--text-primary);
 }
+
+.form-group input:focus {
+outline: 1px solid #DE3996 !important;
+}
+
 .form-group input::placeholder {
   color: var(--text-secondary);
 }
@@ -133,9 +139,19 @@
   border: 1px solid var(--divider-color);
   color: var(--text-primary);
 }
+.btn-cancel:hover {
+  background-color: var(--divider-color);
+  border: 1px solid var(--body-bg);
+  color: #000;
+  /* color: var(--body-bg); */
+}
 .btn-create {
   background-color: var(--primary-color);
   color: #fff;
+}
+.btn-create:hover {
+  background-color: #E5E5E5;
+  color: #000;
 }
 
 /* Success Step */
@@ -188,13 +204,14 @@
     font-size: 14px !important;
   }
   .success-icon {
-    width: 40px !important;
-    height: 40px !important;
+    padding-top: 40px;
+    width: 30px !important;
+    height: 30px !important;
   }
 
   .success-icon::before {
-    width: 50px !important;
-    height: 50px !important;
+    width: 40px !important;
+    height: 40px !important;
   }
 }
 

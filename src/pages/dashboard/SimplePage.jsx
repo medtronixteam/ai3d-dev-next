@@ -8,6 +8,7 @@ import { FaGamepad } from 'react-icons/fa';
 import { GiVrHeadset, GiFactory } from 'react-icons/gi';
 import { MdStore, MdMonitorHeart } from 'react-icons/md';
 import Starfield from '../../components/effects/Starfield';
+import { useLocation } from 'react-router-dom';
 
 const CATEGORIES = [
   { label: 'Construction', type: 'construction', icon: FiTool },
@@ -28,7 +29,6 @@ const SimplePage = () => {
   const [videoLoading, setVideoLoading] = useState(true);
    const [stars, setStars] = useState([]);
     const containerRef = useRef(null);
-
 
     
      const location = useLocation();
@@ -90,7 +90,7 @@ const SimplePage = () => {
     axios.get(`${baseURL}/model/${selectedType}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
-      .then(res => setModels(res.data.data || []))
+      .then(res => setModels(res.models.data || []))
       .catch(() => setError('Failed to load models.'))
       .finally(() => setLoading(false));
   }, [selectedType, token]);

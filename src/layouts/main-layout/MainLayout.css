@@ -8,12 +8,17 @@
   overflow-y: auto;
   height: 100vh;
   position: relative;
-  scrollbar-width: none;
+  /* scrollbar-width: none; */
 
 }
 
 [data-theme='dark'] .main-layout, [data-theme='dark'] .main-content {
   background: black !important;
+}
+
+[data-theme='dark'] .main-layout {
+  background: black !important;
+  /* scrollbar-width: none !important; */
 }
 
 /* Custom Scrollbar */

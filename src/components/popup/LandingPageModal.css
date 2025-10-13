@@ -358,7 +358,7 @@
 
 .sublanding-plan-button:hover {
   background: #333333;
-  transform: translateY(-2px);
+  /* transform: translateY(-2px); */
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
 }
 
@@ -390,9 +390,9 @@
     padding: 25px;
     margin: 0.5rem auto;
   }
-  #generateBtn {
+  /* #generateBtn {
     width: 90% !important;
-  }
+  } */
   #profile-logout-btn {
     margin-left: 1rem !important;
   }

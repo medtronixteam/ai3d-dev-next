@@ -11,6 +11,7 @@ import {
 } from 'react-icons/fi';
 import './Scan.css';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import { useAuth } from '../../context/AuthContext';
 import { baseURL } from '../../config';
 import { FaReact, FaCloudUploadAlt, FaCube } from 'react-icons/fa';
@@ -23,6 +24,9 @@ import LoginPopup from '../../components/popup/LoginPopup';
 import CustomLoader from '../../components/loader/CustomLoader';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import MultiScan from '../../assets/images/MultiScan.svg';
+import SingleScan from '../../assets/images/SingleScan.svg';
+import { ArrowBigLeft, ArrowRight, Image, ImageIcon, ImageUp, Share, Upload } from 'lucide-react';
 
 const MIN_SLOTS = 5;
 const MAX_FILE_SIZE = 3 * 1024 * 1024; // 3MB
@@ -57,6 +61,117 @@ const ScanPage = () => {
   const previewContainerRef = useRef(null);
   const promptBoxRef = useRef(null);
   const navigate = useNavigate();
+
+  const [fileName, setFileName] = useState('');
+  const [singleFile, setSingleFile] = useState(null);
+  const [singleFileLoading, setSingleFileLoading] = useState(false);
+  const [singleFilePreview, setSingleFilePreview] = useState(null);
+
+  const handleFileChange = (e) => {
+    if (!token) {
+      alert('Please log in first');
+      return;
+    }
+
+    if (e.target.files.length > 0) {
+      const file = e.target.files[0];
+      if (file.size <= MAX_FILE_SIZE && file.type.startsWith('image/')) {
+        setFileName(file.name);
+        setSingleFile(file);
+        setSingleFilePreview(URL.createObjectURL(file));
+        setFileSizeError('');
+      } else if (file.size > MAX_FILE_SIZE) {
+        setFileSizeError('File is too large (max 3MB)');
+        setSingleFile(null);
+        setFileName('');
+        setSingleFilePreview(null);
+      }
+    }
+  };
+
+  // Single scan handler
+  const handleSingleSubmit = async () => {
+    if (!singleFile) return;
+    if (!token) {
+      setShowLoginModal(true);
+      return;
+    }
+
+    setSingleFileLoading(true);
+    try {
+      const projectName = getTimestamp();
+      // 1. Create project
+      const projectRes = await axios.post(
+        `${baseURL}/project`,
+        { name: projectName },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      const projectToken = projectRes.data?.token || projectRes.data?.data?.token;
+      if (!projectToken) throw new Error('Project token not returned');
+      // console.log('Project response:', projectRes.data);
+      // console.log('Project token:', projectToken);
+
+      // 2. Upload single file
+      const formData = new FormData();
+      formData.append('file', singleFile, singleFile.name);
+      formData.append('token', projectToken);
+      await axios.post(`${baseURL}/project/file`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      // 3. Complete project
+      await axios.post(
+        `${baseURL}/project/complete`,
+        { token: projectToken },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+
+      // Redirect to preview
+      window.location.href = `/platform/preview/${projectToken}`;
+    } catch (err) {
+      console.error(err);
+      alert('Something went wrong. Please try again.');
+    } finally {
+      setSingleFileLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    document.body.style.overflow = 'auto';
+    document.documentElement.style.overflow = 'auto';
+
+    const style = document.createElement('style');
+    style.id = 'hide-scrollbar-style';
+    style.innerHTML = `
+      html, body { 
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important; 
+      }
+      html::-webkit-scrollbar, 
+      body::-webkit-scrollbar { 
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+      }
+    `;
+
+    const existingStyle = document.getElementById('hide-scrollbar-style');
+    if (existingStyle) {
+      existingStyle.remove();
+    }
+
+    document.head.appendChild(style);
+
+    return () => {
+      const styleToRemove = document.getElementById('hide-scrollbar-style');
+      if (styleToRemove) {
+        styleToRemove.remove();
+      }
+    };
+  }, []);
 
   // Theme detection
   useEffect(() => {
@@ -231,9 +346,14 @@ const ScanPage = () => {
   // Helper to get current timestamp in ms
   const getTimestamp = () => Date.now().toString();
 
+
   // Main handler for submit
   const handleSubmit = async (e) => {
     e.stopPropagation();
+    if (files.length < 2) {
+  toast.error('Please upload at least 2 images!');
+  return;
+  }
     setIsLoading(true);
     setProgress(0); // Reset progress
     setUploadErrors([]);
@@ -450,7 +570,7 @@ const ScanPage = () => {
       }}
     >
       {/* subtle overlay to improve contrast over the GIF (light and dark) */}
-      <div
+      {/* <div
         style={{
           position: 'absolute',
           top: 0,
@@ -463,7 +583,90 @@ const ScanPage = () => {
             ? 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.28) 38%, rgba(0,0,0,0.55) 62%, rgba(0,0,0,0.78) 82%, #000 100%)'
             : 'linear-gradient(to bottom, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.75) 60%, #fff 100%)',
         }}
-      />
+      /> */}
+
+      {/* Single Scan */}
+      <section>
+        <div className="d-flex flex-column text-center mt-2">
+          <h1
+            style={{
+              color: isDarkMode ? '#fff' : '#000000',
+              fontSize: '30px',
+              fontWeight: 600,
+              margin: 0,
+            }}
+          >
+            Create <span style={{ color: '#DE3996' }}>Your</span> Model
+          </h1>
+          <p
+            style={{
+              color: isDarkMode ? '#DADADA' : '#333743',
+              fontSize: '20px',
+              fontWeight: 400,
+              margin: 0,
+            }}
+          >
+            Choose your preferred scanning method
+          </p>
+        </div>
+
+        <div className="single-scanning-container">
+          <img src={SingleScan} alt="" width={100} height={100} />
+          <div className="d-flex flex-column align-items-center justify-content-center">
+            <h2>Transform Photo into 3D Model</h2>
+            <p>
+              Upload a single image and watch AI transform it into a detailed 3D model in seconds.
+            </p>
+            <div className="single-scanning-input-field">
+              {singleFilePreview ? (
+                <img
+                  src={singleFilePreview}
+                  alt="preview"
+                  width={20}
+                  height={20}
+                  style={{
+                    objectFit: 'cover',
+                    borderRadius: '8px',
+                    // marginRight: '10px',
+                  }}
+                />
+              ) : (
+                <ImageUp size={18} />
+              )}
+
+              <input
+                type="file"
+                accept="image/*"
+                id="fileInput"
+                style={{ display: 'none' }}
+                onChange={handleFileChange}
+              />
+
+              <label
+                htmlFor="fileInput"
+                style={{ flex: 1, cursor: 'pointer', color: isDarkMode ? '#fff' : '#000' }}
+              >
+                {fileName || 'Upload your photo'}
+              </label>
+
+              <ArrowRight
+                style={{
+                  background: '#DE3996',
+                  color: '#fff',
+                  width: '30px',
+                  height: '30px',
+                  borderRadius: '50%',
+                  padding: '5px',
+                  cursor: 'pointer',
+                }}
+                onClick={handleSingleSubmit}
+                disabled={!singleFile || singleFileLoading}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section
         ref={promptBoxRef}
         className={`prompt-box${promptFocused ? ' prompt-expanded' : ''}`}
@@ -619,7 +822,8 @@ const ScanPage = () => {
             </div>
           )}
           {fileSizeError && <div style={{ color: 'red', marginBottom: 8 }}>{fileSizeError}</div>}
-          <FiUploadCloud
+          <img
+            src={MultiScan}
             aria-hidden="true"
             className={`upload-cloud-icon${promptFocused ? ' collapsed' : ''}`}
             style={{
@@ -628,20 +832,83 @@ const ScanPage = () => {
               marginBottom: promptFocused ? 8 : 12,
             }}
           />
+          <h1 style={{ fontSize: '20px', fontWeight: 700, color: '#DE3996' }}>Multi scan</h1>
           <p>
             <strong>
-              Drag &amp; Drop or Click to{' '}
-              <span className="highlight" tabIndex={0} role="button" aria-label="Browse files">
-                Browse
-              </span>
+              Upload multiple images, Videos, or CAD files for high-precision 3D reconstruction.
               <br />
-              Images, video, CAD, blueprint or sketch
+              Video Duration Up to 3 mins, Frame Sampling Rotate
             </strong>
             <br />
-            <small>Supported formats: JPG, PNG, MP4, MOV, AVI</small>
+            <small style={{ fontSize: '14px', lineHeight: 3 }}>Supported formats:</small>
             <br />
-            <small>Video Duration Up to 3 mins, Frame Sampling, Rotate</small>
+            <div className="d-flex gap-2 justify-content-center align-items-center">
+              <span
+                style={{
+                  color: '#DE3996',
+                  background: '#FFEDF7',
+                  fontSize: '11px',
+                  padding: '2px 3px',
+                  borderRadius: '3px',
+                }}
+              >
+                JPG
+              </span>
+              <span
+                style={{
+                  color: '#DE3996',
+                  background: '#FFEDF7',
+                  fontSize: '11px',
+                  padding: '2px 3px',
+                  borderRadius: '3px',
+                }}
+              >
+                PNG
+              </span>
+              <span
+                style={{
+                  color: '#DE3996',
+                  background: '#FFEDF7',
+                  fontSize: '11px',
+                  padding: '2px 3px',
+                  borderRadius: '3px',
+                }}
+              >
+                MP4
+              </span>
+              <span
+                style={{
+                  color: '#DE3996',
+                  background: '#FFEDF7',
+                  fontSize: '11px',
+                  padding: '2px 3px',
+                  borderRadius: '3px',
+                }}
+              >
+                MOV
+              </span>
+              <span
+                style={{
+                  color: '#DE3996',
+                  background: '#FFEDF7',
+                  fontSize: '11px',
+                  padding: '2px 3px',
+                  borderRadius: '3px',
+                }}
+              >
+                AVI
+              </span>
+            </div>
           </p>
+          {!showSlider && (
+            <>
+              <span className="highlight" tabIndex={0} role="button" aria-label="Browse files">
+                <Share size={16} />
+                Browse File
+              </span>
+              <small style={{ marginTop: '5px', fontSize: '11px' }}>or drag & drop here</small>
+            </>
+          )}
           <input
             type="file"
             ref={fileInputRef}
@@ -675,7 +942,13 @@ const ScanPage = () => {
                   </div>
                 ))}
                 {[...Array(slotsToFill)].map((_, i) => (
-                  <div key={`dummy-${i}`} className="preview-item dummy" />
+                  <div 
+                    key={`dummy-${i}`} 
+                    className="preview-item dummy" 
+                    onClick={openFilePicker}
+                    style={{ cursor: 'pointer' }}
+                  >
+                  </div>
                 ))}
               </div>
               <button className="slider-arrow" onClick={() => scrollPreview('right')}>
@@ -689,7 +962,7 @@ const ScanPage = () => {
             id="generateBtn1"
             style={{ display: showSlider ? 'inline-flex' : 'none' }}
             onClick={handleSubmit}
-            disabled={files.length === 0 || isLoading}
+            disabled={isLoading}
           >
             <svg
               width="17"

@@ -122,9 +122,9 @@ const CardPayment = () => {
                   width: 38,
                   height: 38,
                   borderRadius: '50%',
-                  border: '2px solid #666',
+                  border: document.documentElement.getAttribute("data-theme") === "dark" ? "2px solid #fff" : '2px solid #4D4C4C',
                   background: 'transparent',
-                  color: '#555',
+                  color: document.documentElement.getAttribute("data-theme") === "dark" ? "#fff" : "#4D4C4C" ,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -141,7 +141,7 @@ const CardPayment = () => {
                   zIndex: 1000,
                 }}
               >
-                <FiArrowLeft size={18} />
+                <FiArrowLeft size={28} />
               </button>
               <div className="row">
                 <div className="col-12 col-md-6 summary-pane">
@@ -151,7 +151,7 @@ const CardPayment = () => {
                     </div>
                   </div>
                   <div>
-                    <p className="text-muted mb-1">Subscribe to our plan</p>
+                    <p className="mb-1">Subscribe to Premium</p>
                     <div className="amount">
                       ${plan.price.toFixed(2)}{' '}
                       <span className="text-muted" style={{ fontSize: 14 }}>
@@ -161,11 +161,14 @@ const CardPayment = () => {
                   </div>
                   <div className="mt-4">
                     <div className="d-flex justify-content-between">
-                      <span className="text-muted">{plan.name}</span>
+                      <div className="d-flex flex-column">
+                        <span className="planName">{plan.name}</span>
+                      <span className='billedName' style={{ fontSize : '12px'}}>Billed monthly</span>
+                      </div>
                       <span>${plan.price.toFixed(2)}</span>
                     </div>
-                    <div className="d-flex justify-content-between">
-                      <span className="text-muted">Tax</span>
+                    <div className="d-flex justify-content-between mt-4">
+                      <span className="planName">Tax</span>
                       <span>${plan.tax.toFixed(2)}</span>
                     </div>
                     <hr />

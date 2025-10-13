@@ -250,6 +250,9 @@ const ResetPassword = () => {
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 maxLength={30}
+                autoComplete="off"
+                onCopy={(e) => e.preventDefault()}
+                onPaste={(e) => e.preventDefault()}
                   style={{ paddingLeft: 40,  backgroundColor: '#F9F9F9',border: 'none' }}
               />
               <span
@@ -266,7 +269,7 @@ const ResetPassword = () => {
                   }}
                 onClick={() => setShowPassword(s => !s)}
               >
-                {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                {showPassword ? <FiEye size={20} /> : <FiEyeOff size={20} />}
               </span>
               </div>
             </div>
@@ -293,6 +296,9 @@ const ResetPassword = () => {
                 value={cPassword}
                 onChange={e => setCPassword(e.target.value)}
                 maxLength={30}
+                autoComplete="off"
+                onCopy={(e) => e.preventDefault()}
+                onPaste={(e) => e.preventDefault()}
                   style={{ paddingLeft: 40, backgroundColor: '#F9F9F9', border: 'none' }}
               />
               <span
@@ -309,7 +315,7 @@ const ResetPassword = () => {
                   }}
                 onClick={() => setShowCPassword(s => !s)}
               >
-                {showCPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                {showCPassword ? <FiEye size={20} /> : <FiEyeOff size={20} />}
               </span>
             </div>
             </div>

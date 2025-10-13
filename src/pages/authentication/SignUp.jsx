@@ -8,6 +8,7 @@ import { FiEye, FiEyeOff } from 'react-icons/fi';
 import './SignUp.css';
 import Logo from '../../assets/images/Logo.png';
 import Robot from '../../assets/images/robot-img.png';
+import { useSearchParams } from 'react-router-dom';
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
@@ -18,6 +19,9 @@ const SignUp = () => {
   const [showCPassword, setShowCPassword] = useState(false);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [searchParams] = useSearchParams();
+  const referral = searchParams.get("referral");
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,6 +35,7 @@ const SignUp = () => {
         name: username,
         email,
         password,
+        referral: referral || null,
       });
       if (res.status === 200) {
         toast.success(res.data?.message || '');
@@ -120,6 +125,9 @@ const SignUp = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       maxLength={30}
+                      autoComplete="off"
+                      onCopy={(e) => e.preventDefault()}
+                      onPaste={(e) => e.preventDefault()}
                     />
                     <span
                       style={{
@@ -131,7 +139,7 @@ const SignUp = () => {
                       }}
                       onClick={() => setShowPassword((s) => !s)}
                     >
-                      {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                      {showPassword ? <FiEye size={20} /> : <FiEyeOff size={20} />}
                     </span>
                   </div>
                   <div
@@ -152,6 +160,9 @@ const SignUp = () => {
                       value={cPassword}
                       onChange={(e) => setCPassword(e.target.value)}
                       maxLength={30}
+                      autoComplete="off"
+                      onCopy={(e) => e.preventDefault()}
+                      onPaste={(e) => e.preventDefault()}
                     />
                     <span
                       style={{
@@ -163,7 +174,7 @@ const SignUp = () => {
                       }}
                       onClick={() => setShowCPassword((s) => !s)}
                     >
-                      {showCPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                      {showCPassword ? <FiEye size={20} /> : <FiEyeOff size={20} />}
                     </span>
                   </div>
                   <div className="text-center">

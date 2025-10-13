@@ -38,6 +38,9 @@ const PasswordConfirmPopup = ({ open, onClose, onConfirm, loading, error, label 
               autoFocus
               required
               maxLength={30}
+              autoComplete="off"
+              onCopy={(e) => e.preventDefault()}
+              onPaste={(e) => e.preventDefault()}
             />
             {error && <div style={{ color: '#e6339a', fontSize: 14, marginBottom: 8 }}>{error}</div>}
             <button type="submit" className="btn btn-primary w-100" disabled={loading || !password.trim()} style={{ marginTop: 2 }}>

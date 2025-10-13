@@ -30,6 +30,7 @@ import checkCircle from '../assets/images/check-circle.png';
 import plusIcon from './images/plus.png';
 import minusIcon from './images/minus.png';
 import { useMediaQuery } from 'react-responsive';
+import { FaArrowAltCircleUp, FaChevronDown } from 'react-icons/fa';
 
 const Referral = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -45,7 +46,7 @@ const Referral = () => {
   ];
 
   const pillsRef = useRef(null);
-  const isMobile = useMediaQuery({ maxWidth: 768 });
+  const isMobile = useMediaQuery({ maxWidth: 915 });
 
   useEffect(() => {
     if (!isMobile || !pillsRef.current) return;
@@ -272,6 +273,13 @@ const Referral = () => {
                   Leadership
                 </Link>
 
+                <Link
+                  to="/referral"
+                  className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`}
+                >
+                  Referral
+                </Link>
+
                 <Link to="/signin" className="a3d-nav-link">
                   Sign-In
                 </Link>
@@ -291,7 +299,7 @@ const Referral = () => {
 
           <div className="container rafferal pb-5" style={{ paddingBottom: 20 }}>
             <div className="row align-items-center">
-              <div className="col-lg-7">
+              <div className="col-lg-7" style={{ marginTop : isMobile ? '0' : '-5rem' }}>
                 <h1 className="a3d-title a3d-slide-up">
                   Spread the
                   <span className="perfect-heading">
@@ -329,7 +337,7 @@ const Referral = () => {
                   src={refferal}
                   alt="3D Robot"
                   className="img-fluid main-image"
-                  style={{ maxWidth: 450 }}
+                  style={{ maxWidth: 450, marginTop : isMobile ? '0' : '-3rem' }}
                 />
               </div>
             </div>
@@ -403,7 +411,7 @@ const Referral = () => {
 
         {/* ========================= Footer ======================= */}
         <div className="aithreed">
-          <section className="dropdown mt-5 bg-white pt-5">
+          <section className="dropdown mt-5 bg-white pt-5" id='FAQs'>
             <div className="container">
               {/* Heading */}
               <div className="text-center mb-4">
@@ -427,18 +435,14 @@ const Referral = () => {
                       >
                         {faq.question}
                         <span className="icon-container">
-                          <img
-                            src={plusIcon}
-                            alt="Plus"
-                            className="icon-plus"
+                          <i
+                            className="fa-solid fa-plus icon-plus"
                             style={{ display: openIndex === index ? 'none' : 'inline' }}
-                          />
-                          <img
-                            src={minusIcon}
-                            alt="Minus"
-                            className="icon-minus"
+                          ></i>
+                          <i
+                            className="fa-solid fa-minus icon-minus"
                             style={{ display: openIndex === index ? 'inline' : 'none' }}
-                          />
+                          ></i>
                         </span>
                       </button>
                     </h2>
@@ -482,13 +486,14 @@ const Referral = () => {
 
                     <div className="dropdown btn-wrapper d-lg-none d-md-none d-sm-none d-block">
                       <button
-                        className="btn dropdown-toggle english"
+                        className="btn english"
                         type="button"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
                       >
                         <img src={world} alt="World" style={{ width: 18, marginRight: 6 }} />
                         English
+                        <FaChevronDown size={12} className='ms-2' />
                       </button>
 
                       <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
@@ -504,12 +509,13 @@ const Referral = () => {
 
                     <div className="dropdown btn-wrapper d-lg-none d-md-none d-sm-none d-block">
                       <button
-                        className="btn dropdown-toggle usd"
+                        className="btn usd"
                         type="button"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
                       >
                         $USD
+                        <FaChevronDown size={12} className='ms-2' />
                       </button>
 
                       <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
@@ -526,13 +532,14 @@ const Referral = () => {
                     <div className="d-flex gap-2 none">
                       <div className="dropdown btn-wrapper none">
                         <button
-                          className="btn dropdown-toggle english"
+                          className="btn english"
                           type="button"
                           data-bs-toggle="dropdown"
                           aria-expanded="false"
                         >
                           <img src={world} alt="World" style={{ width: 18, marginRight: 6 }} />
                           English
+                          <FaChevronDown size={12} className='ms-2' />
                         </button>
 
                         <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
@@ -546,12 +553,13 @@ const Referral = () => {
 
                       <div className="dropdown btn-wrapper none">
                         <button
-                          className="btn dropdown-toggle usd"
+                          className="btn usd"
                           type="button"
                           data-bs-toggle="dropdown"
                           aria-expanded="false"
                         >
                           $USD
+                          <FaChevronDown size={12} className='ms-2' />
                         </button>
 
                         <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
@@ -579,7 +587,15 @@ const Referral = () => {
                   <ul className="mt-1">
                     {['Home', 'About us', 'Pricing'].map((item) => (
                       <li key={item}>
-                        <a href={item === 'Pricing' ? '/platform/subscription' : '#'}>
+                        <a
+                          href={
+                            item === 'Pricing'
+                              ? '/platform/subscription'
+                              : item === 'About us'
+                                ? '/#aboutus'
+                                : '#'
+                          }
+                        >
                           <img
                             className="iconsize me-1"
                             src={arrow}
@@ -607,7 +623,7 @@ const Referral = () => {
                   <ul className="mt-1">
                     {['Help Center', 'FAQ'].map((item) => (
                       <li key={item}>
-                        <a href="#">
+                        <a  href={item === 'FAQ' ? '#FAQs' : '/#help'}>
                           <img
                             className="iconsize me-1"
                             src={arrow}

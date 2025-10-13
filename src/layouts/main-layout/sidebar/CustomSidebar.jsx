@@ -9,6 +9,8 @@ import LoginIcon from '../../../assets/images/loginIcon.svg';
 import TeamIcon from '../../../assets/images/team.svg';
 import SubscriptionIcon from '../../../assets/images/subscriptionIcon.svg';
 import ProjectIcon from '../../../assets/images/project.svg';
+import AiModel from '../../../assets/images/aimodal.svg'
+import Referal from '../../../assets/images/Referal.svg'
 
 const CustomSidebar = ({ onClose }) => {
   return (
@@ -42,8 +44,14 @@ const CustomSidebar = ({ onClose }) => {
             <NavLink to="/platform/settings/team" className="nav-link mb-2">
               <img src={TeamIcon} alt="" style={{ width: '19px' }} /> Team
             </NavLink>
-            <NavLink to="/platform/settings/account" className="nav-link mb-2">
-              <img src={ProjectIcon} alt="" style={{ width: '19px' }} /> Account
+            <NavLink to="/platform/settings/project" className="nav-link mb-2">
+              <img src={ProjectIcon} alt="" style={{ width: '19px' }} /> Project
+            </NavLink>
+            <NavLink to="/platform/settings/aimodal" className="nav-link mb-2">
+              <img src={AiModel} alt="" style={{ width: '19px' }} /> AI Model
+            </NavLink>
+            <NavLink to="/platform/settings/referal" className="nav-link mb-2">
+              <img src={Referal} alt="" style={{ width: '19px' }} /> Referral
             </NavLink>
           </nav>
         </div>

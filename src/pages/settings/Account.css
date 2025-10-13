@@ -39,7 +39,8 @@
 }
 
 [data-theme='dark'] .account-coming-soon-container {
-  background: #110e1f !important;
+  background: #000 !important;
+  height: 100vh !important;
 }
 [data-theme='dark'] .account-coming-soon-card {
   background: #23232a !important;

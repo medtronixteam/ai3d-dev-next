@@ -580,13 +580,72 @@
   background: #fff;
   color: #232334;
   border-radius: 16px;
-  width: 420px;
+  width: 500px;
   max-width: 92vw;
-  padding: 40px 18px;
+  padding: 25px 18px;
   box-shadow: 0 10px 36px rgba(0, 0, 0, 0.18);
   position: relative;
-
   box-shadow: 0 10px 36px rgba(0, 0, 0, 0.18);
+}
+
+.share-through-icons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin:  20px auto 0 auto;
+  gap: 1rem;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.share-through-icons::-webkit-scrollbar {
+  display: none; 
+}
+
+.share-through-icons > div {
+  flex: 0 0 auto;
+}
+
+.share-through-icons-span-tag {
+  background-color: #EEEEEE;
+  border-radius: 50%;
+  width: 55px;
+  height: 55px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #4D4C4C;
+  cursor: pointer;
+}
+
+.share-through-icons-span-name-tag {
+  color: #4D4C4C;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 2.5;
+  cursor: pointer;
+}
+
+.share-through-icons-span-tag.active {
+  background-color: #F4E7EE;
+  border-radius: 50%;
+  width: 55px;
+  height: 55px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #DE3996;
+  cursor: pointer;
+}
+
+.share-through-icons-span-name-tag.active {
+  color: #DE3996;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 2.5;
+  cursor: pointer;
 }
 
 .share-close {
@@ -607,6 +666,12 @@
   transition: all 0.3s ease;
 }
 
+@media (max-width : 600px) {
+  .share-input {
+  padding: 10px 40px 10px 12px !important;
+}
+}
+
 .share-close:hover {
   background: #c53282;
 }
@@ -621,19 +686,23 @@
 .share-title {
   margin: 0 0 6px 0;
   font-weight: 700;
-  font-size: 22px;
+  font-size: 16px;
 }
 
 .share-subtitle {
-  margin: 0 0 14px 0;
-  color: #666;
-  font-size: 15px;
+  line-height: 3;
+  color: #000000;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  margin: 0;
 }
 
 .share-input-row {
   display: flex;
   gap: 8px;
   align-items: center;
+  position: relative;
 }
 
 .share-input {
@@ -648,17 +717,12 @@
 }
 
 .share-copy-btn {
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
-  background: #de3996;
-  color: #fff;
-  border: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
   cursor: pointer;
+  color: #de3996;
 }
 
 .share-copied {
@@ -808,6 +872,7 @@
   color: #f3f3fa !important;
   box-shadow: 0 2px 16px #18182a !important;
   border: none !important;
+  border-radius: 8px;
 }
 
 .dark .profile-input,
@@ -1919,7 +1984,7 @@
 .profile-main-card {
   max-width: 100%;
   margin: 0.5rem 1.5rem;
-  /* border-radius: 10px; */
+  border-radius: 8px;
   box-shadow: 0 2px 16px #e9e9f7;
   padding: 32px;
   /* margin: 85px auto; */

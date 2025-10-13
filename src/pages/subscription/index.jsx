@@ -15,15 +15,14 @@ import side2 from '../../assets/images/side2.svg';
 const Subscription = () => {
   const [billingPeriod, setBillingPeriod] = useState('monthly');
   const navigate = useNavigate();
-  const [monthlyPlan, setMonthlyPlan] = useState({
-    name: 'Starter',
-    price: '29',
-    duration: 'Month',
-  });
-  const [yearlyPlan, setYearlyPlan] = useState({ name: 'Starter', price: '290', duration: 'Year' });
-  const { token } = useAuth();
+  const [monthlyStarterPrice, setMonthlyStarterPrice] = useState(29);
+  const [monthlyProPrice, setMonthlyProPrice] = useState(99);
+  const [yearlyStarterPrice, setYearlyStarterPrice] = useState(290);
+  const [yearlyProPrice, setYearlyProPrice] = useState(990);
+  const { token, activeTeam } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loginModalVisible, setLoginModalVisible] = useState(false);
+  const [subscribingPlan, setSubscribingPlan] = useState(null);
 
   useEffect(() => {
     if (showLoginModal) {
@@ -36,49 +35,76 @@ const Subscription = () => {
     setTimeout(() => setShowLoginModal(false), 250);
   };
 
-  // Handler for plan buttons
-  const handlePlanClick = (planInfo, e) => {
+  const handlePlanClick = async (planInfo, e) => {
     if (e) e.preventDefault();
+    if (activeTeam) return; 
     if (!token) {
       setShowLoginModal(true);
       return;
     }
-    // Save selected plan info to localStorage
-    localStorage.setItem('selectedPlan', JSON.stringify(planInfo));
-    window.open('/platform/subscription/card', '_blank');
+    try {
+      const period = billingPeriod === 'yearly' ? 'annually' : 'monthly';
+      const payload = {
+        name: planInfo?.name,
+        period,
+      };
+      setSubscribingPlan(`${planInfo?.name}-${period}`);
+      const res = await axios.post(`${baseURL}/plan/subscribe`, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const redirectUrl = res?.data?.url || res?.data?.redirectUrl;
+      if (redirectUrl) {
+        window.location.href = redirectUrl;
+      }
+    } catch (err) {
+      // Fallback: keep previous behavior only if subscribe fails
+      try {
+        window.open('/platform/subscription/card', '_blank');
+      } catch (_) {}
+    } finally {
+      setSubscribingPlan(null);
+    }
   };
 
   useEffect(() => {
-    // Fetch plans
+    // Fetch all plans and set Starter/Pro prices for monthly and annually
     axios
-      .get(`${baseURL}/plan/monthly`, {
+      .get(`${baseURL}/plans`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       })
       .then((res) => {
-        const data = res.data || {};
-        setMonthlyPlan({
-          name: data.name || 'Starter',
-          price: data.price || '29',
-          duration: data.duration || 'Month',
-        });
+        const data = res?.data || {};
+        // Expected flexible shapes:
+        // { monthly: [{name:'Starter', price:29},{name:'Pro', price:99}], annually: [...] }
+        // or { plans: { monthly: [...], annually: [...] } }
+        const monthly = Array.isArray(data?.monthly)
+          ? data?.monthly
+          : Array.isArray(data?.plans?.monthly)
+          ? data?.plans?.monthly
+          : [];
+        const annually = Array.isArray(data?.annually)
+          ? data?.annually
+          : Array.isArray(data?.plans?.annually)
+          ? data?.plans?.annually
+          : Array.isArray(data?.yearly)
+          ? data?.yearly
+          : Array.isArray(data?.plans?.yearly)
+          ? data?.plans?.yearly
+          : [];
+
+        const getPrice = (arr, planName, fallback) => {
+          const found = arr.find((p) => (p?.name || '').toLowerCase().includes(planName));
+          const price = found?.price ?? found?.amount ?? found?.unit_amount;
+          return Number(price) || fallback;
+        };
+
+        setMonthlyStarterPrice(getPrice(monthly, 'starter', 29));
+        setMonthlyProPrice(getPrice(monthly, 'pro', 99));
+        setYearlyStarterPrice(getPrice(annually, 'starter', 290));
+        setYearlyProPrice(getPrice(annually, 'pro', 990));
       })
       .catch(() => {
-        setMonthlyPlan({ name: 'Starter', price: '29', duration: 'Month' });
-      });
-    axios
-      .get(`${baseURL}/plan/yearly`, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-      })
-      .then((res) => {
-        const data = res.data || {};
-        setYearlyPlan({
-          name: data.name || 'Starter',
-          price: data.price || '290',
-          duration: data.duration || 'Year',
-        });
-      })
-      .catch(() => {
-        setYearlyPlan({ name: 'Starter', price: '290', duration: 'Year' });
+        // keep defaults
       });
   }, [token]);
 
@@ -176,111 +202,20 @@ const Subscription = () => {
           </div>
           {billingPeriod === 'monthly' && (
             <div className="pricing-cards monthly-plan">
-              {/* Monthly plan cards here (same as before) */}
+              {/* Monthly cards: Starter, Pro (Popular), Enterprise at third */}
               <div className="pricing-card">
                 <div className="card-header">
-                  <span className="title">Freemium</span>
+                  <span className="title">Starter</span>
                   <div className="price-section">
                     <div>
-                      <span className="price">Free</span>
-                      <sub className="sub-class">/14 days</sub>
-                    </div>
-                    <p>Experience 3D All Power, No card required. Cancel any time</p>
-                  </div>
-                </div>
-                <div className="divider-container">
-                  <div className="divider" />
-                </div>
-                <div className="features">
-                  <h2>Features you'll get:</h2>
-                  <ul>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Instance 2D to 3D conversion
-                    </li>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Real-time preview &amp; exports
-                    </li>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Access to all tools &amp; APIs
-                    </li>
-                  </ul>
-                </div>
-                <p className="card-footer">
-                  At the end of 14 days, you can choose a plan that fits your needs. We'll notify
-                  you 2 days before your trial ends.
-                </p>
-                <button
-                  className="plan-button"
-                  onClick={(e) =>
-                    handlePlanClick({ name: 'Freemium', price: 0, duration: '14 days' }, e)
-                  }
-                >
-                  Start Free Trial
-                </button>
-              </div>
-              <div className="popular-card">
-                <div className="popular-tag">Popular</div>
-                <div className="pricing-card">
-                  <div className="card-header">
-                    <span className="title">Starter</span>
-                    <div className="price-section">
-                      <div>
-                        <span className="price">$29</span>
-                        <sub className="sub-class">/Month</sub>
-                      </div>
-                      <p>
-                        $290/Year <br />
-                        Unlock more powerful design tools.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="divider-container">
-                    <div className="divider" />
-                  </div>
-                  <div className="features">
-                    <h2>Features you'll get:</h2>
-                    <ul>
-                      <li>
-                        <img src={vectoImage} alt="" />
-                        Instance 2D to 3D conversion
-                      </li>
-                      <li>
-                        <img src={vectoImage} alt="" />
-                        Real-time preview &amp; exports
-                      </li>
-                      <li>
-                        <img src={vectoImage} alt="" />
-                        Access to all tools &amp; APIs
-                      </li>
-                    </ul>
-                  </div>
-                  <p className="card-footer">
-                    At the end of 14 days, you can choose a plan that fits your needs. We'll notify
-                    you 2 days before your trial ends.
-                  </p>
-                  <button
-                    className="plan-button"
-                    onClick={(e) =>
-                      handlePlanClick({ name: 'Starter', price: 29, duration: 'Month' }, e)
-                    }
-                  >
-                    Choose Starter
-                  </button>
-                </div>
-              </div>
-              <div className="pricing-card">
-                <div className="card-header">
-                  <span className="title">Pro Plan</span>
-                  <div className="price-section">
-                    <div>
-                      <span className="price">$99</span>
+                      <span className="price">{`$${monthlyStarterPrice}`}</span>
                       <sub className="sub-class">/Month</sub>
                     </div>
+                    <div>
+                      <span className="year-price" style={{ fontSize : '16px'}}>{`$${yearlyStarterPrice}`}</span>
+                      <sub className="year-sub-class" style={{ fontSize : '16px'}}>/Year</sub>
+                    </div>
                     <p>
-                      $990/Year <br />
                       Unlock more powerful design tools.
                     </p>
                   </div>
@@ -311,11 +246,104 @@ const Subscription = () => {
                 </p>
                 <button
                   className="plan-button"
-                  onClick={(e) =>
-                    handlePlanClick({ name: 'Pro Plan', price: 99, duration: 'Month' }, e)
-                  }
+                  disabled={!!activeTeam || subscribingPlan === `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`}
+                  onClick={(e) => handlePlanClick({ name: 'Starter' }, e)}
                 >
-                  Choose Pro
+                  {subscribingPlan === `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Choose Starter'}
+                </button>
+              </div>
+              <div className="popular-card">
+                <div className="popular-tag">Popular</div>
+                <div className="pricing-card">
+                  <div className="card-header">
+                    <span className="title">Pro Plan</span>
+                    <div className="price-section">
+                      <div>
+                        <span className="price">{`$${monthlyProPrice}`}</span>
+                        <sub className="sub-class">/Month</sub>
+                      </div>
+                      <div>
+                      <span className="year-price" style={{ fontSize : '16px'}}>{`$${yearlyStarterPrice}`}</span>
+                      <sub className="year-sub-class" style={{ fontSize : '16px'}}>/Year</sub>
+                    </div>
+                      <p>
+                        Unlock more powerful design tools.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="divider-container">
+                    <div className="divider" />
+                  </div>
+                  <div className="features">
+                    <h2>Features you'll get:</h2>
+                    <ul>
+                      <li>
+                        <img src={vectoImage} alt="" />
+                        Instance 2D to 3D conversion
+                      </li>
+                      <li>
+                        <img src={vectoImage} alt="" />
+                        Real-time preview &amp; exports
+                      </li>
+                      <li>
+                        <img src={vectoImage} alt="" />
+                        Access to all tools &amp; APIs
+                      </li>
+                    </ul>
+                  </div>
+                  <p className="card-footer">
+                    At the end of 14 days, you can choose a plan that fits your needs. We'll notify
+                    you 2 days before your trial ends.
+                  </p>
+                  <button
+                    className="plan-button"
+                    disabled={!!activeTeam || subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`}
+                    onClick={(e) => handlePlanClick({ name: 'Pro' }, e)}
+                  >
+                    {subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Choose Pro'}
+                  </button>
+                </div>
+              </div>
+              <div className="pricing-card">
+                <div className="card-header">
+                  <span className="title">Enterprise Plan</span>
+                  <div className="price-section">
+                    <div style={{ marginBottom: '31px' }}>
+                      <span className="price">Custom</span>
+                      <sub className="sub-class">billing</sub>
+                    </div>
+                  </div>
+                </div>
+                <div className="divider-container mt-lg-3">
+                  <div className="divider" />
+                </div>
+                <div className="features">
+                  <h2>Features you'll get:</h2>
+                  <ul>
+                    <li>
+                      <img src={vectoImage} alt="" />
+                      Instance 2D to 3D conversion
+                    </li>
+                    <li>
+                      <img src={vectoImage} alt="" />
+                      Real-time preview &amp; exports
+                    </li>
+                    <li>
+                      <img src={vectoImage} alt="" />
+                      Access to all tools &amp; APIs
+                    </li>
+                  </ul>
+                </div>
+                <p className="card-footer">
+                  At the end of 14 days, you can choose a plan that fits your needs. We'll notify
+                  you 2 days before your trial ends.
+                </p>
+                <button
+                  className="plan-button"
+                  disabled={!!activeTeam}
+                  onClick={(e) => handlePlanClick({ name: 'Enterprise' }, e)}
+                >
+                  Contact Sales
                 </button>
               </div>
             </div>
@@ -328,8 +356,12 @@ const Subscription = () => {
                   <span className="title">Starter Plan</span>
                   <div className="price-section">
                     <div>
-                      <span className="price">$290</span>
+                      <span className="price">{`$${yearlyStarterPrice}`}</span>
                       <sub className="sub-class">/Year</sub>
+                    </div>
+                    <div>
+                      <span className="month-price" style={{ fontSize : '16px'}} >{`$${monthlyProPrice}`}</span>
+                      <sub className="month-sub-class" style={{ fontSize : '16px'}}>/Month</sub>
                     </div>
                     <p>Basic conversions</p>
                   </div>
@@ -360,56 +392,61 @@ const Subscription = () => {
                 </p>
                 <button
                   className="plan-button"
-                  onClick={(e) =>
-                    handlePlanClick({ name: 'Starter', price: 290, duration: 'Year' }, e)
-                  }
+                  disabled={!!activeTeam || subscribingPlan === `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`}
+                  onClick={(e) => handlePlanClick({ name: 'Starter' }, e)}
                 >
-                  Choose Starter
+                  {subscribingPlan === `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Choose Starter'}
                 </button>
               </div>
-              <div className="pricing-card">
-                <div className="card-header">
-                  <span className="title">Pro Plan</span>
-                  <div className="price-section">
-                    <div>
-                      <span className="price">$990</span>
-                      <sub className="sub-class">/Year</sub>
+              <div className="popular-card">
+                <div className="popular-tag">Popular</div>
+                <div className="pricing-card">
+                  <div className="card-header">
+                    <span className="title">Pro Plan</span>
+                    <div className="price-section">
+                      <div>
+                        <span className="price">{`$${yearlyProPrice}`}</span>
+                        <sub className="sub-class">/Year</sub>
+                      </div>
+                      <div>
+                      <span className="month-price" style={{ fontSize : '16px'}} >{`$${monthlyProPrice}`}</span>
+                      <sub className="month-sub-class" style={{ fontSize : '16px'}}>/Month</sub>
                     </div>
-                    <p>Unlock more powerful design tools.</p>
+                      <p>Unlock more powerful design tools.</p>
+                    </div>
                   </div>
+                  <div className="divider-container">
+                    <div className="divider" />
+                  </div>
+                  <div className="features">
+                    <h2>Features you'll get:</h2>
+                    <ul>
+                      <li>
+                        <img src={vectoImage} alt="" />
+                        Instance 2D to 3D conversion
+                      </li>
+                      <li>
+                        <img src={vectoImage} alt="" />
+                        Real-time preview &amp; exports
+                      </li>
+                      <li>
+                        <img src={vectoImage} alt="" />
+                        Access to all tools &amp; APIs
+                      </li>
+                    </ul>
+                  </div>
+                  <p className="card-footer">
+                    At the end of 14 days, you can choose a plan that fits your needs. We'll notify
+                    you 2 days before your trial ends.
+                  </p>
+                  <button
+                    className="plan-button"
+                    disabled={!!activeTeam || subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`}
+                    onClick={(e) => handlePlanClick({ name: 'Pro' }, e)}
+                  >
+                    {subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Choose Pro'}
+                  </button>
                 </div>
-                <div className="divider-container">
-                  <div className="divider" />
-                </div>
-                <div className="features">
-                  <h2>Features you'll get:</h2>
-                  <ul>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Instance 2D to 3D conversion
-                    </li>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Real-time preview &amp; exports
-                    </li>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Access to all tools &amp; APIs
-                    </li>
-                  </ul>
-                </div>
-                <p className="card-footer">
-                  At the end of 14 days, you can choose a plan that fits your needs. We'll notify
-                  you 2 days before your trial ends.
-                </p>
-                <button
-                  className="plan-button"
-                  onClick={(e) =>
-                    handlePlanClick({ name: 'Pro Plan', price: 990, duration: 'Year' }, e)
-                  }
-                >
-                  Choose Pro
-                </button>
               </div>
               <div className="pricing-card">
                 <div className="card-header">
@@ -426,7 +463,7 @@ const Subscription = () => {
                     </p> */}
                   </div>
                 </div>
-                <div className="divider-container">
+                <div className="divider-container mt-lg-3">
                   <div className="divider" />
                 </div>
                 <div className="features">
@@ -452,11 +489,10 @@ const Subscription = () => {
                 </p>
                 <button
                   className="plan-button"
-                  onClick={(e) =>
-                    handlePlanClick({ name: 'Enterprise', price: 0, duration: 'Year' }, e)
-                  }
+                  disabled={!!activeTeam || subscribingPlan === `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`}
+                  onClick={(e) => handlePlanClick({ name: 'Enterprise' }, e)}
                 >
-                  Contact Sales
+                  {subscribingPlan === `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Contact Sales'}
                 </button>
               </div>
               {/* Optionally add Enterprise card here if you have one */}

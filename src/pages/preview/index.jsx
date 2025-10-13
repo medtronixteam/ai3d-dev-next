@@ -147,7 +147,7 @@ const ImagePreview = () => {
         backgroundRepeat: 'no-repeat',
         // minHeight: '110vh',
         position: 'relative',
-        height: '100vh',
+        // height: '100vh',
       }}
     >
       <ExportModal open={exportOpen} onClose={() => setExportOpen(false)} url={DUMMY_EXPORT_URL} />

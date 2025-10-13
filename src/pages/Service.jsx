@@ -17,15 +17,18 @@ import world from './images/worl.png';
 import line from './images/line.png';
 import dot from './images/do.png';
 import arrow from './images/arri.png';
-import AiImg from './images/ai.png';
-import AppImg from './images/app.jpg';
-import GraphicImg from './images/graphic.png';
-import DesktopImg from './images/desktop.png';
+import AiImg from '../assets/images/AI_Image.png';
+import AppImg from '../assets/images/Flutter_Image.png';
+import CreativeMedia from '../assets/images/Creative_Media.png';
+import Business from './images/desktop.png';
+import GraphicImg from '../assets/images/Website_Image.png';
+import DesktopImg from '../assets/images/Desktop_Image.png';
 import LeftArrow from '../assets/images/left-arrow.svg';
 import HalfEllipse from '../assets/images/HalfEllipse.svg';
 import { useMediaQuery } from 'react-responsive';
 import Cards from '../components/Cards/Cards';
 import Circle from './Animation/Circle';
+import { FaChevronDown } from 'react-icons/fa';
 const Service = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
@@ -253,7 +256,7 @@ const Service = () => {
             
             </main>
 
-            <h1 className="service-herosection-title">
+            <h1 className="service-herosection-title a3d-slide-up">
               Our Full Range of AI &{' '}
               <span>
                 Software Services
@@ -261,7 +264,7 @@ const Service = () => {
               </span>
             </h1>
 
-            <p className="service-herosection-description">
+            <p className="service-herosection-description a3d-slide-up" style={{ animationDelay: '0.2s' }}>
               From concept to deployment, AI3D Scanning Solutions delivers end-to-end technology
               services that combine innovation, precision and scalability. Our expert team transform
               ideas into reality with cutting-edge design, development and customization solutions
@@ -295,7 +298,7 @@ const Service = () => {
               ))}
             </div>
 
-            <div className="circle-cards-wrapper">
+            <div className="circle-cards-wrapper a3d-slide-up" style={{ animationDelay: '0.2s' }}>
               <Cards position="top" />
               <Circle />
               <Cards position="bottom" />
@@ -318,7 +321,7 @@ const Service = () => {
             <br /> & Software Services
           </h3>
 
-          <p className="service-herosection2-description">
+          <p className="service-herosection2-description a3d-slide-up" style={{ animationDelay: '0.2s' }}>
               From concept to deployment, AI3D Scanning Solutions delivers end-to-end technology
               services that combine innovation, precision and scalability. Our expert team transform
               ideas into reality with cutting-edge design, development and customization solutions
@@ -337,8 +340,8 @@ const Service = () => {
             <div className="row align-items-center mb-5 py-2" id='AI-Development'>
               {/* Left content */}
               <div className="col-lg-6 mb-lg-0 mb-4">
-                <h2 className="services-title">AI Development &amp; Solutions</h2>
-                <ul className="service-list">
+                <h2 className="services-title a3d-slide-up">AI Development &amp; Solutions</h2>
+                <ul className="service-list a3d-slide-up">
                   <li>
                     <i className="bx bx-check-circle" /> Custom AI model design and training
                   </li>
@@ -367,8 +370,8 @@ const Service = () => {
               </div>
               {/* Right content */}
               <div className="col-lg-6 mb-4 mb-lg-0 offset-lg-1 order-lg-2 order-1" id='Flutter'>
-                <h2 className="services-title">Flutter App Development</h2>
-                <ul className="service-list">
+                <h2 className="services-title a3d-slide-up">Flutter App Development</h2>
+                <ul className="service-list a3d-slide-up">
                   <li>
                     <i className="bx bx-check-circle" />
                     Cross-platform mobile apps for iOS &amp; Android
@@ -388,8 +391,8 @@ const Service = () => {
             <div className="row align-items-center mt-lg-5 mt-3 py-lg-5 mt-3" id='Website-Development'>
               {/* Left content */}
               <div className="col-lg-6 mb-4 mb-lg-0">
-                <h2 className="services-title">Website Development</h2>
-                <ul className="service-list">
+                <h2 className="services-title a3d-slide-up">Website Development</h2>
+                <ul className="service-list a3d-slide-up">
                   <li>
                     <i className="bx bx-check-circle" /> Responsive, high-performance websites
                   </li>
@@ -418,8 +421,8 @@ const Service = () => {
               </div>
               {/* Right content */}
               <div className="col-lg-6 mb-4 mb-lg-0 offset-lg-1 order-lg-2 order-1">
-                <h2 className="services-title">Desktop App Development</h2>
-                <ul className="service-list">
+                <h2 className="services-title a3d-slide-up">Desktop App Development</h2>
+                <ul className="service-list a3d-slide-up">
                   <li>
                     <i className="bx bx-check-circle" /> Windows, macOS, and Linux desktop solutions
                   </li>
@@ -436,8 +439,8 @@ const Service = () => {
             <div className="row align-items-center mt-lg-5 mt-3 py-lg-5 mt-3">
               {/* Left content */}
               <div className="col-lg-6 mb-lg-0 mb-4">
-                <h2 className="services-title">Bus. Dev. &amp; Consulting</h2>
-                <ul className="service-list">
+                <h2 className="services-title a3d-slide-up">Bus. Dev. &amp; Consulting</h2>
+                <ul className="service-list a3d-slide-up">
                   <li>
                     <i className="bx bx-check-circle" /> Go-to-market strategies
                   </li>
@@ -454,19 +457,19 @@ const Service = () => {
               </div>
               {/* Right image */}
               <div className="col-lg-5 services-img text-center text-lg-end mb-lg-0 mb-4">
-                <img src={AiImg} alt="Consulting Services Image" />
+                <img src={Business} alt="Consulting Services Image" />
               </div>
             </div>
             {/* =================== Creative Media ===================== */}
             <div className="row align-items-center mt-lg-5 mt-3 py-lg-5 mt-3">
               {/* Left image */}
-              <div className="col-lg-5 services-img text-center text-lg-end order-lg-1 order-2">
-                <img src={AppImg} alt="Creative Media Image" />
+              <div className="col-lg-5 services-img text-center text-lg-end order-lg-1 order-2 mb-lg-0 mb-4">
+                <img src={CreativeMedia} alt="Creative Media Image" />
               </div>
               {/* Right content */}
               <div className="col-lg-6 mb-4 mb-lg-0 offset-lg-1 order-lg-2 order-1">
-                <h2 className="services-title">Creative Media</h2>
-                <ul className="service-list">
+                <h2 className="services-title a3d-slide-up">Creative Media</h2>
+                <ul className="service-list a3d-slide-up">
                   <li>
                     <i className="bx bx-check-circle" /> Brand identity design
                   </li>
@@ -514,13 +517,14 @@ const Service = () => {
 
                     <div className="dropdown btn-wrapper d-lg-none d-md-none d-sm-none d-block">
                       <button
-                        className="btn dropdown-toggle english"
+                        className="btn english"
                         type="button"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
                       >
                         <img src={world} alt="World" style={{ width: 18, marginRight: 6 }} />
                         English
+                        <FaChevronDown size={12} className='ms-2' />
                       </button>
 
                       <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
@@ -536,12 +540,13 @@ const Service = () => {
 
                     <div className="dropdown btn-wrapper d-lg-none d-md-none d-sm-none d-block">
                       <button
-                        className="btn dropdown-toggle usd"
+                        className="btn usd"
                         type="button"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
                       >
                         $USD
+                        <FaChevronDown size={12} className='ms-2' />
                       </button>
 
                       <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
@@ -558,13 +563,14 @@ const Service = () => {
                     <div className="d-flex gap-2 none">
                       <div className="dropdown btn-wrapper none">
                         <button
-                          className="btn dropdown-toggle english"
+                          className="btn english"
                           type="button"
                           data-bs-toggle="dropdown"
                           aria-expanded="false"
                         >
                           <img src={world} alt="World" style={{ width: 18, marginRight: 6 }} />
                           English
+                          <FaChevronDown size={12} className='ms-2' />
                         </button>
 
                         <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
@@ -578,12 +584,13 @@ const Service = () => {
 
                       <div className="dropdown btn-wrapper none">
                         <button
-                          className="btn dropdown-toggle usd"
+                          className="btn usd"
                           type="button"
                           data-bs-toggle="dropdown"
                           aria-expanded="false"
                         >
                           $USD
+                          <FaChevronDown size={12} className='ms-2' />
                         </button>
 
                         <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
@@ -611,7 +618,15 @@ const Service = () => {
                   <ul className="mt-1">
                     {['Home', 'About us', 'Pricing'].map((item) => (
                       <li key={item}>
-                        <a href={item === 'Pricing' ? '/platform/subscription' : '#'}>
+                        <a
+                          href={
+                            item === 'Pricing'
+                              ? '/platform/subscription'
+                              : item === 'About us'
+                                ? '/#aboutus'
+                                : '#'
+                          }
+                        >
                           <img
                             className="iconsize me-1"
                             src={arrow}
@@ -639,7 +654,7 @@ const Service = () => {
                   <ul className="mt-1">
                     {['Help Center', 'FAQ'].map((item) => (
                       <li key={item}>
-                        <a href="#">
+                        <a href={item === 'FAQ' ? '/#FAQs' : '/#help'}>
                           <img
                             className="iconsize me-1"
                             src={arrow}

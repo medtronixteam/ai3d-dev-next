@@ -30,8 +30,9 @@
 
 [data-theme='dark'],
 [data-theme='dark'] select.form-control {
-  background: #15151b !important;
-  color: #fff !important;
+  background-color: rgba(17, 14, 32, 1);
+  border: 1px solid rgba(168, 168, 168, 1);
+  color: #fff;
   /* border: 1px solid #2a2a33 !important; */
 }
 
@@ -90,6 +91,7 @@
 
 [data-theme='dark'] .summary-pane {
   color: #fff;
+  /* background: linear-gradient(90deg, #6B1846 0%, #1C1F3B 100%) !important; */
 }
 
 /* When columns stack on small screens, extend the gradient to full width */
@@ -126,9 +128,41 @@
 }
 
 .amount {
-  font-size: 2.2rem;
-  font-weight: 700;
+  font-size: 40px;
+  font-weight: 400;
   color: var(--primary-color, #e6339a);
+}
+
+[data-theme='dark'] .amount {
+  color: #FFFFFF;
+}
+
+[data-theme='dark'] .planName {
+  color: #FFFFFF;
+}
+[data-theme='dark'] .billedName {
+  color: #DADADA;
+}
+
+[data-theme='dark'] .payment-container-card .form-control,
+.payment-container-card select.form-control {
+  border: 1px solid #4D4C4C36;
+  border-radius: 5px;
+  padding: 10px 14px;
+  height: 46px;
+  box-shadow: none;
+  background-color: #110E20;
+  color: white;
+}
+
+[data-theme='dark'] .payment-container-card .form-control:focus,
+.payment-container-card select.form-control:focus {
+  border-color: #e6339a;
+  box-shadow: 0 0 0 3px rgba(230, 51, 154, 0.12);
+}
+
+[data-theme='dark'] .select-chevron {
+  color: #fff;
 }
 
 [data-theme='dark'] .team-section-card .team-card {
@@ -223,6 +257,7 @@
 
 /* Split MM/YY and CVC group to look like one input */
 .card-split-group {
+  outline: none !important;
   display: flex;
   align-items: stretch;
   border: 1px solid #e6e6eb;
@@ -232,6 +267,7 @@
 }
 
 .card-split-group .split-input {
+  outline: none !important;
   /* border: none !important; */
   box-shadow: none !important;
   border-radius: 0 !important;
@@ -520,15 +556,16 @@
 
 .payment-success-modal-content {
   background: #fff !important;
-  border-radius: 24px;
+  border-radius: 20px;
   box-shadow: 0 8px 40px rgba(230, 51, 154, 0.13), 0 2px 8px rgba(34, 34, 59, 0.10);
-  padding: 38px 28px 32px 28px;
+  padding: 0px 20px 0px 20px;
   min-width: 320px;
   max-width: 370px;
   min-height: 320px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   position: relative;
   border: 1.5px solid #f7e1ff;
   box-sizing: border-box;
@@ -603,7 +640,7 @@ body.modal-open {
 }
 
 .payment-success-modal .success-message {
-  color: #444;
+  color: #DADADA;
   font-size: 15.5px;
   text-align: center;
   margin-bottom: 0;
@@ -639,7 +676,7 @@ body.modal-open {
 
 @media (max-width: 600px) {
   .payment-success-modal-content {
-    padding: 18px 4px 18px 4px;
+    padding: 18px 8px 18px 8px;
     min-width: 0;
     max-width: 98vw;
     min-height: 220px;

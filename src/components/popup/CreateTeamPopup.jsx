@@ -7,13 +7,21 @@ import { toast } from 'react-toastify';
 import { useAuth } from '../../context/AuthContext';
 import SuccessImg from '../../assets/images/success-img.png'
 
-const CreateTeamPopup = ({ onClose }) => {
+const CreateTeamPopup = ({ onClose, onTeamCreated }) => {
   const [step, setStep] = useState(1);
   const [teamName, setTeamName] = useState('');
   const [teamEmail, setTeamEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const { token } = useAuth();
   const [error, setError] = useState('');
+  const [createdTeam, setCreatedTeam] = useState(null);
+
+  React.useEffect(() => {
+  if (error) {
+    const timer = setTimeout(() => setError(""), 2000); // auto hide after 3s
+    return () => clearTimeout(timer);
+  }
+}, [error]);
 
   const handleCreateTeam = async () => {
     if (teamName.trim() && teamEmail.trim()) {
@@ -25,9 +33,24 @@ const CreateTeamPopup = ({ onClose }) => {
           { email: teamEmail, name: teamName },
           { headers: { Authorization: `Bearer ${token}` } }
         );
+        
         if (res.data && (res.data.status === 'error' || res.data.status !== 'success')) {
           setError(res.data.message || 'Failed to create team!');
         } else {
+          // Store the created team data
+          const newTeam = res.data.team || res.data.data || { 
+            id: Date.now(), // fallback ID if not provided
+            name: teamName, 
+            email: teamEmail 
+          };
+          
+          setCreatedTeam(newTeam);
+          
+          // Call the callback to update parent component's state
+          if (onTeamCreated) {
+            onTeamCreated(newTeam);
+          }
+          
           setStep(2);
         }
       } catch (err) {
@@ -54,6 +77,7 @@ const CreateTeamPopup = ({ onClose }) => {
             id="teamName"
             placeholder="Enter your Team name"
             value={teamName}
+            style={{outline : 'none'}}
             onChange={(e) => setTeamName(e.target.value)}
           />
           <p className="form-helper-static">This can be changed later in the team settings</p>
@@ -65,6 +89,7 @@ const CreateTeamPopup = ({ onClose }) => {
             id="teamEmail"
             placeholder="Enter your Team Email"
             value={teamEmail}
+            style={{outline : 'none'}}
             onChange={(e) => setTeamEmail(e.target.value)}
           />
            <p className="form-helper-static">You can change this later in the team settings</p>
@@ -100,8 +125,9 @@ const CreateTeamPopup = ({ onClose }) => {
   return (
     <div className="create-team-overlay">
       <div className="create-team-popup">
-        {error && <div className="confirm-modal-error">{error}</div>}
+        {/* {error && <div className="confirm-modal-error">{error}</div>} */}
         {step === 1 ? renderStepOne() : renderStepTwo()}
+        {error && <div className="confirm-modal-error mt-2">{error}</div>}
       </div>
     </div>
   );

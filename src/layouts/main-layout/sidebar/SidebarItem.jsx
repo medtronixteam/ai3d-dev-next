@@ -6,13 +6,12 @@ import './SidebarItem.css';
 import { SidebarPopover } from './index';
 import { useAuth } from '../../../context/AuthContext';
 import { useMediaQuery } from '@mui/material';
-
 import SubscriptionImg from '../../../assets/images/subsciption.png';
 import DarkSubscriptionImg from '../../../assets/images/darkSubscription.png';
 import ActiveSubscriptionImg from '../../../assets/images/darkSubscription.png';
 // import ActiveSubscriptionImg from '../../../assets/images/activeSubscription.png';
 
-const SidebarItem = ({ item, isCollapsed, onAutoCollapse }) => {
+const SidebarItem = ({ item, isCollapsed }) => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const { token } = useAuth();
@@ -21,12 +20,16 @@ const SidebarItem = ({ item, isCollapsed, onAutoCollapse }) => {
   const isSubscription = item.title === 'Subscription';
   const isSubscriptionActive =
     isSubscription &&
-    (location.pathname === item.path ||
-      location.pathname.startsWith('/platform/subscription'));
+    (location.pathname === item.path || location.pathname.startsWith('/platform/subscription'));
+
+  // Check for Settings active state
+  const isSettings = item.title === 'Settings';
+  const isSettingsActive = isSettings && location.pathname.startsWith('/platform/settings');
 
   // check dark mode
   const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
-  const isActive = location.pathname === item.path;
+  // Update isActive logic to include Settings check
+  const isActive = location.pathname === item.path || (isSettings && isSettingsActive);
 
   // 👇 Render icon logic
   const renderIcon = () => {
@@ -35,7 +38,7 @@ const SidebarItem = ({ item, isCollapsed, onAutoCollapse }) => {
     } else if (item.title === 'Subscription') {
       let subscriptionImage;
       if (!isDarkMode && isSubscriptionActive) {
-        subscriptionImage = ActiveSubscriptionImg; 
+        subscriptionImage = ActiveSubscriptionImg;
       } else if (isDarkMode) {
         subscriptionImage = DarkSubscriptionImg;
       } else {
@@ -57,11 +60,11 @@ const SidebarItem = ({ item, isCollapsed, onAutoCollapse }) => {
         />
       );
     } else if (item.icon && typeof item.icon === 'object') {
-
       let iconSrc = item.icon.light;
       if (isDarkMode) {
         iconSrc = item.icon.dark || item.icon.light;
       }
+      // Use the updated isActive logic that includes Settings check
       if (!isDarkMode && isActive) {
         iconSrc = item.icon.active || item.icon.light;
       }
@@ -146,7 +149,11 @@ const SidebarItem = ({ item, isCollapsed, onAutoCollapse }) => {
       ) : (
         <NavLink
           to={item.path}
-          className={({ isActive }) => `sidebar-link${isActive ? ' active' : ''}`}
+          className={({ isActive: navIsActive }) => {
+            // For Settings, check if we're on any settings page
+            const shouldBeActive = isSettings ? isSettingsActive : navIsActive;
+            return `sidebar-link${shouldBeActive ? ' active' : ''}`;
+          }}
           onClick={handleNavClick}
         >
           {renderIcon()}

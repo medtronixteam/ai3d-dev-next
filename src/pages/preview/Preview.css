@@ -488,6 +488,7 @@
 [data-theme='dark'] .preview-container {
   background-color: #18181c !important;
   color: #fff !important;
+  /* height: 100% !important; */
 }
 
 [data-theme='dark'] .image-card {
@@ -511,6 +512,12 @@
 [data-theme='dark'] .btn-share,
 [data-theme='dark'] .btn-generate {
   color: #fff !important;
+}
+
+@media (min-width : 850px){
+  .preview-container {
+    height: 100vh !important;
+  }
 }
 
 @media (max-width: 900px) {
@@ -567,6 +574,7 @@
     padding: 2rem 0;
     max-width: 100% !important;
     min-width: 100% !important;
+    margin-bottom: 1rem !important;
   }
   .upload-container {
     padding: 50px 20px !important;
@@ -1084,7 +1092,7 @@
 
 @media (max-width: 600px) {
   .preview-container {
-    height: auto !important;
+    height: 100% !important;
   }
 }
 

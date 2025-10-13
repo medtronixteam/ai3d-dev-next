@@ -3,7 +3,7 @@ import { MdApi } from 'react-icons/md';
 import './Account.css';
 
 const ComingSoonCard = () => (
-  <div className="account-coming-soon-container">
+  <div className="account-coming-soon-container Team-section-card">
     <div className="account-coming-soon-card">
       <MdApi className="account-coming-soon-icon" />
       <h2 className="account-coming-soon-title">Coming Soon</h2>

@@ -14,7 +14,7 @@ const LoginPopup = ({ onClose, onLoginSuccess }) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const { login } = useAuth();
+  const { login, tokens, user } = useAuth();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
@@ -32,18 +32,46 @@ const LoginPopup = ({ onClose, onLoginSuccess }) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post(`${baseURL}/login`, { email, password }, { skipAuthInterceptor: true });
-      login(res.data.token, res.data.user);
+      const res = await axios.post(
+        `${baseURL}/login`,
+        { email, password },
+        { skipAuthInterceptor: true },
+      );
+
+      // Debug: Response ko check karte hain
+      console.log('API Response:', res.data);
+      console.log('Token:', res.data.token);
+      console.log('User data:', res.data.user);
+      
+      // Check karte hain ke response mein proper data hai ya nahi
+      if (!res.data.token) {
+        throw new Error('Token not received from server');
+      }
+      
+
+      // User data ko validate aur format karte hain
+      let userData = res.data.user;
+      if (!userData || !userData.email) {
+        // Fallback: agar user object nahi mila to email se basic object banate hain
+        userData = {
+          email: email,
+          name: res.data.name || email.split('@')[0], // Default name
+          ...res.data // Baaki jo bhi data hai wo merge kar dete hain
+        };
+      }
+      
+      console.log('Formatted user data:', userData);
+      
+      // Login function call karte hain
+      login(res.data.token, userData);
+
       toast.success(res.data?.message || 'Login successful!');
       handleClose();
       
       // Call onLoginSuccess callback if provided, otherwise reload page
       if (onLoginSuccess) {
         onLoginSuccess();
-      } else {
-        // Reload to reflect login state
-        window.location.reload();
-      }
+      } 
     } catch (err) {
       toast.error(err?.response?.data?.message || 'Login failed. Please check your credentials.');
     } finally {
@@ -82,12 +110,15 @@ const LoginPopup = ({ onClose, onLoginSuccess }) => {
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 maxLength={30}
+                autoComplete="off"
+                onCopy={(e) => e.preventDefault()}
+                onPaste={(e) => e.preventDefault()}
               />
               <span
                 style={{ position: 'absolute', right: 9, top: 46, cursor: 'pointer', zIndex: 2 }}
                 onClick={() => setShowPassword(s => !s)}
               >
-                {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                {showPassword ? <FiEye size={20} /> : <FiEyeOff size={20} />}
               </span>
             </div>
             <div className="d-flex justify-content-between align-items-center mb-3">
@@ -120,6 +151,8 @@ const LoginPopup = ({ onClose, onLoginSuccess }) => {
             <div className="or-divider">OR</div>
             <div className="social-buttons-container mt-3">
               <button type="button" className="btn social-btn" onClick={() => {
+                // For social login, we'll need to handle the redirect back
+                // For now, just redirect and let the main app handle the success
                 window.location.href = 'https://app.ai3dscanning.com/auth/google';
               }}>
                 <span className="social-icon">

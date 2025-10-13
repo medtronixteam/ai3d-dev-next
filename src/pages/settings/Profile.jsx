@@ -15,6 +15,10 @@ import {
   FiCheck,
   FiCopy,
   FiArrowRight,
+  FiX,
+  FiMessageCircle,
+  FiTwitter,
+  FiShare,
 } from 'react-icons/fi';
 import { RxHamburgerMenu, RxCross2 } from 'react-icons/rx';
 import ProfileImg from '../../assets/images/Profile.png';
@@ -24,6 +28,10 @@ import { useNotification } from '../../context/NotificationContext';
 import axios from 'axios';
 import { baseURL } from '../../config';
 import './Profile.css';
+import shareProfile from '../../assets/images/shareProfile.svg';
+import { FaSlideshare, FaTelegram, FaTelegramPlane, FaWhatsapp } from 'react-icons/fa';
+import { AtSign, Share, Share2 } from 'lucide-react';
+import { useMediaQuery } from 'react-responsive';
 const themeColor = '#DE3996';
 
 const modalBackdrop = {
@@ -137,6 +145,19 @@ const Profile = () => {
   const [showShareModal, setShowShareModal] = useState(false);
   const [copied, setCopied] = useState(false);
   const [shareUrl, setShareUrl] = useState('');
+  const [filterType, setFilterType] = useState('all');
+
+  const [activeIcon, setActiveIcon] = useState(null);
+
+  const icons = [
+    { id: 'chat', icon: <FiMessageCircle size={25} />, name: 'Chat' },
+    { id: 'telegram', icon: <FaTelegramPlane size={25} />, name: 'Telegram' },
+    { id: 'twitter', icon: <FiTwitter size={25} />, name: 'Twitter' },
+    { id: 'whatsapp', icon: <FaWhatsapp size={25} />, name: 'Whatsapp' },
+    { id: 'email', icon: <AtSign size={25} />, name: 'Email' },
+    { id: 'others', icon: <Share2 size={25} />, name: 'Others' },
+  ];
+
 
   useEffect(() => {
     const origin =
@@ -164,6 +185,40 @@ const Profile = () => {
       .finally(() => setLoading(false));
     fetchPrimaryEmails();
   }, [token]);
+
+  useEffect(() => {
+    document.body.style.overflow = 'auto';
+    document.documentElement.style.overflow = 'auto';
+
+    const style = document.createElement('style');
+    style.id = 'hide-scrollbar-style';
+    style.innerHTML = `
+      html, body { 
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important; 
+      }
+      html::-webkit-scrollbar, 
+      body::-webkit-scrollbar { 
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+      }
+    `;
+
+    const existingStyle = document.getElementById('hide-scrollbar-style');
+    if (existingStyle) {
+      existingStyle.remove();
+    }
+
+    document.head.appendChild(style);
+
+    return () => {
+      const styleToRemove = document.getElementById('hide-scrollbar-style');
+      if (styleToRemove) {
+        styleToRemove.remove();
+      }
+    };
+  }, []);
 
   // Close notification dropdown on outside click
   useEffect(() => {
@@ -252,11 +307,11 @@ const Profile = () => {
   if (user.avatar) {
     profileImg = user.avatar.startsWith('http')
       ? user.avatar
-      : `https://app.ai3dscanning.com/storage/${user.avatar.replace(/^\//, '')}`;
+      : `storage/${user.avatar.replace(/^\//, '')}`;
   } else if (user.image) {
     profileImg = user.image.startsWith('http')
       ? user.image
-      : `https://app.ai3dscanning.com/storage/${user.image.replace(/^\//, '')}`;
+      : `storage/${user.image.replace(/^\//, '')}`;
   }
 
   return (
@@ -400,7 +455,7 @@ const Profile = () => {
         @media (max-width: 480px) {
           .profile-header-section {
             gap: 4px !important;
-            padding: 0 8px !important;
+            padding: 0 0px !important;
           }
           
           .profile-search-container {
@@ -428,175 +483,6 @@ const Profile = () => {
           transform: rotate(90deg) scale(1.1);
           color: #DE3996;
         }
-        
-        /* Ensure notification dropdown is properly positioned on mobile */
-      //   @media (max-width: 768px) {
-      //     .notif-dropdown {
-      //       position: fixed !important;
-      //       top: 30% ;
-      //       left: 50% ;
-      //       transform: translate(-50%, -50%) ;
-      //       margin-top: 0 !important;
-      //       width: 90vw !important;
-      //       max-width: 90vw !important;
-      //       min-width: 90vw !important;
-      //       z-index: 1001 !important;
-      //     }
-      // }
-
-      //     @media (max-width: 600px) {
-      //     .notif-dropdown {
-      //       position: fixed !important;
-      //       top: 20% ;
-      //       left: 50% !important;
-      //       transform: translate(-50%, -50%) !important;
-      //       margin-top: 0 !important;
-      //       width: 90vw !important;
-      //       max-width: 90vw !important;
-      //       min-width: 90vw !important;
-      //       z-index: 1001 !important;
-      //     }
-      //   }
-
-      //   @media (max-width: 540px) {
-      //     .notif-dropdown {
-      //       position: fixed !important;
-      //       top: 18% ;
-      //       left: 50% !important;
-      //       transform: translate(-50%, -50%) !important;
-      //       margin-top: 0 !important;
-      //       width: 90vw !important;
-      //       max-width: 90vw !important;
-      //       min-width: 90vw !important;
-      //       z-index: 1001 !important;
-      //     }
-      //   }
-
-      //    @media (max-width: 450px) {
-      //     .notif-dropdown {
-      //       position: fixed !important;
-      //       top: 14% ;
-      //       left: 50% !important;
-      //       transform: translate(-50%, -50%) !important;
-      //       margin-top: 0 !important;
-      //       width: 90vw !important;
-      //       max-width: 90vw !important;
-      //       min-width: 90vw !important;
-      //       z-index: 1001 !important;
-      //     }
-      // }
-
-      // @media (max-width: 426px) {
-      //     .notif-dropdown {
-      //       position: fixed !important;
-      //       top: 26%;
-      //       left: 50% !important;
-      //       transform: translate(-50%, -50%) !important;
-      //       margin-top: 0 !important;
-      //       width: 90vw !important;
-      //       max-width: 90vw !important;
-      //       min-width: 90vw !important;
-      //       z-index: 1001 !important;
-      //     }
-      // }
-
-      // @media (max-width: 420px) {
-      //     .notif-dropdown {
-      //       position: fixed !important;
-      //       top: 14%;
-      //       left: 50% !important;
-      //       transform: translate(-50%, -50%) !important;
-      //       margin-top: 0 !important;
-      //       width: 90vw !important;
-      //       max-width: 90vw !important;
-      //       min-width: 90vw !important;
-      //       z-index: 1001 !important;
-      //     }
-      // }
-
-      //    @media (max-width: 390px) {
-      //     .notif-dropdown {
-      //       position: fixed !important;
-      //       top: 15% ;
-      //       left: 50% !important;
-      //       transform: translate(-50%, -50%) !important;
-      //       margin-top: 0 !important;
-      //       width: 90vw !important;
-      //       max-width: 90vw !important;
-      //       min-width: 90vw !important;
-      //       z-index: 1001 !important;
-      //     }
-      // }
-
-      // @media (max-width: 380px) {
-      //     .notif-dropdown {
-      //       position: fixed !important;
-      //       top: 26% ;
-      //       left: 50% !important;
-      //       transform: translate(-50%, -50%) !important;
-      //       margin-top: 0 !important;
-      //       width: 90vw !important;
-      //       max-width: 90vw !important;
-      //       min-width: 90vw !important;
-      //       z-index: 1001 !important;
-      //     }
-      // }
-
-      // @media (max-width: 360px) {
-      //     .notif-dropdown {
-      //       position: fixed !important;
-      //       top: 17% ;
-      //       left: 50% !important;
-      //       transform: translate(-50%, -50%) !important;
-      //       margin-top: 0 !important;
-      //       width: 90vw !important;
-      //       max-width: 90vw !important;
-      //       min-width: 90vw !important;
-      //       z-index: 1001 !important;
-      //     }
-      // }
-
-      // @media (max-width: 350px) {
-      //     .notif-dropdown {
-      //       position: fixed !important;
-      //       top: 14% ;
-      //       left: 50% !important;
-      //       transform: translate(-50%, -50%) !important;
-      //       margin-top: 0 !important;
-      //       width: 90vw !important;
-      //       max-width: 90vw !important;
-      //       min-width: 90vw !important;
-      //       z-index: 1001 !important;
-      //     }
-      // }
-
-      // @media (max-width: 345px) {
-      //     .notif-dropdown {
-      //       position: fixed !important;
-      //       top: 15%;
-      //       left: 50% !important;
-      //       transform: translate(-50%, -50%) !important;
-      //       margin-top: 0 !important;
-      //       width: 90vw !important;
-      //       max-width: 90vw !important;
-      //       min-width: 90vw !important;
-      //       z-index: 1001 !important;
-      //     }
-      // }
-
-      // @media (max-width: 340px) {
-      //     .notif-dropdown {
-      //       position: fixed !important;
-      //       top: 26% ;
-      //       left: 50% !important;
-      //       transform: translate(-50%, -50%) !important;
-      //       margin-top: 0 !important;
-      //       width: 90vw !important;
-      //       max-width: 90vw !important;
-      //       min-width: 90vw !important;
-      //       z-index: 1001 !important;
-      //     }
-      // }
 
 
       `}</style>
@@ -679,36 +565,38 @@ const Profile = () => {
       {showShareModal && (
         <div className="share-modal-backdrop" onClick={() => setShowShareModal(false)}>
           <div className="share-modal" onClick={(e) => e.stopPropagation()}>
-            <button
-              className="share-close"
-              onClick={() => setShowShareModal(false)}
-              aria-label="Close"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="white"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
+            <div className="d-flex justify-content-between">
+              <h3 className="share-title">Share with</h3>
+              <span onClick={() => setShowShareModal(false)} aria-label="Close">
+                <FiX size={16} />
+              </span>
+            </div>
 
-            <h3 className="share-title">Share your profile</h3>
-            <p className="share-subtitle">
-              Copy the secure link below to quickly share your profile with teammates or clients.{' '}
-            </p>
+            <div className="share-through-icons d-flex justify-content-between"  style={{ overflowX: 'auto', scrollBehavior: 'smooth', gap: '10px' }}>
+              {icons.map(({ id, icon, name }) => (
+                <div
+                  key={id}
+                  className="d-flex flex-column align-items-center justify-content-center"
+                  onClick={() => setActiveIcon(id)}>
+                  <span
+                    className={`share-through-icons-span-tag ${activeIcon === id ? 'active' : ''}`}>
+                    {icon}
+                  </span>
+                  <span
+                    className={`share-through-icons-span-name-tag ${
+                      activeIcon === id ? 'active' : '' }`}>
+                    {name}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <p className="share-subtitle">Or share with link</p>
             <div className="share-input-row">
               <input className="share-input" type="text" readOnly value={shareUrl} />
-              <button className="share-copy-btn" onClick={copyShareUrl} aria-label="Copy">
-                <FiCopy />
-              </button>
+              <span className="share-copy-btn" onClick={copyShareUrl}>
+                <FiCopy size={18} />
+              </span>
             </div>
             {copied && <div className="share-copied">Copied!</div>}
           </div>
@@ -909,56 +797,73 @@ const Profile = () => {
                 {notifOpen && (
                   <div className="notif-dropdown">
                     <div className="notif-dropdown-header">
-                      <span>Notifications</span>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        {unreadCount > 0 && (
-                          <button
-                            className="notif-mark-all-btn"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              markAllAsRead();
-                            }}
-                            disabled={markAllLoading}
-                            style={{
-                              background: 'none',
-                              color: 'black',
-                              // borderBottom: '1px solid black',
-                              textDecoration: 'underline',
-                              borderRadius: 'none',
-                              boxShadow: 'none',
-                              fontWeight: '700',
-                              fontSize: '12px',
-                              padding: '6px 10px',
-                              cursor: markAllLoading ? 'not-allowed' : 'pointer',
-                              transition: 'background 0.2s, color 0.2s',
-                              minWidth: '0',
-                              minHeight: '0',
-                              lineHeight: '1',
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '4px',
-                            }}
-                          >
-                            {markAllLoading ? (
-                              <>
-                                <div
-                                  className="loading-spinner"
-                                  style={{
-                                    width: '10px',
-                                    height: '10px',
-                                    border: '2px solid #fff',
-                                    borderTop: '2px solid transparent',
-                                  }}
-                                ></div>
-                                Marking...
-                              </>
-                            ) : (
-                              'Mark all as read'
-                            )}
-                          </button>
-                        )}
-                      </div>
+                      <span>All notifications</span>
                     </div>
+
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        marginTop: '8px',
+                        padding: '0 18px 6px 18px',
+                        borderBottom: '1px solid #8D8D8D66',
+                        marginBottom: '5px',
+                      }}
+                    >
+                      <div className="notify">
+                        <span
+                          className={`all-notif ${filterType === 'all' ? 'active' : ''}`}
+                          onClick={() => setFilterType('all')}
+                        >
+                          All
+                        </span>
+                        <span
+                          className={`unread-notif ${filterType === 'unread' ? 'active' : ''}`}
+                          onClick={() => setFilterType('unread')}
+                        >
+                          Unread ({unreadCount})
+                        </span>
+                      </div>
+
+                      {unreadCount > 0 && (
+                        <button
+                          className="notif-mark-all-btn"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            markAllAsRead();
+                          }}
+                          disabled={markAllLoading}
+                          style={{
+                            background: 'none',
+                            color: '#DE3996',
+                            borderRadius: 'none',
+                            boxShadow: 'none',
+                            fontWeight: '600',
+                            fontSize: '12px',
+                            cursor: markAllLoading ? 'not-allowed' : 'pointer',
+                            transition: 'background 0.2s, color 0.2s',
+                          }}
+                        >
+                          {markAllLoading ? (
+                            <>
+                              <div
+                                className="loading-spinner"
+                                style={{
+                                  width: '10px',
+                                  height: '10px',
+                                  border: '2px solid #fff',
+                                  borderTop: '2px solid transparent',
+                                }}
+                              ></div>
+                              Marking...
+                            </>
+                          ) : (
+                            'Mark all as read'
+                          )}
+                        </button>
+                      )}
+                    </div>
+
                     {/* <div style={{ 
                               fontSize: '11px', 
                               color: '#888', 
@@ -968,48 +873,175 @@ const Profile = () => {
                             }}>
                               Click to toggle read/unread status
                             </div> */}
+
+                    {/* <div className="notif-dropdown-list">
+                              <div className="d-flex flex-column">
+                                <span className='last-days-notif'>Last 7 Days</span>
+                                <span className='older-days-notif'>Older</span>
+                              </div>
+                              {notifications && notifications.length > 0 ? (
+                                notifications.map((notif, idx) => {
+                                  const isToggling = togglingNotifications.has(notif.id);
+                                  return (
+                                    <div 
+                                      key={notif.id || idx} 
+                                      className={`notif-item${notif.read_at ? ' read' : ' unread'}${isToggling ? ' toggling' : ''}`}
+                                      onClick={() => !isToggling && toggleNotificationRead(notif.id)}
+                                      style={{ cursor: isToggling ? 'not-allowed' : 'pointer' }}
+                                    > 
+                                      
+                                      {isToggling ? (
+                                        <span className="notif-status-icon notif-loading">
+                                          <div className="loading-spinner"></div>
+                                        </span>
+                                      ) : notif.read_at ? (
+                                        <span className="notif-status-icon notif-tick"><FiCheck /></span>
+                                      ) : (
+                                        <span className="notif-status-icon notif-dot"></span>
+                                      )}
+                                      <div className="notif-message">
+                                        {notif.data?.message || notif.message || notif.text || notif.title || 'New notification'}
+                                      </div>
+                                    </div>
+                                  );
+                                })
+                              ) : (
+                                <div className="notif-empty">No notifications</div>
+                              )}
+                            </div> */}
+
                     <div className="notif-dropdown-list">
                       {notifications && notifications.length > 0 ? (
-                        notifications.map((notif, idx) => {
-                          const isToggling = togglingNotifications.has(notif.id);
+                        (() => {
+                          const now = new Date();
+                          const today = [];
+                          const last7Days = [];
+                          const older = [];
+
+                          const filteredNotifications =
+                            filterType === 'unread'
+                              ? notifications.filter((n) => !n.read_at)
+                              : notifications;
+
+                          filteredNotifications.forEach((notif) => {
+                            const notifDate = new Date(notif.created_at);
+                            const isToday = notifDate.toDateString() === now.toDateString();
+                            const diffInDays = (now - notifDate) / (1000 * 60 * 60 * 24);
+
+                            if (isToday) {
+                              today.push(notif);
+                            } else if (diffInDays <= 7) {
+                              last7Days.push(notif);
+                            } else {
+                              older.push(notif);
+                            }
+                          });
+
+                          const renderNotif = (list) =>
+                            list.map((notif, idx) => {
+                              const isToggling = togglingNotifications?.has
+                                ? togglingNotifications.has(notif.id)
+                                : false;
+
+                              return (
+                                <div
+                                  key={notif.id || idx}
+                                  className={`notif-item${notif.read_at ? ' read' : ' unread'}${
+                                    isToggling ? ' toggling' : ''
+                                  }`}
+                                  onClick={() => !isToggling && toggleNotificationRead(notif.id)}
+                                  style={{ cursor: isToggling ? 'not-allowed' : 'pointer' }}
+                                >
+                                  {isToggling ? (
+                                    <span className="notif-status-icon notif-loading">
+                                      <div className="loading-spinner"></div>
+                                    </span>
+                                  ) : notif.read_at ? (
+                                    <span className="notif-status-icon notif-tick">
+                                      <FiCheck />
+                                    </span>
+                                  ) : (
+                                    <span className="notif-status-icon notif-dot"></span>
+                                  )}
+                                  <div className="notif-item-content">
+                                    <div className="notif-message">
+                                      {notif.data?.message ||
+                                        notif.message ||
+                                        notif.text ||
+                                        notif.title ||
+                                        'New notification'}
+                                    </div>
+                                    <div className="notif-date">
+                                      {new Date(notif.created_at).toLocaleDateString('en-US', {
+                                        day: 'numeric',
+                                        month: 'short',
+                                      })}
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            });
+
                           return (
-                            <div
-                              key={notif.id || idx}
-                              className={`notif-item${notif.read_at ? ' read' : ' unread'}${isToggling ? ' toggling' : ''}`}
-                              onClick={() => !isToggling && toggleNotificationRead(notif.id)}
-                              style={{ cursor: isToggling ? 'not-allowed' : 'pointer' }}
-                            >
-                              {/* Dot, Tick, or Loading icon */}
-                              {isToggling ? (
-                                <span className="notif-status-icon notif-loading">
-                                  <div className="loading-spinner"></div>
-                                </span>
-                              ) : notif.read_at ? (
-                                <span className="notif-status-icon notif-tick">
-                                  <FiCheck />
-                                </span>
-                              ) : (
-                                <span className="notif-status-icon notif-dot"></span>
+                            <>
+                              {/* Today */}
+                              {today.length > 0 && (
+                                <>
+                                  <span className="today-notif">Today</span>
+                                  {renderNotif(today)}
+                                </>
                               )}
-                              <div className="notif-message">
-                                {notif.data?.message ||
-                                  notif.message ||
-                                  notif.text ||
-                                  notif.title ||
-                                  'New notification'}
-                              </div>
-                            </div>
+
+                              {/* Last 7 Days */}
+                              {last7Days.length > 0 && (
+                                <>
+                                  <span className="last-days-notif">Last 7 Days</span>
+                                  {renderNotif(last7Days)}
+                                </>
+                              )}
+
+                              {/* Older */}
+                              {older.length > 0 && (
+                                <>
+                                  <span className="older-days-notif">Older</span>
+                                  {renderNotif(older)}
+                                </>
+                              )}
+
+                              {/* If nothing */}
+                              {today.length === 0 &&
+                                last7Days.length === 0 &&
+                                older.length === 0 && (
+                                  <div className="notif-empty">No notifications</div>
+                                )}
+                            </>
                           );
-                        })
+                        })()
                       ) : (
                         <div className="notif-empty">No notifications</div>
                       )}
                     </div>
                   </div>
                 )}
+                <style>{`
+                          @keyframes notif-dot-pop {
+                            0% { transform: scale(0.2); opacity: 0; }
+                            60% { transform: scale(1.2); opacity: 1; }
+                            100% { transform: scale(1); opacity: 1; }
+                          }
+                          @keyframes notif-dropdown-in {
+                            0% { opacity: 0; transform: translateY(-18px) scale(0.95) rotateX(18deg); }
+                            60% { opacity: 1; transform: translateY(6px) scale(1.04) rotateX(-6deg); }
+                            100% { opacity: 1; transform: translateY(0) scale(1) rotateX(0deg); }
+                          }
+                          @keyframes notif-item-in {
+                            0% { opacity: 0; transform: translateY(18px) scale(0.95); }
+                            60% { opacity: 1; transform: translateY(-2px) scale(1.04); }
+                            100% { opacity: 1; transform: translateY(0) scale(1); }
+                          }
+                        `}</style>
               </div>
             )}
-
           </div>
         </div>
 
@@ -1026,6 +1058,7 @@ const Profile = () => {
                   borderRadius: '50%',
                   objectFit: 'cover',
                   marginRight: 24,
+                  border: '1px solid #e6339a',
                 }}
               />
             ) : (
@@ -1460,11 +1493,7 @@ const EditProfileModal = ({ onClose, user, setUser, onChangePassword, onSuccess 
           <div className="profile-img-row">
             {imgUrl ? (
               <img
-                src={
-                  imgUrl.startsWith('http')
-                    ? imgUrl
-                    : `https://app.ai3dscanning.com/storage/${imgUrl.replace(/^\//, '')}`
-                }
+                src={imgUrl.startsWith('http') ? imgUrl : `storage/${imgUrl.replace(/^\//, '')}`}
                 alt="Profile"
               />
             ) : (
@@ -1764,9 +1793,12 @@ const ChangePasswordModal = ({ onClose, onSuccess, onForgotPassword }) => {
                 placeholder="Please enter your old password"
                 required
                 maxLength={30}
+                autoComplete="off"
+                onCopy={(e) => e.preventDefault()}
+                onPaste={(e) => e.preventDefault()}
               />
               <span className="password-eye" onClick={() => setShowOld((s) => !s)}>
-                {showOld ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                {showOld ? <FiEye size={20} /> : <FiEyeOff size={20} />}
               </span>
             </div>
             <button
@@ -1800,9 +1832,12 @@ const ChangePasswordModal = ({ onClose, onSuccess, onForgotPassword }) => {
                 className="form-control"
                 required
                 maxLength={30}
+                autoComplete="off"
+                onCopy={(e) => e.preventDefault()}
+                onPaste={(e) => e.preventDefault()}
               />
               <span className="password-eye" onClick={() => setShowNew((s) => !s)}>
-                {showNew ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                {showNew ? <FiEye size={18} /> : <FiEyeOff size={18} />}
               </span>
             </div>
           </div>
@@ -1818,9 +1853,12 @@ const ChangePasswordModal = ({ onClose, onSuccess, onForgotPassword }) => {
                 className="form-control"
                 required
                 maxLength={30}
+                autoComplete="off"
+                onCopy={(e) => e.preventDefault()}
+                onPaste={(e) => e.preventDefault()}
               />
               <span className="password-eye" onClick={() => setShowConfirm((s) => !s)}>
-                {showConfirm ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                {showConfirm ? <FiEye size={20} /> : <FiEyeOff size={20} />}
               </span>
             </div>
           </div>
@@ -2099,6 +2137,9 @@ const ForgotPasswordModal = ({ onClose }) => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     maxLength={30}
+                    autoComplete="off"
+                    onCopy={(e) => e.preventDefault()}
+                    onPaste={(e) => e.preventDefault()}
                   />
                   <span
                     style={{
@@ -2110,7 +2151,7 @@ const ForgotPasswordModal = ({ onClose }) => {
                     }}
                     onClick={() => setShowPassword((s) => !s)}
                   >
-                    {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                    {showPassword ? <FiEye size={20} /> : <FiEyeOff size={20} />}
                   </span>
                 </div>
               </div>
@@ -2125,6 +2166,9 @@ const ForgotPasswordModal = ({ onClose }) => {
                     value={cPassword}
                     onChange={(e) => setCPassword(e.target.value)}
                     maxLength={30}
+                    autoComplete="off"
+                    onCopy={(e) => e.preventDefault()}
+                    onPaste={(e) => e.preventDefault()}
                   />
                   <span
                     style={{
@@ -2136,7 +2180,7 @@ const ForgotPasswordModal = ({ onClose }) => {
                     }}
                     onClick={() => setShowCPassword((s) => !s)}
                   >
-                    {showCPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                    {showCPassword ? <FiEye size={20} /> : <FiEyeOff size={20} />}
                   </span>
                 </div>
               </div>

@@ -10,15 +10,14 @@ import './LandingPageModal.css';
 
 const LandingPageModal = ({ open, onClose, onRequireLogin }) => {
   const [billingPeriod, setBillingPeriod] = useState('monthly');
-  const [monthlyPlan, setMonthlyPlan] = useState({
-    name: 'Starter',
-    price: '29',
-    duration: 'Month',
-  });
-  const [yearlyPlan, setYearlyPlan] = useState({ name: 'Starter', price: '290', duration: 'Year' });
+  const [monthlyStarterPrice, setMonthlyStarterPrice] = useState(29);
+  const [monthlyProPrice, setMonthlyProPrice] = useState(99);
+  const [yearlyStarterPrice, setYearlyStarterPrice] = useState(290);
+  const [yearlyProPrice, setYearlyProPrice] = useState(990);
   const { token } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loginModalVisible, setLoginModalVisible] = useState(false);
+  const [subscribingPlan, setSubscribingPlan] = useState(null);
 
   useEffect(() => {
     if (showLoginModal) {
@@ -39,49 +38,68 @@ const LandingPageModal = ({ open, onClose, onRequireLogin }) => {
   };
 
   // Handler for plan buttons
-  const handlePlanClick = (planInfo, e) => {
+  const handlePlanClick = async (planInfo, e) => {
     if (e) e.preventDefault();
     if (!token) {
-      onRequireLogin(); 
+      setShowLoginModal(true);
       return;
     }
-    // Save selected plan info to localStorage
-    localStorage.setItem('selectedPlan', JSON.stringify(planInfo));
-    // Navigate to card payment page
-    window.location.href = '/platform/subscription/card';
+    try {
+      const period = billingPeriod === 'yearly' ? 'annually' : 'monthly';
+      const payload = { name: planInfo?.name, period };
+      setSubscribingPlan(`${planInfo?.name}-${period}`);
+      const res = await axios.post(`${baseURL}/plan/subscribe`, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const redirectUrl = res?.data?.url || res?.data?.redirectUrl;
+      if (redirectUrl) {
+        window.location.href = redirectUrl;
+      }
+    } catch (err) {
+      try {
+        window.location.href = '/platform/subscription/card';
+      } catch (_) {}
+    } finally {
+      setSubscribingPlan(null);
+    }
   };
 
   useEffect(() => {
-    // Fetch plans
+    // Fetch all plans and set Starter/Pro prices for monthly and annually
     axios
-      .get(`${baseURL}/plan/monthly`, {
+      .get(`${baseURL}/plans`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       })
       .then((res) => {
-        const data = res.data || {};
-        setMonthlyPlan({
-          name: data.name || 'Starter',
-          price: data.price || '29',
-          duration: data.duration || 'Month',
-        });
+        const data = res?.data || {};
+        const monthly = Array.isArray(data?.monthly)
+          ? data?.monthly
+          : Array.isArray(data?.plans?.monthly)
+            ? data?.plans?.monthly
+            : [];
+        const annually = Array.isArray(data?.annually)
+          ? data?.annually
+          : Array.isArray(data?.plans?.annually)
+            ? data?.plans?.annually
+            : Array.isArray(data?.yearly)
+              ? data?.yearly
+              : Array.isArray(data?.plans?.yearly)
+                ? data?.plans?.yearly
+                : [];
+
+        const getPrice = (arr, planName, fallback) => {
+          const found = arr.find((p) => (p?.name || '').toLowerCase().includes(planName));
+          const price = found?.price ?? found?.amount ?? found?.unit_amount;
+          return Number(price) || fallback;
+        };
+
+        setMonthlyStarterPrice(getPrice(monthly, 'starter', 29));
+        setMonthlyProPrice(getPrice(monthly, 'pro', 99));
+        setYearlyStarterPrice(getPrice(annually, 'starter', 290));
+        setYearlyProPrice(getPrice(annually, 'pro', 990));
       })
       .catch(() => {
-        setMonthlyPlan({ name: 'Starter', price: '29', duration: 'Month' });
-      });
-    axios
-      .get(`${baseURL}/plan/yearly`, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-      })
-      .then((res) => {
-        const data = res.data || {};
-        setYearlyPlan({
-          name: data.name || 'Starter',
-          price: data.price || '290',
-          duration: data.duration || 'Year',
-        });
-      })
-      .catch(() => {
-        setYearlyPlan({ name: 'Starter', price: '290', duration: 'Year' });
+        // keep defaults
       });
   }, [token]);
 
@@ -104,7 +122,6 @@ const LandingPageModal = ({ open, onClose, onRequireLogin }) => {
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
-
               padding: '60px',
               margin: '-40px -40px 30px -40px',
               position: 'relative',
@@ -142,14 +159,14 @@ const LandingPageModal = ({ open, onClose, onRequireLogin }) => {
             <div className="sublanding-modal-cards monthly-plan">
               <div className="sublanding-modal-card">
                 <div className="sublanding-card-header">
-                  <span className="sublanding-title mb-0">Freemium</span>
+                  <span className="sublanding-title mb-0">Starter</span>
                   <div className="sublanding-price-section">
                     <div className="mx-4 mb-0 sublanding-para-text">
-                      <span className="sublanding-price">Free</span>
-                      <sub className="sublanding-sub-class">/14 days</sub>
+                      <span className="sublanding-price">{`$${monthlyStarterPrice}`}</span>
+                      <sub className="sublanding-sub-class">/Month</sub>
                     </div>
                     <p className="mx-4 mt-0 mb-0 sublanding-para-text">
-                      Experience 3D All Power, No card required. Cancel any time
+                      Unlock more powerful design tools.
                     </p>
                   </div>
                 </div>
@@ -177,27 +194,21 @@ const LandingPageModal = ({ open, onClose, onRequireLogin }) => {
                   At the end of 14 days, you can choose a plan that fits your needs. We'll notify
                   you 2 days before your trial ends.
                 </p>
-                <button
-                  className="sublanding-plan-button"
-                  onClick={(e) =>
-                    handlePlanClick({ name: 'Freemium', price: 0, duration: '14 days' }, e)
-                  }
-                >
-                  Start Free Trial
+                <button className="sublanding-plan-button" disabled={subscribingPlan === `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`} onClick={(e) => handlePlanClick({ name: 'Starter' }, e)}>
+                  {subscribingPlan === `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Choose Starter'}
                 </button>
               </div>
 
               <div className="sublanding-modal-card sublanding-popular-card">
                 <div className="sublanding-popular-tag">Popular</div>
                 <div className="sublanding-card-header">
-                  <span className="sublanding-title mb-0">Starter</span>
+                  <span className="sublanding-title mb-0">Pro Plan</span>
                   <div className="sublanding-price-section">
                     <div className="mb-0 mx-4">
-                      <span className="sublanding-price">$29</span>
+                      <span className="sublanding-price">{`$${monthlyProPrice}`}</span>
                       <sub className="sublanding-sub-class">/Month</sub>
                     </div>
                     <p className="sublanding-para-text mt-0 mb-0 mx-4">
-                      $290/Year <br />
                       Unlock more powerful design tools.
                     </p>
                   </div>
@@ -226,28 +237,23 @@ const LandingPageModal = ({ open, onClose, onRequireLogin }) => {
                   At the end of 14 days, you can choose a plan that fits your needs. We'll notify
                   you 2 days before your trial ends.
                 </p>
-                <button
-                  className="sublanding-plan-button"
-                  onClick={(e) =>
-                    handlePlanClick({ name: 'Starter', price: 29, duration: 'Month' }, e)
-                  }
-                >
-                  Choose Starter
+                <button className="sublanding-plan-button" disabled={subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`} onClick={(e) => handlePlanClick({ name: 'Pro' }, e)}>
+                  {subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Choose Pro'}
                 </button>
               </div>
 
               <div className="sublanding-modal-card">
                 <div className="sublanding-card-header">
-                  <span className="sublanding-title mb-0">Pro Plan</span>
+                  <span className="sublanding-title mb-0">Enterprise Plan</span>
                   <div className="sublanding-price-section">
                     <div className="mb-0 mx-4 mt-0 sublanding-para-text">
-                      <span className="sublanding-price">$99</span>
-                      <sub className="sublanding-sub-class">/Month</sub>
+                      <span className="sublanding-price">Custom</span>
+                      <sub className="sublanding-sub-class">billing</sub>
                     </div>
-                    <p className="sublanding-para-text mt-0 mb-0 mx-4">
+                    {/* <p className="sublanding-para-text mt-0 mb-0 mx-4">
                       $990/Year <br />
                       Unlock more powerful design tools.
-                    </p>
+                    </p> */}
                   </div>
                 </div>
                 <div className="sublanding-divider-container mt-0">
@@ -274,13 +280,8 @@ const LandingPageModal = ({ open, onClose, onRequireLogin }) => {
                   At the end of 14 days, you can choose a plan that fits your needs. We'll notify
                   you 2 days before your trial ends.
                 </p>
-                <button
-                  className="sublanding-plan-button"
-                  onClick={(e) =>
-                    handlePlanClick({ name: 'Pro Plan', price: 99, duration: 'Month' }, e)
-                  }
-                >
-                  Choose Pro
+                <button className="sublanding-plan-button" disabled={subscribingPlan === `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`} onClick={(e) => handlePlanClick({ name: 'Enterprise' }, e)}>
+                  {subscribingPlan === `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Contact Sales'}
                 </button>
               </div>
             </div>
@@ -294,7 +295,7 @@ const LandingPageModal = ({ open, onClose, onRequireLogin }) => {
                   <span className="sublanding-title mb-0">Starter Plan</span>
                   <div className="sublanding-price-section">
                     <div className="mb-0 mx-4 sublanding-para-text">
-                      <span className="sublanding-price">$290</span>
+                      <span className="sublanding-price">{`$${yearlyStarterPrice}`}</span>
                       <sub className="sublanding-sub-class">/Year</sub>
                     </div>
                     <p className="mx-4 mt-0 mb-0 sublanding-para-text">Basic conversions</p>
@@ -324,25 +325,23 @@ const LandingPageModal = ({ open, onClose, onRequireLogin }) => {
                   At the end of 14 days, you can choose a plan that fits your needs. We'll notify
                   you 2 days before your trial ends.
                 </p>
-                <button
-                  className="sublanding-plan-button"
-                  onClick={(e) =>
-                    handlePlanClick({ name: 'Starter', price: 290, duration: 'Year' }, e)
-                  }
-                >
-                  Choose Starter
+                <button className="sublanding-plan-button" disabled={subscribingPlan === `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`} onClick={(e) => handlePlanClick({ name: 'Starter' }, e)}>
+                  {subscribingPlan === `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Choose Starter'}
                 </button>
               </div>
 
               <div className="sublanding-modal-card">
+                <div className="popular-tag">Popular</div>
                 <div className="sublanding-card-header">
                   <span className="sublanding-title mb-0">Pro Plan</span>
                   <div className="sublanding-price-section">
                     <div className="mb-0 mx-4">
-                      <span className="sublanding-price">$990</span>
+                      <span className="sublanding-price">{`$${yearlyProPrice}`}</span>
                       <sub className="sublanding-sub-class">/Year</sub>
                     </div>
-                    <p className="mx-4 mt-0 mb-0 sublanding-para-text">Unlock more powerful design tools.</p>
+                    <p className="mx-4 mt-0 mb-0 sublanding-para-text">
+                      Unlock more powerful design tools.
+                    </p>
                   </div>
                 </div>
                 <div className="sublanding-divider-container mt-0">
@@ -369,13 +368,8 @@ const LandingPageModal = ({ open, onClose, onRequireLogin }) => {
                   At the end of 14 days, you can choose a plan that fits your needs. We'll notify
                   you 2 days before your trial ends.
                 </p>
-                <button
-                  className="sublanding-plan-button"
-                  onClick={(e) =>
-                    handlePlanClick({ name: 'Pro Plan', price: 990, duration: 'Year' }, e)
-                  }
-                >
-                  Choose Pro
+                <button className="sublanding-plan-button" disabled={subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`} onClick={(e) => handlePlanClick({ name: 'Pro' }, e)}>
+                  {subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Choose Pro'}
                 </button>
               </div>
 
@@ -383,7 +377,7 @@ const LandingPageModal = ({ open, onClose, onRequireLogin }) => {
                 <div className="sublanding-card-header">
                   <span className="sublanding-title mb-0">Enterprise Plan</span>
                   <div className="sublanding-price-section">
-                    <div className='mx-4' style={{ marginBottom: '31px' }}>
+                    <div className="mx-4" style={{ marginBottom: '31px' }}>
                       <span className="sublanding-price">Custom</span>
                       <sub className="sublanding-sub-class">billing</sub>
                     </div>
@@ -418,13 +412,8 @@ const LandingPageModal = ({ open, onClose, onRequireLogin }) => {
                   At the end of 14 days, you can choose a plan that fits your needs. We'll notify
                   you 2 days before your trial ends.
                 </p>
-                <button
-                  className="sublanding-plan-button"
-                  onClick={(e) =>
-                    handlePlanClick({ name: 'Enterprise', price: 0, duration: 'Year' }, e)
-                  }
-                >
-                  Contact Sales
+                <button className="sublanding-plan-button" disabled={subscribingPlan === `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`} onClick={(e) => handlePlanClick({ name: 'Enterprise' }, e)}>
+                  {subscribingPlan === `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Contact Sales'}
                 </button>
               </div>
             </div>
@@ -440,4 +429,4 @@ const LandingPageModal = ({ open, onClose, onRequireLogin }) => {
   );
 };
 
-export default LandingPageModal
+export default LandingPageModal;

@@ -9,6 +9,8 @@ import ApiSdkComingSoon from '../pages/api-sdk';
 import Support from '../pages/support';
 import Service from '../pages/Service';
 import Referral from '../pages/referral';
+import ReferralPage from '../pages/settings/ReferralPage';
+import { Navigate } from 'react-router-dom';
 
 // LAZY IMPORTS
 const App = lazy(() => import('../App'));
@@ -24,6 +26,7 @@ const Error404 = lazy(() => import('pages/errors/Error404'));
 const RecentProjects = lazy(() => import('pages/dashboard/RecentProjects'));
 const SimplePage = lazy(() => import('pages/dashboard/SimplePage'));
 const Subscription = lazy(() => import('pages/subscription'));
+const SubscriptionSuccess = lazy(() => import('pages/subscription/Success'));
 const Team = lazy(() => import('pages/team'));
 const ScanPage = lazy(() => import('../pages/scan'));
 const PreviewPage = lazy(() => import('pages/preview'));
@@ -93,6 +96,9 @@ const routes = [
               { path: 'subscription', element: <SubscriptionSettings /> },
               { path: 'ai-mode', element: <AiModelSettings /> },
               { path: 'team', element: <Team /> },
+              { path: 'referal', element: <ReferralPage /> },
+              { path: 'project', element: <ReferralPage /> },
+              { path: 'aimodal', element: <ReferralPage /> },
               { path: 'purchase-history', element: <PurchaseHistory /> },
             ],
           },
@@ -109,6 +115,11 @@ const routes = [
       // Other Routes
       { path: '/platform/subscription/card', element: <CardPayment /> },
       { path: '/login/success', element: <OAuthSuccess /> },
+      { path: '/subscription/success', element: <SubscriptionSuccess /> },
+      { 
+        path: '/subscription/cancelled', 
+        element: <Navigate to="/platform/settings/subscription" replace /> 
+      },
 
       // Auth Routes
       {

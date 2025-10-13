@@ -84,22 +84,26 @@
   margin-top: 5rem;
   top: -170px;
   left: 250px;
+  height: 215px;
 }
 
 .card-container-service.right-top {
   margin-top: 5rem;
   top: -170px;
   right: 250px;
+  height: 125px;
 }
 
 .card-container-service.left-bottom {
   bottom: -180px;
   left: 100px;
+   height: 145px;
 }
 
 .card-container-service.right-bottom {
   bottom: -180px;
   right: 100px;
+   height: 240px;
 }
 
 @media (max-width: 620px) {
@@ -170,15 +174,24 @@
 
   .card-container-service.left-top {
     margin-top: 3rem;
+    height: 170px !important;
   }
 
   .card-container-service.right-top {
     margin-top: 3rem;
+    height: 110px !important;
+  }
+  .card-container-service.left-bottom {
+    height:  115px !important;
+  }
+  .card-container-service.right-bottom {
+    height: 185px !important;
   }
 
   .card-container-service.right-top p {
     padding-left: 10px;
     padding-right: 10px;
+    
   }
 
   .card-container-service.left-bottom p {
@@ -215,21 +228,25 @@
   .card-container-service.left-top {
     top: -230px;
     left: 50px;
+    height: 170px !important;
   }
 
   .card-container-service.right-top {
     top: -230px;
     right: 50px;
+    height: 110px !important;
   }
 
   .card-container-service.left-bottom {
     bottom: -200px;
     left: 20px;
+    height: 115px !important;
   }
 
   .card-container-service.right-bottom {
     bottom: -200px;
     right: 20px;
+    height: 180px !important;
   }
 }
 
@@ -251,21 +268,25 @@
   .card-container-service.left-top {
     top: -230px;
     left: 130px;
+    height: 170px !important;
   }
 
   .card-container-service.right-top {
     top: -230px;
     right: 150px;
+    height: 110px !important;
   }
 
   .card-container-service.left-bottom {
     bottom: -200px;
     left: 50px;
+    height: 110px !important;
   }
 
   .card-container-service.right-bottom {
     bottom: -200px;
     right: 50px;
+    height: 180px !important;
   }
 }
 
@@ -291,7 +312,7 @@
   }
 }
 
-@media (min-width: 1440px) and (max-width: 6000px) {
+@media (min-width: 1440px) {
   .cards-wrapper-service {
     max-width: 1200px;
     margin: 0 auto;

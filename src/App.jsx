@@ -1,10 +1,16 @@
 import { Outlet } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
+
+const stripePromise = loadStripe('pk_test_51Ro0YlQ70PrIzDS75v3YwqGKLv5FOgPCS9zckYEyRKv8PMfEa21B6RWFbX1bdRIYXwhrcbaw88c6DOlKStzuMdVR00tP56C98S');
 
 const App = () => {
   return (
     <AuthProvider>
-      <Outlet />
+      <Elements stripe={stripePromise}>
+        <Outlet />
+      </Elements>
     </AuthProvider>
   );
 };

@@ -61,9 +61,15 @@
 }
 .invite-section h4 {
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 500;
   margin-bottom: 12px;
 }
+
+[data-theme='dark'] .invite-section h4 {
+  color: white;
+  font-weight: 500;
+}
+
 .invite-form {
   display: grid;
   grid-template-columns: 1fr auto auto;
@@ -93,6 +99,11 @@
 .role-select-wrapper {
   position: relative;
 }
+.role-button-group {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
 .role-selector {
   padding: 10px 36px 10px 12px;
   border: 1px solid var(--divider-color);
@@ -107,6 +118,9 @@
   background-repeat: no-repeat;
   background-position: right 12px center;
   color: var(--text-primary);
+}
+.role-selector:focus {
+  outline:  1px solid #DE3996 !important;
 }
 .send-invite-btn {
   display: flex;
@@ -130,6 +144,7 @@
     gap: 5px;
     padding: 10px 12px;
     font-size: 12px;
+    /* flex-shrink: 0; */
   }
   .send-invite-btn svg {
     font-size: 14px;
@@ -137,6 +152,15 @@
   .members-list-header {
     grid-template-columns: 2fr 1fr 2fr !important;
     font-size: 12px !important;
+  }
+  .invite-form {
+    display: flex;
+    flex-direction: column;
+  }
+  .role-button-group {
+    display: flex;
+    gap: 10px;
+    width: 100%;
   }
 }
 
@@ -151,6 +175,9 @@
   position: relative;
   margin-bottom: 12px;
 }
+/* .search-teams input:focus {
+  outline:  1px solid #DE3996 !important;
+}  */
 .search-teams svg {
   position: absolute;
   left: 12px;
@@ -160,32 +187,48 @@
   font-size: 18px;
 }
 .search-teams input {
-  width: 100%;
+  width: 60%;
   padding: 10px 12px 10px 38px;
-  border-radius: 8px;
+  border-radius: 25px;
   border: 1px solid #ddd;
   font-size: 15px;
+  outline: none;
+}
+
+[data-theme='dark'] .search-teams input {
+  background: #110e20;
+  color: #fff;
+}
+@media (max-width: 992px) {
+  .search-teams input {
+    width: 100% !important;
+  }
 }
 
 .team-members-list {
   border-radius: 8px;
   overflow: hidden;
-  border: 1px solid #f0f0f0;
+  /* border: 1px solid #f0f0f0; */
   max-height: 250px;
   overflow-y: auto;
 }
 .members-list-header {
   display: grid;
-  grid-template-columns: 2.5fr 2fr 2fr;
+  grid-template-columns: 4fr 1fr 2.5fr 50px;
   background-color: var(--search-bg);
   padding: 10px 16px;
-  font-weight: 600;
-  font-size: 13px;
+  font-weight: 400;
+  font-size: 14px;
   color: var(--text-secondary);
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   letter-spacing: 0.5px;
   align-items: center;
-  gap: 12px;
+  /* gap: 12px; */
+}
+
+[data-theme='dark'] .members-list-header {
+  background: #110e20;
+  color: #fff;
 }
 
 .members-list {
@@ -195,13 +238,31 @@
 }
 .member-item {
   display: grid;
-  grid-template-columns: 3fr 1fr 1fr 50px;
+  grid-template-columns: 4fr 1fr 2.5fr 50px;
   align-items: center;
-  padding: 10px 16px;
+  padding: 15px 0px 10px 0px;
   border-bottom: 1px solid #f0f0f0;
 }
 .member-item:last-child {
   border-bottom: none;
+}
+
+@media (max-width: 600px) {
+  .members-list {
+    display: block; 
+    overflow-x: auto; 
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .member-item {
+    display: grid;
+    grid-template-columns: 4fr 1fr 2.5fr 50px !important;
+    align-items: center;
+    padding: 15px 0px 10px 0px;
+    border-bottom: 1px solid #f0f0f0;
+    scrollbar-width: none;
+    min-width: 500px;
+  }
 }
 
 .member-info {
@@ -229,6 +290,18 @@
 .member-name {
   display: block;
   font-weight: 600;
+  color: black;
+}
+
+[data-theme='dark'] .member-name {
+  color: #fff;
+}
+
+[data-theme='dark'] .member-role {
+  color: #fff;
+}
+[data-theme='dark'] .member-since {
+  color: #fff;
 }
 .member-email {
   font-size: 13px;
@@ -237,6 +310,7 @@
 .member-role,
 .member-since {
   font-size: 14px;
+  color: black;
 }
 .member-actions {
   position: relative;
@@ -262,7 +336,7 @@
   border: 1px solid var(--divider-color);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  padding: 8px;
+  /* padding: 8px; */
   z-index: 10;
   width: max-content;
   animation: popup-scale-in 0.2s ease-out forwards;

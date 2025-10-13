@@ -75,6 +75,9 @@
 
 [data-theme='dark'] .team-section {
   background-color: #000000;
+  /* margin: 10px 10px 10px 0px;
+  border-radius: 8px; */
+
 }
 [data-theme='dark'] .custom-sidebar .nav-link:hover{
   color: rgb(255, 255, 255) !important;
@@ -213,8 +216,8 @@
 
 @media (min-width: 1200px) {
   .custom-sidebar-desktop {
-    width: 180px;
-    padding: 20px 0px;
+    width: 200px;
+    padding: 20px 10px 20px 0px;
   }
 }
 

@@ -1,6 +1,4 @@
-
-
- .signin-form a {
+.signin-form a {
      text-decoration: none;
      color: var(--primary-color);
  }
@@ -13,7 +11,7 @@
      animation: fadeIn 1.5s ease-in-out;
  }
 
- .signin-form .logo-animated {
+ .signin-form .logo-animated {   
      max-width: 100px;
      margin: 20px;
      animation: fadeInLogo 1.2s ease-in-out;

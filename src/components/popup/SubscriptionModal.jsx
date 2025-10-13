@@ -10,15 +10,14 @@ import './SubscriptionModal.css';
 
 const SubscriptionModal = ({ open, onClose }) => {
   const [billingPeriod, setBillingPeriod] = useState('monthly');
-  const [monthlyPlan, setMonthlyPlan] = useState({
-    name: 'Starter',
-    price: '29',
-    duration: 'Month',
-  });
-  const [yearlyPlan, setYearlyPlan] = useState({ name: 'Starter', price: '290', duration: 'Year' });
-  const { token } = useAuth();
+  const [monthlyStarterPrice, setMonthlyStarterPrice] = useState(29);
+  const [monthlyProPrice, setMonthlyProPrice] = useState(99);
+  const [yearlyStarterPrice, setYearlyStarterPrice] = useState(290);
+  const [yearlyProPrice, setYearlyProPrice] = useState(990);
+  const { token, activeTeam } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loginModalVisible, setLoginModalVisible] = useState(false);
+  const [subscribingPlan, setSubscribingPlan] = useState(null);
 
   useEffect(() => {
     if (showLoginModal) {
@@ -38,50 +37,70 @@ const SubscriptionModal = ({ open, onClose }) => {
     // Don't close the subscription modal, let user continue with plan selection
   };
 
-  // Handler for plan buttons
-  const handlePlanClick = (planInfo, e) => {
+  // Handler for plan buttons -> subscribe and redirect URL
+  const handlePlanClick = async (planInfo, e) => {
     if (e) e.preventDefault();
+    if (activeTeam) return; // Disable subscription actions in team mode
     if (!token) {
       setShowLoginModal(true);
       return;
     }
-    // Save selected plan info to localStorage
-    localStorage.setItem('selectedPlan', JSON.stringify(planInfo));
-    // Navigate to card payment page
-    window.location.href = '/platform/subscription/card';
+    try {
+      const period = billingPeriod === 'yearly' ? 'annually' : 'monthly';
+      const payload = { name: planInfo?.name, period };
+      setSubscribingPlan(`${planInfo?.name}-${period}`);
+      const res = await axios.post(`${baseURL}/plan/subscribe`, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const redirectUrl = res?.data?.url || res?.data?.redirectUrl;
+      if (redirectUrl) {
+        window.location.href = redirectUrl;
+      }
+    } catch (err) {
+      try {
+        window.location.href = '/platform/subscription/card';
+      } catch (_) {}
+    } finally {
+      setSubscribingPlan(null);
+    }
   };
 
   useEffect(() => {
-    // Fetch plans
+    // Fetch all plans and set Starter/Pro prices for monthly and annually
     axios
-      .get(`${baseURL}/plan/monthly`, {
+      .get(`${baseURL}/plans`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       })
       .then((res) => {
-        const data = res.data || {};
-        setMonthlyPlan({
-          name: data.name || 'Starter',
-          price: data.price || '29',
-          duration: data.duration || 'Month',
-        });
+        const data = res?.data || {};
+        const monthly = Array.isArray(data?.monthly)
+          ? data?.monthly
+          : Array.isArray(data?.plans?.monthly)
+          ? data?.plans?.monthly
+          : [];
+        const annually = Array.isArray(data?.annually)
+          ? data?.annually
+          : Array.isArray(data?.plans?.annually)
+          ? data?.plans?.annually
+          : Array.isArray(data?.yearly)
+          ? data?.yearly
+          : Array.isArray(data?.plans?.yearly)
+          ? data?.plans?.yearly
+          : [];
+
+        const getPrice = (arr, planName, fallback) => {
+          const found = arr.find((p) => (p?.name || '').toLowerCase().includes(planName));
+          const price = found?.price ?? found?.amount ?? found?.unit_amount;
+          return Number(price) || fallback;
+        };
+
+        setMonthlyStarterPrice(getPrice(monthly, 'starter', 29));
+        setMonthlyProPrice(getPrice(monthly, 'pro', 99));
+        setYearlyStarterPrice(getPrice(annually, 'starter', 290));
+        setYearlyProPrice(getPrice(annually, 'pro', 990));
       })
       .catch(() => {
-        setMonthlyPlan({ name: 'Starter', price: '29', duration: 'Month' });
-      });
-    axios
-      .get(`${baseURL}/plan/yearly`, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-      })
-      .then((res) => {
-        const data = res.data || {};
-        setYearlyPlan({
-          name: data.name || 'Starter',
-          price: data.price || '290',
-          duration: data.duration || 'Year',
-        });
-      })
-      .catch(() => {
-        setYearlyPlan({ name: 'Starter', price: '290', duration: 'Year' });
+        // keep defaults
       });
   }, [token]);
 
@@ -99,16 +118,16 @@ const SubscriptionModal = ({ open, onClose }) => {
           {/* Modal Header */}
           <div
             className="subscription-modal-header"
-            style={{
-              backgroundImage: `url(${videoGif})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
+            // style={{
+            //   backgroundImage: `url(${videoGif})`,
+            //   backgroundSize: 'cover',
+            //   backgroundPosition: 'center',
+            //   backgroundRepeat: 'no-repeat',
 
-              padding: '60px',
-              margin: '-40px -40px 30px -40px',
-              position: 'relative',
-            }}
+            //   padding: '60px',
+            //   margin: '-40px -40px 30px -40px',
+            //   position: 'relative',
+            // }}
           >
             <h2>
               Choose <span>Your </span>Plan
@@ -137,20 +156,18 @@ const SubscriptionModal = ({ open, onClose }) => {
             </div>
           </div>
 
-          {/* Monthly Plans */}
+          {/* Monthly Plans (Freemium removed): Starter, Pro (Popular), Enterprise */}
           {billingPeriod === 'monthly' && (
             <div className="subscription-modal-cards monthly-plan">
               <div className="subscription-modal-card">
                 <div className="card-header">
-                  <span className="title mb-0">Freemium</span>
+                  <span className="title mb-0">Starter</span>
                   <div className="price-section">
-                    <div className="mx-4 mb-0 para-text">
-                      <span className="price">Free</span>
-                      <sub className="sub-class">/14 days</sub>
+                    <div className="mb-0 mx-4">
+                      <span className="price">{`$${monthlyStarterPrice}`}</span>
+                      <sub className="sub-class">/Month</sub>
                     </div>
-                    <p className="mx-4 mt-0 mb-0 para-text">
-                      Experience 3D All Power, No card required. Cancel any time
-                    </p>
+                    <p className="para-text mt-0 mb-0 mx-4">Unlock more powerful design tools.</p>
                   </div>
                 </div>
                 <div className="divider-container mt-0">
@@ -174,32 +191,23 @@ const SubscriptionModal = ({ open, onClose }) => {
                   </ul>
                 </div>
                 <p className="card-footer">
-                  At the end of 14 days, you can choose a plan that fits your needs. We'll notify
-                  you 2 days before your trial ends.
+                  At the end of 14 days, you can choose a plan that fits your needs. We'll notify you 2 days before your trial ends.
                 </p>
-                <button
-                  className="plan-button"
-                  onClick={(e) =>
-                    handlePlanClick({ name: 'Freemium', price: 0, duration: '14 days' }, e)
-                  }
-                >
-                  Start Free Trial
+                <button className="plan-button" disabled={!!activeTeam || subscribingPlan === `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`} onClick={(e) => handlePlanClick({ name: 'Starter' }, e)}>
+                  {subscribingPlan === `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Choose Starter'}
                 </button>
               </div>
 
               <div className="subscription-modal-card popular-card">
                 <div className="popular-tag">Popular</div>
                 <div className="card-header">
-                  <span className="title mb-0">Starter</span>
+                  <span className="title mb-0">Pro Plan</span>
                   <div className="price-section">
-                    <div className="mb-0 mx-4">
-                      <span className="price">$29</span>
+                    <div className="mb-0 mx-4 mt-0 para-text">
+                      <span className="price">{`$${monthlyProPrice}`}</span>
                       <sub className="sub-class">/Month</sub>
                     </div>
-                    <p className="para-text mt-0 mb-0 mx-4">
-                      $290/Year <br />
-                      Unlock more powerful design tools.
-                    </p>
+                    <p className="para-text mt-0 mb-0 mx-4">Unlock more powerful design tools.</p>
                   </div>
                 </div>
                 <div className="divider-container mt-0">
@@ -223,34 +231,24 @@ const SubscriptionModal = ({ open, onClose }) => {
                   </ul>
                 </div>
                 <p className="card-footer">
-                  At the end of 14 days, you can choose a plan that fits your needs. We'll notify
-                  you 2 days before your trial ends.
+                  At the end of 14 days, you can choose a plan that fits your needs. We'll notify you 2 days before your trial ends.
                 </p>
-                <button
-                  className="plan-button"
-                  onClick={(e) =>
-                    handlePlanClick({ name: 'Starter', price: 29, duration: 'Month' }, e)
-                  }
-                >
-                  Choose Starter
+                <button className="plan-button" disabled={!!activeTeam || subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`} onClick={(e) => handlePlanClick({ name: 'Pro' }, e)}>
+                  {subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Choose Pro'}
                 </button>
               </div>
 
               <div className="subscription-modal-card">
                 <div className="card-header">
-                  <span className="title mb-0">Pro Plan</span>
+                  <span className="title mb-0">Enterprise Plan</span>
                   <div className="price-section">
-                    <div className="mb-0 mx-4 mt-0 para-text">
-                      <span className="price">$99</span>
-                      <sub className="sub-class">/Month</sub>
+                    <div className='mx-4' style={{ marginBottom: '31px' }}>
+                      <span className="price">Custom</span>
+                      <sub className="sub-class">billing</sub>
                     </div>
-                    <p className="para-text mt-0 mb-0 mx-4">
-                      $990/Year <br />
-                      Unlock more powerful design tools.
-                    </p>
                   </div>
                 </div>
-                <div className="divider-container mt-0">
+                <div className="divider-container mt-2">
                   <div className="divider" />
                 </div>
                 <div className="features">
@@ -271,16 +269,10 @@ const SubscriptionModal = ({ open, onClose }) => {
                   </ul>
                 </div>
                 <p className="card-footer">
-                  At the end of 14 days, you can choose a plan that fits your needs. We'll notify
-                  you 2 days before your trial ends.
+                  At the end of 14 days, you can choose a plan that fits your needs. We'll notify you 2 days before your trial ends.
                 </p>
-                <button
-                  className="plan-button"
-                  onClick={(e) =>
-                    handlePlanClick({ name: 'Pro Plan', price: 99, duration: 'Month' }, e)
-                  }
-                >
-                  Choose Pro
+                <button className="plan-button" disabled={!!activeTeam || subscribingPlan === `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`} onClick={(e) => handlePlanClick({ name: 'Enterprise' }, e)}>
+                  {subscribingPlan === `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Contact Sales'}
                 </button>
               </div>
             </div>
@@ -294,7 +286,7 @@ const SubscriptionModal = ({ open, onClose }) => {
                   <span className="title mb-0">Starter Plan</span>
                   <div className="price-section">
                     <div className="mb-0 mx-4 para-text">
-                      <span className="price">$290</span>
+                      <span className="price">{`$${yearlyStarterPrice}`}</span>
                       <sub className="sub-class">/Year</sub>
                     </div>
                     <p className="mx-4 mt-0 mb-0 para-text">Basic conversions</p>
@@ -324,22 +316,18 @@ const SubscriptionModal = ({ open, onClose }) => {
                   At the end of 14 days, you can choose a plan that fits your needs. We'll notify
                   you 2 days before your trial ends.
                 </p>
-                <button
-                  className="plan-button"
-                  onClick={(e) =>
-                    handlePlanClick({ name: 'Starter', price: 290, duration: 'Year' }, e)
-                  }
-                >
-                  Choose Starter
+                <button className="plan-button" disabled={!!activeTeam || subscribingPlan === `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`} onClick={(e) => handlePlanClick({ name: 'Starter' }, e)}>
+                  {subscribingPlan === `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Choose Starter'}
                 </button>
               </div>
 
-              <div className="subscription-modal-card">
+              <div className="subscription-modal-card popular-card">
+                <div className="popular-tag">Popular</div>
                 <div className="card-header">
                   <span className="title mb-0">Pro Plan</span>
                   <div className="price-section">
                     <div className="mb-0 mx-4">
-                      <span className="price">$990</span>
+                      <span className="price">{`$${yearlyProPrice}`}</span>
                       <sub className="sub-class">/Year</sub>
                     </div>
                     <p className="mx-4 mt-0 mb-0 para-text">Unlock more powerful design tools.</p>
@@ -369,13 +357,8 @@ const SubscriptionModal = ({ open, onClose }) => {
                   At the end of 14 days, you can choose a plan that fits your needs. We'll notify
                   you 2 days before your trial ends.
                 </p>
-                <button
-                  className="plan-button"
-                  onClick={(e) =>
-                    handlePlanClick({ name: 'Pro Plan', price: 990, duration: 'Year' }, e)
-                  }
-                >
-                  Choose Pro
+                <button className="plan-button" disabled={!!activeTeam || subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`} onClick={(e) => handlePlanClick({ name: 'Pro' }, e)}>
+                  {subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Choose Pro'}
                 </button>
               </div>
 
@@ -418,13 +401,8 @@ const SubscriptionModal = ({ open, onClose }) => {
                   At the end of 14 days, you can choose a plan that fits your needs. We'll notify
                   you 2 days before your trial ends.
                 </p>
-                <button
-                  className="plan-button"
-                  onClick={(e) =>
-                    handlePlanClick({ name: 'Enterprise', price: 0, duration: 'Year' }, e)
-                  }
-                >
-                  Contact Sales
+                <button className="plan-button" disabled={!!activeTeam || subscribingPlan === `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`} onClick={(e) => handlePlanClick({ name: 'Enterprise' }, e)}>
+                  {subscribingPlan === `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Contact Sales'}
                 </button>
               </div>
             </div>

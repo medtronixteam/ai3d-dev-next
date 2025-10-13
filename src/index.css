@@ -1,10 +1,13 @@
 /* @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap'); */
-*/ * {
+* {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
 
+html, body {
   overflow-x: hidden;
+  height: 100%;
 }
 
 body {
@@ -19,8 +22,8 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-  background-color: #ffffff !important; /* White background */
-  -webkit-text-fill-color: #000 !important; /* Black text for light mode */
+  background-color: #ffffff !important; 
+  -webkit-text-fill-color: #000 !important;
   -webkit-box-shadow: 0 0 0px 1000px #fff inset !important;
   box-shadow: 0 0 0px 1000px #fff inset !important;
   transition: background-color 5000s ease-in-out 0s;
@@ -32,8 +35,8 @@ input:-webkit-autofill:active {
 [data-theme="dark"] input:-webkit-autofill:focus,
 [data-theme="dark"] input:-webkit-autofill:active {
   background-color: #110e1f !important;
-  -webkit-text-fill-color: #fff !important; /* White text for dark mode */
-  -webkit-box-shadow: 0 0 0px 1000px #110e1f inset !important; /* Dark background */
+  -webkit-text-fill-color: #fff !important; 
+  -webkit-box-shadow: 0 0 0px 1000px #110e1f inset !important;
   box-shadow: 0 0 0px 1000px #110e1f inset !important;
   transition: background-color 5000s ease-in-out 0s;
 }
@@ -259,4 +262,35 @@ textarea {
 ol,
 ul {
   padding-left: 1rem !important;
+}
+
+
+/* pink toast style */
+.pink-toast {
+  background: #fff !important;     
+  border-left: 5px solid #DE3996; 
+  color: #000 !important;          
+}
+
+.pink-toast .Toastify__progress-bar {
+  background: #DE3996 !important;  
+}
+
+.pink-toast svg {
+  color: #DE3996 !important;      
+   fill: #DE3996 !important;
+}
+
+/* Scrollbar hide ONLY when dashboard-active class is present */
+body.dashboard-active,
+body.dashboard-active * {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+body.dashboard-active::-webkit-scrollbar,
+body.dashboard-active *::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }

@@ -22,12 +22,12 @@ jobs:
         echo "$SSH_KEY" > /tmp/deploy_key
         chmod 600 /tmp/deploy_key
         ssh -i /tmp/deploy_key -o StrictHostKeyChecking=no contact@$SERVER_IP <<EOF
-          cd /home/contact/dev_ai3dscanning_frontend
+          cd /home/contact/AI_3d_scanning
           
           git pull origin main
           cd ..
-          sudo docker compose build crm-frontend
-          sudo docker compose up crm-frontend -d
+          sudo docker compose build ai-3d-scanning
+          sudo docker compose up ai-3d-scanning -d
          
           
                    

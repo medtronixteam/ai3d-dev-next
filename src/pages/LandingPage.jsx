@@ -93,12 +93,12 @@ import client2 from '../assets/images/client2.jpg';
 // Managers Images
 import HiraMam from '../assets/images/HiraMam.svg';
 import SamiaMam from '../assets/images/SamiaMam.svg';
-import UsamaSir from '../assets/images/UsamaSir.svg';
-import MudassarSir from '../assets/images/MudassarSir.svg';
+import UsamaSir from '../assets/images/UsamaSir.jpeg';
+import MudassarSir from '../assets/images/mudassar.jpeg';
 import ArslanSir from '../assets/images/ArslanSir.svg';
 import CeoSir from '../assets/images/CeoSir.svg';
-import SajeelSir from '../assets/images/SajeelSir.svg';
-import SehrozSir from '../assets/images/shehroz.png';
+import SajeelSir from '../assets/images/SajeelSir.jpeg';
+import SehrozSir from '../assets/images/ShehrozSir.jpeg';
 
 import hiraImg from '../assets/images/HiraImg.svg';
 import samiaImg from '../assets/images/SamiaImg.svg';
@@ -364,134 +364,6 @@ const LandingPage = () => {
     fetchModels();
   }, []);
 
-  // const modelCards = [
-  //   { img: carImg, label: 'Car', price: '23K' },
-
-  //   { img: homeImg, label: 'Home', price: '23K' },
-
-  //   { img: shoesImg, label: 'Shoes', price: '23K' },
-
-  //   { img: astronautImg, label: 'Space Robot', price: '23K' },
-
-  //   { img: headphonesImg, label: 'Headphones', price: '23K' },
-
-  //   { img: car2Img, label: 'Car', price: '23K' },
-
-  //   { img: car3Img, label: 'Car', price: '23K' },
-
-  //   { img: ninjaImg, label: 'Character', price: '23K' },
-
-  //   { img: homeImg, label: 'Exterior', price: '23K' },
-
-  //   { img: homeImg, label: 'Home', price: '23K' },
-
-  //   { img: shoesImg, label: 'Shoes', price: '23K' },
-
-  //   { img: carImg, label: 'Car', price: '23K' },
-  // ];
-
-  //  useEffect(() => {
-
-  //     const wrapper = document.querySelector(".testimonials-wrapper");
-
-  //     const cards = document.querySelectorAll(".testimonial-item");
-
-  //     const prevBtn = document.getElementById("prevBtn");
-
-  //     const nextBtn = document.getElementById("nextBtn");
-
-  //     let currentIndex = 1;
-
-  //     let autoSlideInterval;
-
-  //     const updateSlidePosition = () => {
-
-  //       const cardWidth = cards[0].offsetWidth;
-
-  //       const offset = -(currentIndex - 1) * cardWidth;
-
-  //       wrapper.style.transform = `translateX(${offset}px)`;
-
-  //       cards.forEach((card, index) => {
-
-  //         card.querySelector(".testimonial-card").classList.remove("active");
-
-  //         if (index === currentIndex) {
-
-  //           card.querySelector(".testimonial-card").classList.add("active");
-
-  //         }
-
-  //       });
-
-  //     };
-
-  //     const goToNext = () => {
-
-  //       currentIndex = (currentIndex + 1) % cards.length;
-
-  //       updateSlidePosition();
-
-  //     };
-
-  //     const goToPrev = () => {
-
-  //       currentIndex = (currentIndex - 1 + cards.length) % cards.length;
-
-  //       updateSlidePosition();
-
-  //     };
-
-  //     const startAutoSlide = () => {
-
-  //       autoSlideInterval = setInterval(goToNext, 3000);
-
-  //     };
-
-  //     const stopAutoSlide = () => {
-
-  //       clearInterval(autoSlideInterval);
-
-  //     };
-
-  //     prevBtn.addEventListener("click", () => {
-
-  //       stopAutoSlide();
-
-  //       goToPrev();
-
-  //       startAutoSlide();
-
-  //     });
-
-  //     nextBtn.addEventListener("click", () => {
-
-  //       stopAutoSlide();
-
-  //       goToNext();
-
-  //       startAutoSlide();
-
-  //     });
-
-  //     wrapper.style.transition = "transform 0.5s ease-in-out";
-
-  //     updateSlidePosition();
-
-  //     startAutoSlide();
-
-  //     return () => {
-
-  //       stopAutoSlide();
-
-  //       prevBtn.removeEventListener("click", goToPrev);
-
-  //       nextBtn.removeEventListener("click", goToNext);
-
-  //     };
-
-  //   }, []);
-
   // FAQ data
 
   const faqs = [
@@ -703,29 +575,24 @@ const LandingPage = () => {
       render(true);
     };
 
-    // ✅ Add click handlers
     prevBtn?.addEventListener('click', goToPrev);
     nextBtn?.addEventListener('click', goToNext);
 
-    // ✅ Disable touch drag (Important!)
     const disableDrag = (e) => {
       e.preventDefault();
     };
 
-    // Apply to wrapper and items
     const wrapper = section.querySelector('.testimonials-wrapper');
     if (wrapper) {
-      wrapper.style.touchAction = 'none'; // Prevents browser from handling touch
+      wrapper.style.touchAction = 'none'; 
       wrapper.addEventListener('touchstart', disableDrag, { passive: false });
       wrapper.addEventListener('touchmove', disableDrag, { passive: false });
       wrapper.addEventListener('touchend', disableDrag, { passive: false });
       wrapper.addEventListener('mousedown', disableDrag);
     }
 
-    // ✅ Optional: Auto-slide every 4 seconds
     let autoSlideInterval = setInterval(goToNext, 4000);
 
-    // Clear on unmount
     return () => {
       prevBtn?.removeEventListener('click', goToPrev);
       nextBtn?.removeEventListener('click', goToNext);
@@ -745,13 +612,12 @@ const LandingPage = () => {
       const clicked = e.currentTarget;
       const slide = clicked.closest('.team-slide');
 
-      // Extract data from the clicked card
       const imgSrc = slide.querySelector('.img-container img')?.src || '';
       const name = slide.querySelector('h5')?.textContent || '';
       const role = slide.querySelector('.twocards, .teamtitle')?.textContent || '';
       const desc = slide.querySelector('p')?.textContent || '';
 
-      // Optional: You can define more detailed data (like expertise, philosophy) in an object
+    
       const fullDataMap = {
         'Arslan Ahmad': {
           Image: ArslanImg,
@@ -789,7 +655,7 @@ const LandingPage = () => {
           philosophy: '.........',
         },
         'Shehroz Shabbir': {
-          Image: shehrozImg,
+          Image: SehrozSir,
           title: 'Web Development Manager',
           desc: [
             'As the Full Stack Developer at AI3D Scanning Solutions, Shehroz Shabbir is the technical backbone behind the company’s innovative platforms. Skilled in both front-end and back-end development, he ensures that every digital product delivers a seamless, high-performance user experience.',
@@ -825,9 +691,8 @@ const LandingPage = () => {
           linkedin: 'https://www.linkedin.com/in/hira-chaudhary-287186287/',
           philosophy: '"Great design doesn’t just capture attention it inspires connection."',
         },
-        // Add others as needed
         'Usama Ahmad': {
-          Image: osamaImg,
+          Image: UsamaSir,
           title: 'Finance Manager',
 
           desc: [
@@ -847,7 +712,7 @@ const LandingPage = () => {
             '"A strong financial foundation is the backbone of innovation. My mission is to ensure every number tells a story that drives the company forward.”',
         },
         'Sajeel Nisar': {
-          Image: sajeelImg,
+          Image: SajeelSir,
           title: 'AI Lead',
 
           desc: [
@@ -867,7 +732,7 @@ const LandingPage = () => {
             '"The future belongs to intelligent systems — and I believe in building AI that makes technology more human."',
         },
         'Mudassar Farooq': {
-          Image: mudassarImg,
+          Image: MudassarSir,
           title: 'HR & Business Development Manager',
           desc: [
             'Mudassar is a dynamic professional at AI3D Scanning Solutions, combining strategic business development expertise with a strong foundation in human resources. In his business development role, he focuses on identifying growth opportunities, building partnerships, and expanding the company’s reach in the AI and 3D scanning industry.',
@@ -1198,7 +1063,7 @@ const LandingPage = () => {
                       <img src={Robot_Loader} alt="Loading..." className="loader-robot-image" />
                     </div>
                   )}
-{/* update the git code */}
+
                   {/* Model */}
                   {!loading && (
                     <model-viewer
@@ -1827,7 +1692,7 @@ const LandingPage = () => {
             <div className="row g-md-4">
               {(showAllModels ? models : models.slice(0, 6)).map((card, idx) => {
                 const imgUrl = card.image
-                  ? `https://app.ai3dscanning.com/storage/${card.image.replace(/^\/+/, '')}`
+                  ? `https://dev-backend.ai3dscanning.com/storage/${card.image.replace(/^\/+/, '')}`
                   : modelFallback;
 
                 return (

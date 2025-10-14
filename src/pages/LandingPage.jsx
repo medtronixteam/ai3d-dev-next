@@ -1198,7 +1198,7 @@ const LandingPage = () => {
                       <img src={Robot_Loader} alt="Loading..." className="loader-robot-image" />
                     </div>
                   )}
-
+{/* update the git code */}
                   {/* Model */}
                   {!loading && (
                     <model-viewer

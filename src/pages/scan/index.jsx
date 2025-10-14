@@ -25,6 +25,7 @@ import CustomLoader from '../../components/loader/CustomLoader';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import MultiScan from '../../assets/images/MultiScan.svg';
+import DarkMode from '../../assets/images/DarkMode.svg';
 import SingleScan from '../../assets/images/SingleScan.svg';
 import { ArrowBigLeft, ArrowRight, Image, ImageIcon, ImageUp, Share, Upload } from 'lucide-react';
 
@@ -611,7 +612,7 @@ const ScanPage = () => {
         </div>
 
         <div className="single-scanning-container">
-          <img src={SingleScan} alt="" width={100} height={100} />
+          <img src={isDarkMode ? DarkMode : SingleScan} alt="" width={100} height={100} />
           <div className="d-flex flex-column align-items-center justify-content-center">
             <h2>Transform Photo into 3D Model</h2>
             <p>
@@ -658,6 +659,7 @@ const ScanPage = () => {
                   borderRadius: '50%',
                   padding: '5px',
                   cursor: 'pointer',
+                  boxShadow : '0 0 2px #00000040'
                 }}
                 onClick={handleSingleSubmit}
                 disabled={!singleFile || singleFileLoading}

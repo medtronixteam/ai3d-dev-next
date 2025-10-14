@@ -185,7 +185,7 @@
   color: #fff;
 }
 
-.search-box::before {
+/* .search-box::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -197,8 +197,32 @@
     #5c5cbe84,
     #e03f9a
   );
-  animation: borderFlow 12s linear infinite; /* time adjust kar sakti ho */
+  animation: borderFlow 6s linear infinite;
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+} */
+
+.search-box::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--angle),
+    #e63399,              /* Bright Pink */
+    #cfcfff,              /* Light lavender tone */
+    #e63399               /* Back to pink */
+  );
+  animation: borderFlow 6s linear infinite;
+  mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
@@ -218,7 +242,12 @@
 
 .search-box:focus-within {
   outline: none;
-  box-shadow: 0 0px 20px #c63081;
+  transition: box-shadow 0.3s ease; /* smooth focus effect */
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.08),     
+    -3px 0 7px 1px rgba(230, 51, 153, 0.2),
+    3px 0 7px 1px rgba(230, 51, 153, 0.2), 
+    0 4px 7px 1px rgba(230, 51, 153, 0.2); 
   border: none !important;
 }
 
@@ -578,7 +607,7 @@ svg {
     #6767d684,
     #e03f9a
   );
-  animation: borderFlow 12s linear infinite;
+  animation: borderFlow 6s linear infinite;
   /* darker, tighter shadow for dark mode */
   box-shadow: 0 12px 26px 6px rgba(0, 0, 0, 0.35) !important;
 }
@@ -2280,5 +2309,123 @@ svg {
   100% {
     background-position: 200% center;
     opacity: 1;
+  }
+}
+
+/* bubble animation */
+
+.bubble-wrapper-animation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1; /* above the gif, below text */
+  pointer-events: none;
+}
+
+.bubble-wrapper-animation  div {
+  position: absolute;
+  width: 3rem;
+  height: 3rem;
+  border: 2px solid rgba(255, 255, 255, 0.749);
+  border-radius: 50%;
+  top: 15%;
+  left: 10%;
+  animation: rise 4s linear infinite;
+}
+
+[data-theme = 'dark'] .bubble-wrapper-animation  div {
+  opacity: 25%;
+}
+
+div .bubble {
+  position: absolute;
+  width: 0.5em;
+  height: 0.5em;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  top: 20%;
+  left: 20%;
+}
+
+.bubble-wrapper-animation div:nth-child(1) {
+  top: 20%;
+  left: 20%;
+  animation: rise 8s linear infinite;
+}
+.bubble-wrapper-animation div:nth-child(2) {
+  top: 60%;
+  left: 80%;
+  animation: rise 10s linear infinite;
+}
+.bubble-wrapper-animation div:nth-child(3) {
+  top: 40%;
+  right: 40%;
+  animation: rise 5s linear infinite;
+}
+.bubble-wrapper-animation div:nth-child(4) {
+  top: 60%;
+  left: 30%;
+  animation: rise 7s linear infinite;
+}
+.bubble-wrapper-animation div:nth-child(5) {
+  top: 90%;
+  right: 10%;
+  animation: rise 9s linear infinite;
+}
+.bubble-wrapper-animation div:nth-child(6) {
+  top: 30%;
+  left: 80%;
+  animation: rise 5s linear infinite;
+}
+.bubble-wrapper-animation div:nth-child(7) {
+  top: 70%;
+  left: 0%;
+  animation: rise 10s linear infinite;
+}
+.bubble-wrapper-animation div:nth-child(8) {
+  top: 75%;
+  left: 60%;
+  animation: rise 10s linear infinite;
+}
+.bubble-wrapper-animation div:nth-child(9) {
+  top: 50%;
+  left: 50%;
+  animation: rise 6s linear infinite;
+}
+.bubble-wrapper-animation div:nth-child(10) {
+  top: 50%;
+  left: 90%;
+  animation: rise 6s linear infinite;
+}
+.bubble-wrapper-animation div:nth-child(11) {
+  top: 20%;
+  left: 90%;
+  animation: rise 8s linear infinite;
+}
+.bubble-wrapper-animation div:nth-child(12) {
+  top: 10%;
+  left: 70%;
+  animation: rise 10s linear infinite;
+}
+.bubble-wrapper-animation div:nth-child(13) {
+  top: 10%;
+  left: 5%;
+  animation: rise 5s linear infinite;
+}
+.bubble-wrapper-animation div:nth-child(13) {
+  top: 80%;
+  left: 85%;
+  animation: rise 7s linear infinite;
+}
+
+@keyframes rise {
+  0% {
+    transform: scale(0) translateY(0px) rotate(70deg)
+  }
+  100% {
+    transform: scale(1) translateY(-100px) rotate(0deg)
   }
 }

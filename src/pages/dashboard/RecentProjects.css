@@ -190,12 +190,12 @@
 
 /* Dropdown items - transparent, no padding, no background */
 .rp-sort-dropdown .dropdown-item {
-  margin-left: -0.5rem !important;
+  /* margin-left: -0.5rem !important; */
   font-size: 15px;
   color: #222;
   background: transparent !important;
   border: none;
-  padding: 6px 0px;
+  /* padding: 6px 0px; */
   margin: 0;
   width: 100%;
   text-align: left;
@@ -213,16 +213,6 @@
   height: 20px;
   margin-right: 8px;
   background: url('../../assets/images/sort-click.svg') no-repeat center / contain;
-}
-
-/* Remove checkmark from non-active */
-.rp-sort-dropdown .dropdown-item::before {
-  content: "";
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  margin-right: 8px;
-  background: none;
 }
 
 .rp-sort-dropdown .dropdown-item:hover {

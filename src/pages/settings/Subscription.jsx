@@ -32,6 +32,7 @@ import {
   CardExpiryElement,
   CardCvcElement,
 } from '@stripe/react-stripe-js';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const Subscription = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -56,11 +57,13 @@ const Subscription = () => {
   const [subscriptions, setSubscriptions] = useState([]);
   const [loadingSubscriptions, setLoadingSubscriptions] = useState(false);
   const [subscriptionData, setSubscriptionData] = useState(null);
-  const [autoRenewal, setAutoRenewal] = useState(false);
+  // const [autoRenewal, setAutoRenewal] = useState(false);
   const [currentPaymentMethod, setCurrentPaymentMethod] = useState(null);
   const [loadingPaymentMethod, setLoadingPaymentMethod] = useState(false);
-  const [autoRenewalLoading, setAutoRenewalLoading] = useState(false);
+  // const [autoRenewalLoading, setAutoRenewalLoading] = useState(false);
   const [isDark, setIsDarkMode] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Theme detection
   useEffect(() => {
@@ -244,6 +247,12 @@ const Subscription = () => {
           row.StatusOrder.toLowerCase().includes(activeFilter.toLowerCase()),
         );
 
+  const totalPages = Math.ceil(filteredTable.length / rowsPerPage);
+  const paginatedData = filteredTable.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage,
+  );
+
   const fetchCoins = async () => {
     if (!token) return;
     setLoadingCoinsSpinner(true);
@@ -278,7 +287,7 @@ const Subscription = () => {
     setCoins((prev) => prev - Number(spentAmount));
   };
 
-   const fetchSubscriptions = async () => {
+  const fetchSubscriptions = async () => {
     if (!token) return;
     setLoadingSubscriptions(true);
 
@@ -315,7 +324,7 @@ const Subscription = () => {
 
       // Filter only active or inactive subscriptions for display cards
       const validSubs = data.subscriptions.filter(
-        (sub) => sub.status === 'active' || sub.status === 'inactive'
+        (sub) => sub.status === 'active' || sub.status === 'inactive',
       );
 
       if (validSubs.length === 0) {
@@ -339,17 +348,31 @@ const Subscription = () => {
         return {
           ...sub,
           id: correctedId,
-          planName: (sub.type || 'Pro Plan').charAt(0).toUpperCase() + (sub.type || 'Pro Plan').slice(1).toLowerCase(),
+          planName:
+            (sub.type || 'Pro Plan').charAt(0).toUpperCase() +
+            (sub.type || 'Pro Plan').slice(1).toLowerCase(),
           status: sub.status,
-          buyDate: createdDate.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }),
-          expiryDate: expiryDate.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }),
+          buyDate: createdDate.toLocaleDateString('en-US', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+          }),
+          expiryDate: expiryDate.toLocaleDateString('en-US', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+          }),
           amount: sub.price_amount || '$19.99',
           billingCycle: sub.interval === 'year' ? 'Yearly' : 'Monthly',
           nextBillingDate: (() => {
             const nextBilling = new Date(createdDate);
             if (sub.interval === 'year') nextBilling.setFullYear(nextBilling.getFullYear() + 1);
             else nextBilling.setMonth(nextBilling.getMonth() + 1);
-            return nextBilling.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            return nextBilling.toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric',
+            });
           })(),
         };
       });
@@ -360,8 +383,7 @@ const Subscription = () => {
 
       // Set autoRenewal based on first active subscription
       const activeSub = validSubs.find((sub) => sub.status === 'active');
-      setAutoRenewal(activeSub ? activeSub.auto_renew === 1 : false);
-
+      // setAutoRenewal(activeSub ? activeSub.auto_renew === 1 : false);
     } catch (err) {
       console.error('Failed to fetch subscriptions:', err);
       toast.error('Error fetching subscription data');
@@ -796,174 +818,247 @@ const Subscription = () => {
           <CustomLoader />
         </div>
       ) : subscriptionData && subscriptionData.length > 0 ? (
-        subscriptionData.map((plan, index) => (
-          <div className="main-starter-plan-container" key={index}>
-            <div className="main-starter-plan">
-              <div className="main-starter-plan-content">
-                <div className="starter-plan">
-                  <h2 className="starter-plan-h2">{plan.planName}</h2>
-                  <h2 className="starter-plan-h2-tag">{plan.status}</h2>
+        subscriptionData.map((plan) => {
+          const uniqueId = plan.stripe_id || plan.id;
+          if (!uniqueId) {
+            console.warn('Plan missing unique ID:', plan);
+            return null;
+          }
+
+          return (
+            <div className="main-starter-plan-container" key={uniqueId}>
+              <div className="main-starter-plan">
+                <div className="main-starter-plan-content">
+                  <div className="starter-plan">
+                    <h2 className="starter-plan-h2">{plan.planName}</h2>
+                    <h2 className="starter-plan-h2-tag">{plan.status}</h2>
+                  </div>
+                  <div className="flex-plan">
+                    <span
+                      style={{
+                        color: isDark ? '#fff' : 'rgba(61, 61, 61, 1)',
+                        fontWeight: 600,
+                        fontSize: '14px',
+                        minWidth: isMobile ? '100px' : '120px',
+                      }}
+                    >
+                      Started:
+                    </span>
+                    <span
+                      style={{
+                        color: isDark ? '#fff' : 'rgba(117, 117, 117, 1)',
+                        fontSize: isMobile ? '12px' : '14px',
+                        fontWeight: 600,
+                      }}
+                    >
+                      {plan.buyDate}
+                    </span>
+                  </div>
+                  <div className="flex-plan">
+                    <span
+                      style={{
+                        color: isDark ? '#fff' : 'rgba(61, 61, 61, 1)',
+                        fontWeight: 600,
+                        fontSize: '14px',
+                        minWidth: isMobile ? '100px' : '120px',
+                      }}
+                    >
+                      Status:
+                    </span>
+                    <span
+                      style={{
+                        color: '#E74C3C',
+                        fontSize: isMobile ? '12px' : '14px',
+                        fontWeight: 600,
+                      }}
+                    >
+                      Expiring in{' '}
+                      {(() => {
+                        const now = new Date();
+                        const expiry = new Date(plan.expiryDate);
+                        const diffInDays = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
+                        return diffInDays > 0 ? `${diffInDays} days` : 'Expired';
+                      })()}
+                    </span>
+                  </div>
+                  <div className="flex-plan">
+                    <span
+                      style={{
+                        color: isDark ? '#fff' : 'rgba(61, 61, 61, 1)',
+                        fontWeight: 600,
+                        fontSize: '14px',
+                        minWidth: isMobile ? '100px' : '120px',
+                      }}
+                    >
+                      Renewal Date:
+                    </span>
+                    <span
+                      style={{
+                        color: isDark ? '#fff' : 'rgba(117, 117, 117, 1)',
+                        fontSize: isMobile ? '12px' : '14px',
+                        fontWeight: 600,
+                      }}
+                    >
+                      {plan.nextBillingDate}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex-plan">
-                  <span
-                    style={{
-                      color: isDark ? '#fff' : 'rgba(61, 61, 61, 1)',
-                      fontWeight: 600,
-                      fontSize: '14px',
-                      minWidth: isMobile ? '100px' : '120px',
-                    }}
-                  >
-                    Started:
-                  </span>
-                  <span
-                    style={{
-                      color: isDark ? '#fff' : 'rgba(117, 117, 117, 1)',
-                      fontSize: isMobile ? '12px' : '14px',
-                      fontWeight: 600,
-                    }}
-                  >
-                    {plan.buyDate}
-                  </span>
-                </div>
-                <div className="flex-plan">
-                  <span
-                    style={{
-                      color: isDark ? '#fff' : 'rgba(61, 61, 61, 1)',
-                      fontWeight: 600,
-                      fontSize: '14px',
-                      minWidth: isMobile ? '100px' : '120px',
-                    }}
-                  >
-                    Status:
-                  </span>
-                  <span
-                    style={{
-                      color: '#E74C3C',
-                      fontSize: isMobile ? '12px' : '14px',
-                      fontWeight: 600,
-                    }}
-                  >
-                    Expiring in{' '}
-                    {(() => {
-                      const now = new Date();
-                      const expiry = new Date(plan.expiryDate);
-                      const diffInDays = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
-                      return diffInDays > 0 ? `${diffInDays} days` : 'Expired';
-                    })()}
-                  </span>
-                </div>
-                <div className="flex-plan">
-                  <span
-                    style={{
-                      color: isDark ? '#fff' : 'rgba(61, 61, 61, 1)',
-                      fontWeight: 600,
-                      fontSize: '14px',
-                      minWidth: isMobile ? '100px' : '120px',
-                    }}
-                  >
-                    Renewal Date:
-                  </span>
-                  <span
-                    style={{
-                      color: isDark ? '#fff' : 'rgba(117, 117, 117, 1)',
-                      fontSize: isMobile ? '12px' : '14px',
-                      fontWeight: 600,
-                    }}
-                  >
-                    {plan.nextBillingDate}
-                  </span>
+
+                <div className="payment-type">
+                  <h1>{coins.toLocaleString()}</h1>
+                  <p>Coins Payment</p>
                 </div>
               </div>
 
-              <div className="payment-type">
-                <h1>{coins.toLocaleString()}</h1>
-                <p>Coins Payment</p>
-              </div>
-            </div>
+              <div className="payment-cycle">
+                <div className="billing-cycle">
+                  <h3>Billing Cycle</h3>
+                  <p>{plan.billingCycle}</p>
+                </div>
+                <div className="Next-Billing-Date">
+                  <h3>Next Billing Date</h3>
+                  <p>{plan.nextBillingDate}</p>
+                </div>
+                <div className="billing-amount">
+                  <h3>Billing Amount</h3>
+                  <p>{plan.price_amount}</p>
+                </div>
+                <div className="billing-method">
+                  <FiEdit size={18} style={{ color: 'rgba(222, 57, 150, 1)' }} />
+                  <h3 onClick={() => setShowEditPaymentPopup(true)} style={{ cursor: 'pointer' }}>
+                    Edit Payment Method
+                  </h3>
+                </div>
 
-            <div className="payment-cycle">
-              <div className="billing-cycle">
-                <h3>Billing Cycle</h3>
-                <p>{plan.billingCycle}</p>
+                {/* ✅ Auto Renewal Toggle — per plan */}
+                <div className="Auto-Renewal">
+                  <h3>Auto Renewal</h3>
+                  <label className="switch-Renewal">
+                    <input
+                      type="checkbox"
+                      checked={plan.auto_renew === 1}
+                      onChange={async (e) => {
+                        const newStatus = e.target.checked ? 1 : 0;
+                        const subscriptionId = plan?.stripe_id || plan?.id;
+
+                        if (!subscriptionId || !token) {
+                          toast.error('Subscription ID or token missing');
+                          return;
+                        }
+
+                        // Optimistically update UI
+                        setSubscriptionData((prev) =>
+                          prev.map((p) =>
+                            p.stripe_id === plan.stripe_id || p.id === plan.id
+                              ? { ...p, auto_renew: newStatus }
+                              : p,
+                          ),
+                        );
+
+                        try {
+                          const res = await fetch(`${baseURL}/subscription/auto-renew`, {
+                            method: 'POST',
+                            headers: {
+                              Authorization: `Bearer ${token}`,
+                              'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                              subscription: subscriptionId,
+                              auto_renew: newStatus,
+                            }),
+                          });
+
+                          const data = await res.json();
+
+                          if (res.ok) {
+                            toast.success(
+                              `Auto-renewal ${newStatus ? 'enabled' : 'disabled'} successfully`,
+                            );
+                          } else {
+                            // Revert on error
+                            setSubscriptionData((prev) =>
+                              prev.map((p) =>
+                                p.stripe_id === plan.stripe_id || p.id === plan.id
+                                  ? { ...p, auto_renew: plan.auto_renew }
+                                  : p,
+                              ),
+                            );
+                            toast.error(data.message || 'Failed to update auto-renewal');
+                          }
+                        } catch (err) {
+                          console.error('Auto-renew toggle failed:', err);
+                          // Revert on network error
+                          setSubscriptionData((prev) =>
+                            prev.map((p) =>
+                              p.stripe_id === plan.stripe_id || p.id === plan.id
+                                ? { ...p, auto_renew: plan.auto_renew }
+                                : p,
+                            ),
+                          );
+                          toast.error('Network error: Failed to update auto-renewal');
+                        }
+                      }}
+                    />
+                    <span className="slider-Renewal"></span>
+                  </label>
+                </div>
               </div>
-              <div className="Next-Billing-Date">
-                <h3>Next Billing Date</h3>
-                <p>{plan.nextBillingDate}</p>
-              </div>
-              <div className="billing-amount">
-                <h3>Billing Amount</h3>
-                <p>{plan.price_amount}</p>
-              </div>
-              <div className="billing-method">
-                <FiEdit size={18} style={{ color: 'rgba(222, 57, 150, 1)' }} />
-                <h3 onClick={() => setShowEditPaymentPopup(true)} style={{ cursor: 'pointer' }}>
-                  Edit Payment Method
-                </h3>
-              </div>
-              <div className="Auto-Renewal">
-                <h3>Auto Renewal</h3>
-                <label className="switch-Renewal">
-                  <input
-                    type="checkbox"
-                    checked={autoRenewal}
-                    disabled={autoRenewalLoading}
-                    onChange={(e) => {
-                      const subscriptionIdToUse =
-                        plan?.stripe_id ||
-                        (subscriptions.length > 0 ? subscriptions[0].stripe_id : null);
-                      handleAutoRenewalToggle(subscriptionIdToUse, e.target.checked);
-                    }}
+
+              <div className="starter-plans-buttons">
+                <div
+                  className="d-flex Switch-plan-button"
+                  onClick={() => {
+                    if (activeTeam) return; // disable in team mode
+                    setShowSwitchActivePopup(true);
+                  }}
+                  style={activeTeam ? { opacity: 0.6, pointerEvents: 'none' } : {}}
+                >
+                  <img
+                    src={SwitchPlan}
+                    alt="icon"
+                    width={18}
+                    height={18}
+                    style={{ marginTop: '2px' }}
                   />
-                  <span className="slider-Renewal"></span>
-                </label>
-              </div>
-            </div>
+                  <span>Switch plan</span>
+                </div>
+                {starterCanceled ? (
+                  <div
+                    className="cancel-plan-button"
+                    onClick={() => {
+                      if (activeTeam) return; // disable in team mode
+                      setShowRefundPopup(true);
+                    }}
+                    style={activeTeam ? { opacity: 0.6, pointerEvents: 'none' } : {}}
+                  >
+                    <span>Request Refund</span>
+                  </div>
+                ) : (
+                  <div
+                    className="cancel-plan-button"
+                    onClick={(e) => {
+                      if (activeTeam) {
+                        console.log('🔴 BLOCKED: Team mode active');
+                        return;
+                      }
 
-            <div className="starter-plans-buttons">
-              <div
-                className="d-flex Switch-plan-button"
-                onClick={() => {
-                  if (activeTeam) return; // disable in team mode
-                  setShowSwitchActivePopup(true);
-                }}
-                style={activeTeam ? { opacity: 0.6, pointerEvents: 'none' } : {}}
-              >
-                <img
-                  src={SwitchPlan}
-                  alt="icon"
-                  width={18}
-                  height={18}
-                  style={{ marginTop: '2px' }}
-                />
-                <span>Switch plan</span>
+                      // setCancelPlanType(plan?.stripe_id || plan?.id);
+                      const subscriptionIdToCancel = plan?.stripe_id || plan?.id;
+                      console.log('Cancelling subscription ID:', subscriptionIdToCancel);
+
+                      setCancelPlanType(subscriptionIdToCancel);
+                      setShowCancelPopup(true);
+                      console.log('🔴 Popup should open now');
+                    }}
+                    style={activeTeam ? { opacity: 0.6, pointerEvents: 'none' } : {}}
+                  >
+                    <span>Cancel Plan</span>
+                  </div>
+                )}
               </div>
-              {starterCanceled ? (
-                <div
-                  className="cancel-plan-button"
-                  onClick={() => {
-                    if (activeTeam) return; // disable in team mode
-                    setShowRefundPopup(true);
-                  }}
-                  style={activeTeam ? { opacity: 0.6, pointerEvents: 'none' } : {}}
-                >
-                  <span>Request Refund</span>
-                </div>
-              ) : (
-                <div
-                  className="cancel-plan-button"
-                  onClick={() => {
-                    if (activeTeam) return; // disable in team mode
-                    setCancelPlanType('starter');
-                    setShowCancelPopup(true);
-                  }}
-                  style={activeTeam ? { opacity: 0.6, pointerEvents: 'none' } : {}}
-                >
-                  <span>Cancel Plan</span>
-                </div>
-              )}
             </div>
-          </div>
-        ))
+          );
+        })
       ) : (
         <div
           style={{
@@ -1058,8 +1153,8 @@ const Subscription = () => {
             <div style={{ padding: '20px', textAlign: 'center' }}>
               <CustomLoader />
             </div>
-          ) : filteredTable.length > 0 ? (
-            filteredTable.map((row, index) => (
+          ) : paginatedData.length > 0 ? (
+            paginatedData.map((row, index) => (
               <div className="history-plan-table-content" key={index}>
                 <span>{row.startDate}</span>
                 <span>{row.endDate}</span>
@@ -1090,6 +1185,52 @@ const Subscription = () => {
             </div>
           )}
         </div>
+        <div className="um-pagination">
+          <div className="um-pagination-left">
+            <span>Show</span>
+            <select
+              className="um-pagination-select"
+              value={rowsPerPage}
+              onChange={(e) => {
+                setRowsPerPage(Number(e.target.value));
+                setCurrentPage(1);
+              }}
+            >
+              <option value="5">05</option>
+              <option value="10">10</option>
+              <option value="20">20</option>
+            </select>
+            <span>Cards per page</span>
+          </div>
+
+          <div className="um-pagination-right">
+            <button
+              className="um-pagination-btn"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((prev) => prev - 1)}
+            >
+              <ChevronLeft size={16} />
+            </button>
+
+            {[...Array(totalPages)].map((_, i) => (
+              <button
+                key={i}
+                className={`um-pagination-btn ${currentPage === i + 1 ? 'active' : ''}`}
+                onClick={() => setCurrentPage(i + 1)}
+              >
+                {i + 1}
+              </button>
+            ))}
+
+            <button
+              className="um-pagination-btn"
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage((prev) => prev + 1)}
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
+        </div>
       </div>
 
       <NotificationProvider fetchCoins={fetchCoins} />
@@ -1107,8 +1248,9 @@ const Subscription = () => {
       {showCancelPopup && (
         <CancelPlanPopup
           subscriptionId={
-            subscriptionData?.stripe_id ||
-            (subscriptions.length > 0 ? subscriptions[0].stripe_id : null)
+            // subscriptionData?.stripe_id ||
+            // (subscriptions.length > 0 ? subscriptions[0].stripe_id : null)
+            cancelPlanType
           }
           onClose={() => {
             setShowCancelPopup(false);

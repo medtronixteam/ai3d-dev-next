@@ -15,6 +15,8 @@ import axios from 'axios';
 import { baseURL } from '../../config';
 import { GiTick } from 'react-icons/gi';
 import { FaCheck } from 'react-icons/fa';
+import { ChevronLeft, ChevronRight, Send, Share, Share2 } from 'lucide-react';
+import CustomLoader from '../../components/loader/CustomLoader';
 
 const ReferralPage = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -25,6 +27,28 @@ const ReferralPage = () => {
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
   const [email, setEmail] = useState('');
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Theme detection
+  useEffect(() => {
+    const checkTheme = () => {
+      setIsDarkMode(document.documentElement.getAttribute('data-theme') === 'dark');
+    };
+
+    // Check initial theme
+    checkTheme();
+
+    // Listen for theme changes
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     document.body.style.overflow = 'auto';
@@ -78,6 +102,9 @@ const ReferralPage = () => {
           axios.get(`${baseURL}/referral/link`),
         ]);
 
+        console.log('Referral list response:', listRes.data);
+        console.log('Referral link response:', linkRes.data);
+
         setReferralList(listRes.data?.data || []);
 
         const rawUrl = linkRes.data?.url || '';
@@ -99,11 +126,14 @@ const ReferralPage = () => {
     try {
       setLoading(true);
       setError('');
-      await axios.post(`${baseURL}/referral/email`, { email });
+      const response = await axios.post(`${baseURL}/referral/email`, { email });
+      console.log('Email invite response:', response.data);
       setEmail('');
+      const listRes = await axios.get(`${baseURL}/referral/lists`);
+      setReferralList(listRes.data?.data || []);
+      console.log('Updated referral list:', listRes.data?.data);
     } catch (err) {
       console.error('Failed to send email invite:', err);
-
       if (err.response && err.response.data && err.response.data.message) {
         setError(err.response.data.message);
       } else {
@@ -135,11 +165,19 @@ const ReferralPage = () => {
     return referralList.filter((r) => r.status === filter);
   }, [filter, referralList]);
 
+  const totalPages = Math.ceil(filteredRecords.length / rowsPerPage);
+  const paginatedData = filteredRecords.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage,
+  );
+
   return (
     <section>
       <div className="referal-page-main-container">
-        {/* {loading && <p>Loading referrals...</p>}
-        {error && <p style={{ color: 'red' }}>{error}</p>} */}
+        <div className="share-coins-button">
+          <Send size={18} />
+          <span>Share Coins</span>
+        </div>
 
         <div className="position-relative">
           <span className="referal-page-star">
@@ -149,7 +187,7 @@ const ReferralPage = () => {
 
         <div className="position-relative">
           <span className="referal-page-share">
-            <img src={ReferalShare} alt="Star" />
+            <Share2 size={20} style={{ color: isDarkMode ? '#FFD9EE' : '#DE3996' }} />
           </span>
         </div>
 
@@ -268,7 +306,11 @@ const ReferralPage = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <div className="send-button" onClick={handleSendEmail} style={{ backgroundColor: email ? '#de3996' : '#00000080' }}>
+              <div
+                className="send-button"
+                onClick={handleSendEmail}
+                style={{ backgroundColor: email ? '#de3996' : '#00000080' }}
+              >
                 {loading ? (
                   <>
                     <FiSend size={18} />
@@ -335,90 +377,159 @@ const ReferralPage = () => {
             </span>
           </div>
 
-          {filteredRecords.map((item, index) => (
-            <div className="referal-page-history-track" key={index}>
-              {!isMobile ? (
-                <div className="referal-page-history-record">
-                  <div className="referal-page-person-record">
-                    <h3>{item.name}</h3>
-                    <p>{item.email}</p>
-                    <p>{item.joined}</p>
-                    <p>{item.Awaiting}</p>
-                  </div>
+          {loading ? (
+            <div style={{ padding: '20px', textAlign: 'center' }}>
+              <CustomLoader />
+            </div>
+          ) : paginatedData.length > 0 ? (
+            <>
+              {paginatedData.map((item, index) => (
+                <div className="referal-page-history-track" key={index}>
+                  {!isMobile ? (
+                    <div className="referal-page-history-record">
+                      <div className="referal-page-person-record">
+                        <h3>{item.name}</h3>
+                        <p>{item.email}</p>
+                        <p>{item.joined}</p>
+                        <p>{item.Awaiting}</p>
+                      </div>
 
-                  {item.status !== 'Expired' && (
+                      {item.status !== 'Expired' && (
+                        <>
+                          <div className="referal-page-person-record d-flex flex-column align-items-center justify-content-center">
+                            <h3>Recipient Reward</h3>
+                            <p style={{ color: '#00C29F', textAlign: 'center' }}>
+                              {item.coins || '0'}
+                            </p>
+                          </div>
+
+                          <div className="referal-page-person-record d-flex flex-column align-items-center justify-content-center">
+                            <h3>Your Reward</h3>
+                            <p style={{ color: '#824AF0', textAlign: 'center' }}>
+                              {item.rewardCoins || '0'}
+                            </p>
+                          </div>
+                        </>
+                      )}
+
+                      <div className="referal-page-person-status-record">
+                        <span
+                          className={
+                            item.status === 'Completed'
+                              ? 'status-completed'
+                              : item.status === 'Expired'
+                                ? 'status-expired'
+                                : 'status-pending'
+                          }
+                        >
+                          {item.status || 'pending'}
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
                     <>
-                      <div className="referal-page-person-record d-flex flex-column align-items-center justify-content-center">
-                        <h3>Recipient Reward</h3>
-                        <p style={{ color: '#00C29F', textAlign: 'center' }}>{item.coins || '0'}</p>
+                      {/* Mobile View */}
+                      <div className="referal-page-mobile-history-record">
+                        <div className="referal-page-mobile-person-record">
+                          <h3>{item.name}</h3>
+                          <p>{item.email}</p>
+                          <p>{item.joined}</p>
+                          <p>{item.Awaiting}</p>
+                        </div>
+
+                        <div className="referal-page-mobile-person-status-record">
+                          <span
+                            className={
+                              item.status === 'Completed'
+                                ? 'status-completed'
+                                : item.status === 'Expired'
+                                  ? 'status-expired'
+                                  : 'status-pending'
+                            }
+                          >
+                            {item.status || 'pending'}
+                          </span>
+                        </div>
                       </div>
 
-                      <div className="referal-page-person-record d-flex flex-column align-items-center justify-content-center">
-                        <h3>Your Reward</h3>
-                        <p style={{ color: '#824AF0', textAlign: 'center' }}>
-                          {item.rewardCoins || '0'}
-                        </p>
-                      </div>
+                      {item.status !== 'Expired' && (
+                        <div className="d-flex justify-content-between">
+                          <div className="referal-page-mobile-person-record d-flex flex-column mt-2">
+                            <h3>Recipient Reward</h3>
+                            <p style={{ color: '#00C29F' }}>{item.coins || '0'}</p>
+                          </div>
+
+                          <div className="referal-page-mobile-person-record d-flex flex-column mt-2">
+                            <h3>Your Reward</h3>
+                            <p style={{ color: '#824AF0' }}>{item.rewardCoins || '0'}</p>
+                          </div>
+                        </div>
+                      )}
                     </>
                   )}
-
-                  <div className="referal-page-person-status-record">
-                    <span
-                      className={
-                        item.status === 'Completed'
-                          ? 'status-completed'
-                          : item.status === 'Expired'
-                            ? 'status-expired'
-                            : 'status-pending'
-                      }
+                </div>
+              ))}
+              
+              {totalPages > 0 && (
+                <div className="um-pagination">
+                  <div className="um-pagination-left">
+                    <span>Show</span>
+                    <select
+                      className="um-pagination-select"
+                      value={rowsPerPage}
+                      onChange={(e) => {
+                        setRowsPerPage(Number(e.target.value));
+                        setCurrentPage(1);
+                      }}
                     >
-                      {item.status || 'pending'}
-                    </span>
+                      <option value="5">05</option>
+                      <option value="10">10</option>
+                      <option value="20">20</option>
+                    </select>
+                    <span>Cards per page</span>
+                  </div>
+
+                  <div className="um-pagination-right">
+                    <button
+                      className="um-pagination-btn"
+                      disabled={currentPage === 1}
+                      onClick={() => setCurrentPage((prev) => prev - 1)}
+                    >
+                      <ChevronLeft size={16} />
+                    </button>
+
+                    {[...Array(totalPages)].map((_, i) => (
+                      <button
+                        key={i}
+                        className={`um-pagination-btn ${currentPage === i + 1 ? 'active' : ''}`}
+                        onClick={() => setCurrentPage(i + 1)}
+                      >
+                        {i + 1}
+                      </button>
+                    ))}
+
+                    <button
+                      className="um-pagination-btn"
+                      disabled={currentPage === totalPages}
+                      onClick={() => setCurrentPage((prev) => prev + 1)}
+                    >
+                      <ChevronRight size={16} />
+                    </button>
                   </div>
                 </div>
-              ) : (
-                /* Mobile View  */
-                <>
-                  <div className="referal-page-mobile-history-record">
-                    <div className="referal-page-mobile-person-record">
-                      <h3>{item.name}</h3>
-                      <p>{item.email}</p>
-                      <p>{item.joined}</p>
-                      <p>{item.Awaiting}</p>
-                    </div>
-
-                    <div className="referal-page-mobile-person-status-record">
-                      <span
-                        className={
-                          item.status === 'Completed'
-                            ? 'status-completed'
-                            : item.status === 'Expired'
-                              ? 'status-expired'
-                              : 'status-pending'
-                        }
-                      >
-                        {item.status}
-                      </span>
-                    </div>
-                  </div>
-
-                  {item.status !== 'Expired' && (
-                    <div className="d-flex justify-content-between">
-                      <div className="referal-page-mobile-person-record d-flex flex-column mt-2">
-                        <h3>Recipient Reward</h3>
-                        <p style={{ color: '#00C29F' }}>{item.coins || '-'}</p>
-                      </div>
-
-                      <div className="referal-page-mobile-person-record d-flex flex-column mt-2">
-                        <h3>Your Reward</h3>
-                        <p style={{ color: '#824AF0' }}>{item.rewardCoins || '-'}</p>
-                      </div>
-                    </div>
-                  )}
-                </>
               )}
+            </>
+          ) : (
+            <div
+              style={{
+                padding: '20px',
+                textAlign: 'center',
+                color: isDarkMode ? '#DADADA' : '#666',
+              }}
+            >
+              No Referral History found
             </div>
-          ))}
+          )}
         </div>
       </div>
     </section>

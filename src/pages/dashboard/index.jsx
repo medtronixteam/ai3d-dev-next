@@ -348,7 +348,6 @@ function ModelCardVideoModal({ open, videoUrl, onClose }) {
 
   React.useEffect(() => {
     if (open && videoUrl) {
-      console.log('Modal opening with URL:', videoUrl);
       setLoading(true);
       setModalVisible(true);
       setVideoError(false);
@@ -360,7 +359,6 @@ function ModelCardVideoModal({ open, videoUrl, onClose }) {
 
       // Set timeout for loading
       timeoutRef.current = setTimeout(() => {
-        console.log('Video loading timeout');
         setLoading(false);
         setVideoError(true);
       }, 30000);
@@ -383,7 +381,6 @@ function ModelCardVideoModal({ open, videoUrl, onClose }) {
   }, [open, videoUrl]);
 
   const handleVideoLoad = () => {
-    console.log('Video loaded successfully in modal');
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
@@ -393,8 +390,6 @@ function ModelCardVideoModal({ open, videoUrl, onClose }) {
   };
 
   const handleVideoError = (err) => {
-    console.error('Video error in modal:', err);
-    console.error('Video URL:', videoUrl);
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
@@ -404,29 +399,6 @@ function ModelCardVideoModal({ open, videoUrl, onClose }) {
   };
 
   if (!open || !videoUrl) return null;
-
-  // if (loading) {
-  //   return (
-  //     <div
-  //       style={{
-  //         position: 'fixed',
-  //         top: 0,
-  //         left: 0,
-  //         width: '100vw',
-  //         height: '100vh',
-  //         zIndex: 9999,
-  //         display: 'flex',
-  //         alignItems: 'center',
-  //         justifyContent: 'center',
-  //         background: 'rgba(0,0,0,0.15)',
-  //         transition: 'all 0.3s ease',
-  //       }}
-  //     >
-  //       <CustomLoader />
-  //     </div>
-  //   );
-  // }
-
   return (
     <div
       style={{
@@ -565,23 +537,18 @@ function ModelCardVideoModal({ open, videoUrl, onClose }) {
               transition: 'opacity 0.3s ease',
             }}
             onLoadStart={() => {
-              console.log('Video load started in modal');
             }}
             onLoadedMetadata={() => {
-              console.log('Video metadata loaded in modal');
               handleVideoLoad();
             }}
             onLoadedData={() => {
-              console.log('Video data loaded in modal');
               handleVideoLoad();
             }}
             onCanPlay={() => {
-              console.log('Video can play in modal');
               handleVideoLoad();
             }}
             onError={handleVideoError}
             onPlay={() => {
-              console.log('Video started playing in modal');
             }}
           />
         )}
@@ -756,77 +723,74 @@ const Dashboard = () => {
     return () => observer.disconnect();
   }, []);
 
-  const fetchModels = useCallback(async (type, pageNum = 1, append = false) => {
-    
-    if (append) {
-      setIsLoadingMore(true);
-    } else {
-      setLoading(true);
-    }
-    setError('');
-    try {
-      const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
-      // 1. Get all models
-      const response = await fetch(`${baseURL}/model/${type}?page=${pageNum}`, { headers });
-      const data = await response.json();
-      // console.log('Full model API response:', data);
-      const rawModels = data.models?.data || [];
-
-      setPagination({
-        current_page: data.models?.current_page || 1,
-        last_page: data.models?.last_page || 1,
-        total: data.models?.total || 0,
-      });
-
-      // Check if there are more pages
-      const morePages = data.models?.current_page < data.models?.last_page;
-      setHasMore(morePages);
-
-      // 2. Get favorite models (sirf agar logged in ho)
-      let favorites = [];
-      if (token) {
-        const favRes = await fetch(`${baseURL}/favorite/models`, { headers });
-        const favData = await favRes.json();
-        favorites = favData['favorite models'] || [];
-      }
-
-      // 3. Merge: mark models as favorite
-      const modelsWithFavorites = rawModels.map((model) => ({
-        ...model,
-        is_favorite: favorites.some((fav) => fav.id === model.id),
-      }));
-
-      // Append or replace models
+  const fetchModels = useCallback(
+    async (type, pageNum = 1, append = false) => {
       if (append) {
-        await new Promise((resolve) => setTimeout(resolve, 3000));
-        setModels((prevModels) => {
-          const newList = [...prevModels, ...modelsWithFavorites];
-          return newList;
+        setIsLoadingMore(true);
+      } else {
+        setLoading(true);
+      }
+      setError('');
+      try {
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+        const response = await fetch(`${baseURL}/model/${type}?page=${pageNum}`, { headers });
+        const data = await response.json();
+        const rawModels = data.models?.data || [];
+
+        setPagination({
+          current_page: data.models?.current_page || 1,
+          last_page: data.models?.last_page || 1,
+          total: data.models?.total || 0,
         });
-      } else {
-        // console.log('Replacing models with new list');
-        setModels(modelsWithFavorites);
+
+        const morePages = data.models?.current_page < data.models?.last_page;
+        setHasMore(morePages);
+
+        let favorites = [];
+        if (token) {
+          const favRes = await fetch(`${baseURL}/favorite/models`, { headers });
+          const favData = await favRes.json();
+          favorites = favData['favorite models'] || [];
+        }
+
+        // 3. Merge: mark models as favorite
+        const modelsWithFavorites = rawModels.map((model) => ({
+          ...model,
+          is_favorite: favorites.some((fav) => fav.id === model.id),
+        }));
+
+        // Append or replace models
+        if (append) {
+          await new Promise((resolve) => setTimeout(resolve, 3000));
+          setModels((prevModels) => {
+            const newList = [...prevModels, ...modelsWithFavorites];
+            return newList;
+          });
+        } else {
+          setModels(modelsWithFavorites);
+        }
+      } catch (err) {
+        console.error('Error fetching models:', err);
+        setError('Failed to load models.');
+        if (!append) {
+          setModels([]);
+        }
+      } finally {
+        if (append) {
+          setIsLoadingMore(false);
+        } else {
+          setLoading(false);
+        }
       }
-    } catch (err) {
-      console.error('Error fetching models:', err);
-      setError('Failed to load models.');
-      if (!append) {
-        setModels([]);
-      }
-    } finally {
-      if (append) {
-        setIsLoadingMore(false);
-      } else {
-        setLoading(false);
-      }
-    }
-  }, [token]);
+    },
+    [token],
+  );
 
   const handleNext = useCallback(() => {
     // console.log('handleNext called');
     // console.log('Current state:', { hasMore, isLoadingMore, page });
-    
+
     if (hasMore && !isLoadingMore) {
       const nextPage = page + 1;
       setPage(nextPage);
@@ -985,12 +949,17 @@ const Dashboard = () => {
 
   // Infinite Scroll Effect using Intersection Observer
   useEffect(() => {
-    
     const observer = new IntersectionObserver(
       (entries) => {
         const firstEntry = entries[0];
-        
-        if (firstEntry.isIntersecting && hasMore && !isLoadingMore && !loading && !isFavoriteModeActive) {
+
+        if (
+          firstEntry.isIntersecting &&
+          hasMore &&
+          !isLoadingMore &&
+          !loading &&
+          !isFavoriteModeActive
+        ) {
           handleNext();
         }
       },
@@ -998,7 +967,7 @@ const Dashboard = () => {
         root: null,
         rootMargin: '200px',
         threshold: 0.1,
-      }
+      },
     );
 
     const currentLoader = loaderRef.current;
@@ -1085,6 +1054,23 @@ const Dashboard = () => {
           minHeight: 320,
         }}
       >
+        <div className="bubble-wrapper-animation">
+          <div><span className='bubble'></span></div>
+          <div><span className='bubble'></span></div>
+          <div><span className='bubble'></span></div>
+          <div><span className='bubble'></span></div>
+          <div><span className='bubble'></span></div>
+          <div><span className='bubble'></span></div>
+          <div><span className='bubble'></span></div>
+          <div><span className='bubble'></span></div>
+          <div><span className='bubble'></span></div>
+          <div><span className='bubble'></span></div>
+          <div><span className='bubble'></span></div>
+          <div><span className='bubble'></span></div>
+          <div><span className='bubble'></span></div>
+          <div><span className='bubble'></span></div>
+          <div><span className='bubble'></span></div>
+        </div>
         {!isDark && (
           <img
             src={videoGif}
@@ -1430,17 +1416,19 @@ const Dashboard = () => {
                       </div>
                     </div>
                     <div className="model-card-content" style={{ position: 'relative' }}>
-                      <img
-                        src={Paid}
-                        alt="paid"
-                        style={{
-                          position: 'absolute',
-                          top: '-2px',
-                          right: '8px',
-                          width: '16px',
-                          height: '16px',
-                        }}
-                      />
+                      {model.is_free !== 1 && (
+                        <img
+                          src={Paid}
+                          alt="paid"
+                          style={{
+                            position: 'absolute',
+                            top: '-2px',
+                            right: '8px',
+                            width: '16px',
+                            height: '16px',
+                          }}
+                        />
+                      )}
                       <div className="model-card-title">{model.title || model.name}</div>
                       <div className="model-card-desc">
                         {model.description || 'No description.'}
@@ -1473,8 +1461,12 @@ const Dashboard = () => {
                             model.url ||
                             (model.data && (model.data.video_url || model.data.url));
 
+                            console.log('Model data:', model);
+                            console.log('Raw URL found:', rawUrl);
+
                           if (!rawUrl) {
-                            alert('Video URL not found');
+                            toast.error('Video URL not found');
+                            console.error('No video URL in model:', model);
                             return;
                           }
                           const finalUrl = getFullVideoUrl(rawUrl);
@@ -1491,15 +1483,15 @@ const Dashboard = () => {
               })}
             </div>
           )}
-          
+
           {/* Intersection Observer Target */}
           {!loading && !isFavoriteModeActive && currentModels.length > 0 && (
-            <div 
-              ref={loaderRef} 
-              style={{ 
-                height: '20px', 
+            <div
+              ref={loaderRef}
+              style={{
+                height: '20px',
                 width: '100%',
-                margin: '20px 0'
+                margin: '20px 0',
               }}
             />
           )}

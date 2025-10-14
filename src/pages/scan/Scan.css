@@ -57,7 +57,10 @@
 }
 
 [data-theme = 'dark'] .single-scanning-container {
-  background-image: url('../../assets/images/dark.gif');
+  background: linear-gradient(to right, 
+              #1d1733,
+              #6e1c4a);
+  box-shadow: 0 0 5px #1d173367;
 }
 
 .single-scanning-container h2 {
@@ -88,7 +91,7 @@
   margin-top: 0.5rem;
   padding: 8px 12px;
   border-radius: 25px;
-  background: transparent;
+  background: linear-gradient(to right, #E5D4F4, #FDC7D9);
 }
 
 .single-scanning-input-field::before {
@@ -105,6 +108,11 @@
   mask-composite: exclude;
   pointer-events: none;
 }
+
+[data-theme = 'dark'] .single-scanning-input-field {
+  background: linear-gradient(to right, #110E20, #DE3996);
+}
+
 
 .prompt-box:focus-within {
   outline: none;

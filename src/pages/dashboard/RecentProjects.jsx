@@ -135,26 +135,6 @@ const RecentProjects = () => {
 
   const getProjectKey = (p) => p?.id ?? p?.token ?? p?.name ?? p?.title ?? Math.random();
 
-  // Fetch projects from API
-  // const fetchProjects = async (filter) => {
-  //   setLoading(true);
-  //   let url = `${baseURL}/project`;
-  //   if (filter === 'Recent Project') url += '?recent=recent';
-  //   if (filter === 'Favourite Project') url += '?favorite=favorite';
-  //   console.log('API CALL:', { filter, url, token }); // Debug log
-  //   try {
-  //     const res = await axios.get(url, {
-  //       headers: { Authorization: `Bearer ${token}` }
-  //     });
-  //     setProjects(Array.isArray(res.data.data?.data) ? res.data.data.data : []);
-  //   } catch (err) {
-  //     setProjects([]);
-  //     console.error('API ERROR:', err); // Debug log
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const fetchProjects = async (filter) => {
     setLoading(true);
     try {
@@ -444,20 +424,28 @@ const RecentProjects = () => {
             </button>
             {sortDropdownOpen && (
               <ul className="dropdown-menu dropdown-menu-end show" style={{ display: 'block' }}>
-                <li className="dropdown-header">
+                {/* <li className="dropdown-header">
                   <div className="sort-title">Sort by:</div>
-                </li>
+                </li> */}
                 {['Default', 'Name', 'Date', 'Size'].map((option) => (
-                  <li key={option}>
-                    <button
-                      className={`dropdown-item${sortOption === option ? ' active' : ''}`}
-                      onClick={() => {
-                        setSortOption(option);
-                        setSortDropdownOpen(false);
-                      }}
+                  <li key={option} 
+                  onMouseEnter={(e) => (e.currentTarget.style.background = '#FFF2F7')}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}>
+                    <label
+                      className="dropdown-item d-flex align-items-center gap-2"
+                      style={{ cursor: 'pointer', userSelect: 'none' }}
                     >
+                      <input
+                        type="checkbox"
+                        checked={sortOption === option}
+                        onChange={() => {
+                          setSortOption(option);
+                          setSortDropdownOpen(false);
+                        }}
+                      style={{ accentColor: '#e63399' , width: 16, height: 16, border : 'none !important', outline: 'none'}}
+                      />
                       {option}
-                    </button>
+                    </label>
                   </li>
                 ))}
               </ul>
@@ -545,7 +533,10 @@ const RecentProjects = () => {
                         />
                       </>
                     )}
-                    <button className="rec-rp-fav-btn" onClick={() => handleFavoriteToggle(project)}>
+                    <button
+                      className="rec-rp-fav-btn"
+                      onClick={() => handleFavoriteToggle(project)}
+                    >
                       {project.favorite ? <FaHeart size={14} /> : <FaRegHeart size={14} />}
                     </button>
                   </div>

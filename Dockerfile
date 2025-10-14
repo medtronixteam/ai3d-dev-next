@@ -1,7 +1,7 @@
 FROM node:18-alpine AS build
 WORKDIR /app
 COPY package*.json ./
-RUN npm install --legacy-peer-deps
+RUN npm install --legacy-peer-depsRUN npm install @rollup/rollup-linux-x64-musl
 COPY . .
 RUN npm run build
 

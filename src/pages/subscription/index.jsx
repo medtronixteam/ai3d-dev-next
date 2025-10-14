@@ -10,7 +10,7 @@ import vectoImage from '../../assets/images/Vector.svg';
 import videoGif from '../../assets/images/video.gif';
 import { FiPower, FiX, FiArrowRight, FiArrowLeft } from 'react-icons/fi';
 import LoginPopup from '../../components/popup/LoginPopup';
-import side2 from '../../assets/images/side2.svg';
+import Construction from '../../assets/images/construction.png';
 
 const Subscription = () => {
   const [billingPeriod, setBillingPeriod] = useState('monthly');
@@ -23,6 +23,15 @@ const Subscription = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loginModalVisible, setLoginModalVisible] = useState(false);
   const [subscribingPlan, setSubscribingPlan] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
+
+  const handleButtonClick = () => {
+    setShowPopup(true);
+  };
+
+  const closePopup = () => {
+    setShowPopup(false);
+  };
 
   useEffect(() => {
     if (showLoginModal) {
@@ -37,7 +46,7 @@ const Subscription = () => {
 
   const handlePlanClick = async (planInfo, e) => {
     if (e) e.preventDefault();
-    if (activeTeam) return; 
+    if (activeTeam) return;
     if (!token) {
       setShowLoginModal(true);
       return;
@@ -80,17 +89,17 @@ const Subscription = () => {
         const monthly = Array.isArray(data?.monthly)
           ? data?.monthly
           : Array.isArray(data?.plans?.monthly)
-          ? data?.plans?.monthly
-          : [];
+            ? data?.plans?.monthly
+            : [];
         const annually = Array.isArray(data?.annually)
           ? data?.annually
           : Array.isArray(data?.plans?.annually)
-          ? data?.plans?.annually
-          : Array.isArray(data?.yearly)
-          ? data?.yearly
-          : Array.isArray(data?.plans?.yearly)
-          ? data?.plans?.yearly
-          : [];
+            ? data?.plans?.annually
+            : Array.isArray(data?.yearly)
+              ? data?.yearly
+              : Array.isArray(data?.plans?.yearly)
+                ? data?.plans?.yearly
+                : [];
 
         const getPrice = (arr, planName, fallback) => {
           const found = arr.find((p) => (p?.name || '').toLowerCase().includes(planName));
@@ -212,12 +221,15 @@ const Subscription = () => {
                       <sub className="sub-class">/Month</sub>
                     </div>
                     <div>
-                      <span className="year-price" style={{ fontSize : '16px'}}>{`$${yearlyStarterPrice}`}</span>
-                      <sub className="year-sub-class" style={{ fontSize : '16px'}}>/Year</sub>
+                      <span
+                        className="year-price"
+                        style={{ fontSize: '16px' }}
+                      >{`$${yearlyStarterPrice}`}</span>
+                      <sub className="year-sub-class" style={{ fontSize: '16px' }}>
+                        /Year
+                      </sub>
                     </div>
-                    <p>
-                      Unlock more powerful design tools.
-                    </p>
+                    <p>Unlock more powerful design tools.</p>
                   </div>
                 </div>
                 <div className="divider-container">
@@ -244,12 +256,15 @@ const Subscription = () => {
                   At the end of 14 days, you can choose a plan that fits your needs. We'll notify
                   you 2 days before your trial ends.
                 </p>
-                <button
+                {/* <button
                   className="plan-button"
                   disabled={!!activeTeam || subscribingPlan === `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`}
                   onClick={(e) => handlePlanClick({ name: 'Starter' }, e)}
                 >
                   {subscribingPlan === `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Choose Starter'}
+                </button> */}
+                <button className="plan-button" onClick={handleButtonClick}>
+                  Choose Starter
                 </button>
               </div>
               <div className="popular-card">
@@ -263,12 +278,15 @@ const Subscription = () => {
                         <sub className="sub-class">/Month</sub>
                       </div>
                       <div>
-                      <span className="year-price" style={{ fontSize : '16px'}}>{`$${yearlyStarterPrice}`}</span>
-                      <sub className="year-sub-class" style={{ fontSize : '16px'}}>/Year</sub>
-                    </div>
-                      <p>
-                        Unlock more powerful design tools.
-                      </p>
+                        <span
+                          className="year-price"
+                          style={{ fontSize: '16px' }}
+                        >{`$${yearlyStarterPrice}`}</span>
+                        <sub className="year-sub-class" style={{ fontSize: '16px' }}>
+                          /Year
+                        </sub>
+                      </div>
+                      <p>Unlock more powerful design tools.</p>
                     </div>
                   </div>
                   <div className="divider-container">
@@ -295,13 +313,23 @@ const Subscription = () => {
                     At the end of 14 days, you can choose a plan that fits your needs. We'll notify
                     you 2 days before your trial ends.
                   </p>
-                  <button
+                  {/* <button
                     className="plan-button"
-                    disabled={!!activeTeam || subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`}
+                    disabled={
+                      !!activeTeam ||
+                      subscribingPlan ===
+                        `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
+                    }
                     onClick={(e) => handlePlanClick({ name: 'Pro' }, e)}
                   >
-                    {subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Choose Pro'}
-                  </button>
+                    {subscribingPlan ===
+                    `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
+                      ? 'Processing…'
+                      : 'Choose Pro'}
+                  </button> */}
+                  <button className="plan-button" onClick={handleButtonClick}>
+                  Choose Pro
+                </button>
                 </div>
               </div>
               <div className="pricing-card">
@@ -360,8 +388,13 @@ const Subscription = () => {
                       <sub className="sub-class">/Year</sub>
                     </div>
                     <div>
-                      <span className="month-price" style={{ fontSize : '16px'}} >{`$${monthlyProPrice}`}</span>
-                      <sub className="month-sub-class" style={{ fontSize : '16px'}}>/Month</sub>
+                      <span
+                        className="month-price"
+                        style={{ fontSize: '16px' }}
+                      >{`$${monthlyProPrice}`}</span>
+                      <sub className="month-sub-class" style={{ fontSize: '16px' }}>
+                        /Month
+                      </sub>
                     </div>
                     <p>Basic conversions</p>
                   </div>
@@ -390,12 +423,22 @@ const Subscription = () => {
                   At the end of 14 days, you can choose a plan that fits your needs. We'll notify
                   you 2 days before your trial ends.
                 </p>
-                <button
+                {/* <button
                   className="plan-button"
-                  disabled={!!activeTeam || subscribingPlan === `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`}
+                  disabled={
+                    !!activeTeam ||
+                    subscribingPlan ===
+                      `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
+                  }
                   onClick={(e) => handlePlanClick({ name: 'Starter' }, e)}
                 >
-                  {subscribingPlan === `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Choose Starter'}
+                  {subscribingPlan ===
+                  `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
+                    ? 'Processing…'
+                    : 'Choose Starter'}
+                </button> */}
+                <button className="plan-button" onClick={handleButtonClick}>
+                  Choose Starter
                 </button>
               </div>
               <div className="popular-card">
@@ -409,9 +452,14 @@ const Subscription = () => {
                         <sub className="sub-class">/Year</sub>
                       </div>
                       <div>
-                      <span className="month-price" style={{ fontSize : '16px'}} >{`$${monthlyProPrice}`}</span>
-                      <sub className="month-sub-class" style={{ fontSize : '16px'}}>/Month</sub>
-                    </div>
+                        <span
+                          className="month-price"
+                          style={{ fontSize: '16px' }}
+                        >{`$${monthlyProPrice}`}</span>
+                        <sub className="month-sub-class" style={{ fontSize: '16px' }}>
+                          /Month
+                        </sub>
+                      </div>
                       <p>Unlock more powerful design tools.</p>
                     </div>
                   </div>
@@ -439,13 +487,23 @@ const Subscription = () => {
                     At the end of 14 days, you can choose a plan that fits your needs. We'll notify
                     you 2 days before your trial ends.
                   </p>
-                  <button
+                  {/* <button
                     className="plan-button"
-                    disabled={!!activeTeam || subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`}
+                    disabled={
+                      !!activeTeam ||
+                      subscribingPlan ===
+                        `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
+                    }
                     onClick={(e) => handlePlanClick({ name: 'Pro' }, e)}
                   >
-                    {subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Choose Pro'}
-                  </button>
+                    {subscribingPlan ===
+                    `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
+                      ? 'Processing…'
+                      : 'Choose Pro'}
+                  </button> */}
+                  <button className="plan-button" onClick={handleButtonClick}>
+                  Choose Pro
+                </button>
                 </div>
               </div>
               <div className="pricing-card">
@@ -489,10 +547,17 @@ const Subscription = () => {
                 </p>
                 <button
                   className="plan-button"
-                  disabled={!!activeTeam || subscribingPlan === `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`}
+                  disabled={
+                    !!activeTeam ||
+                    subscribingPlan ===
+                      `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
+                  }
                   onClick={(e) => handlePlanClick({ name: 'Enterprise' }, e)}
                 >
-                  {subscribingPlan === `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Contact Sales'}
+                  {subscribingPlan ===
+                  `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
+                    ? 'Processing…'
+                    : 'Contact Sales'}
                 </button>
               </div>
               {/* Optionally add Enterprise card here if you have one */}
@@ -502,6 +567,19 @@ const Subscription = () => {
       </div>
       {/* Login Required Modal */}
       {showLoginModal && <LoginPopup onClose={() => setShowLoginModal(false)} />}
+
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="popup-box">
+            <button onClick={closePopup} className="close-popup-btn">
+              <FiX size={20} />
+            </button>
+            <img src={Construction} alt="image" width={150} height={150} />
+            <h3>Under Development</h3>
+            <p>Our team is currently working on this feature</p>
+          </div>
+        </div>
+      )}
     </>
   );
 };

@@ -328,7 +328,7 @@ const SubscriptionModal = ({ open, onClose }) => {
                   At the end of 14 days, you can choose a plan that fits your needs. We'll notify
                   you 2 days before your trial ends.
                 </p>
-                <button
+                {/* <button
                   className="plan-button"
                   disabled={
                     !!activeTeam ||
@@ -341,6 +341,9 @@ const SubscriptionModal = ({ open, onClose }) => {
                   `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
                     ? 'Processing…'
                     : 'Contact Sales'}
+                </button> */}
+                <button className="plan-button" onClick={handleButtonClick}>
+                  Contact Sales
                 </button>
               </div>
             </div>
@@ -508,7 +511,7 @@ const SubscriptionModal = ({ open, onClose }) => {
                   At the end of 14 days, you can choose a plan that fits your needs. We'll notify
                   you 2 days before your trial ends.
                 </p>
-                <button
+                {/* <button
                   className="plan-button"
                   disabled={
                     !!activeTeam ||
@@ -521,6 +524,9 @@ const SubscriptionModal = ({ open, onClose }) => {
                   `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
                     ? 'Processing…'
                     : 'Contact Sales'}
+                </button> */}
+                <button className="plan-button" onClick={handleButtonClick}>
+                  Contact Sales
                 </button>
               </div>
             </div>

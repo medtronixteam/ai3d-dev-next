@@ -373,11 +373,14 @@ const Subscription = () => {
                   At the end of 14 days, you can choose a plan that fits your needs. We'll notify
                   you 2 days before your trial ends.
                 </p>
-                <button
+                {/* <button
                   className="plan-button"
                   disabled={!!activeTeam}
                   onClick={(e) => handlePlanClick({ name: 'Enterprise' }, e)}
                 >
+                  Contact Sales
+                </button> */}
+                <button className="plan-button" onClick={handleButtonClick}>
                   Contact Sales
                 </button>
               </div>
@@ -552,7 +555,7 @@ const Subscription = () => {
                   At the end of 14 days, you can choose a plan that fits your needs. We'll notify
                   you 2 days before your trial ends.
                 </p>
-                <button
+                {/* <button
                   className="plan-button"
                   disabled={
                     !!activeTeam ||
@@ -565,6 +568,9 @@ const Subscription = () => {
                   `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
                     ? 'Processing…'
                     : 'Contact Sales'}
+                </button> */}
+                <button className="plan-button" onClick={handleButtonClick}>
+                  Contact Sales
                 </button>
               </div>
               {/* Optionally add Enterprise card here if you have one */}

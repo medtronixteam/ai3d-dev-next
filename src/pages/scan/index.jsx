@@ -348,14 +348,13 @@ const ScanPage = () => {
   // Helper to get current timestamp in ms
   const getTimestamp = () => Date.now().toString();
 
-
   // Main handler for submit
   const handleSubmit = async (e) => {
     e.stopPropagation();
     if (files.length < 2) {
-  toast.error('Please upload at least 2 images!');
-  return;
-  }
+      toast.error('Please upload at least 2 images!');
+      return;
+    }
     setIsLoading(true);
     setProgress(0); // Reset progress
     setUploadErrors([]);
@@ -648,7 +647,11 @@ const ScanPage = () => {
                 htmlFor="fileInput"
                 style={{ flex: 1, cursor: 'pointer', color: isDarkMode ? '#fff' : '#000' }}
               >
-                {fileName || 'Upload your photo'}
+                {fileName
+                  ? fileName.length > 15
+                    ? fileName.slice(0, 15) + '...'
+                    : fileName
+                  : 'Upload your photo'}
               </label>
 
               <ArrowRight
@@ -660,7 +663,7 @@ const ScanPage = () => {
                   borderRadius: '50%',
                   padding: '5px',
                   cursor: 'pointer',
-                  boxShadow : '0 0 2px #00000040'
+                  boxShadow: '0 0 2px #00000040',
                 }}
                 onClick={handleSingleSubmit}
                 disabled={!singleFile || singleFileLoading}
@@ -945,13 +948,12 @@ const ScanPage = () => {
                   </div>
                 ))}
                 {[...Array(slotsToFill)].map((_, i) => (
-                  <div 
-                    key={`dummy-${i}`} 
-                    className="preview-item dummy" 
+                  <div
+                    key={`dummy-${i}`}
+                    className="preview-item dummy"
                     onClick={openFilePicker}
                     style={{ cursor: 'pointer' }}
-                  >
-                  </div>
+                  ></div>
                 ))}
               </div>
               <button className="slider-arrow" onClick={() => scrollPreview('right')}>

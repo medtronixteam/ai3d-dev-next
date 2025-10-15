@@ -339,23 +339,33 @@ const VideoModal = ({ open, videoUrl, onClose }) => {
 };
 
 // Model Card Video Modal (for Explore → button)
-function ModelCardVideoModal({ open, videoUrl, imageUrl, onClose }) {
+function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose }) {
   const [loading, setLoading] = React.useState(true);
   const [modalVisible, setModalVisible] = React.useState(false);
   const [mediaError, setMediaError] = React.useState(false);
-  const [isVideoMode, setIsVideoMode] = React.useState(!!videoUrl);
+  const [isVideoMode, setIsVideoMode] = React.useState(false);
   const timeoutRef = React.useRef(null);
 
+  // Detect file type by extension
+  const getFileType = (url) => {
+    if (!url) return null;
+    const extension = url.split('.').pop().toLowerCase();
+    if (['mp4', 'mov', 'avi', 'webm', 'mkv'].includes(extension)) return 'video';
+    if (['glb', 'gltf'].includes(extension)) return 'glb';
+    return 'image';
+  };
+
   React.useEffect(() => {
-    if (open && (videoUrl || imageUrl)) {
+    if (open && fileUrl) {
       setLoading(true);
       setModalVisible(true);
       setMediaError(false);
-      setIsVideoMode(!!videoUrl);
+
+      const type = getFileType(fileUrl);
+      setIsVideoMode(type === 'video');
 
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
-      // Timeout fallback
       timeoutRef.current = setTimeout(() => {
         console.warn('⏰ Media loading timeout');
         setLoading(false);
@@ -371,7 +381,7 @@ function ModelCardVideoModal({ open, videoUrl, imageUrl, onClose }) {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [open, videoUrl, imageUrl]);
+  }, [open, fileUrl]);
 
   const handleLoad = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -386,7 +396,7 @@ function ModelCardVideoModal({ open, videoUrl, imageUrl, onClose }) {
     setMediaError(true);
   };
 
-  if (!open || (!videoUrl && !imageUrl)) return null;
+  if (!open || !fileUrl) return null;
 
   return (
     <div
@@ -412,7 +422,7 @@ function ModelCardVideoModal({ open, videoUrl, imageUrl, onClose }) {
       <div
         style={{
           position: 'relative',
-          background: 'transparent',
+          background: '#fff',
           borderRadius: 28,
           maxWidth: '720px',
           width: '97vw',
@@ -488,7 +498,7 @@ function ModelCardVideoModal({ open, videoUrl, imageUrl, onClose }) {
         {/* Main Content */}
         {!mediaError && isVideoMode ? (
           <video
-            src={videoUrl}
+            src={fileUrl}
             autoPlay
             loop
             muted
@@ -510,23 +520,20 @@ function ModelCardVideoModal({ open, videoUrl, imageUrl, onClose }) {
             }}
           />
         ) : (
-          !isVideoMode &&
-          imageUrl && (
-            <img
-              src={imageUrl}
-              alt="Model Preview"
-              onLoad={handleLoad}
-              onError={handleError}
-              style={{
-                maxWidth: '100%',
-                maxHeight: '60vh',
-                borderRadius: 18,
-                objectFit: 'contain',
-                opacity: loading ? 0 : 1,
-                transition: 'opacity 0.3s ease',
-              }}
-            />
-          )
+          <img
+            src={imageUrl}
+            alt="Model Preview"
+            onLoad={handleLoad}
+            onError={handleError}
+            style={{
+              maxWidth: '100%',
+              maxHeight: '60vh',
+              borderRadius: 18,
+              objectFit: 'contain',
+              opacity: loading ? 0 : 1,
+              transition: 'opacity 0.3s ease',
+            }}
+          />
         )}
       </div>
 
@@ -541,203 +548,6 @@ function ModelCardVideoModal({ open, videoUrl, imageUrl, onClose }) {
   );
 }
 
-// function ModelCardImageModal({ open, imageUrl, onClose }) {
-//   const [loading, setLoading] = React.useState(true);
-//   const [modalVisible, setModalVisible] = React.useState(false);
-//   const [imageError, setImageError] = React.useState(false);
-//   const timeoutRef = React.useRef(null);
-
-//   React.useEffect(() => {
-//     if (open && imageUrl) {
-//       console.log('🖼️ Modal opening with image:', imageUrl);
-//       setLoading(true);
-//       setModalVisible(true);
-//       setImageError(false);
-
-//       timeoutRef.current = setTimeout(() => {
-//         console.warn('Image loading timeout');
-//         setLoading(false);
-//         setImageError(true);
-//       }, 20000);
-//     } else if (!open) {
-//       setModalVisible(false);
-//       setLoading(true);
-//       setImageError(false);
-//       if (timeoutRef.current) {
-//         clearTimeout(timeoutRef.current);
-//       }
-//     }
-
-//     return () => {
-//       if (timeoutRef.current) {
-//         clearTimeout(timeoutRef.current);
-//       }
-//     };
-//   }, [open, imageUrl]);
-
-//   const handleImageLoad = () => {
-//     console.log('✅ Image loaded in modal');
-//     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-//     setLoading(false);
-//     setImageError(false);
-//   };
-
-//   const handleImageError = (err) => {
-//     console.error('❌ Image failed to load:', err);
-//     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-//     setLoading(false);
-//     setImageError(true);
-//   };
-
-//   if (!open || !imageUrl) return null;
-
-//   return (
-//     <div
-//       style={{
-//         position: 'fixed',
-//         top: 0,
-//         left: 0,
-//         width: '100vw',
-//         height: '100vh',
-//         zIndex: 9999,
-//         display: 'flex',
-//         alignItems: 'center',
-//         justifyContent: 'center',
-//         background: 'rgba(30,30,40,0.38)',
-//         transition: 'all 0.3s ease',
-//         opacity: modalVisible ? 1 : 0,
-//         visibility: modalVisible ? 'visible' : 'hidden',
-//       }}
-//       onClick={(e) => {
-//         if (e.target === e.currentTarget) {
-//           onClose();
-//         }
-//       }}
-//     >
-//       <div
-//         style={{
-//           position: 'relative',
-//           background: 'transparent',
-//           borderRadius: 28,
-//           maxWidth: '720px',
-//           width: '97vw',
-//           maxHeight: '50vh',
-//           padding: 0,
-//           display: 'flex',
-//           justifyContent: 'center',
-//           alignItems: 'center',
-//           overflow: 'hidden',
-//           animation: 'modal-3d-pop-in 0.55s cubic-bezier(.25,1.7,.45,1.32)',
-//           transformStyle: 'preserve-3d',
-//           perspective: 1200,
-//           backdropFilter: 'blur(0px)',
-//         }}
-//       >
-//         <button
-//           onClick={onClose}
-//           style={{
-//             position: 'absolute',
-//             top: 18,
-//             right: 18,
-//             zIndex: 10001,
-//             background: 'var(--primary-color)',
-//             border: 'none',
-//             borderRadius: '50%',
-//             width: 38,
-//             height: 38,
-//             color: '#fff',
-//             fontSize: 26,
-//             cursor: 'pointer',
-//             display: 'flex',
-//             alignItems: 'center',
-//             justifyContent: 'center',
-//             boxShadow: '0 2px 12px rgba(0,0,0,0.10)',
-//           }}
-//           aria-label="Close image"
-//         >
-//           <FiX size={18} />
-//         </button>
-
-//         {loading && !imageError && (
-//           <div
-//             style={{
-//               position: 'fixed',
-//               top: 0,
-//               left: 0,
-//               width: '100vw',
-//               height: '100vh',
-//               zIndex: 9999,
-//               display: 'flex',
-//               alignItems: 'center',
-//               justifyContent: 'center',
-//               background: 'rgba(0,0,0,0.15)',
-//               transition: 'all 0.3s ease',
-//             }}
-//           >
-//             <CustomLoader />
-//           </div>
-//         )}
-
-//         {imageError && (
-//           <div
-//             style={{
-//               textAlign: 'center',
-//               color: 'white',
-//               maxWidth: '400px',
-//               padding: '20px',
-//             }}
-//           >
-//             <h3>Image not found</h3>
-//             <p>The image file failed to load or link is invalid.</p>
-//             <button
-//               onClick={onClose}
-//               style={{
-//                 background: '#DE3996',
-//                 color: 'white',
-//                 border: 'none',
-//                 padding: '10px 20px',
-//                 borderRadius: '5px',
-//                 cursor: 'pointer',
-//                 marginTop: '10px',
-//               }}
-//             >
-//               Close
-//             </button>
-//           </div>
-//         )}
-
-//         {!imageError && (
-//           <img
-//             src={imageUrl}
-//             alt="Model Preview"
-//             onLoad={handleImageLoad}
-//             onError={handleImageError}
-//             style={{
-//               maxWidth: '100%',
-//               maxHeight: '50vh',
-//               borderRadius: 18,
-//               background: 'transparent',
-//               opacity: loading ? 0 : 1,
-//               visibility: loading ? 'hidden' : 'visible',
-//               transition: 'opacity 0.3s ease',
-//               objectFit: 'contain',
-//             }}
-//           />
-//         )}
-//       </div>
-
-//       <style>{`
-//         @keyframes modal-3d-pop-in {
-//           0% { transform: scale(0.7) rotateX(18deg) translateY(80px); opacity: 0; }
-//           60% { transform: scale(1.08) rotateX(-6deg) translateY(-12px); opacity: 1; }
-//           100% { transform: scale(1) rotateX(0) translateY(0); opacity: 1; }
-//         }
-//       `}</style>
-//     </div>
-//   );
-// }
-
-// Modern Modal Component
 function ModernModal({
   open,
   onClose,
@@ -854,7 +664,7 @@ const Dashboard = () => {
   const [modelModalOpen, setModelModalOpen] = useState(false);
   const [modelModalData, setModelModalData] = useState(null);
   const [modelVideoModalOpen, setModelVideoModalOpen] = React.useState(false);
-  const [modelVideoUrl, setModelVideoUrl] = React.useState('');
+  const [modelFileUrl, setModelFileUrl] = useState(null);
   const [exploreLoading, setExploreLoading] = React.useState(false);
   const location = useLocation();
   const [currentWord, setCurrentWord] = useState('images');
@@ -1676,7 +1486,7 @@ const Dashboard = () => {
 
                           if (rawUrl || imgUrl) {
                             const finalUrl = rawUrl ? getFullVideoUrl(rawUrl) : null;
-                            setModelVideoUrl(finalUrl);
+                            setModelFileUrl(finalUrl); // ✅ renamed from setModelVideoUrl
                             setSelectedModelData(model);
                             setModelVideoModalOpen(true);
                           } else {
@@ -1926,7 +1736,7 @@ const Dashboard = () => {
       {/* Model Card Video Modal */}
       <ModelCardVideoModal
         open={modelVideoModalOpen}
-        videoUrl={modelVideoUrl}
+        fileUrl={modelFileUrl} // ✅ renamed from videoUrl
         imageUrl={
           selectedModelData?.image
             ? `https://app.ai3dscanning.com/storage/${selectedModelData.image.replace(/^\/+/, '')}`
@@ -1934,16 +1744,6 @@ const Dashboard = () => {
         }
         onClose={() => setModelVideoModalOpen(false)}
       />
-
-      {/* <ModelCardImageModal
-        open={showImagePopup}
-        imageUrl={
-          selectedModelData?.image
-            ? `https://app.ai3dscanning.com/storage/${selectedModelData.image.replace(/^\/+/, '')}`
-            : null
-        }
-        onClose={() => setShowImagePopup(false)}
-      /> */}
 
       {showLoginModal && (
         <LoginPopup

@@ -345,6 +345,27 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose }) {
   const [mediaError, setMediaError] = React.useState(false);
   const [isVideoMode, setIsVideoMode] = React.useState(false);
   const timeoutRef = React.useRef(null);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Theme detection
+  useEffect(() => {
+    const checkTheme = () => {
+      setIsDarkMode(document.documentElement.getAttribute('data-theme') === 'dark');
+    };
+
+    // Check initial theme
+    checkTheme();
+
+    // Listen for theme changes
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
 
   // Detect file type by extension
   const getFileType = (url) => {
@@ -422,7 +443,7 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose }) {
       <div
         style={{
           position: 'relative',
-          background:  isDarkMode ? '#23232a' : '#fff',
+          background: isDarkMode ? '#23232a' : '#fff',
           borderRadius: 28,
           maxWidth: '720px',
           width: '97vw',
@@ -1478,7 +1499,7 @@ const Dashboard = () => {
                             model.file_url ||
                             model.video_url ||
                             model.url ||
-                            (model.data && (model.data.video_url || model.data.url));index
+                            (model.data && (model.data.video_url || model.data.url));
 
                           const imgUrl = model.image
                             ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`

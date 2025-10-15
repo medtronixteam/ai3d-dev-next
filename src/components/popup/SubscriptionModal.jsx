@@ -7,6 +7,7 @@ import vectoImage from '../../assets/images/Vector.svg';
 import videoGif from '../../assets/images/video.gif';
 import LoginPopup from './LoginPopup';
 import './SubscriptionModal.css';
+import Construction from '../../assets/images/construction.png';
 
 const SubscriptionModal = ({ open, onClose }) => {
   const [billingPeriod, setBillingPeriod] = useState('monthly');
@@ -18,6 +19,15 @@ const SubscriptionModal = ({ open, onClose }) => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loginModalVisible, setLoginModalVisible] = useState(false);
   const [subscribingPlan, setSubscribingPlan] = useState(null);
+   const [showPopup, setShowPopup] = useState(false);
+
+  const handleButtonClick = () => {
+    setShowPopup(true);
+  };
+
+  const closePopup = () => {
+    setShowPopup(false);
+  };
 
   useEffect(() => {
     if (showLoginModal) {
@@ -203,7 +213,7 @@ const SubscriptionModal = ({ open, onClose }) => {
                   At the end of 14 days, you can choose a plan that fits your needs. We'll notify
                   you 2 days before your trial ends.
                 </p>
-                <button
+                {/* <button
                   className="plan-button"
                   disabled={
                     !!activeTeam ||
@@ -216,6 +226,9 @@ const SubscriptionModal = ({ open, onClose }) => {
                   `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
                     ? 'Processing…'
                     : 'Choose Starter'}
+                </button> */}
+                <button className="plan-button" onClick={handleButtonClick}>
+                  Choose Starter
                 </button>
               </div>
 
@@ -264,7 +277,7 @@ const SubscriptionModal = ({ open, onClose }) => {
                   At the end of 14 days, you can choose a plan that fits your needs. We'll notify
                   you 2 days before your trial ends.
                 </p>
-                <button
+                {/* <button
                   className="plan-button"
                   disabled={
                     !!activeTeam ||
@@ -275,6 +288,9 @@ const SubscriptionModal = ({ open, onClose }) => {
                   {subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
                     ? 'Processing…'
                     : 'Choose Pro'}
+                </button> */}
+                <button className="plan-button" onClick={handleButtonClick}>
+                  Choose Pro
                 </button>
               </div>
 
@@ -377,7 +393,7 @@ const SubscriptionModal = ({ open, onClose }) => {
                   At the end of 14 days, you can choose a plan that fits your needs. We'll notify
                   you 2 days before your trial ends.
                 </p>
-                <button
+                {/* <button
                   className="plan-button"
                   disabled={
                     !!activeTeam ||
@@ -390,6 +406,9 @@ const SubscriptionModal = ({ open, onClose }) => {
                   `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
                     ? 'Processing…'
                     : 'Choose Starter'}
+                </button> */}
+                <button className="plan-button" onClick={handleButtonClick}>
+                  Choose Starter
                 </button>
               </div>
 
@@ -438,7 +457,7 @@ const SubscriptionModal = ({ open, onClose }) => {
                   At the end of 14 days, you can choose a plan that fits your needs. We'll notify
                   you 2 days before your trial ends.
                 </p>
-                <button
+                {/* <button
                   className="plan-button"
                   disabled={
                     !!activeTeam ||
@@ -449,6 +468,9 @@ const SubscriptionModal = ({ open, onClose }) => {
                   {subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
                     ? 'Processing…'
                     : 'Choose Pro'}
+                </button> */}
+                <button className="plan-button" onClick={handleButtonClick}>
+                  Choose Pro
                 </button>
               </div>
 
@@ -509,6 +531,18 @@ const SubscriptionModal = ({ open, onClose }) => {
       {/* Login Required Modal */}
       {showLoginModal && (
         <LoginPopup onClose={handleCloseLoginModal} onLoginSuccess={handleLoginSuccess} />
+      )}
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="popup-box">
+            <button onClick={closePopup} className="close-popup-btn">
+              <FiX size={20} />
+            </button>
+            <img src={Construction} alt="image" width={150} height={150} />
+            <h3>Under Development</h3>
+            <p>Our team is currently working on this feature</p>
+          </div>
+        </div>
       )}
     </>
   );

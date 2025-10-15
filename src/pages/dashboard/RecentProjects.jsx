@@ -8,6 +8,7 @@ import {
   FaHeart,
   FaEye,
   FaCube,
+  FaFileExport,
 } from 'react-icons/fa';
 import { BiSortAZ } from 'react-icons/bi';
 import img1 from '../../assets/images/products/drone.png';
@@ -25,6 +26,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import GridIcon from '../../assets/images/grid-icon.svg';
 import CardIcon from '../../assets/images/card-icon.svg';
 import sorticon from '../../assets/images/sort-icon.svg';
+import { FolderPen, Send } from 'lucide-react';
 
 const FILTERS = ['All', 'Recent Project', 'Favourite Project'];
 
@@ -134,6 +136,26 @@ const RecentProjects = () => {
   const [imgLoadedById, setImgLoadedById] = useState({});
 
   const getProjectKey = (p) => p?.id ?? p?.token ?? p?.name ?? p?.title ?? Math.random();
+
+  // Fetch projects from API
+  // const fetchProjects = async (filter) => {
+  //   setLoading(true);
+  //   let url = `${baseURL}/project`;
+  //   if (filter === 'Recent Project') url += '?recent=recent';
+  //   if (filter === 'Favourite Project') url += '?favorite=favorite';
+  //   console.log('API CALL:', { filter, url, token }); // Debug log
+  //   try {
+  //     const res = await axios.get(url, {
+  //       headers: { Authorization: `Bearer ${token}` }
+  //     });
+  //     setProjects(Array.isArray(res.data.data?.data) ? res.data.data.data : []);
+  //   } catch (err) {
+  //     setProjects([]);
+  //     console.error('API ERROR:', err); // Debug log
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const fetchProjects = async (filter) => {
     setLoading(true);
@@ -570,14 +592,20 @@ const RecentProjects = () => {
                   {dropdownOpen === project.id && (
                     <div className="rp-card-menu">
                       <button onClick={() => handleRenameClick(project)}>
-                        <FaPen /> Rename
-                      </button>
-                      <button onClick={() => handleViewProject(project)}>
-                        <FaEye /> View
-                      </button>
-                      <button onClick={() => handleDeleteClick(project)}>
-                        <FaTrash /> Remove
-                      </button>
+                          <FolderPen /> Rename
+                        </button>
+                        <button onClick={() => handleViewProject(project)}>
+                          <FaEye /> View
+                        </button>
+                        <button onClick={() => handleViewProject(project)}>
+                          <FaFileExport /> Export
+                        </button>
+                        <button onClick={() => handleViewProject(project)}>
+                          <Send size={18} /> Share
+                        </button>
+                        <button onClick={() => handleDeleteClick(project)}>
+                          <FaTrash /> Remove
+                        </button>
                     </div>
                   )}
                 </div>
@@ -666,24 +694,33 @@ const RecentProjects = () => {
                           : ''}
                       </div>
                     </div>
-                    <button className="rp-fav-btn" onClick={() => handleFavoriteToggle(project)}>
+                    {/* <button className="rec-rp-fav-btn" onClick={() => handleFavoriteToggle(project)}>
                       {project.favorite ? <FaHeart /> : <FaRegHeart />}
-                    </button>
+                    </button> */}
                     <button
                       className="rp-card-menu-btn"
                       onClick={() =>
                         setDropdownOpen(dropdownOpen === project.id ? null : project.id)
                       }
                     >
-                      <FaEllipsisV />
+                      <FaEllipsisV size={16}/>
                     </button>
                     {dropdownOpen === project.id && (
                       <div className="rp-card-menu">
                         <button onClick={() => handleRenameClick(project)}>
-                          <FaPen /> Rename
+                          <FolderPen /> Rename
                         </button>
                         <button onClick={() => handleViewProject(project)}>
                           <FaEye /> View
+                        </button>
+                        <button onClick={() => handleFavoriteToggle(project)}>
+                          <FaFileExport /> Export
+                        </button>
+                        <button onClick={() => handleFavoriteToggle(project)}>
+                          {project.favorite ? <FaHeart /> : <FaRegHeart />} Favourite
+                        </button>
+                        <button onClick={() => handleViewProject(project)}>
+                          <Send size={18} /> Share
                         </button>
                         <button onClick={() => handleDeleteClick(project)}>
                           <FaTrash /> Remove

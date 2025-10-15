@@ -27,6 +27,7 @@ import 'react-quill/dist/quill.snow.css';
 import MultiScan from '../../assets/images/MultiScan.svg';
 import DarkMode from '../../assets/images/DarkMode.svg';
 import SingleScan from '../../assets/images/SingleScan.svg';
+import DarkMultiScan from '../../assets/images/DarkMultiScan.svg';
 import { ArrowBigLeft, ArrowRight, Image, ImageIcon, ImageUp, Share, Upload } from 'lucide-react';
 
 const MIN_SLOTS = 5;
@@ -825,7 +826,7 @@ const ScanPage = () => {
           )}
           {fileSizeError && <div style={{ color: 'red', marginBottom: 8 }}>{fileSizeError}</div>}
           <img
-            src={MultiScan}
+            src={isDarkMode ? DarkMultiScan : MultiScan}
             aria-hidden="true"
             className={`upload-cloud-icon${promptFocused ? ' collapsed' : ''}`}
             style={{
@@ -848,7 +849,7 @@ const ScanPage = () => {
               <span
                 style={{
                   color: '#DE3996',
-                  background: '#FFEDF7',
+                  background: isDarkMode ? '#DE399636' : '#FFEDF7',
                   fontSize: '11px',
                   padding: '2px 3px',
                   borderRadius: '3px',
@@ -859,7 +860,7 @@ const ScanPage = () => {
               <span
                 style={{
                   color: '#DE3996',
-                  background: '#FFEDF7',
+                  background: isDarkMode ? '#DE399636' : '#FFEDF7',
                   fontSize: '11px',
                   padding: '2px 3px',
                   borderRadius: '3px',
@@ -870,7 +871,7 @@ const ScanPage = () => {
               <span
                 style={{
                   color: '#DE3996',
-                  background: '#FFEDF7',
+                  background: isDarkMode ? '#DE399636' : '#FFEDF7',
                   fontSize: '11px',
                   padding: '2px 3px',
                   borderRadius: '3px',
@@ -881,7 +882,7 @@ const ScanPage = () => {
               <span
                 style={{
                   color: '#DE3996',
-                  background: '#FFEDF7',
+                  background: isDarkMode ? '#DE399636' : '#FFEDF7',
                   fontSize: '11px',
                   padding: '2px 3px',
                   borderRadius: '3px',
@@ -892,7 +893,7 @@ const ScanPage = () => {
               <span
                 style={{
                   color: '#DE3996',
-                  background: '#FFEDF7',
+                  background: isDarkMode ? '#DE399636' : '#FFEDF7',
                   fontSize: '11px',
                   padding: '2px 3px',
                   borderRadius: '3px',

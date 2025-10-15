@@ -145,7 +145,7 @@ function VideoModalWithLoader({ videoUrl, onClose }) {
           }}
         >
           <p style={{ fontSize: 18, fontWeight: 500, marginBottom: 10 }}>
-            🚫 Video Could Not Be Played
+            Video Could Not Be Played
           </p>
           <p style={{ fontSize: 16, opacity: 0.9, maxWidth: 300, lineHeight: 1.5 }}>
             {errorState === 'timeout'
@@ -339,66 +339,55 @@ const VideoModal = ({ open, videoUrl, onClose }) => {
 };
 
 // Model Card Video Modal (for Explore → button)
-function ModelCardVideoModal({ open, videoUrl, onClose }) {
+function ModelCardVideoModal({ open, videoUrl, imageUrl, onClose }) {
   const [loading, setLoading] = React.useState(true);
   const [modalVisible, setModalVisible] = React.useState(false);
-  const [videoError, setVideoError] = React.useState(false);
+  const [mediaError, setMediaError] = React.useState(false);
+  const [isVideoMode, setIsVideoMode] = React.useState(!!videoUrl);
   const timeoutRef = React.useRef(null);
-  const videoRef = React.useRef(null);
 
   React.useEffect(() => {
-    if (open && videoUrl) {
+    if (open && (videoUrl || imageUrl)) {
       setLoading(true);
       setModalVisible(true);
-      setVideoError(false);
+      setMediaError(false);
+      setIsVideoMode(!!videoUrl);
 
-      // Clear any existing timeout
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
-      // Set timeout for loading
+      // Timeout fallback
       timeoutRef.current = setTimeout(() => {
+        console.warn('⏰ Media loading timeout');
         setLoading(false);
-        setVideoError(true);
-      }, 30000);
+        setMediaError(true);
+      }, 20000);
     } else if (!open) {
       setModalVisible(false);
       setLoading(true);
-      setVideoError(false);
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
-      }
+      setMediaError(false);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     }
 
     return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
-      }
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [open, videoUrl]);
+  }, [open, videoUrl, imageUrl]);
 
-  const handleVideoLoad = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
-    }
+  const handleLoad = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setLoading(false);
-    setVideoError(false);
+    setMediaError(false);
   };
 
-  const handleVideoError = (err) => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
-    }
+  const handleError = (err) => {
+    console.error('❌ Media failed to load:', err);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setLoading(false);
-    setVideoError(true);
+    setMediaError(true);
   };
 
-  if (!open || !videoUrl) return null;
+  if (!open || (!videoUrl && !imageUrl)) return null;
+
   return (
     <div
       style={{
@@ -417,10 +406,7 @@ function ModelCardVideoModal({ open, videoUrl, onClose }) {
         visibility: modalVisible ? 'visible' : 'hidden',
       }}
       onClick={(e) => {
-        // Click outside video to close
-        if (e.target === e.currentTarget) {
-          onClose();
-        }
+        if (e.target === e.currentTarget) onClose();
       }}
     >
       <div
@@ -428,18 +414,14 @@ function ModelCardVideoModal({ open, videoUrl, onClose }) {
           position: 'relative',
           background: 'transparent',
           borderRadius: 28,
-          maxWidth: 720,
+          maxWidth: '720px',
           width: '97vw',
           maxHeight: '82vh',
-          padding: 0,
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
           overflow: 'hidden',
           animation: 'modal-3d-pop-in 0.55s cubic-bezier(.25,1.7,.45,1.32)',
-          transformStyle: 'preserve-3d',
-          perspective: 1200,
-          backdropFilter: 'blur(0px)',
         }}
       >
         <button
@@ -448,7 +430,6 @@ function ModelCardVideoModal({ open, videoUrl, onClose }) {
             position: 'absolute',
             top: 18,
             right: 18,
-            zIndex: 10001,
             background: 'var(--primary-color)',
             border: 'none',
             borderRadius: '50%',
@@ -460,15 +441,15 @@ function ModelCardVideoModal({ open, videoUrl, onClose }) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 2px 12px rgba(0,0,0,0.10)',
+            zIndex: 10000,
           }}
-          aria-label="Close video"
+          aria-label="Close media"
         >
           <FiX size={18} />
         </button>
 
-        {/* Loading state */}
-        {loading && !videoError && (
+        {/* Loader */}
+        {loading && !mediaError && (
           <div
             style={{
               position: 'fixed',
@@ -481,76 +462,71 @@ function ModelCardVideoModal({ open, videoUrl, onClose }) {
               alignItems: 'center',
               justifyContent: 'center',
               background: 'rgba(0,0,0,0.15)',
-              transition: 'all 0.3s ease',
             }}
           >
             <CustomLoader />
           </div>
         )}
 
-        {/* Error state */}
-        {videoError && (
-          <div
+        {/* Error fallback */}
+        {mediaError && imageUrl && (
+          <img
+            src={imageUrl}
+            alt="Fallback Preview"
+            onLoad={handleLoad}
+            onError={handleError}
             style={{
-              textAlign: 'center',
-              color: 'white',
-              maxWidth: '400px',
-              padding: '20px',
+              maxWidth: '100%',
+              maxHeight: '60vh',
+              borderRadius: 18,
+              background: 'transparent',
+              objectFit: 'contain',
             }}
-          >
-            <h3>Video Loading Failed</h3>
-            <p>The video file is too large or server is slow</p>
-            <button
-              onClick={onClose}
-              style={{
-                background: '#DE3996',
-                color: 'white',
-                border: 'none',
-                padding: '10px 20px',
-                borderRadius: '5px',
-                cursor: 'pointer',
-                marginTop: '10px',
-              }}
-            >
-              Close
-            </button>
-          </div>
+          />
         )}
 
-        {!videoError && (
+        {/* Main Content */}
+        {!mediaError && isVideoMode ? (
           <video
-            ref={videoRef}
             src={videoUrl}
-            autoPlay={true}
+            autoPlay
             loop
             muted
             playsInline
-            controls={true}
+            controls
+            onLoadedData={handleLoad}
+            onError={(err) => {
+              console.warn('⚠️ Video failed — switching to image');
+              setIsVideoMode(false);
+              handleError(err);
+            }}
             style={{
               maxWidth: '100%',
-              maxHeight: '80vh',
+              maxHeight: '70vh',
               borderRadius: 18,
               background: 'transparent',
-              zIndex: 10000,
               opacity: loading ? 0 : 1,
-              visibility: loading ? 'hidden' : 'visible',
               transition: 'opacity 0.3s ease',
             }}
-            onLoadStart={() => {
-            }}
-            onLoadedMetadata={() => {
-              handleVideoLoad();
-            }}
-            onLoadedData={() => {
-              handleVideoLoad();
-            }}
-            onCanPlay={() => {
-              handleVideoLoad();
-            }}
-            onError={handleVideoError}
-            onPlay={() => {
-            }}
           />
+        ) : (
+          !isVideoMode &&
+          imageUrl && (
+            <img
+              src={imageUrl}
+              alt="Model Preview"
+              onLoad={handleLoad}
+              onError={handleError}
+              style={{
+                maxWidth: '100%',
+                maxHeight: '60vh',
+                borderRadius: 18,
+                objectFit: 'contain',
+                opacity: loading ? 0 : 1,
+                transition: 'opacity 0.3s ease',
+              }}
+            />
+          )
         )}
       </div>
 
@@ -564,6 +540,202 @@ function ModelCardVideoModal({ open, videoUrl, onClose }) {
     </div>
   );
 }
+
+// function ModelCardImageModal({ open, imageUrl, onClose }) {
+//   const [loading, setLoading] = React.useState(true);
+//   const [modalVisible, setModalVisible] = React.useState(false);
+//   const [imageError, setImageError] = React.useState(false);
+//   const timeoutRef = React.useRef(null);
+
+//   React.useEffect(() => {
+//     if (open && imageUrl) {
+//       console.log('🖼️ Modal opening with image:', imageUrl);
+//       setLoading(true);
+//       setModalVisible(true);
+//       setImageError(false);
+
+//       timeoutRef.current = setTimeout(() => {
+//         console.warn('Image loading timeout');
+//         setLoading(false);
+//         setImageError(true);
+//       }, 20000);
+//     } else if (!open) {
+//       setModalVisible(false);
+//       setLoading(true);
+//       setImageError(false);
+//       if (timeoutRef.current) {
+//         clearTimeout(timeoutRef.current);
+//       }
+//     }
+
+//     return () => {
+//       if (timeoutRef.current) {
+//         clearTimeout(timeoutRef.current);
+//       }
+//     };
+//   }, [open, imageUrl]);
+
+//   const handleImageLoad = () => {
+//     console.log('✅ Image loaded in modal');
+//     if (timeoutRef.current) clearTimeout(timeoutRef.current);
+//     setLoading(false);
+//     setImageError(false);
+//   };
+
+//   const handleImageError = (err) => {
+//     console.error('❌ Image failed to load:', err);
+//     if (timeoutRef.current) clearTimeout(timeoutRef.current);
+//     setLoading(false);
+//     setImageError(true);
+//   };
+
+//   if (!open || !imageUrl) return null;
+
+//   return (
+//     <div
+//       style={{
+//         position: 'fixed',
+//         top: 0,
+//         left: 0,
+//         width: '100vw',
+//         height: '100vh',
+//         zIndex: 9999,
+//         display: 'flex',
+//         alignItems: 'center',
+//         justifyContent: 'center',
+//         background: 'rgba(30,30,40,0.38)',
+//         transition: 'all 0.3s ease',
+//         opacity: modalVisible ? 1 : 0,
+//         visibility: modalVisible ? 'visible' : 'hidden',
+//       }}
+//       onClick={(e) => {
+//         if (e.target === e.currentTarget) {
+//           onClose();
+//         }
+//       }}
+//     >
+//       <div
+//         style={{
+//           position: 'relative',
+//           background: 'transparent',
+//           borderRadius: 28,
+//           maxWidth: '720px',
+//           width: '97vw',
+//           maxHeight: '50vh',
+//           padding: 0,
+//           display: 'flex',
+//           justifyContent: 'center',
+//           alignItems: 'center',
+//           overflow: 'hidden',
+//           animation: 'modal-3d-pop-in 0.55s cubic-bezier(.25,1.7,.45,1.32)',
+//           transformStyle: 'preserve-3d',
+//           perspective: 1200,
+//           backdropFilter: 'blur(0px)',
+//         }}
+//       >
+//         <button
+//           onClick={onClose}
+//           style={{
+//             position: 'absolute',
+//             top: 18,
+//             right: 18,
+//             zIndex: 10001,
+//             background: 'var(--primary-color)',
+//             border: 'none',
+//             borderRadius: '50%',
+//             width: 38,
+//             height: 38,
+//             color: '#fff',
+//             fontSize: 26,
+//             cursor: 'pointer',
+//             display: 'flex',
+//             alignItems: 'center',
+//             justifyContent: 'center',
+//             boxShadow: '0 2px 12px rgba(0,0,0,0.10)',
+//           }}
+//           aria-label="Close image"
+//         >
+//           <FiX size={18} />
+//         </button>
+
+//         {loading && !imageError && (
+//           <div
+//             style={{
+//               position: 'fixed',
+//               top: 0,
+//               left: 0,
+//               width: '100vw',
+//               height: '100vh',
+//               zIndex: 9999,
+//               display: 'flex',
+//               alignItems: 'center',
+//               justifyContent: 'center',
+//               background: 'rgba(0,0,0,0.15)',
+//               transition: 'all 0.3s ease',
+//             }}
+//           >
+//             <CustomLoader />
+//           </div>
+//         )}
+
+//         {imageError && (
+//           <div
+//             style={{
+//               textAlign: 'center',
+//               color: 'white',
+//               maxWidth: '400px',
+//               padding: '20px',
+//             }}
+//           >
+//             <h3>Image not found</h3>
+//             <p>The image file failed to load or link is invalid.</p>
+//             <button
+//               onClick={onClose}
+//               style={{
+//                 background: '#DE3996',
+//                 color: 'white',
+//                 border: 'none',
+//                 padding: '10px 20px',
+//                 borderRadius: '5px',
+//                 cursor: 'pointer',
+//                 marginTop: '10px',
+//               }}
+//             >
+//               Close
+//             </button>
+//           </div>
+//         )}
+
+//         {!imageError && (
+//           <img
+//             src={imageUrl}
+//             alt="Model Preview"
+//             onLoad={handleImageLoad}
+//             onError={handleImageError}
+//             style={{
+//               maxWidth: '100%',
+//               maxHeight: '50vh',
+//               borderRadius: 18,
+//               background: 'transparent',
+//               opacity: loading ? 0 : 1,
+//               visibility: loading ? 'hidden' : 'visible',
+//               transition: 'opacity 0.3s ease',
+//               objectFit: 'contain',
+//             }}
+//           />
+//         )}
+//       </div>
+
+//       <style>{`
+//         @keyframes modal-3d-pop-in {
+//           0% { transform: scale(0.7) rotateX(18deg) translateY(80px); opacity: 0; }
+//           60% { transform: scale(1.08) rotateX(-6deg) translateY(-12px); opacity: 1; }
+//           100% { transform: scale(1) rotateX(0) translateY(0); opacity: 1; }
+//         }
+//       `}</style>
+//     </div>
+//   );
+// }
 
 // Modern Modal Component
 function ModernModal({
@@ -700,6 +872,8 @@ const Dashboard = () => {
   const [hasMore, setHasMore] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const loaderRef = React.useRef(null);
+  const [showModelPopup, setShowModelPopup] = useState(false);
+  const [selectedModelData, setSelectedModelData] = useState(null);
 
   useEffect(() => {
     // Add class to body
@@ -734,8 +908,10 @@ const Dashboard = () => {
       try {
         const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
+        // 1. Get all models
         const response = await fetch(`${baseURL}/model/${type}?page=${pageNum}`, { headers });
         const data = await response.json();
+        // console.log('Full model API response:', data);
         const rawModels = data.models?.data || [];
 
         setPagination({
@@ -744,9 +920,11 @@ const Dashboard = () => {
           total: data.models?.total || 0,
         });
 
+        // Check if there are more pages
         const morePages = data.models?.current_page < data.models?.last_page;
         setHasMore(morePages);
 
+        // 2. Get favorite models (sirf agar logged in ho)
         let favorites = [];
         if (token) {
           const favRes = await fetch(`${baseURL}/favorite/models`, { headers });
@@ -768,6 +946,7 @@ const Dashboard = () => {
             return newList;
           });
         } else {
+          // console.log('Replacing models with new list');
           setModels(modelsWithFavorites);
         }
       } catch (err) {
@@ -1055,21 +1234,51 @@ const Dashboard = () => {
         }}
       >
         <div className="bubble-wrapper-animation">
-          <div><span className='bubble'></span></div>
-          <div><span className='bubble'></span></div>
-          <div><span className='bubble'></span></div>
-          <div><span className='bubble'></span></div>
-          <div><span className='bubble'></span></div>
-          <div><span className='bubble'></span></div>
-          <div><span className='bubble'></span></div>
-          <div><span className='bubble'></span></div>
-          <div><span className='bubble'></span></div>
-          <div><span className='bubble'></span></div>
-          <div><span className='bubble'></span></div>
-          <div><span className='bubble'></span></div>
-          <div><span className='bubble'></span></div>
-          <div><span className='bubble'></span></div>
-          <div><span className='bubble'></span></div>
+          <div>
+            <span className="bubble"></span>
+          </div>
+          <div>
+            <span className="bubble"></span>
+          </div>
+          <div>
+            <span className="bubble"></span>
+          </div>
+          <div>
+            <span className="bubble"></span>
+          </div>
+          <div>
+            <span className="bubble"></span>
+          </div>
+          <div>
+            <span className="bubble"></span>
+          </div>
+          <div>
+            <span className="bubble"></span>
+          </div>
+          <div>
+            <span className="bubble"></span>
+          </div>
+          <div>
+            <span className="bubble"></span>
+          </div>
+          <div>
+            <span className="bubble"></span>
+          </div>
+          <div>
+            <span className="bubble"></span>
+          </div>
+          <div>
+            <span className="bubble"></span>
+          </div>
+          <div>
+            <span className="bubble"></span>
+          </div>
+          <div>
+            <span className="bubble"></span>
+          </div>
+          <div>
+            <span className="bubble"></span>
+          </div>
         </div>
         {!isDark && (
           <img
@@ -1461,18 +1670,19 @@ const Dashboard = () => {
                             model.url ||
                             (model.data && (model.data.video_url || model.data.url));
 
-                            console.log('Model data:', model);
-                            console.log('Raw URL found:', rawUrl);
+                          const imgUrl = model.image
+                            ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
+                            : null;
 
-                          if (!rawUrl) {
-                            toast.error('Video URL not found');
-                            console.error('No video URL in model:', model);
-                            return;
+                          if (rawUrl || imgUrl) {
+                            const finalUrl = rawUrl ? getFullVideoUrl(rawUrl) : null;
+                            setModelVideoUrl(finalUrl);
+                            setSelectedModelData(model);
+                            setModelVideoModalOpen(true);
+                          } else {
+                            toast.error('No video or image found');
+                            console.error('Neither video nor image exists for model:', model);
                           }
-                          const finalUrl = getFullVideoUrl(rawUrl);
-                          console.log('Final URL for modal:', finalUrl);
-                          setModelVideoUrl(finalUrl);
-                          setModelVideoModalOpen(true);
                         }}
                       >
                         Explore →
@@ -1717,8 +1927,23 @@ const Dashboard = () => {
       <ModelCardVideoModal
         open={modelVideoModalOpen}
         videoUrl={modelVideoUrl}
+        imageUrl={
+          selectedModelData?.image
+            ? `https://app.ai3dscanning.com/storage/${selectedModelData.image.replace(/^\/+/, '')}`
+            : null
+        }
         onClose={() => setModelVideoModalOpen(false)}
       />
+
+      {/* <ModelCardImageModal
+        open={showImagePopup}
+        imageUrl={
+          selectedModelData?.image
+            ? `https://app.ai3dscanning.com/storage/${selectedModelData.image.replace(/^\/+/, '')}`
+            : null
+        }
+        onClose={() => setShowImagePopup(false)}
+      /> */}
 
       {showLoginModal && (
         <LoginPopup

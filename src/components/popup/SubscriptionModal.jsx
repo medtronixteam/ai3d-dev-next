@@ -76,17 +76,17 @@ const SubscriptionModal = ({ open, onClose }) => {
         const monthly = Array.isArray(data?.monthly)
           ? data?.monthly
           : Array.isArray(data?.plans?.monthly)
-          ? data?.plans?.monthly
-          : [];
+            ? data?.plans?.monthly
+            : [];
         const annually = Array.isArray(data?.annually)
           ? data?.annually
           : Array.isArray(data?.plans?.annually)
-          ? data?.plans?.annually
-          : Array.isArray(data?.yearly)
-          ? data?.yearly
-          : Array.isArray(data?.plans?.yearly)
-          ? data?.plans?.yearly
-          : [];
+            ? data?.plans?.annually
+            : Array.isArray(data?.yearly)
+              ? data?.yearly
+              : Array.isArray(data?.plans?.yearly)
+                ? data?.plans?.yearly
+                : [];
 
         const getPrice = (arr, planName, fallback) => {
           const found = arr.find((p) => (p?.name || '').toLowerCase().includes(planName));
@@ -167,6 +167,15 @@ const SubscriptionModal = ({ open, onClose }) => {
                       <span className="price">{`$${monthlyStarterPrice}`}</span>
                       <sub className="sub-class">/Month</sub>
                     </div>
+                    <div className="mx-4 para-text">
+                      <span
+                        className="year-price"
+                        style={{ fontSize: '16px' }}
+                      >{`$${yearlyStarterPrice}`}</span>
+                      <sub className="year-sub-class" style={{ fontSize: '16px' }}>
+                        /Year
+                      </sub>
+                    </div>
                     <p className="para-text mt-0 mb-0 mx-4">Unlock more powerful design tools.</p>
                   </div>
                 </div>
@@ -191,10 +200,22 @@ const SubscriptionModal = ({ open, onClose }) => {
                   </ul>
                 </div>
                 <p className="card-footer">
-                  At the end of 14 days, you can choose a plan that fits your needs. We'll notify you 2 days before your trial ends.
+                  At the end of 14 days, you can choose a plan that fits your needs. We'll notify
+                  you 2 days before your trial ends.
                 </p>
-                <button className="plan-button" disabled={!!activeTeam || subscribingPlan === `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`} onClick={(e) => handlePlanClick({ name: 'Starter' }, e)}>
-                  {subscribingPlan === `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Choose Starter'}
+                <button
+                  className="plan-button"
+                  disabled={
+                    !!activeTeam ||
+                    subscribingPlan ===
+                      `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
+                  }
+                  onClick={(e) => handlePlanClick({ name: 'Starter' }, e)}
+                >
+                  {subscribingPlan ===
+                  `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
+                    ? 'Processing…'
+                    : 'Choose Starter'}
                 </button>
               </div>
 
@@ -207,6 +228,15 @@ const SubscriptionModal = ({ open, onClose }) => {
                       <span className="price">{`$${monthlyProPrice}`}</span>
                       <sub className="sub-class">/Month</sub>
                     </div>
+                    <div className="mb-0 mx-4 mt-0 para-text">
+                      <span
+                        className="year-price"
+                        style={{ fontSize: '16px' }}
+                      >{`$${yearlyStarterPrice}`}</span>
+                      <sub className="year-sub-class" style={{ fontSize: '16px' }}>
+                        /Year
+                      </sub>
+                    </div>
                     <p className="para-text mt-0 mb-0 mx-4">Unlock more powerful design tools.</p>
                   </div>
                 </div>
@@ -231,10 +261,20 @@ const SubscriptionModal = ({ open, onClose }) => {
                   </ul>
                 </div>
                 <p className="card-footer">
-                  At the end of 14 days, you can choose a plan that fits your needs. We'll notify you 2 days before your trial ends.
+                  At the end of 14 days, you can choose a plan that fits your needs. We'll notify
+                  you 2 days before your trial ends.
                 </p>
-                <button className="plan-button" disabled={!!activeTeam || subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`} onClick={(e) => handlePlanClick({ name: 'Pro' }, e)}>
-                  {subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Choose Pro'}
+                <button
+                  className="plan-button"
+                  disabled={
+                    !!activeTeam ||
+                    subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
+                  }
+                  onClick={(e) => handlePlanClick({ name: 'Pro' }, e)}
+                >
+                  {subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
+                    ? 'Processing…'
+                    : 'Choose Pro'}
                 </button>
               </div>
 
@@ -242,13 +282,13 @@ const SubscriptionModal = ({ open, onClose }) => {
                 <div className="card-header">
                   <span className="title mb-0">Enterprise Plan</span>
                   <div className="price-section">
-                    <div className='mx-4' style={{ marginBottom: '31px' }}>
+                    <div className="mx-4" style={{ marginBottom: '31px' }}>
                       <span className="price">Custom</span>
                       <sub className="sub-class">billing</sub>
                     </div>
                   </div>
                 </div>
-                <div className="divider-container mt-2">
+                <div className="divider-container mt-lg-4">
                   <div className="divider" />
                 </div>
                 <div className="features">
@@ -269,10 +309,22 @@ const SubscriptionModal = ({ open, onClose }) => {
                   </ul>
                 </div>
                 <p className="card-footer">
-                  At the end of 14 days, you can choose a plan that fits your needs. We'll notify you 2 days before your trial ends.
+                  At the end of 14 days, you can choose a plan that fits your needs. We'll notify
+                  you 2 days before your trial ends.
                 </p>
-                <button className="plan-button" disabled={!!activeTeam || subscribingPlan === `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`} onClick={(e) => handlePlanClick({ name: 'Enterprise' }, e)}>
-                  {subscribingPlan === `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Contact Sales'}
+                <button
+                  className="plan-button"
+                  disabled={
+                    !!activeTeam ||
+                    subscribingPlan ===
+                      `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
+                  }
+                  onClick={(e) => handlePlanClick({ name: 'Enterprise' }, e)}
+                >
+                  {subscribingPlan ===
+                  `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
+                    ? 'Processing…'
+                    : 'Contact Sales'}
                 </button>
               </div>
             </div>
@@ -288,6 +340,15 @@ const SubscriptionModal = ({ open, onClose }) => {
                     <div className="mb-0 mx-4 para-text">
                       <span className="price">{`$${yearlyStarterPrice}`}</span>
                       <sub className="sub-class">/Year</sub>
+                    </div>
+                    <div className="mb-0 mx-4 para-text">
+                      <span
+                        className="month-price"
+                        style={{ fontSize: '16px' }}
+                      >{`$${monthlyProPrice}`}</span>
+                      <sub className="month-sub-class" style={{ fontSize: '16px' }}>
+                        /Month
+                      </sub>
                     </div>
                     <p className="mx-4 mt-0 mb-0 para-text">Basic conversions</p>
                   </div>
@@ -316,8 +377,19 @@ const SubscriptionModal = ({ open, onClose }) => {
                   At the end of 14 days, you can choose a plan that fits your needs. We'll notify
                   you 2 days before your trial ends.
                 </p>
-                <button className="plan-button" disabled={!!activeTeam || subscribingPlan === `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`} onClick={(e) => handlePlanClick({ name: 'Starter' }, e)}>
-                  {subscribingPlan === `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Choose Starter'}
+                <button
+                  className="plan-button"
+                  disabled={
+                    !!activeTeam ||
+                    subscribingPlan ===
+                      `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
+                  }
+                  onClick={(e) => handlePlanClick({ name: 'Starter' }, e)}
+                >
+                  {subscribingPlan ===
+                  `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
+                    ? 'Processing…'
+                    : 'Choose Starter'}
                 </button>
               </div>
 
@@ -329,6 +401,15 @@ const SubscriptionModal = ({ open, onClose }) => {
                     <div className="mb-0 mx-4">
                       <span className="price">{`$${yearlyProPrice}`}</span>
                       <sub className="sub-class">/Year</sub>
+                    </div>
+                    <div className="mb-0 mx-4 para-text">
+                      <span
+                        className="month-price"
+                        style={{ fontSize: '16px' }}
+                      >{`$${monthlyProPrice}`}</span>
+                      <sub className="month-sub-class" style={{ fontSize: '16px' }}>
+                        /Month
+                      </sub>
                     </div>
                     <p className="mx-4 mt-0 mb-0 para-text">Unlock more powerful design tools.</p>
                   </div>
@@ -357,8 +438,17 @@ const SubscriptionModal = ({ open, onClose }) => {
                   At the end of 14 days, you can choose a plan that fits your needs. We'll notify
                   you 2 days before your trial ends.
                 </p>
-                <button className="plan-button" disabled={!!activeTeam || subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`} onClick={(e) => handlePlanClick({ name: 'Pro' }, e)}>
-                  {subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Choose Pro'}
+                <button
+                  className="plan-button"
+                  disabled={
+                    !!activeTeam ||
+                    subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
+                  }
+                  onClick={(e) => handlePlanClick({ name: 'Pro' }, e)}
+                >
+                  {subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
+                    ? 'Processing…'
+                    : 'Choose Pro'}
                 </button>
               </div>
 
@@ -366,18 +456,13 @@ const SubscriptionModal = ({ open, onClose }) => {
                 <div className="card-header">
                   <span className="title mb-0">Enterprise Plan</span>
                   <div className="price-section">
-                    <div className='mx-4' style={{ marginBottom: '31px' }}>
+                    <div className="mx-4" style={{ marginBottom: '31px' }}>
                       <span className="price">Custom</span>
                       <sub className="sub-class">billing</sub>
                     </div>
-                    {/* <p>
-                                      Contact us for enterprise pricing
-                                      <br />
-                                      Unlock all features.
-                                    </p> */}
                   </div>
                 </div>
-                <div className="divider-container mt-2">
+                <div className="divider-container mt-lg-4">
                   <div className="divider" />
                 </div>
                 <div className="features">
@@ -401,8 +486,19 @@ const SubscriptionModal = ({ open, onClose }) => {
                   At the end of 14 days, you can choose a plan that fits your needs. We'll notify
                   you 2 days before your trial ends.
                 </p>
-                <button className="plan-button" disabled={!!activeTeam || subscribingPlan === `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`} onClick={(e) => handlePlanClick({ name: 'Enterprise' }, e)}>
-                  {subscribingPlan === `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Contact Sales'}
+                <button
+                  className="plan-button"
+                  disabled={
+                    !!activeTeam ||
+                    subscribingPlan ===
+                      `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
+                  }
+                  onClick={(e) => handlePlanClick({ name: 'Enterprise' }, e)}
+                >
+                  {subscribingPlan ===
+                  `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
+                    ? 'Processing…'
+                    : 'Contact Sales'}
                 </button>
               </div>
             </div>

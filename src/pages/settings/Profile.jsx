@@ -1544,6 +1544,7 @@ const EditProfileModal = ({ onClose, user, setUser, onChangePassword, onSuccess 
                 onChange={handleChange}
                 className="form-control"
                 required
+                maxLength={15}
               />
             </div>
             <div>

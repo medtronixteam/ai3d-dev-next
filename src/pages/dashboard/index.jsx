@@ -422,7 +422,7 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose }) {
       <div
         style={{
           position: 'relative',
-          background: '#fff',
+          background:  isDarkMode ? '#23232a' : '#fff',
           borderRadius: 28,
           maxWidth: '720px',
           width: '97vw',
@@ -1478,7 +1478,7 @@ const Dashboard = () => {
                             model.file_url ||
                             model.video_url ||
                             model.url ||
-                            (model.data && (model.data.video_url || model.data.url));
+                            (model.data && (model.data.video_url || model.data.url));index
 
                           const imgUrl = model.image
                             ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`

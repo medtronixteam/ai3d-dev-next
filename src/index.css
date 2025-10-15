@@ -8,12 +8,14 @@
 html, body {
   overflow-x: hidden;
   height: 100%;
+  border: none !important;
 }
 
 body {
   scrollbar-width: thin;
   scrollbar-color: #FED8E4 white;
   overflow-x: hidden;
+  border: none !important;
 
 }
 /* ===== Light Mode ===== */

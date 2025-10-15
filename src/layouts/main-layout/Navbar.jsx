@@ -269,10 +269,12 @@ const Navbar = ({ onSidebarToggle, sidebarOpen }) => {
         ) : (
           // Regular navbar content for non-settings pages
           <>
-            <div className="upgrade-coins-btn-nav" onClick={() => setShowCoinsPopup(true)}>
-              <img src={UpgradeCoin} alt="" className={loadingCoinSpinner ? 'coin-spin' : ''} />{' '}
-              <span>{coins.toLocaleString()}</span>{' '}
-            </div>
+            {token && (
+              <div className="upgrade-coins-btn-nav" onClick={() => setShowCoinsPopup(true)}>
+                <img src={UpgradeCoin} alt="" className={loadingCoinSpinner ? 'coin-spin' : ''} />{' '}
+                <span>{coins.toLocaleString()}</span>{' '}
+              </div>
+            )}
             <button className="upgrade-btn" onClick={() => setSubscriptionModalOpen(true)}>
               <img src={Diamond} alt="Upgrade Icon" style={{ width: 18, marginRight: 6 }} />
               Upgrade your plan

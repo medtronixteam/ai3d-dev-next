@@ -206,7 +206,7 @@ const Subscription = () => {
               Yearly
             </div>
             <div className="discount-label">
-              Save from 10% <span style={{ color: '#000000' }}>with yearly</span>
+              Save from 20% <span style={{ color: '#000000' }}>with yearly</span>
             </div>
           </div>
           {billingPeriod === 'monthly' && (

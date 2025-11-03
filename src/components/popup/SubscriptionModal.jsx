@@ -161,7 +161,7 @@ const SubscriptionModal = ({ open, onClose }) => {
                 Yearly
               </div>
               <div className="discount-label">
-                Save from 10% <span>with yearly</span>
+                Save from 20% <span>with yearly</span>
               </div>
             </div>
           </div>

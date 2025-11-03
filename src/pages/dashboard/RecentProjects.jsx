@@ -159,6 +159,7 @@ const RecentProjects = () => {
 
   const fetchProjects = async (filter) => {
     setLoading(true);
+
     try {
       let finalProjects = [];
 
@@ -450,9 +451,11 @@ const RecentProjects = () => {
                   <div className="sort-title">Sort by:</div>
                 </li> */}
                 {['Default', 'Name', 'Date', 'Size'].map((option) => (
-                  <li key={option} 
-                  onMouseEnter={(e) => (e.currentTarget.style.background = '#FFF2F7')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}>
+                  <li
+                    key={option}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = '#FFF2F7')}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+                  >
                     <label
                       className="dropdown-item d-flex align-items-center gap-2"
                       style={{ cursor: 'pointer', userSelect: 'none' }}
@@ -464,7 +467,13 @@ const RecentProjects = () => {
                           setSortOption(option);
                           setSortDropdownOpen(false);
                         }}
-                      style={{ accentColor: '#e63399' , width: 16, height: 16, border : 'none !important', outline: 'none'}}
+                        style={{
+                          accentColor: '#e63399',
+                          width: 16,
+                          height: 16,
+                          border: 'none !important',
+                          outline: 'none',
+                        }}
                       />
                       {option}
                     </label>
@@ -477,8 +486,10 @@ const RecentProjects = () => {
       </div>
       {/* Grid View */}
       {loading ? (
-        <div className="centered-loader">
-          <CustomLoader />
+        <div className="recent-loader-item">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="recent-loader-loader"></div>
+          ))}
         </div>
       ) : projects.length === 0 ? (
         <div style={{ textAlign: 'center', padding: 60, color: '#888', fontSize: 20 }}>
@@ -592,20 +603,20 @@ const RecentProjects = () => {
                   {dropdownOpen === project.id && (
                     <div className="rp-card-menu">
                       <button onClick={() => handleRenameClick(project)}>
-                          <FolderPen /> Rename
-                        </button>
-                        <button onClick={() => handleViewProject(project)}>
-                          <FaEye /> View
-                        </button>
-                        <button onClick={() => handleViewProject(project)}>
-                          <FaFileExport /> Export
-                        </button>
-                        <button onClick={() => handleViewProject(project)}>
-                          <Send size={18} /> Share
-                        </button>
-                        <button onClick={() => handleDeleteClick(project)}>
-                          <FaTrash /> Remove
-                        </button>
+                        <FolderPen /> Rename
+                      </button>
+                      <button onClick={() => handleViewProject(project)}>
+                        <FaEye /> View
+                      </button>
+                      <button onClick={() => handleViewProject(project)}>
+                        <FaFileExport /> Export
+                      </button>
+                      <button onClick={() => handleViewProject(project)}>
+                        <Send size={18} /> Share
+                      </button>
+                      <button onClick={() => handleDeleteClick(project)}>
+                        <FaTrash /> Remove
+                      </button>
                     </div>
                   )}
                 </div>
@@ -703,7 +714,7 @@ const RecentProjects = () => {
                         setDropdownOpen(dropdownOpen === project.id ? null : project.id)
                       }
                     >
-                      <FaEllipsisV size={16}/>
+                      <FaEllipsisV size={16} />
                     </button>
                     {dropdownOpen === project.id && (
                       <div className="rp-card-menu">

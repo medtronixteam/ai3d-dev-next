@@ -628,6 +628,10 @@
   cursor: pointer;
 }
 
+[data-theme = 'dark'] .share-through-icons-span-name-tag {
+  color: #fff;
+}
+
 .share-through-icons-span-tag.active {
   background-color: #F4E7EE;
   border-radius: 50%;
@@ -748,6 +752,8 @@
 [data-theme='dark'] .share-copy-btn {
   background: #e6339a !important;
   color: #fff !important;
+  padding: 2px 4px !important;
+  border-radius: 5px !important;
 }
 
 @media (min-width: 993px) {
@@ -908,6 +914,36 @@
   opacity: 1;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px #f9f9f9 inset !important;
+  box-shadow: 0 0 0px 1000px #f9f9f9 inset !important;
+  -webkit-text-fill-color: #232334 !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+[data-theme='dark'] input:-webkit-autofill,
+[data-theme='dark'] input:-webkit-autofill:hover,
+[data-theme='dark'] input:-webkit-autofill:focus,
+[data-theme='dark'] textarea:-webkit-autofill,
+[data-theme='dark'] textarea:-webkit-autofill:hover,
+[data-theme='dark'] textarea:-webkit-autofill:focus,
+[data-theme='dark'] select:-webkit-autofill,
+[data-theme='dark'] select:-webkit-autofill:hover,
+[data-theme='dark'] select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px #232334 inset !important;
+  box-shadow: 0 0 0px 1000px #232334 inset !important;
+  -webkit-text-fill-color: #f3f3fa !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 .dark .profile-email-card,
 [data-theme='dark'] .profile-email-card {
   background: #232334 !important;
@@ -988,7 +1024,7 @@
 .dark .profile-main-card .profile-input {
   background: #110e20 !important;
   color: #f3f3fa !important;
-  border: 1px solid rgb(59, 58, 58) !important;
+  /* border: 1px solid rgb(59, 58, 58) !important; */
 }
 
 [data-theme='dark'] .profile-main-card input:disabled,

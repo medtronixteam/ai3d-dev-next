@@ -10,7 +10,7 @@ import vectoImage from '../../assets/images/Vector.svg';
 import videoGif from '../../assets/images/video.gif';
 import { FiPower, FiX, FiArrowRight, FiArrowLeft } from 'react-icons/fi';
 import LoginPopup from '../../components/popup/LoginPopup';
-import Construction from '../../assets/images/construction.png';
+import Construction from '../../assets/images/construction.jpeg';
 
 const Subscription = () => {
   const [billingPeriod, setBillingPeriod] = useState('monthly');
@@ -588,7 +588,7 @@ const Subscription = () => {
             </button>
             <img src={Construction} alt="image" width={150} height={150} />
             <h3>Under Development</h3>
-            <p>Our team is currently working on this feature</p>
+            <p className='text-center'>Our team is currently working on this feature</p>
           </div>
         </div>
       )}

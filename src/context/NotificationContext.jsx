@@ -5,21 +5,21 @@ import { baseURL } from '../config';
 import { initializeApp } from 'firebase/app';
 import { toast } from 'react-toastify';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
-import { v4 as uuidv4 } from 'uuid';  
+import { v4 as uuidv4 } from 'uuid';
+import Subscription from '../pages/settings/Subscription';
 
-
-const NotificationContext = createContext();
+export const NotificationContext = createContext();
 export const useNotification = () => useContext(NotificationContext);
 
-export const NotificationProvider = ({ children, fetchCoins }) => {
+export const NotificationProvider = ({ children,  fetchCoins }) => {
   const { token } = useAuth();
   const [unreadCount, setUnreadCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [markAllLoading, setMarkAllLoading] = useState(false);
   const [togglingNotifications, setTogglingNotifications] = useState(new Set());
 
-   const getUserUniqueId = useCallback(() => {
+
+  const getUserUniqueId = useCallback(() => {
     let userId = localStorage.getItem('userUniqueId');
     if (!userId) {
       userId = uuidv4();
@@ -85,7 +85,7 @@ export const NotificationProvider = ({ children, fetchCoins }) => {
         `${baseURL}/update-token`,
         {
           token: fcmToken,
-          device_id: userUniqueId, 
+          device_id: userUniqueId,
         },
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -98,7 +98,7 @@ export const NotificationProvider = ({ children, fetchCoins }) => {
   // 🔹 Compare and store FCM token (keep history, update latest only)
   const storeTokenInArray = async (fcmToken) => {
     let tokens = JSON.parse(localStorage.getItem('fcmTokens')) || [];
-    // console.log('Previous tokens:', tokens);
+    console.log('Previous tokens:', tokens);
 
     // Sirf latest token ko backend bhejna hai
     if (tokens[0] !== fcmToken) {
@@ -123,14 +123,13 @@ export const NotificationProvider = ({ children, fetchCoins }) => {
       });
 
       if (fcmToken) {
-        console.log('FCM Token:', fcmToken);
+        console.log('✅ FCM Token:', fcmToken);
         await storeTokenInArray(fcmToken);
       } else {
-        console.warn('FCM token not generated.');
+        console.warn('⚠️ FCM token not generated.');
       }
 
-      // Listen for foreground messages
-      onMessage(messaging, async(payload) => {
+      onMessage(messaging, async (payload) => {
         console.log('📩 Foreground message:', payload);
 
         if (payload?.notification) {
@@ -142,12 +141,11 @@ export const NotificationProvider = ({ children, fetchCoins }) => {
             read_at: null,
           };
 
-          // Add notification to state
           setNotifications((prev) => [newNotif, ...prev]);
           setUnreadCount((prev) => prev + 1);
 
           toast.success(newNotif.title, {
-            className: 'pink-toast', 
+            className: 'pink-toast',
           });
 
           if (payload.notification.body.includes('notification')) {
@@ -163,7 +161,6 @@ export const NotificationProvider = ({ children, fetchCoins }) => {
           } else {
             console.log('Unknown notification type:', payload.notification.body);
           }
-
         }
       });
     } catch (error) {
@@ -179,26 +176,22 @@ export const NotificationProvider = ({ children, fetchCoins }) => {
     }
   }, [token, fetchNotifications, setupFirebaseMessaging]);
 
-  // Mark all notifications as read
-  const markAllAsRead = useCallback(async () => {
-    if (!token) return;
-    setMarkAllLoading(true);
+  // 🔹 Mark all notifications as read
+  const markAllAsRead = async () => {
     try {
-      await axios.get(`${baseURL}/notification/markasread`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      // After marking as read, refresh notifications
-      fetchNotifications();
+      await axios.post(
+        `${baseURL}/notifications/markasread`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      setNotifications((prev) => prev.map((n) => ({ ...n, read_at: new Date() })));
+      setUnreadCount(0);
     } catch (err) {
-      //  console.error('DEBUG - Error marking all as read:', err);
-      if (err.response?.status === 401) {
-        handleUnauthorized();
-      }
-    } finally {
-      setMarkAllLoading(false);
+      console.error('Mark all read failed:', err);
     }
-  }, [token, fetchNotifications]);
-
+  };
 
   // 🔹 Mark single notification as read
   const markAsRead = async (id) => {
@@ -215,7 +208,7 @@ export const NotificationProvider = ({ children, fetchCoins }) => {
       );
       setUnreadCount((prev) => Math.max(0, prev - 1));
     } catch (err) {
-      console.error('❌ Mark read failed:', err);
+      console.error('Mark read failed:', err);
     }
   };
 

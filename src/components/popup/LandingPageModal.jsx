@@ -149,7 +149,7 @@ const LandingPageModal = ({ open, onClose, onRequireLogin }) => {
                 Yearly
               </div>
               <div className="sublanding-discount-label">
-                Save from 10% <span>with yearly</span>
+                Save from 20% <span>with yearly</span>
               </div>
             </div>
           </div>

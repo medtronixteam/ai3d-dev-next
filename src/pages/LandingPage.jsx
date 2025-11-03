@@ -56,7 +56,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPauseCircle } from '@fortawesome/free-solid-svg-icons';
 import { FaChevronDown, FaLinkedin } from 'react-icons/fa';
 import rainbowImg from './images/rainbow.png';
-import ArslanImg from '../assets/images/Arslan.svg';
+import ArslanImg from '../assets/images/Arslan.jpeg';
 import CeoImg from '../assets/images/Ceo.svg';
 import girImg from './images/gir.png';
 import girtImg from './images/girt.png';
@@ -95,14 +95,14 @@ import HiraMam from '../assets/images/HiraMam.svg';
 import SamiaMam from '../assets/images/SamiaMam.svg';
 import UsamaSir from '../assets/images/UsamaSir.jpeg';
 import MudassarSir from '../assets/images/mudassar.jpeg';
-import ArslanSir from '../assets/images/ArslanSir.svg';
+import ArslanSir from '../assets/images/Arslan.png';
 import CeoSir from '../assets/images/CeoSir.svg';
 import SajeelSir from '../assets/images/SajeelSir.jpeg';
 import SehrozSir from '../assets/images/ShehrozSir.jpeg';
 
 import hiraImg from '../assets/images/HiraImg.svg';
-import samiaImg from '../assets/images/SamiaImg.svg';
-import osamaImg from '../assets/images/Person1.svg';
+import samiaImg from '../assets/images/samia.png';
+import osamaImg from '../assets/images/osama.png';
 import sajeelImg from '../assets/images/Sajeel.svg';
 import mudassarImg from '../assets/images/Mudassar.svg';
 import shehrozImg from '../assets/images/ShahrozImg.svg';
@@ -116,14 +116,25 @@ import Robot_Loader from '../assets/images/RobotLoader.png';
 import { FiArrowRight } from 'react-icons/fi';
 import { baseURL } from '../config';
 import { useAuth } from '../context/AuthContext';
-// import MiniBotViewer from '../components/MiniBotViewer';
-// import Mini_bot from '../../public/assets/images/mini_bot.glb'
 
 const LandingPage = () => {
   const { pathname, hash, key } = useLocation();
   const [subscriptionModalOpen, setSubscriptionModalOpen] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [scrolled, setScrolled] = useState(false);
+
+  // useEffect ko fix karen
+  useEffect(() => {
+  const handleScroll = () => {
+  console.log('scrollY', window.scrollY);
+  setScrolled(window.scrollY > 50);
+};
+  
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -134,8 +145,8 @@ const LandingPage = () => {
   }, []);
 
   const handleOpenLogin = () => {
-    setSubscriptionModalOpen(false); // subscription modal close
-    setShowLoginModal(true); // login modal open
+    setSubscriptionModalOpen(false); 
+    setShowLoginModal(true); 
   };
 
   const flagColors = {
@@ -584,7 +595,7 @@ const LandingPage = () => {
 
     const wrapper = section.querySelector('.testimonials-wrapper');
     if (wrapper) {
-      wrapper.style.touchAction = 'none'; 
+      wrapper.style.touchAction = 'none';
       wrapper.addEventListener('touchstart', disableDrag, { passive: false });
       wrapper.addEventListener('touchmove', disableDrag, { passive: false });
       wrapper.addEventListener('touchend', disableDrag, { passive: false });
@@ -617,7 +628,6 @@ const LandingPage = () => {
       const role = slide.querySelector('.twocards, .teamtitle')?.textContent || '';
       const desc = slide.querySelector('p')?.textContent || '';
 
-    
       const fullDataMap = {
         'Arslan Ahmad': {
           Image: ArslanImg,
@@ -797,6 +807,8 @@ const LandingPage = () => {
   return (
     <>
       <div className="landing-page-section ai_3d_landing">
+        {/* ========================= navbar ======================= */}
+
         <div className="main_head" style={{ backgroundColor: '#FFEDF7' }}>
           <main className="container py-sm-4 pt-4">
             {/* ========================= navbar ======================= */}
@@ -938,7 +950,7 @@ const LandingPage = () => {
               style={{ marginTop: isMobile ? '-2.5rem' : '-4rem' }}
             >
               <div
-                className="col-lg-7"
+                className="col-lg-7 p-lg-0"
                 // style={{ marginTop: isMobile ? '0rem' : '-2rem' }}
               >
                 <h1 className="a3d-title a3d-slide-up" style={{ marginTop: 30 }}>
@@ -1036,7 +1048,7 @@ const LandingPage = () => {
                 </div>
               </div>
 
-              <div className="col-lg-5">
+              <div className="col-lg-5 p-lg-0">
                 {/* {{-- <div> --}} */}
 
                 {/* <img
@@ -1692,7 +1704,7 @@ const LandingPage = () => {
             <div className="row g-md-4">
               {(showAllModels ? models : models.slice(0, 6)).map((card, idx) => {
                 const imgUrl = card.image
-                  ? `https://dev-backend.ai3dscanning.com/storage/${card.image.replace(/^\/+/, '')}`
+                  ? `https://app.ai3dscanning.com/storage/${card.image.replace(/^\/+/, '')}`
                   : modelFallback;
 
                 return (
@@ -1849,7 +1861,7 @@ const LandingPage = () => {
                 <div className="team-card-container col-12 col-md-4 col-3 mb-0 mt-3">
                   <div className="team-slide">
                     <div className="img-container Hillier">
-                      <img src={ArslanSir} alt="Arslan Ahmad" />
+                      <img src={ArslanImg} alt="Arslan Ahmad" />
                     </div>
 
                     <div className="team-card team-cads">
@@ -1933,7 +1945,7 @@ const LandingPage = () => {
                         desc: 'Leads visual communication, brand identity, and product design direction.',
                       },
                       {
-                        img: SamiaMam,
+                        img: samiaImg,
                         name: 'Samia Rasheed',
                         role: 'HR Associate & Social Media Manager',
                         desc: 'Supports hiring processes while managing brand voice and engagement across platforms.',
@@ -1941,7 +1953,7 @@ const LandingPage = () => {
                       // Repeat for loop effect (optional)
 
                       {
-                        img: UsamaSir,
+                        img: osamaImg,
                         name: 'Usama Ahmad',
                         role: 'Admin & Finance Manager',
                         desc: 'Manages company finances, budgeting, and administrative operations with precision and compliance.',
@@ -2277,7 +2289,7 @@ const LandingPage = () => {
               </div>
             </div>
           </section>
-          
+
           <section className="subscribe-section position-relative " id="help">
             <div className="container-fluid ">
               <div className="row align-items-center">
@@ -2671,7 +2683,7 @@ const LandingPage = () => {
         onRequireLogin={handleOpenLogin}
       />
 
-      {showLoginModal && ( 
+      {showLoginModal && (
         <LoginPopup
           onClose={() => setShowLoginModal(false)}
           onSuccess={() => {

@@ -42,7 +42,7 @@ import axios from 'axios';
 import LoginPopup from '../../components/popup/LoginPopup';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { toast } from 'react-toastify';
-
+import {FastAverageColor} from 'fast-average-color';
 const CATEGORIES = [
   { label: 'Construction', type: 'construction', icon: icon1, favorite: true },
   { label: 'Gaming', type: 'gaming', icon: icon2, favorite: true },
@@ -193,7 +193,7 @@ function VideoModalWithLoader({ videoUrl, onClose }) {
           onError={(err) => {
             console.error('Video failed to load:', err);
             setLoading(false);
-            setErrorState('corrupted'); // Mark as file corruption/server misconfig
+            setErrorState('corrupted');
           }}
         />
       )}
@@ -339,11 +339,13 @@ const VideoModal = ({ open, videoUrl, onClose }) => {
 };
 
 // Model Card Video Modal (for Explore → button)
-function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose }) {
+function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId }) {
   const [loading, setLoading] = React.useState(true);
   const [modalVisible, setModalVisible] = React.useState(false);
   const [mediaError, setMediaError] = React.useState(false);
   const [isVideoMode, setIsVideoMode] = React.useState(false);
+  const [is3DModel, setIs3DModel] = React.useState(false);
+  const [modelUrl, setModelUrl] = React.useState(null);
   const timeoutRef = React.useRef(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -353,10 +355,8 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose }) {
       setIsDarkMode(document.documentElement.getAttribute('data-theme') === 'dark');
     };
 
-    // Check initial theme
     checkTheme();
 
-    // Listen for theme changes
     const observer = new MutationObserver(checkTheme);
     observer.observe(document.documentElement, {
       attributes: true,
@@ -366,206 +366,362 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose }) {
     return () => observer.disconnect();
   }, []);
 
-
   // Detect file type by extension
   const getFileType = (url) => {
     if (!url) return null;
     const extension = url.split('.').pop().toLowerCase();
     if (['mp4', 'mov', 'avi', 'webm', 'mkv'].includes(extension)) return 'video';
-    if (['glb', 'gltf'].includes(extension)) return 'glb';
+    if (['glb', 'gltf'].includes(extension)) return '3d';
     return 'image';
   };
 
+  // Fetch 3D model URL from API
+  const fetch3DModelUrl = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+
+      const apiUrl = `${baseURL}/model/temp/url/${id}`;
+      console.log('🌐 API URL:', apiUrl);
+
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log('📡 Response Status:', response.status);
+      console.log('📡 Response OK:', response.ok);
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch model URL: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('📦 API Response Data:', data);
+
+      const url =
+        data.url || data.temp_url || data.model_url || data.data?.url || data.data?.temp_url;
+
+      console.log('🎯 Extracted URL:', url);
+      console.groupEnd();
+
+      if (!url) {
+        console.error('No URL found in API response:', data);
+        return null;
+      }
+
+      return url;
+    } catch (error) {
+      console.error('Error fetching 3D model URL:', error);
+      console.groupEnd();
+      return null;
+    }
+  };
+
   React.useEffect(() => {
-    if (open && fileUrl) {
+    if (open) {
       setLoading(true);
       setModalVisible(true);
       setMediaError(false);
+      setModelUrl(null);
 
-      const type = getFileType(fileUrl);
+      const type = fileUrl ? getFileType(fileUrl) : null;
+
       setIsVideoMode(type === 'video');
+
+      const is3D = type === '3d';
+      console.log('🎲 Is 3D Model:', is3D);
+
+      // If fileUrl points to .glb but is direct storage URL (not signed)
+      if (is3D && fileUrl && modelId) {
+        setIs3DModel(true);
+
+        fetch3DModelUrl(modelId).then((url) => {
+          if (url) {
+            console.log('Fresh temporary URL received:', url);
+            const urlWithTimestamp = url.includes('?')
+              ? `${url}&_t=${Date.now()}`
+              : `${url}?_t=${Date.now()}`;
+            console.log('🔗 Final URL with timestamp:', urlWithTimestamp);
+            setModelUrl(urlWithTimestamp);
+          } else {
+            console.error('No URL received from API');
+            setMediaError(true);
+            setLoading(false);
+          }
+        });
+      }
+      // If no fileUrl but modelId exists, it's definitely a 3D model
+      else if (!fileUrl && modelId) {
+        console.log('No fileUrl but modelId exists - fetching 3D model');
+        setIs3DModel(true);
+
+        fetch3DModelUrl(modelId).then((url) => {
+          if (url) {
+            console.log('✅ Fresh URL received:', url);
+            const urlWithTimestamp = url.includes('?')
+              ? `${url}&_t=${Date.now()}`
+              : `${url}?_t=${Date.now()}`;
+            setModelUrl(urlWithTimestamp);
+            // ✅ Don't set loading false - wait for model-viewer onLoad event
+          } else {
+            console.error('No URL received from API');
+            setMediaError(true);
+            setLoading(false);
+          }
+        });
+      }
+      // If fileUrl exists and is already a signed URL (with query params)
+      else if (is3D && fileUrl && fileUrl.includes('?')) {
+        console.log('Using provided signed URL');
+        setIs3DModel(true);
+        setModelUrl(fileUrl);
+        // ✅ Don't set loading false - wait for model-viewer onLoad event
+      } else {
+        console.log('📷 Not a 3D model - using image/video mode');
+        setIs3DModel(false);
+      }
+
+      console.groupEnd();
 
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
       timeoutRef.current = setTimeout(() => {
-        console.warn('⏰ Media loading timeout');
         setLoading(false);
         setMediaError(true);
       }, 20000);
     } else if (!open) {
+      console.log('🚪 Modal closed');
       setModalVisible(false);
       setLoading(true);
       setMediaError(false);
+      setIs3DModel(false);
+      setModelUrl(null);
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     }
 
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [open, fileUrl]);
+  }, [open, fileUrl, modelId]);
 
   const handleLoad = () => {
+    console.log('✅ Media loaded successfully');
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setLoading(false);
     setMediaError(false);
   };
 
   const handleError = (err) => {
-    console.error('❌ Media failed to load:', err);
+    console.error('Media failed to load:', err);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setLoading(false);
     setMediaError(true);
   };
 
-  if (!open || !fileUrl) return null;
+  if (!open) return null;
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100vw',
-        height: '100vh',
-        zIndex: 9999,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: 'rgba(30,30,40,0.38)',
-        transition: 'all 0.3s ease',
-        opacity: modalVisible ? 1 : 0,
-        visibility: modalVisible ? 'visible' : 'hidden',
-      }}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
+    <>
       <div
         style={{
-          position: 'relative',
-          background: isDarkMode ? '#23232a' : '#fff',
-          borderRadius: 28,
-          maxWidth: '720px',
-          width: '97vw',
-          maxHeight: '82vh',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          zIndex: 9999,
           display: 'flex',
-          justifyContent: 'center',
           alignItems: 'center',
-          overflow: 'hidden',
-          animation: 'modal-3d-pop-in 0.55s cubic-bezier(.25,1.7,.45,1.32)',
+          justifyContent: 'center',
+          background: 'rgba(30,30,40,0.38)',
+          transition: 'all 0.3s ease',
+          opacity: modalVisible ? 1 : 0,
+          visibility: modalVisible ? 'visible' : 'hidden',
+        }}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) onClose();
         }}
       >
-        <button
-          onClick={onClose}
+        <div
           style={{
-            position: 'absolute',
-            top: 18,
-            right: 18,
-            background: 'var(--primary-color)',
-            border: 'none',
-            borderRadius: '50%',
-            width: 38,
-            height: 38,
-            color: '#fff',
-            fontSize: 26,
-            cursor: 'pointer',
+            position: 'relative',
+            background: isDarkMode ? '#23232a' : '#fff',
+            borderRadius: 28,
+            maxWidth: '650px',
+            width: '90vw',
+            maxHeight: '60vh',
             display: 'flex',
-            alignItems: 'center',
             justifyContent: 'center',
-            zIndex: 10000,
+            alignItems: 'center',
+            overflow: 'hidden',
+            animation: 'modal-3d-pop-in 0.55s cubic-bezier(.25,1.7,.45,1.32)',
           }}
-          aria-label="Close media"
         >
-          <FiX size={18} />
-        </button>
-
-        {/* Loader */}
-        {loading && !mediaError && (
-          <div
+          <button
+            onClick={onClose}
             style={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              width: '100vw',
-              height: '100vh',
-              zIndex: 9999,
+              position: 'absolute',
+              top: 18,
+              right: 18,
+              background: 'var(--primary-color)',
+              border: 'none',
+              borderRadius: '50%',
+              width: 38,
+              height: 38,
+              color: '#fff',
+              fontSize: 26,
+              cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              background: 'rgba(0,0,0,0.15)',
+              zIndex: 10000,
             }}
+            aria-label="Close media"
           >
-            <CustomLoader />
-          </div>
-        )}
+            <FiX size={18} />
+          </button>
 
-        {/* Error fallback */}
-        {mediaError && imageUrl && (
-          <img
-            src={imageUrl}
-            alt="Fallback Preview"
-            onLoad={handleLoad}
-            onError={handleError}
-            style={{
-              maxWidth: '100%',
-              maxHeight: '60vh',
-              borderRadius: 18,
-              background: 'transparent',
-              objectFit: 'contain',
-            }}
-          />
-        )}
+          {loading && !mediaError && (
+            <div
+              style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100vw',
+                height: '100vh',
+                zIndex: 9999,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'rgba(0,0,0,0.15)',
+              }}
+            >
+              {is3DModel ? (
+                <>
+                  <div className="animated-loader">
+                    <span className="loader-loader"></span>
+                  </div>
+                  <p
+                    style={{
+                      fontSize: '16px',
+                      fontWeight: 500,
+                      color: isDarkMode ? '#fff' : '#000',
+                      marginTop: '10rem',
+                    }}
+                  >
+                    We are frying model for you😋
+                  </p>
+                </>
+              ) : (
+                <CustomLoader />
+              )}
+            </div>
+          )}
 
-        {/* Main Content */}
-        {!mediaError && isVideoMode ? (
-          <video
-            src={fileUrl}
-            autoPlay
-            loop
-            muted
-            playsInline
-            controls
-            onLoadedData={handleLoad}
-            onError={(err) => {
-              console.warn('⚠️ Video failed — switching to image');
-              setIsVideoMode(false);
-              handleError(err);
-            }}
-            style={{
-              maxWidth: '100%',
-              maxHeight: '70vh',
-              borderRadius: 18,
-              background: 'transparent',
-              opacity: loading ? 0 : 1,
-              transition: 'opacity 0.3s ease',
-            }}
-          />
-        ) : (
-          <img
-            src={imageUrl}
-            alt="Model Preview"
-            onLoad={handleLoad}
-            onError={handleError}
-            style={{
-              maxWidth: '100%',
-              maxHeight: '60vh',
-              borderRadius: 18,
-              objectFit: 'contain',
-              opacity: loading ? 0 : 1,
-              transition: 'opacity 0.3s ease',
-            }}
-          />
-        )}
+          {/* Error fallback */}
+          {mediaError && imageUrl && (
+            <img
+              src={imageUrl}
+              alt="Fallback Preview"
+              onLoad={handleLoad}
+              onError={handleError}
+              style={{
+                maxWidth: '100%',
+                maxHeight: '60vh',
+                borderRadius: 18,
+                background: 'transparent',
+                objectFit: 'contain',
+              }}
+            />
+          )}
+
+          {/* Main Content */}
+          {!mediaError && (
+            <>
+              {/* Video Mode */}
+              {isVideoMode && fileUrl && (
+                <video
+                  src={fileUrl}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  controls
+                  onLoadedData={handleLoad}
+                  onError={(err) => {
+                    console.warn('⚠️ Video failed — switching to image');
+                    setIsVideoMode(false);
+                    handleError(err);
+                  }}
+                  style={{
+                    maxWidth: '100%',
+                    maxHeight: '70vh',
+                    borderRadius: 18,
+                    background: 'transparent',
+                    opacity: loading ? 0 : 1,
+                    transition: 'opacity 0.3s ease',
+                  }}
+                />
+              )}
+
+              {/* 3D Model Mode */}
+              {is3DModel && modelUrl && (
+                <model-viewer
+                  key={modelUrl}
+                  src={modelUrl}
+                  alt="3D Model"
+                  auto-rotate
+                  camera-controls
+                  camera-orbit="0deg 90deg 9m"
+                  field-of-view="29.68deg"
+                  shadow-intensity="1"
+                  loading="eager"
+                  reveal="auto"
+                  style={{
+                    width: '100%',
+                    height: '50vh',
+                    borderRadius: 18,
+                    opacity: loading ? 0 : 1,
+                    transition: 'opacity 0.3s ease',
+                  }}
+                  onLoad={handleLoad}
+                  onError={handleError}
+                />
+              )}
+
+              {/* Image Mode */}
+              {!isVideoMode && !is3DModel && imageUrl && (
+                <img
+                  src={imageUrl}
+                  alt="Model Preview"
+                  onLoad={handleLoad}
+                  onError={handleError}
+                  style={{
+                    maxWidth: '100%',
+                    maxHeight: '60vh',
+                    borderRadius: 18,
+                    objectFit: 'contain',
+                    opacity: loading ? 0 : 1,
+                    transition: 'opacity 0.3s ease',
+                  }}
+                />
+              )}
+            </>
+          )}
+        </div>
+
+        <style>{`
+          @keyframes modal-3d-pop-in {
+            0% { transform: scale(0.7) rotateX(18deg) translateY(80px); opacity: 0; }
+            60% { transform: scale(1.08) rotateX(-6deg) translateY(-12px); opacity: 1; }
+            100% { transform: scale(1) rotateX(0) translateY(0); opacity: 1; }
+          }
+        `}</style>
       </div>
-
-      <style>{`
-        @keyframes modal-3d-pop-in {
-          0% { transform: scale(0.7) rotateX(18deg) translateY(80px); opacity: 0; }
-          60% { transform: scale(1.08) rotateX(-6deg) translateY(-12px); opacity: 1; }
-          100% { transform: scale(1) rotateX(0) translateY(0); opacity: 1; }
-        }
-      `}</style>
-    </div>
+    </>
   );
 }
 
@@ -700,11 +856,83 @@ const Dashboard = () => {
     current_page: 1,
     last_page: 1,
   });
+  const imgRefs = useRef([]);
   const [hasMore, setHasMore] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const loaderRef = React.useRef(null);
   const [showModelPopup, setShowModelPopup] = useState(false);
   const [selectedModelData, setSelectedModelData] = useState(null);
+  const [cardBgColors, setCardBgColors] = useState({});
+  const getLightAverageColor = async (imageUrl) => {
+    const fac = new FastAverageColor();
+    try {
+      const color = await fac.getColorAsync(imageUrl);
+      // Convert to HSL to lighten if too dark
+      const hsl = rgbToHsl(color.value[0], color.value[1], color.value[2]);
+      if (hsl.l < 0.6) {
+        // Lighten it
+        hsl.l = 0.7 + Math.random() * 0.2; // 70%–90% lightness
+      }
+      return hslToRgb(hsl.h, hsl.s, hsl.l);
+    } catch (e) {
+      console.warn('Color extraction failed for:', imageUrl);
+      return [250, 250, 250]; // fallback light gray
+    }
+  };
+
+  // Utility: RGB → HSL
+  function rgbToHsl(r, g, b) {
+    r /= 255;
+    g /= 255;
+    b /= 255;
+    const max = Math.max(r, g, b),
+      min = Math.min(r, g, b);
+    let h,
+      s,
+      l = (max + min) / 2;
+    if (max === min) {
+      h = s = 0;
+    } else {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r:
+          h = (g - b) / d + (g < b ? 6 : 0);
+          break;
+        case g:
+          h = (b - r) / d + 2;
+          break;
+        case b:
+          h = (r - g) / d + 4;
+          break;
+      }
+      h /= 6;
+    }
+    return { h, s, l };
+  }
+
+  // Utility: HSL → RGB
+  function hslToRgb(h, s, l) {
+    let r, g, b;
+    if (s === 0) {
+      r = g = b = l;
+    } else {
+      const hue2rgb = (p, q, t) => {
+        if (t < 0) t += 1;
+        if (t > 1) t -= 1;
+        if (t < 1 / 6) return p + (q - p) * 6 * t;
+        if (t < 1 / 2) return q;
+        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+        return p;
+      };
+      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      const p = 2 * l - q;
+      r = hue2rgb(p, q, h + 1 / 3);
+      g = hue2rgb(p, q, h);
+      b = hue2rgb(p, q, h - 1 / 3);
+    }
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+  }
 
   useEffect(() => {
     // Add class to body
@@ -910,6 +1138,29 @@ const Dashboard = () => {
     }
     return models;
   }, [isFavoriteModeActive, favoriteModels, models, selectedType]);
+  useEffect(() => {
+    const fetchColors = async () => {
+      const newColors = { ...cardBgColors };
+      for (let i = 0; i < currentModels.length; i++) {
+        const model = currentModels[i];
+        const imgUrl = model.thumbnail
+          ? `https://app.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
+          : model.image
+            ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
+            : null;
+
+        if (imgUrl && !newColors[model.id]) {
+          const [r, g, b] = await getLightAverageColor(imgUrl);
+          newColors[model.id] = `rgb(${r}, ${g}, ${b})`;
+          setCardBgColors({ ...newColors }); // Update progressively
+        }
+      }
+    };
+
+    if (currentModels.length > 0) {
+      fetchColors();
+    }
+  }, [currentModels]);
 
   const searchModels = async () => {
     if (!searchText.trim()) return;
@@ -1064,53 +1315,33 @@ const Dashboard = () => {
           minHeight: 320,
         }}
       >
-        <div className="bubble-wrapper-animation">
-          <div>
-            <span className="bubble"></span>
-          </div>
-          <div>
-            <span className="bubble"></span>
-          </div>
-          <div>
-            <span className="bubble"></span>
-          </div>
-          <div>
-            <span className="bubble"></span>
-          </div>
-          <div>
-            <span className="bubble"></span>
-          </div>
-          <div>
-            <span className="bubble"></span>
-          </div>
-          <div>
-            <span className="bubble"></span>
-          </div>
-          <div>
-            <span className="bubble"></span>
-          </div>
-          <div>
-            <span className="bubble"></span>
-          </div>
-          <div>
-            <span className="bubble"></span>
-          </div>
-          <div>
-            <span className="bubble"></span>
-          </div>
-          <div>
-            <span className="bubble"></span>
-          </div>
-          <div>
-            <span className="bubble"></span>
-          </div>
-          <div>
-            <span className="bubble"></span>
-          </div>
-          <div>
-            <span className="bubble"></span>
-          </div>
-        </div>
+   {/* Star Animation */}
+<div className="star-wrapper-animation">
+  {[...Array(12)].map((_, index) => {
+    const delay = Math.random() * 5;
+    const left = Math.random() * 100;
+    const top = Math.random() * 100;
+    const colorClass = `color-${Math.floor(Math.random() * 3) + 1}`;
+    const dirX = Math.random().toFixed(2);
+    const dirY = Math.random().toFixed(2);
+
+    return (
+      <div key={index} className="star-container">
+        <span
+          className={`star ${colorClass}`}
+          style={{
+            animationDelay: `${delay}s`,
+            left: `${left}%`,
+            top: `${top}%`,
+            "--dir-x": dirX,
+            "--dir-y": dirY,
+          }}
+        ></span>
+      </div>
+    );
+  })}
+</div>
+
         {!isDark && (
           <img
             src={videoGif}
@@ -1123,7 +1354,7 @@ const Dashboard = () => {
               width: '100%',
               height: '100%',
               objectFit: 'cover',
-              zIndex: 0,
+            
               pointerEvents: 'none',
               filter: 'brightness(0.85) saturate(1.1) blur(0.5px)',
               background: 'white',
@@ -1393,6 +1624,52 @@ const Dashboard = () => {
                 return (
                   <div key={model.id} className="model-card">
                     <div
+                      onClick={() => {
+                          console.group('🔵 BUTTON CLICK - Model Card');
+                          console.log('📦 Full Model Object:', model);
+                          console.log('🆔 Model ID:', model.id);
+                          console.log('📁 Model file_url:', model.file_url);
+                          console.log('🎥 Model video_url:', model.video_url);
+                          console.log('🔗 Model url:', model.url);
+                          console.log('🖼️ Model image:', model.image);
+                          console.groupEnd();
+
+                          const rawUrl =
+                            model.file_url ||
+                            model.video_url ||
+                            model.url ||
+                            (model.data && (model.data.video_url || model.data.url));
+
+                          console.group('🔍 URL DETECTION');
+                          console.log('📍 Raw URL:', rawUrl);
+
+                          // Check file type
+
+                          console.groupEnd();
+
+                          const imgUrl = model.image
+                            ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
+                            : null;
+
+                          console.log('🖼️ Image URL:', imgUrl);
+
+                          if (rawUrl || imgUrl) {
+                            const finalUrl = rawUrl ? getFullVideoUrl(rawUrl) : null;
+
+                            console.group('✅ OPENING MODAL');
+                            console.log('🎯 Final URL:', finalUrl);
+                            console.log('🆔 Model ID:', model.id);
+                            console.log('🖼️ Image URL:', imgUrl);
+                            console.groupEnd();
+
+                            setModelFileUrl(finalUrl);
+                            setSelectedModelData(model);
+                            setModelVideoModalOpen(true);
+                          } else {
+                            console.error('❌ Neither video nor image exists for model:', model);
+                            toast.error('No video or image found');
+                          }
+                        }}
                       style={{
                         position: 'relative',
                         display: 'flex',
@@ -1407,6 +1684,10 @@ const Dashboard = () => {
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
+
+                          cursor: 'pointer',
+                          background: cardBgColors[model.id] || 'white', 
+                          borderRadius: 12,
                         }}
                       >
                         {!imgLoadedArr[idx] && (
@@ -1492,32 +1773,12 @@ const Dashboard = () => {
                           <CustomLoader />
                         </div>
                       )}
-                      <button
+                      {/* <button
                         className="model-card-btn"
-                        onClick={() => {
-                          const rawUrl =
-                            model.file_url ||
-                            model.video_url ||
-                            model.url ||
-                            (model.data && (model.data.video_url || model.data.url));
-
-                          const imgUrl = model.image
-                            ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
-                            : null;
-
-                          if (rawUrl || imgUrl) {
-                            const finalUrl = rawUrl ? getFullVideoUrl(rawUrl) : null;
-                            setModelFileUrl(finalUrl); // ✅ renamed from setModelVideoUrl
-                            setSelectedModelData(model);
-                            setModelVideoModalOpen(true);
-                          } else {
-                            toast.error('No video or image found');
-                            console.error('Neither video nor image exists for model:', model);
-                          }
-                        }}
+                      
                       >
                         Explore →
-                      </button>
+                      </button> */}
                     </div>
                   </div>
                 );
@@ -1757,12 +2018,13 @@ const Dashboard = () => {
       {/* Model Card Video Modal */}
       <ModelCardVideoModal
         open={modelVideoModalOpen}
-        fileUrl={modelFileUrl} // ✅ renamed from videoUrl
+        fileUrl={modelFileUrl}
         imageUrl={
           selectedModelData?.image
             ? `https://app.ai3dscanning.com/storage/${selectedModelData.image.replace(/^\/+/, '')}`
             : null
         }
+        modelId={selectedModelData?.id} // ✅ Pass model ID
         onClose={() => setModelVideoModalOpen(false)}
       />
 

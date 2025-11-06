@@ -288,7 +288,7 @@ const Subscription = () => {
                         <span
                           className="year-price"
                           style={{ fontSize: '16px' }}
-                        >990</span>
+                        >$990</span>
                         <sub className="year-sub-class" style={{ fontSize: '16px' }}>
                           /Year
                         </sub>
@@ -401,7 +401,7 @@ const Subscription = () => {
                       <span
                         className="month-price"
                         style={{ fontSize: '16px' }}
-                      >29</span>
+                      >$29</span>
                       <sub className="month-sub-class" style={{ fontSize: '16px' }}>
                         /Month
                       </sub>

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import axios from 'axios';
 
-const GOOGLE_AUTH_URL = 'https://dev-backend.ai3dscanning.com/auth/google';
+const GOOGLE_AUTH_URL = 'https://app.ai3dscanning.com/auth/google';
 
 const OAuthSuccess = () => {
   const navigate = useNavigate();

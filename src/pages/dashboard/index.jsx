@@ -55,13 +55,13 @@ const CATEGORIES = [
 const getModelImageUrl = (image) => {
   if (!image) return model1;
   if (image.startsWith('http')) return image;
-  return `https://dev-backend.ai3dscanning.com/storage/${image.replace(/^\//, '')}`;
+  return `https://app.ai3dscanning.com/storage/${image.replace(/^\//, '')}`;
 };
 
 const getFullVideoUrl = (url) => {
   if (!url) return '';
   if (url.startsWith('http')) return url;
-  return `https://dev-backend.ai3dscanning.com/storage/${url.replace(/^\/+/, '')}`;
+  return `https://app.ai3dscanning.com/storage/${url.replace(/^\/+/, '')}`;
 };
 
 function VideoModalWithLoader({ videoUrl, onClose }) {
@@ -1144,9 +1144,9 @@ const Dashboard = () => {
       for (let i = 0; i < currentModels.length; i++) {
         const model = currentModels[i];
         const imgUrl = model.thumbnail
-          ? `https://dev-backend.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
+          ? `https://app.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
           : model.image
-            ? `https://dev-backend.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
+            ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
             : null;
 
         if (imgUrl && !newColors[model.id]) {
@@ -1277,7 +1277,7 @@ const Dashboard = () => {
     if (models.length === 0) return;
     let cancelled = false;
     const toStorageUrl = (path) =>
-      `https://dev-backend.ai3dscanning.com/storage/${String(path || '').replace(/^\/+/, '')}`;
+      `https://app.ai3dscanning.com/storage/${String(path || '').replace(/^\/+/, '')}`;
     models.forEach((model, idx) => {
       const url = model?.thumbnail
         ? toStorageUrl(model.thumbnail)
@@ -1617,9 +1617,9 @@ const Dashboard = () => {
             <div className="model-list-row">
               {currentModels.map((model, idx) => {
                 const imgUrl = model.thumbnail
-                  ? `https://dev-backend.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
+                  ? `https://app.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
                   : model.image
-                    ? `https://dev-backend.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
+                    ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
                     : model1;
                 return (
                   <div
@@ -1633,7 +1633,7 @@ const Dashboard = () => {
                         (model.data && (model.data.video_url || model.data.url));
 
                       const imgUrl = model.image
-                        ? `https://dev-backend.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
+                        ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
                         : null;
 
                       if (rawUrl || imgUrl) {
@@ -1972,7 +1972,7 @@ const Dashboard = () => {
         fileUrl={modelFileUrl}
         imageUrl={
           selectedModelData?.image
-            ? `https://dev-backend.ai3dscanning.com/storage/${selectedModelData.image.replace(/^\/+/, '')}`
+            ? `https://app.ai3dscanning.com/storage/${selectedModelData.image.replace(/^\/+/, '')}`
             : null
         }
         modelId={selectedModelData?.id} // ✅ Pass model ID

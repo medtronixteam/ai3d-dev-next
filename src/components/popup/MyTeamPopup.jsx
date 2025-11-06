@@ -58,11 +58,11 @@ const MyTeamPopup = ({ onClose, user, teams, onTeamUpdate }) => {
   if (user?.avatar) {
     profileImg = user.avatar.startsWith('http')
       ? user.avatar
-      : `https://dev-backend.ai3dscanning.com/storage/${user.avatar.replace(/^\//, '')}`;
+      : `https://app.ai3dscanning.com/storage/${user.avatar.replace(/^\//, '')}`;
   } else if (user?.image) {
     profileImg = user.image.startsWith('http')
       ? user.image
-      : `https://dev-backend.ai3dscanning.com/storage/${user.image.replace(/^\//, '')}`;
+      : `https://app.ai3dscanning.com/storage/${user.image.replace(/^\//, '')}`;
   }
 
   useEffect(() => {

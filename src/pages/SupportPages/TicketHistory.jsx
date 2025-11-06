@@ -44,7 +44,7 @@ const TicketHistory = () => {
         <p className="support-ticket-system-p-tag">Manage and track your support requests</p>
 
         <div className="ticket-actions-bar">
-          <div className="search-box">
+          <div className="ticket-search-box">
             <Search size={18} />
             <input type="text" placeholder="Search tickets..." />
           </div>

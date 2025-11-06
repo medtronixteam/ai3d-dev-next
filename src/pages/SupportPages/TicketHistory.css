@@ -32,12 +32,12 @@
   margin: 20px 0px;
 }
 
-.search-box {
+.ticket-search-box {
   position: relative;
   display: inline-block;
 }
 
-.search-box input {
+.ticket-search-box input {
   padding: 10px 15px 10px 35px;
   border: 1px solid #cbcbcb;
   border-radius: 6px;
@@ -48,7 +48,7 @@
   background: #fff;
 }
 
-.search-box svg {
+.ticket-search-box svg {
   position: absolute;
   top: 50%;
   left: 10px;
@@ -236,7 +236,7 @@
   background-color: #2d2d2d;
 } */
 
-[data-theme='dark'] .search-box input {
+[data-theme='dark'] .ticket-search-box input {
   background-color: #110E20;
   color: #fff;
   border-color:  #DE3996;
@@ -297,12 +297,12 @@
     align-items: flex-start !important;
     gap: 10px;
   }
-  .search-box input {
+  .ticket-search-box input {
     width: 100% !important;
     min-width: 100% !important;
     max-width: 100%;
   }
-  .search-box {
+  .ticket-search-box {
     width: 100% !important;
   }
 }

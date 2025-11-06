@@ -628,10 +628,6 @@
   cursor: pointer;
 }
 
-[data-theme = 'dark'] .share-through-icons-span-name-tag {
-  color: #fff;
-}
-
 .share-through-icons-span-tag.active {
   background-color: #F4E7EE;
   border-radius: 50%;
@@ -715,7 +711,7 @@
   background: #f7f7fb;
   border: 1px solid #e5e5f0;
   color: #232334;
-  padding: 10px 12px;
+  padding: 10px 35px 10px 12px;
   height: 42px;
   border-radius: 10px;
 }
@@ -752,8 +748,6 @@
 [data-theme='dark'] .share-copy-btn {
   background: #e6339a !important;
   color: #fff !important;
-  padding: 2px 4px !important;
-  border-radius: 5px !important;
 }
 
 @media (min-width: 993px) {
@@ -1024,7 +1018,7 @@ select:-webkit-autofill:focus {
 .dark .profile-main-card .profile-input {
   background: #110e20 !important;
   color: #f3f3fa !important;
-  /* border: 1px solid rgb(59, 58, 58) !important; */
+  border: 1px solid rgb(59, 58, 58) !important;
 }
 
 [data-theme='dark'] .profile-main-card input:disabled,

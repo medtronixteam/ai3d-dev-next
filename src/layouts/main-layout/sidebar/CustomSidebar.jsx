@@ -44,12 +44,12 @@ const CustomSidebar = ({ onClose }) => {
             <NavLink to="/platform/settings/team" className="nav-link mb-2">
               <img src={TeamIcon} alt="" style={{ width: '19px' }} /> Team
             </NavLink>
-            <NavLink to="/platform/settings/project" className="nav-link mb-2">
+            {/* <NavLink to="/platform/settings/project" className="nav-link mb-2">
               <img src={ProjectIcon} alt="" style={{ width: '19px' }} /> Project
             </NavLink>
             <NavLink to="/platform/settings/aimodal" className="nav-link mb-2">
               <img src={AiModel} alt="" style={{ width: '19px' }} /> AI Model
-            </NavLink>
+            </NavLink> */}
             <NavLink to="/platform/settings/referal" className="nav-link mb-2">
               <img src={Referal} alt="" style={{ width: '19px' }} /> Referral
             </NavLink>

@@ -411,6 +411,7 @@ const Referral = () => {
 
         {/* ========================= Footer ======================= */}
         <div className="aithreed">
+          
           <section className="dropdown mt-5 bg-white pt-5" id='FAQs'>
             <div className="container">
               {/* Heading */}

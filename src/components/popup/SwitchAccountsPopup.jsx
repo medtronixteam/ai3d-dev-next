@@ -45,12 +45,6 @@ const SwitchAccountsPopup = ({ onClose, onAddAccount, onManageAccount }) => {
       <div className="switch-account-popup">
         <div className="d-flex justify-content-between">
           <h2 className="switch-account-popup-h2">Switch accounts</h2>
-          {/* <img
-            onClick={onClose}
-            src={CloseVector}
-            alt="icon"
-            className="switch-account-popup-img"
-          /> */}
           <FiX onClick={onClose} size={18} className="switch-account-popup-img" />
         </div>
 

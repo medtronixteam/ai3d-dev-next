@@ -42,7 +42,7 @@ import axios from 'axios';
 import LoginPopup from '../../components/popup/LoginPopup';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { toast } from 'react-toastify';
-import {FastAverageColor} from 'fast-average-color';
+import { FastAverageColor } from 'fast-average-color';
 const CATEGORIES = [
   { label: 'Construction', type: 'construction', icon: icon1, favorite: true },
   { label: 'Gaming', type: 'gaming', icon: icon2, favorite: true },
@@ -55,13 +55,13 @@ const CATEGORIES = [
 const getModelImageUrl = (image) => {
   if (!image) return model1;
   if (image.startsWith('http')) return image;
-  return `https://app.ai3dscanning.com/storage/${image.replace(/^\//, '')}`;
+  return `https://dev-backend.ai3dscanning.com/storage/${image.replace(/^\//, '')}`;
 };
 
 const getFullVideoUrl = (url) => {
   if (!url) return '';
   if (url.startsWith('http')) return url;
-  return `https://app.ai3dscanning.com/storage/${url.replace(/^\/+/, '')}`;
+  return `https://dev-backend.ai3dscanning.com/storage/${url.replace(/^\/+/, '')}`;
 };
 
 function VideoModalWithLoader({ videoUrl, onClose }) {
@@ -1144,9 +1144,9 @@ const Dashboard = () => {
       for (let i = 0; i < currentModels.length; i++) {
         const model = currentModels[i];
         const imgUrl = model.thumbnail
-          ? `https://app.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
+          ? `https://dev-backend.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
           : model.image
-            ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
+            ? `https://dev-backend.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
             : null;
 
         if (imgUrl && !newColors[model.id]) {
@@ -1277,7 +1277,7 @@ const Dashboard = () => {
     if (models.length === 0) return;
     let cancelled = false;
     const toStorageUrl = (path) =>
-      `https://app.ai3dscanning.com/storage/${String(path || '').replace(/^\/+/, '')}`;
+      `https://dev-backend.ai3dscanning.com/storage/${String(path || '').replace(/^\/+/, '')}`;
     models.forEach((model, idx) => {
       const url = model?.thumbnail
         ? toStorageUrl(model.thumbnail)
@@ -1315,32 +1315,32 @@ const Dashboard = () => {
           minHeight: 320,
         }}
       >
-   {/* Star Animation */}
-<div className="star-wrapper-animation">
-  {[...Array(12)].map((_, index) => {
-    const delay = Math.random() * 5;
-    const left = Math.random() * 100;
-    const top = Math.random() * 100;
-    const colorClass = `color-${Math.floor(Math.random() * 3) + 1}`;
-    const dirX = Math.random().toFixed(2);
-    const dirY = Math.random().toFixed(2);
+        {/* Star Animation */}
+        <div className="star-wrapper-animation">
+          {[...Array(12)].map((_, index) => {
+            const delay = Math.random() * 5;
+            const left = Math.random() * 100;
+            const top = Math.random() * 100;
+            const colorClass = `color-${Math.floor(Math.random() * 3) + 1}`;
+            const dirX = Math.random().toFixed(2);
+            const dirY = Math.random().toFixed(2);
 
-    return (
-      <div key={index} className="star-container">
-        <span
-          className={`star ${colorClass}`}
-          style={{
-            animationDelay: `${delay}s`,
-            left: `${left}%`,
-            top: `${top}%`,
-            "--dir-x": dirX,
-            "--dir-y": dirY,
-          }}
-        ></span>
-      </div>
-    );
-  })}
-</div>
+            return (
+              <div key={index} className="star-container">
+                <span
+                  className={`star ${colorClass}`}
+                  style={{
+                    animationDelay: `${delay}s`,
+                    left: `${left}%`,
+                    top: `${top}%`,
+                    '--dir-x': dirX,
+                    '--dir-y': dirY,
+                  }}
+                ></span>
+              </div>
+            );
+          })}
+        </div>
 
         {!isDark && (
           <img
@@ -1354,7 +1354,7 @@ const Dashboard = () => {
               width: '100%',
               height: '100%',
               objectFit: 'cover',
-            
+
               pointerEvents: 'none',
               filter: 'brightness(0.85) saturate(1.1) blur(0.5px)',
               background: 'white',
@@ -1617,125 +1617,101 @@ const Dashboard = () => {
             <div className="model-list-row">
               {currentModels.map((model, idx) => {
                 const imgUrl = model.thumbnail
-                  ? `https://app.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
+                  ? `https://dev-backend.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
                   : model.image
-                    ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
+                    ? `https://dev-backend.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
                     : model1;
                 return (
-                  <div key={model.id} className="model-card">
+                  <div
+                    key={model.id}
+                    className="model-card"
+                    onClick={() => {
+                      const rawUrl =
+                        model.file_url ||
+                        model.video_url ||
+                        model.url ||
+                        (model.data && (model.data.video_url || model.data.url));
+
+                      const imgUrl = model.image
+                        ? `https://dev-backend.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
+                        : null;
+
+                      if (rawUrl || imgUrl) {
+                        const finalUrl = rawUrl ? getFullVideoUrl(rawUrl) : null;
+
+                        setModelFileUrl(finalUrl);
+                        setSelectedModelData(model);
+                        setModelVideoModalOpen(true);
+                      } else {
+                        toast.error('No video or image found');
+                      }
+                    }}
+                    style={{
+                      cursor: 'pointer',
+                      borderRadius: 12,
+                      overflow: 'hidden',
+                    }}
+                  >
                     <div
-                      onClick={() => {
-                          console.group('🔵 BUTTON CLICK - Model Card');
-                          console.log('📦 Full Model Object:', model);
-                          console.log('🆔 Model ID:', model.id);
-                          console.log('📁 Model file_url:', model.file_url);
-                          console.log('🎥 Model video_url:', model.video_url);
-                          console.log('🔗 Model url:', model.url);
-                          console.log('🖼️ Model image:', model.image);
-                          console.groupEnd();
-
-                          const rawUrl =
-                            model.file_url ||
-                            model.video_url ||
-                            model.url ||
-                            (model.data && (model.data.video_url || model.data.url));
-
-                          console.group('🔍 URL DETECTION');
-                          console.log('📍 Raw URL:', rawUrl);
-
-                          // Check file type
-
-                          console.groupEnd();
-
-                          const imgUrl = model.image
-                            ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
-                            : null;
-
-                          console.log('🖼️ Image URL:', imgUrl);
-
-                          if (rawUrl || imgUrl) {
-                            const finalUrl = rawUrl ? getFullVideoUrl(rawUrl) : null;
-
-                            console.group('✅ OPENING MODAL');
-                            console.log('🎯 Final URL:', finalUrl);
-                            console.log('🆔 Model ID:', model.id);
-                            console.log('🖼️ Image URL:', imgUrl);
-                            console.groupEnd();
-
-                            setModelFileUrl(finalUrl);
-                            setSelectedModelData(model);
-                            setModelVideoModalOpen(true);
-                          } else {
-                            console.error('❌ Neither video nor image exists for model:', model);
-                            toast.error('No video or image found');
-                          }
-                        }}
                       style={{
                         position: 'relative',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
+                        background: cardBgColors[model.id] || 'white',
                         borderRadius: 12,
                       }}
                     >
-                      <div
+                      {!imgLoadedArr[idx] && (
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            zIndex: 1,
+                            background: 'transparent',
+                          }}
+                        >
+                          <span
+                            className="dashboard-thumb-loader"
+                            aria-label="loading thumbnail"
+                          ></span>
+                        </div>
+                      )}
+                      <img
+                        src={imgUrl}
+                        alt={model.title || model.name}
+                        className="model-card-img"
                         style={{
-                          position: 'relative',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
+                          opacity: imgLoadedArr[idx] ? 1 : 0,
+                          transition: 'opacity 0.5s',
+                          zIndex: 2,
+                        }}
+                        onLoad={() => {
+                          setImgLoadedArr((arr) => {
+                            const newArr = [...arr];
+                            newArr[idx] = true;
+                            return newArr;
+                          });
+                        }}
+                      />
 
-                          cursor: 'pointer',
-                          background: cardBgColors[model.id] || 'white', 
-                          borderRadius: 12,
+                      <button
+                        className="rp-fav-btn"
+                        onClick={(e) => {
+                          e.stopPropagation(); // stops opening modal when clicking heart
+                          handleModelFavoriteToggle(model);
                         }}
                       >
-                        {!imgLoadedArr[idx] && (
-                          <div
-                            style={{
-                              position: 'absolute',
-                              top: 0,
-                              left: 0,
-                              right: 0,
-                              bottom: 0,
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              zIndex: 1,
-                              background: 'transparent',
-                            }}
-                          >
-                            <span
-                              className="dashboard-thumb-loader"
-                              aria-label="loading thumbnail"
-                            ></span>
-                          </div>
-                        )}
-                        <img
-                          src={imgUrl}
-                          alt={model.title || model.name}
-                          className="model-card-img"
-                          style={{
-                            opacity: imgLoadedArr[idx] ? 1 : 0,
-                            transition: 'opacity 0.5s',
-                            zIndex: 2,
-                          }}
-                          onLoad={() => {
-                            setImgLoadedArr((arr) => {
-                              const newArr = [...arr];
-                              newArr[idx] = true;
-                              return newArr;
-                            });
-                          }}
-                        />
-                        <button
-                          className="rp-fav-btn"
-                          onClick={() => handleModelFavoriteToggle(model)}
-                        >
-                          {model.is_favorite ? <FaHeart size={12} /> : <FaRegHeart size={12} />}
-                        </button>
-                      </div>
+                        {model.is_favorite ? <FaHeart size={12} /> : <FaRegHeart size={12} />}
+                      </button>
                     </div>
+
                     <div className="model-card-content" style={{ position: 'relative' }}>
                       {model.is_free !== 1 && (
                         <img
@@ -1754,31 +1730,6 @@ const Dashboard = () => {
                       <div className="model-card-desc">
                         {model.description || 'No description.'}
                       </div>
-                      {exploreLoading && (
-                        <div
-                          style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            width: '100%',
-                            height: '100%',
-                            background: 'rgba(0,0,0,0.12)',
-                            zIndex: 10,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            borderRadius: 8,
-                          }}
-                        >
-                          <CustomLoader />
-                        </div>
-                      )}
-                      {/* <button
-                        className="model-card-btn"
-                      
-                      >
-                        Explore →
-                      </button> */}
                     </div>
                   </div>
                 );
@@ -2021,7 +1972,7 @@ const Dashboard = () => {
         fileUrl={modelFileUrl}
         imageUrl={
           selectedModelData?.image
-            ? `https://app.ai3dscanning.com/storage/${selectedModelData.image.replace(/^\/+/, '')}`
+            ? `https://dev-backend.ai3dscanning.com/storage/${selectedModelData.image.replace(/^\/+/, '')}`
             : null
         }
         modelId={selectedModelData?.id} // ✅ Pass model ID

@@ -4,7 +4,7 @@ import './CoinsPopup.css';
 import UpgradeCoin from '../../assets/images/UpgradeCoin.svg';
 import TotalCoin from '../../assets/images/TotalCoins.svg';
 import { baseURL } from '../../config';
-import { FiCheck } from 'react-icons/fi';
+import { FiCheck, FiX } from 'react-icons/fi';
 
 const CoinsPopup = ({ onClose, coins, onCoinsUpdate }) => {
   const amounts = [50, 100, 150, 200, 250, 300, 350, 'Custom'];
@@ -168,7 +168,8 @@ const CoinsPopup = ({ onClose, coins, onCoinsUpdate }) => {
   return (
     <section>
       <div className="shared-coins-overlay" onClick={onClose}>
-        <div className="shared-coins-content" onClick={(e) => e.stopPropagation()}>
+        <div className="shared-coins-content position-relative" onClick={(e) => e.stopPropagation()}>
+          <FiX onClick={onClose} size={22} className="coins-popup-cross-btn" />
           <div className="shared-coins-header">
             <h1>Share Coins</h1>
             <p>Send coins to friends & family</p>

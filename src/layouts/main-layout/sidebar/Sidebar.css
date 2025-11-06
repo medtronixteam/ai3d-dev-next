@@ -63,7 +63,7 @@
 }
 
 .sidebar.collapsed .sidebar-content {
-  padding: 32px 24px;
+  padding: 28px 24px;
   opacity: 0.92;
   scrollbar-width: none;
 }
@@ -460,7 +460,7 @@
   }
 }
 
-@media (min-width: 1250px) {
+@media (min-width: 1400px) {
   .sidebar-link img {
     width: 22px !important;
     height: 22px !important;

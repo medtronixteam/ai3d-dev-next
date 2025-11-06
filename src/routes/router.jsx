@@ -11,6 +11,10 @@ import Service from '../pages/Service';
 import Referral from '../pages/referral';
 import ReferralPage from '../pages/settings/ReferralPage';
 import { Navigate } from 'react-router-dom';
+import ContributorLandingPage from '../pages/ContributorPage/ContributorLandingPage';
+import GetStartedPage from '../pages/ContributorPage/GetStartedPage';
+import TicketHistory from '../pages/SupportPages/TicketHistory';
+import SupportTicketDetails from '../pages/SupportPages/SupportTicketDetails';
 
 // LAZY IMPORTS
 const App = lazy(() => import('../App'));
@@ -57,6 +61,14 @@ const routes = [
       {
         path: '/',
         element: <LandingPage />,
+      },
+      {
+        path: '/contributor-landingpage',
+        element: <ContributorLandingPage />,
+      },
+      {
+        path: '/contributor-getstarted',
+        element: <GetStartedPage />,
       },
       {
         path: '/referral',
@@ -108,6 +120,8 @@ const routes = [
           { path: 'api-sdk', element: <ApiSdkComingSoon /> },
           { path: 'notification', element: <ProtectedRoute><Notification /></ProtectedRoute> },
           { path: 'support', element: <Support /> },
+          { path: 'support-ticket-history', element: <TicketHistory /> },
+          { path: 'support-ticket-detail', element: <SupportTicketDetails /> },
           { path: 'session-history', element: <ProtectedRoute><SessionHistory /></ProtectedRoute> },
         ],
       },

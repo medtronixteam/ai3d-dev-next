@@ -245,7 +245,7 @@ const SubscriptionModal = ({ open, onClose }) => {
                       <span
                         className="year-price"
                         style={{ fontSize: '16px' }}
-                      >{`$${yearlyStarterPrice}`}</span>
+                      >$990</span>
                       <sub className="year-sub-class" style={{ fontSize: '16px' }}>
                         /Year
                       </sub>
@@ -364,7 +364,7 @@ const SubscriptionModal = ({ open, onClose }) => {
                       <span
                         className="month-price"
                         style={{ fontSize: '16px' }}
-                      >{`$${monthlyProPrice}`}</span>
+                      >$29</span>
                       <sub className="month-sub-class" style={{ fontSize: '16px' }}>
                         /Month
                       </sub>

@@ -1893,7 +1893,7 @@ const LandingPage = () => {
             <div className="row g-md-4">
               {(showAllModels ? models : models.slice(0, 6)).map((card, idx) => {
                 const imgUrl = card.image
-                  ? `https://dev-backend.ai3dscanning.com/storage/${card.image.replace(/^\/+/, '')}`
+                  ? `https://app.ai3dscanning.com/storage/${card.image.replace(/^\/+/, '')}`
                   : modelFallback;
 
                 return (

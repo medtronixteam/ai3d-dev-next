@@ -12,7 +12,7 @@ const LandingPageModal = ({ open, onClose, onRequireLogin }) => {
   const [billingPeriod, setBillingPeriod] = useState('monthly');
   const [monthlyStarterPrice, setMonthlyStarterPrice] = useState(29);
   const [monthlyProPrice, setMonthlyProPrice] = useState(99);
-  const [yearlyStarterPrice, setYearlyStarterPrice] = useState(290);
+  const [yearlyStarterPrice, setYearlyStarterPrice] = useState(990);
   const [yearlyProPrice, setYearlyProPrice] = useState(990);
   const { token } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -95,7 +95,7 @@ const LandingPageModal = ({ open, onClose, onRequireLogin }) => {
 
         setMonthlyStarterPrice(getPrice(monthly, 'starter', 29));
         setMonthlyProPrice(getPrice(monthly, 'pro', 99));
-        setYearlyStarterPrice(getPrice(annually, 'starter', 290));
+        setYearlyStarterPrice(getPrice(annually, 'starter', 990));
         setYearlyProPrice(getPrice(annually, 'pro', 990));
       })
       .catch(() => {

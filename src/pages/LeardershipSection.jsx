@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import $ceo from '../assets/images/leardership/ceo.png';
-import $joel from '../assets/images/leardership/joel.png';
-import $osama from '../assets/images/leardership/osama.png';
-import $hira from '../assets/images/leardership/hira.png';
-import $shehroz from '../assets/images/leardership/shehroz.png';
-import $mudassar from '../assets/images/leardership/mudassar.png';
-import $samia from '../assets/images/leardership/samia.png';
-import $sajeel from '../assets/images/leardership/sajeel.png';
+import $ceo from '../assets/images/leadership/ceo.png';
+import $joel from '../assets/images/leadership/joel.png';
+import $osama from '../assets/images/leadership/osama.png';
+import $hira from '../assets/images/leadership/hira.png';
+import $shehroz from '../assets/images/leadership/shehroz.png';
+import $mudassar from '../assets/images/leadership/mudassar.png';
+import $samia from '../assets/images/leadership/samia.png';
+import $sajeel from '../assets/images/leadership/sajeel.png';
 import CustomInfoModal from '../components/popup/CustomInfoModal';
 
 const LeardershipSection = () => {

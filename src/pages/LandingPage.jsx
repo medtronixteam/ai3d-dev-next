@@ -121,7 +121,7 @@ import { baseURL } from '../config';
 import { useAuth } from '../context/AuthContext';
 import RoadmapSection from './LandingPageRoadmap';
 import TestimonialSection from './TestimonialSection';
-import LeardershipSection from './LeardershipSection';
+// import LeardershipSection from './LeardershipSection';
 
 const LandingPage = () => {
   const { pathname, hash, key } = useLocation();
@@ -1893,7 +1893,7 @@ const LandingPage = () => {
             <div className="row g-md-4">
               {(showAllModels ? models : models.slice(0, 6)).map((card, idx) => {
                 const imgUrl = card.image
-                  ? `https://app.ai3dscanning.com/storage/${card.image.replace(/^\/+/, '')}`
+                  ? `https://dev-backend.ai3dscanning.com/storage/${card.image.replace(/^\/+/, '')}`
                   : modelFallback;
 
                 return (
@@ -2110,83 +2110,8 @@ const LandingPage = () => {
                 )}
               </div>
 
-              {/* Splide Slider for Team Members */}
+              {/* <LeardershipSection /> */}
 
-              {/* <div className="splide mt-4" id="team-slider" aria-label="Team Slider">
-                <div className="splide__track">
-                  <ul className="splide__list">
-                    {[
-                      {
-                        img: SehrozSir,
-                        name: 'Shehroz Shabbir',
-                        role: 'Web Development Manager',
-                        desc: 'Expertise spans coding, system architecture, and database management, enabling him to translate complex business needs into functional, efficient, and scalable solutions. His work powers the AI-driven and 3D scanning technologies that define the company’s cutting-edge services.',
-                      },
-
-                      {
-                        img: MudassarSir,
-                        name: 'Mudassar Farooq',
-                        role: 'HR & Business Development Manager',
-                        desc: 'Drives recruitment, culture, and leads business growth and client outreach efforts.',
-                      },
-                      {
-                        img: HiraMam,
-                        name: 'Hira Aziz',
-                        role: 'Creative Media Manager',
-                        desc: 'Leads visual communication, brand identity, and product design direction.',
-                      },
-                      {
-                        img: samiaImg,
-                        name: 'Samia Rasheed',
-                        role: 'HR Associate & Social Media Manager',
-                        desc: 'Supports hiring processes while managing brand voice and engagement across platforms.',
-                      },
-                      // Repeat for loop effect (optional)
-
-                      {
-                        img: osamaImg,
-                        name: 'Usama Ahmad',
-                        role: 'Admin & Finance Manager',
-                        desc: 'Manages company finances, budgeting, and administrative operations with precision and compliance.',
-                      },
-                      {
-                        img: SajeelSir,
-                        name: 'Sajeel Nisar',
-                        role: 'AI Lead',
-                        desc: 'Architecting and training core AI models driving 2D-to-3D transformation at AI3D.',
-                      },
-                    ].map((member, index) => (
-                      <li className="splide__slide" key={index}>
-                        <div className="team-slide">
-                          <div className="img-container image-container">
-                            <img src={member.img} alt={member.name} />
-                          </div>
-
-                          <div className="team-card image-card">
-                            <h5 className="teamname">{member.name}</h5>
-
-                            <small className="teamtitle">{member.role}</small>
-
-                            <p className="pera teampara">
-                              {member.desc.length > 100
-                                ? `${member.desc.substring(0, 100)}...`
-                                : member.desc}
-                            </p>
-
-                            <div className="mt-auto">
-                              <a href="javascript:void(0)" className="learn-more learn-m">
-                                Learn More
-                                <img src={learnImg} alt="" className="mt-1 left lef ms-2" />
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div> */}
-              <LeardershipSection />
             </div>
           </section>
 

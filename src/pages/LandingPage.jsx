@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import './LandingPage.css';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
@@ -17,7 +18,7 @@ import PITB from './images/PITB.png';
 import Modling from './images/3d-modeling.png';
 import store from './images/store.png';
 import design from './images/provide.png';
-import mobile from './images/mobile-responsive.png';
+import mobile from '../assets/images/b2b.png';
 import machine from './images/machine.png';
 import e_commerce from './images/ecommerce.png';
 import construction from './images/construction.png';
@@ -54,9 +55,11 @@ import videoSrc from './images/3dModal.mp4';
 import videoIcon from './images/video_icon.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPauseCircle } from '@fortawesome/free-solid-svg-icons';
-import { FaChevronDown, FaLinkedin } from 'react-icons/fa';
+import { FaChevronDown, FaLinkedin, FaApple, FaGooglePlay, FaArrowUp } from 'react-icons/fa';
 import rainbowImg from './images/rainbow.png';
+import googlePlayImg from '../assets/images/google-play.png';
 import ArslanImg from '../assets/images/Arslan.jpeg';
+import ArslanImg2 from '../assets/images/arslan-bhai-2.png';
 import CeoImg from '../assets/images/Ceo.svg';
 import girImg from './images/gir.png';
 import girtImg from './images/girt.png';
@@ -116,26 +119,77 @@ import Robot_Loader from '../assets/images/RobotLoader.png';
 import { FiArrowRight } from 'react-icons/fi';
 import { baseURL } from '../config';
 import { useAuth } from '../context/AuthContext';
+import RoadmapSection from './LandingPageRoadmap';
+import TestimonialSection from './TestimonialSection';
+import LeardershipSection from './LeardershipSection';
 
 const LandingPage = () => {
   const { pathname, hash, key } = useLocation();
   const [subscriptionModalOpen, setSubscriptionModalOpen] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [scrolled, setScrolled] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const landingRef = useRef(null);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  // useEffect ko fix karen
   useEffect(() => {
-  const handleScroll = () => {
-  console.log('scrollY', window.scrollY);
-  setScrolled(window.scrollY > 50);
-};
-  
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-  
+    const section = landingRef.current;
+    if (!section) return;
 
+    const handleScroll = () => {
+      const scrollTop = section.scrollTop;
+      setIsScrolled(scrollTop > 30);
+      setShowScrollTop(scrollTop > 300);
+    };
+
+    section.addEventListener('scroll', handleScroll);
+    return () => section.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    if (landingRef.current) {
+      landingRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  // // useEffect ko fix karen
+  // // useEffect(() => {
+  // //   const handleScroll = () => {
+  // //     console.log('scrollY', window.scrollY);
+  // //     setScrolled(window.scrollY > 50);
+  // //   };
+
+  // //   window.addEventListener('scroll', handleScroll);
+  // //   return () => window.removeEventListener('scroll', handleScroll);
+  // // }, []);
+  // // Create a ref for the scrollable div
+  // const scrollableDivRef = useRef(null);
+
+  // useEffect(() => {
+  //   // Get the actual DOM element that scrolls
+  //   const scrollableElement = scrollableDivRef.current;
+
+  //   if (!scrollableElement) {
+  //     console.error('Scrollable div ref is not attached to any element.');
+  //     return;
+  //   }
+
+  //   const handleScroll = () => {
+  //     // Use scrollableElement.scrollTop instead of window.scrollY
+  //     setIsScrolled(scrollableElement.scrollTop > 30);
+  //   };
+
+  //   // Add the scroll listener to the div, not the window
+  //   scrollableElement.addEventListener('scroll', handleScroll);
+
+  //   // Clean up the event listener when the component unmounts
+  //   return () => {
+  //     scrollableElement.removeEventListener('scroll', handleScroll);
+  //   };
+  // }, []);
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
@@ -145,8 +199,8 @@ const LandingPage = () => {
   }, []);
 
   const handleOpenLogin = () => {
-    setSubscriptionModalOpen(false); 
-    setShowLoginModal(true); 
+    setSubscriptionModalOpen(false);
+    setShowLoginModal(true);
   };
 
   const flagColors = {
@@ -238,26 +292,26 @@ const LandingPage = () => {
   const visibleCards = getVisibleCards();
 
   // hide scrollbar
-  useEffect(() => {
-    const css = `
-      html, body { 
-        scrollbar-width: none !important;
-        -ms-overflow-style: none !important; 
-      }
-      html::-webkit-scrollbar, 
-      body::-webkit-scrollbar { 
-        display: none !important; 
-      }
-    `;
+  // useEffect(() => {
+  //   const css = `
+  //     html, body {
+  //       scrollbar-width: none !important;
+  //       -ms-overflow-style: none !important;
+  //     }
+  //     html::-webkit-scrollbar,
+  //     body::-webkit-scrollbar {
+  //       display: none !important;
+  //     }
+  //   `;
 
-    const style = document.createElement('style');
-    style.innerHTML = css;
-    document.head.appendChild(style);
+  //   const style = document.createElement('style');
+  //   style.innerHTML = css;
+  //   document.head.appendChild(style);
 
-    return () => {
-      document.head.removeChild(style);
-    };
-  }, []);
+  //   return () => {
+  //     document.head.removeChild(style);
+  //   };
+  // }, []);
 
   const pills = [
     { label: 'Construction', icon: rightarrow, target: '3d-Sample' },
@@ -272,20 +326,29 @@ const LandingPage = () => {
   const isMobile = useMediaQuery({ maxWidth: 768 });
 
   useEffect(() => {
-    if (!isMobile || !pillsRef.current) return;
-    let scrollAmount = 0;
-    const pillWidth = 130;
-    const interval = setInterval(() => {
-      scrollAmount += pillWidth;
-      if (scrollAmount >= pillsRef.current.scrollWidth - pillsRef.current.clientWidth) {
-        scrollAmount = 0;
+    if (!pillsRef.current) return;
+
+    // Only run auto-scroll on mobile views
+    if (!isMobile) return;
+
+    let animationFrameId;
+    // Speed: pixels per frame. Adjust for desired speed.
+    const speed = 0.5;
+
+    const animateScroll = () => {
+      if (pillsRef.current) {
+        pillsRef.current.scrollLeft += speed;
+        // If we've scrolled past half the content (the original set), reset to 0
+        if (pillsRef.current.scrollLeft >= pillsRef.current.scrollWidth / 2) {
+          pillsRef.current.scrollLeft = 0;
+        }
       }
-      pillsRef.current.scrollTo({
-        left: scrollAmount,
-        behavior: 'smooth',
-      });
-    }, 1800);
-    return () => clearInterval(interval);
+      animationFrameId = requestAnimationFrame(animateScroll);
+    };
+
+    animationFrameId = requestAnimationFrame(animateScroll);
+
+    return () => cancelAnimationFrame(animationFrameId);
   }, [isMobile]);
 
   const trustedLogos = [
@@ -411,38 +474,38 @@ const LandingPage = () => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
-  useEffect(() => {
-    const slider = new window.Splide('#team-slider', {
-      type: 'loop',
-      perPage: 5,
-      perMove: 1,
-      pagination: false,
-      arrows: false,
-      autoplay: true,
-      interval: 2000,
-      gap: '1.5rem',
-      drag: true,
-      focus: 'center',
-      breakpoints: {
-        1200: { perPage: 3 },
-        768: { perPage: 3 },
-        576: { perPage: 1 },
-      },
-    }).mount();
+  // useEffect(() => {
+  //   const slider = new window.Splide('#team-slider', {
+  //     type: 'loop',
+  //     perPage: 5,
+  //     perMove: 1,
+  //     pagination: false,
+  //     arrows: false,
+  //     autoplay: true,
+  //     interval: 2000,
+  //     gap: '1.5rem',
+  //     drag: true,
+  //     focus: 'center',
+  //     breakpoints: {
+  //       1200: { perPage: 3 },
+  //       768: { perPage: 3 },
+  //       576: { perPage: 1 },
+  //     },
+  //   }).mount();
 
-    // Custom Navigation Buttons
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
+  //   // Custom Navigation Buttons
+  //   const prevBtn = document.getElementById('prevBtn');
+  //   const nextBtn = document.getElementById('nextBtn');
 
-    prevBtn?.addEventListener('click', () => slider.go('<'));
-    nextBtn?.addEventListener('click', () => slider.go('>'));
+  //   prevBtn?.addEventListener('click', () => slider.go('<'));
+  //   nextBtn?.addEventListener('click', () => slider.go('>'));
 
-    return () => {
-      slider.destroy();
-      prevBtn?.removeEventListener('click', () => {});
-      nextBtn?.removeEventListener('click', () => {});
-    };
-  }, []);
+  //   return () => {
+  //     slider.destroy();
+  //     prevBtn?.removeEventListener('click', () => { });
+  //     nextBtn?.removeEventListener('click', () => { });
+  //   };
+  // }, []);
 
   const togglePlayPause = () => {
     if (videoRef.current.paused) {
@@ -630,7 +693,7 @@ const LandingPage = () => {
 
       const fullDataMap = {
         'Arslan Ahmad': {
-          Image: ArslanImg,
+          Image: ArslanImg2,
           title: 'Founder - CEO & Product Lead',
           desc: [
             'Arslan drives the vision and product innovation at AI 3D Scanning Solutions Inc., leading end-to-end product development from concept to deployment. With a focus on cutting-edge AI and LLM integration, he spearheads strategic partnerships oversees market positioning, and ensures the platform delivers transformative value to global industries.',
@@ -803,17 +866,54 @@ const LandingPage = () => {
       buttons.forEach((btn) => btn.removeEventListener('click', handler));
     };
   }, []);
+  // const [isScrolled, setIsScrolled] = useState(false); // Use this state
+  // const landingSectionRef = useRef(null);
+
+  // useEffect(() => {
+  //   const section = landingSectionRef.current;
+  //   if (!section) {
+  //     console.error('Landing section ref is not attached to any element.');
+  //     return;
+  //   }
+
+  //   const handleScroll = () => {
+  //     // Use section.scrollTop instead of window.scrollY
+  //     setIsScrolled(section.scrollTop > 30); // Target 30px as requested
+  //   };
+
+  //   section.addEventListener('scroll', handleScroll);
+  //   return () => section.removeEventListener('scroll', handleScroll);
+  // }, []);
+
+  // useEffect(() => {
+  //   const handleScroll = () => setIsScrolled(window.scrollY > 30);
+  //   window.addEventListener('scroll', handleScroll);
+  //   return () => window.removeEventListener('scroll', handleScroll);
+  // }, []);
+
+  // useEffect ko fix karen
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     console.log('scrollY', window.scrollY);
+  //     setScrolled(window.scrollY > 50);
+  //   };
+  //   window.addEventListener('scroll', handleScroll);
+  //   return () => window.removeEventListener('scroll', handleScroll);
+  // }, []);
+  // Create a ref for the scrollable div
 
   return (
     <>
-      <div className="landing-page-section ai_3d_landing">
+      <div className="landing-page-section ai_3d_landing" ref={landingRef}>
         {/* ========================= navbar ======================= */}
 
         <div className="main_head" style={{ backgroundColor: '#FFEDF7' }}>
           <main className="container py-sm-4 pt-4">
             {/* ========================= navbar ======================= */}
 
-            <header className="a3d-header container-fluid bg-white mb-4 a3d-fade-in">
+            <header
+              className={`a3d-header container-fluid bg-white mb-4 a3d-fade-in ${isScrolled ? 'a3d-header-scrolled' : ''}`}
+            >
               <div className="d-flex justify-content-between align-items-center">
                 <Link to="/">
                   <img src={logo} alt="Logo" style={{ width: '70%' }} />
@@ -849,33 +949,30 @@ const LandingPage = () => {
                     Services
                   </Link>
 
-                  <a href="#3d-Sample" className="a3d-nav-link">
+                  <a href="/#3d-Sample" className="a3d-nav-link">
                     3D Samples
                   </a>
 
-                  <a href="#Leadership" className="a3d-nav-link">
+                  <a href="/#Leadership" className="a3d-nav-link">
                     Leadership
                   </a>
-                  <Link
-                    to="/referral"
+                  <a
+                    href="/referral"
                     className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`}
                   >
                     Referral
-                  </Link>
+                  </a>
                 </nav>
 
                 <div className="d-none d-lg-flex gap-3 align-items-center">
-                  <Link to="/signin" className="a3d-nav-link">
-                    Sign-In
-                  </Link>
-
                   <Link to="/platform/">
                     <button className="a3d-join-btn">Join Us</button>
                   </Link>
                 </div>
               </div>
             </header>
-
+            {/* Spacer to prevent content overlap */}
+            <div className="a3d-header-offset"></div>
             {/* Mobile Sidebar */}
 
             <div className={`mobile-sidebar ${isOpen ? 'open' : ''}`}>
@@ -927,9 +1024,9 @@ const LandingPage = () => {
                   Referral
                 </Link>
 
-                <Link to="/signin" className="a3d-nav-link">
+                {/* <Link to="/signin" className="a3d-nav-link">
                   Sign-In
-                </Link>
+                </Link> */}
 
                 <Link to="/platform/">
                   <button className="a3d-join-btn">Join Us</button>
@@ -953,15 +1050,13 @@ const LandingPage = () => {
                 className="col-lg-7 p-lg-0"
                 // style={{ marginTop: isMobile ? '0rem' : '-2rem' }}
               >
-                <h1 className="a3d-title a3d-slide-up" style={{ marginTop: 30 }}>
-                  {/* <span className="perfect-heading">
-                    Perf
-                    <span className="ec-wrapper">
-                      ec
-                      <img src={elipse} alt="Ellipse" className="ellipse-img" />
-                    </span>
-                    t
-                  </span> */}
+                <motion.h1
+                  className="a3d-title"
+                  style={{ marginTop: 30 }}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8 }}
+                >
                   <span className="a3d-gradient-span-text">
                     <img src={elipse} alt="Ellipse" className="ellipse-img-ec" />
                     Perfect place where
@@ -970,46 +1065,41 @@ const LandingPage = () => {
                     <br />
                     <span>Model Creation</span>
                   </span>
-                  {/* <span className="a3d-gradient-text">
-                    {' '}
-                    place where
-                    <span className="d-none d-lg-inline">
-                      <br />
-                    </span>
-                    Innovation Meet 3D{' '}
-                    <span className="d-none d-lg-inline">
-                      <br />
-                    </span>
-                    Model Creation
-                  </span> */}
                   <span></span>
-                </h1>
+                </motion.h1>
 
-                <p className="a3d-description mt-4 a3d-slide-up" style={{ animationDelay: '0.2s' }}>
+                <motion.p
+                  className="a3d-description mt-4"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                >
                   AI-powered platform for live 3D model generation, editing and{' '}
                   <span className="d-none d-lg-inline">
                     <br />
                   </span>{' '}
                   collaboration - no expensive hardware needed.
-                </p>
+                </motion.p>
 
                 <div
                   className="a3d-pills-scroll d-flex gap-3 my-4 a3d-slide-up"
                   id="pillSlider"
                   ref={pillsRef}
                   style={{
-                    overflowX: isMobile ? 'auto' : 'visible',
+                    overflowX: isMobile ? 'hidden' : 'visible', // Hide scrollbar but allow programmatic scroll
+                    whiteSpace: isMobile ? 'nowrap' : 'normal',
                     minHeight: 48,
-                    scrollBehavior: 'smooth',
                     scrollbarWidth: 'none',
                     msOverflowStyle: 'none',
+                    flexWrap: isMobile ? 'nowrap' : 'wrap',
                   }}
                 >
-                  {pills.map((pill, idx) => (
+                  {/* Duplicate pills to create infinite illusion only on mobile */}
+                  {(isMobile ? [...pills, ...pills] : pills).map((pill, idx) => (
                     <div
                       className="a3d-pill"
-                      key={pill.label}
-                      style={{ minWidth: 'auto' }}
+                      key={`${pill.label}-${idx}`}
+                      style={{ minWidth: 'auto', flexShrink: 0 }}
                       onClick={() => {
                         const target = document.getElementById(pill.target);
                         if (target) {
@@ -1146,7 +1236,13 @@ const LandingPage = () => {
 
         {/* ========================= How it Work Section  ======================= */}
 
-        <section className="service-cards a3d-fade-in mt-5 pt-md-0 pt-3">
+        <motion.section
+          className="service-cards mt-5 pt-md-0 pt-3"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
           <div className="container">
             <div className="text-center mb-1">
               <h2 className="section-title" style={{ fontSize: isMobile ? '29px' : '38px' }}>
@@ -1173,7 +1269,13 @@ const LandingPage = () => {
               <div className="container">
                 <div className="row g-4">
                   {/* Card */}
-                  <div className="col-12 col-md-6 col-lg-4">
+                  <motion.div
+                    className="col-12 col-md-6 col-lg-4"
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.1 }}
+                  >
                     <div className="service-card">
                       <h3 className="service-title">Services we provide</h3>
                       <p className="service-desc">
@@ -1211,8 +1313,14 @@ const LandingPage = () => {
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="col-12 col-md-6 col-lg-4">
+                  </motion.div>
+                  <motion.div
+                    className="col-12 col-md-6 col-lg-4"
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.3 }}
+                  >
                     <div className="service-card">
                       <h3 className="service-title">Buy &amp; sell 2D images</h3>
                       <p className="service-desc">
@@ -1255,8 +1363,14 @@ const LandingPage = () => {
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="col-12 col-md-6 col-lg-4">
+                  </motion.div>
+                  <motion.div
+                    className="col-12 col-md-6 col-lg-4"
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.5 }}
+                  >
                     <div className="service-card">
                       <h3 className="service-title">
                         Generate 3D models <br />
@@ -1297,16 +1411,23 @@ const LandingPage = () => {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 </div>
               </div>
             </section>
           </div>
-        </section>
+        </motion.section>
 
         {/* ========================= Services Section  ======================= */}
 
-        <section className="our-services a3d-fade-in" id="Services">
+        <motion.section
+          className="our-services"
+          id="Services"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
           <div className="container">
             {/* <div className="text-center mb-5">
               <h2 className="section-title">
@@ -1336,7 +1457,7 @@ const LandingPage = () => {
                 <h3 className="business-heading mb-1">Business to Business</h3>
 
                 <p className="business-description">
-                  AI3D integrates seamlessly into your existing web, mobile, or desktop ecosystem
+                  3DIO integrates seamlessly into your existing web, mobile, or desktop ecosystem
                   through robust APIs. From e-commerce and gaming to construction, healthcare, and
                   manufacturing - our AI converts 2D images, videos, and text into lifelike,
                   interactive 3D models in seconds. Flexible licensing and deployment options ensure
@@ -1345,7 +1466,13 @@ const LandingPage = () => {
               </div>
 
               <div className="row">
-                <div className="col-lg-6 mt-lg-0 mt-4">
+                <motion.div
+                  className="col-lg-6 mt-lg-0 mt-4"
+                  initial={{ opacity: 0, x: -50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
+                >
                   <div className="business-service">
                     <div className="business-service-icon">
                       <img src={gaming} alt="" />
@@ -1361,8 +1488,14 @@ const LandingPage = () => {
                       </p>
                     </div>
                   </div>
-                </div>
-                <div className="col-lg-6 mt-lg-0 mt-4">
+                </motion.div>
+                <motion.div
+                  className="col-lg-6 mt-lg-0 mt-4"
+                  initial={{ opacity: 0, x: 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                >
                   <div className="business-service">
                     <div className="business-service-icon">
                       <img src={construction} alt="" />
@@ -1378,8 +1511,14 @@ const LandingPage = () => {
                       </p>
                     </div>
                   </div>
-                </div>
-                <div className="col-lg-6 mt-4">
+                </motion.div>
+                <motion.div
+                  className="col-lg-6 mt-4"
+                  initial={{ opacity: 0, x: -50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                >
                   <div className="business-service">
                     <div className="business-service-icon">
                       <img src={health} alt="" />
@@ -1395,8 +1534,14 @@ const LandingPage = () => {
                       </p>
                     </div>
                   </div>
-                </div>
-                <div className="col-lg-6 mt-4">
+                </motion.div>
+                <motion.div
+                  className="col-lg-6 mt-4"
+                  initial={{ opacity: 0, x: 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                >
                   <div className="business-service">
                     <div className="business-service-icon">
                       <img src={vr} alt="" />
@@ -1412,8 +1557,14 @@ const LandingPage = () => {
                       </p>
                     </div>
                   </div>
-                </div>
-                <div className="col-lg-6 mt-4">
+                </motion.div>
+                <motion.div
+                  className="col-lg-6 mt-4"
+                  initial={{ opacity: 0, x: -50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.5 }}
+                >
                   <div className="business-service">
                     <div className="business-service-icon">
                       <img src={e_commerce} alt="" />
@@ -1428,8 +1579,14 @@ const LandingPage = () => {
                       </p>
                     </div>
                   </div>
-                </div>
-                <div className="col-lg-6 mt-4">
+                </motion.div>
+                <motion.div
+                  className="col-lg-6 mt-4"
+                  initial={{ opacity: 0, x: 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.6 }}
+                >
                   <div className="business-service">
                     <div className="business-service-icon">
                       <img src={machine} alt="" />
@@ -1445,7 +1602,7 @@ const LandingPage = () => {
                       </p>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               </div>
             </div>
 
@@ -1462,7 +1619,37 @@ const LandingPage = () => {
                       alignItems: 'center',
                     }}
                   >
-                    <img src={mobile} alt="Mobile Preview" className="img leap-img me-md-4 mx-2" />
+                    <div className="d-flex flex-column align-items-center">
+                      <img
+                        src={mobile}
+                        alt="Mobile Preview"
+                        className="img leap-img me-md-4 mx-2"
+                      />
+                      <div className="d-flex justify-content-center gap-0 mt-4 flex-wrap">
+                        <button className="store-btn">
+                          <div className="icon-wrapper">
+                            <FaApple size={28} className="store-icon" />
+                          </div>
+                          <div className="store-text">
+                            <span className="small-text">GET IT ON</span>
+                            <span className="large-text">APP STORE</span>
+                          </div>
+                        </button>
+                        <button className="store-btn">
+                          <div className="icon-wrapper">
+                            <img
+                              src={googlePlayImg}
+                              alt="Google Play"
+                              className="store-icon google-play-icon-img"
+                            />
+                          </div>
+                          <div className="store-text">
+                            <span className="small-text">GET IT ON</span>
+                            <span className="large-text">GOOGLE PLAY</span>
+                          </div>
+                        </button>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="client-section col-lg-5 col-12 mb-4 order-lg-2 order-1">
@@ -1474,13 +1661,15 @@ const LandingPage = () => {
                       <h3 className="client-heading text-center">Business to Client</h3>
 
                       <p className="section-subtitle">
-                        Experience the power of AI3D anywhere - on Android, iOS, and Web. Our
-                        AI-powered 3D Scanning platform lets you instantly transform 2D images into
-                        high-precision, photorealistic 3D models without the need for complex tools
-                        or technical skills.
+                        3DIO is an AI powered 3D scanning platform available on Android, iOS, and
+                        Web designed to turn your 2D images into stunning, high precision,
+                        photorealistic 3D models within seconds. No complex software, no technical
+                        expertise just powerful results made simple.
                         <br />
-                        Create, customize, and export your models effortlessly for gaming, AR/VR,
-                        product design, 3D printing, or personal projects.
+                        <br />
+                        With 3DIO, you can easily create, customize, and export professional quality
+                        3D models for gaming, AR/VR experiences, product design, 3D printing, or
+                        personal creative projects all from one smart platform.
                       </p>
                       <div className="row align-items-start mt-2 g-0 key-highlights">
                         <div className="col-12 col-md-12 pe-md-3">
@@ -1523,7 +1712,7 @@ const LandingPage = () => {
               </div>
             </section>
           </div>
-        </section>
+        </motion.section>
 
         <section className="scan_section py-5">
           <div className="container scan_container">
@@ -1543,7 +1732,7 @@ const LandingPage = () => {
                 </div>
 
                 <p className="scan_description" style={{ width: '95%', color: '#1A1A40B2' }}>
-                  AI3D combines cutting-edge AI algorithms with powerful cloud infrastructure to
+                  3DIO combines cutting-edge AI algorithms with powerful cloud infrastructure to
                   deliver studio-quality 3D scanning that's fast, accurate, and secure. Whether
                   you're creating for gaming, e-commerce, design, or enterprise use, our features
                   ensure your results are top-tier and ready for production.
@@ -1720,7 +1909,7 @@ const LandingPage = () => {
                       <div className="model_footer">
                         <div className="model_label">
                           {card.title}
-                          <span className="model_price">23K</span>
+                          {/* <span className="model_price">23K</span> */}
                         </div>
 
                         <a href="#" className="model_card_button">
@@ -1760,8 +1949,8 @@ const LandingPage = () => {
         <section className="api_section ai_3d_landing mt-4">
           <div className="container">
             <div className="api_wrapper d-flex justify-content-between align-items-center flex-wrap">
-              <div className="api_content" style={{ textAlign: 'center' }}>
-                <h3 className="api_title">Business 3D API</h3>
+              <div className="api_content">
+                <h3 className="api_title">Business 3DIO API</h3>
 
                 <p className="api_subtitle">More than quality, we develop language API</p>
               </div>
@@ -1845,19 +2034,21 @@ const LandingPage = () => {
 
               <div className="row mt-5 justify-content-center marb">
                 <div className="text-center mb-lg-4 mb-md-3 mb-0">
-                  <p className="mb-3 needd">Our Leadership</p>
+                  <h2 className="mb-2" style={{ color: 'rgba(222, 57, 150, 1)' }}>
+                    Our Leadership
+                  </h2>
 
-                  <div className="faq-head">
+                  {/* <div className="faq-head mb-0">
                     <h2 className="faq-t text-black">Our Team Members</h2>
 
                     <img src={rainbowImg} alt="Rainbow" className="rainbow-over" />
-                  </div>
+                  </div> */}
 
                   <p className="text-muted text d-lg-block">Meet Our C-Level Executive Team</p>
                 </div>
 
                 {/* Static Cards (CEO & Advisor) */}
-
+                {/* 
                 <div className="team-card-container col-12 col-md-4 col-3 mb-0 mt-3">
                   <div className="team-slide">
                     <div className="img-container Hillier">
@@ -1912,7 +2103,7 @@ const LandingPage = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
 
                 {modalData && (
                   <CustomInfoModal modalData={modalData} onClose={() => setModalData(null)} />
@@ -1921,7 +2112,7 @@ const LandingPage = () => {
 
               {/* Splide Slider for Team Members */}
 
-              <div className="splide mt-4" id="team-slider" aria-label="Team Slider">
+              {/* <div className="splide mt-4" id="team-slider" aria-label="Team Slider">
                 <div className="splide__track">
                   <ul className="splide__list">
                     {[
@@ -1994,29 +2185,8 @@ const LandingPage = () => {
                     ))}
                   </ul>
                 </div>
-              </div>
-
-              {/* Custom Navigation Buttons */}
-
-              <div className="cc mt-4">
-                <div className="icon-toggle-wrapper d-flex justify-content-center ">
-                  <button
-                    type="button"
-                    id="prevBtn"
-                    className="icon-toggle-label btn btn-outline-primary"
-                  >
-                    <i className="fa fa-long-arrow-left" aria-hidden="true"></i>
-                  </button>
-
-                  <button
-                    type="button"
-                    id="nextBtn"
-                    className="icon-toggle-label btn btn-outline-primary right"
-                  >
-                    <i className="fa fa-long-arrow-right" aria-hidden="true"></i>
-                  </button>
-                </div>
-              </div>
+              </div> */}
+              <LeardershipSection />
             </div>
           </section>
 
@@ -2045,7 +2215,7 @@ const LandingPage = () => {
             </div>
 
             {/* Carousel */}
-            <section className="testimonial-section relative" style={{ padding: '50px 30px' }}>
+            {/* <section className="testimonial-section relative" style={{ padding: '50px 30px' }}>
               <div className="container-fluid">
                 <div className="d-flex justify-content-center align-items-center">
                   {visibleCards.map((index) => {
@@ -2080,20 +2250,28 @@ const LandingPage = () => {
                   })}
                 </div>
               </div>
-            </section>
+            </section> */}
+            <TestimonialSection />
 
             {/* Navigation */}
-            <div className="custom-nav">
+            {/* <div className="custom-nav">
               <div className="nav-btn" id="prevBtn" onClick={prev}>
                 <img width="12px" src={leftic} alt="" />
               </div>
               <div className="nav-btn" id="nextBtn" onClick={next}>
                 <img width="12px" src={rightic} alt="" />
               </div>
-            </div>
+            </div> */}
           </section>
 
-          <section className="difficult" style={{ marginTop: 65, marginBottom: 90 }}>
+          <motion.section
+            className="difficult"
+            style={{ marginTop: 65, marginBottom: 90 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
             <div className="container">
               <div className="row g-4 roww">
                 <div className="text-center mt-5">
@@ -2110,117 +2288,10 @@ const LandingPage = () => {
                     through a carefully planned development journey.
                   </p>
                 </div>
-
-                {/* Card 1 */}
-
-                <div className="col-lg-3 col-md-6 col-sm-6 col-12 response marg sepra">
-                  <div className="roadmap-card text-center h-100">
-                    <div className="icon-box mx-auto">
-                      <div className="box">
-                        <img src={topRight} alt="" />
-                      </div>
-
-                      <img src={manIcon} alt="" style={{ height: 52 }} />
-                    </div>
-
-                    <h5>Initial Development</h5>
-
-                    <p className="all" style={{ color: 'rgba(26, 26, 64, 0.7)' }}>
-                      scanning modules. This stage focuses on research, prototyping, and
-                      infrastructure setup. Laying the foundation for our AI engine, mobile & web
-                      applications, and core
-                    </p>
-                  </div>
-
-                  <div className="posi">
-                    <img src={one} alt="Bottom Base" className="bottom-base-img img-fluid" />
-                  </div>
-                </div>
-
-                {/* Card 2 */}
-
-                <div className="col-lg-3 col-md-6 col-sm-6 col-12 response marg">
-                  <div className="roadmap-card text-center h-100">
-                    <div className="icon-box mx-auto">
-                      <div className="box">
-                        <img src={topRight} alt="" />
-                      </div>
-
-                      <img src={tv} alt="" style={{ height: 52 }} />
-                    </div>
-
-                    <h5>Development Mode Release</h5>
-
-                    <p className="all">
-                      Continuous iteration based on feedback. scanning platform for internal testing
-                      and selected early adopters. Launching the first functional version of our
-                      AI-powered
-                      <br className="d-lg-block d-block" />
-                      <br className="d-lg-block d-block" />
-                    </p>
-                  </div>
-
-                  <div className="posi">
-                    <img src={two} alt="Bottom Base" className="bottom-base-img img-fluid" />
-                  </div>
-                </div>
-
-                {/* Card 3 */}
-
-                <div className="col-lg-3 col-md-6 col-sm-6 col-12 response marg topm">
-                  <div className="roadmap-card text-center h-100">
-                    <div className="icon-box mx-auto">
-                      <div className="box">
-                        <img src={topRight} alt="" />
-                      </div>
-
-                      <img src={beta} alt="" style={{ height: 52 }} />
-                    </div>
-
-                    <h5>Beta Release</h5>
-
-                    <p className="all">
-                      Exclusive access for our B2B and B2C waitlist clients, allowing them to test
-                      features, provide input, and help shape the final product.
-                      <br className="d-lg-block d-block" />
-                      <br className="d-lg-block d-block" />
-                    </p>
-                  </div>
-
-                  <div className="posi">
-                    <img src={three} alt="Bottom Base" className="bottom-base-img img-fluid" />
-                  </div>
-                </div>
-
-                {/* Card 4 */}
-
-                <div className="col-lg-3 col-md-6 col-sm-6 col-12 response marg topm">
-                  <div className="roadmap-card text-center h-100">
-                    <div className="icon-box mx-auto">
-                      <div className="box">
-                        <img src={topRight} alt="" />
-                      </div>
-
-                      <img src={lock} alt="" style={{ height: 52 }} />
-                    </div>
-
-                    <h5>Public Release</h5>
-
-                    <p className="all">
-                      Full-scale launch for general customers, enterprises, and partners—delivering
-                      our complete suite of scanning, editing, and 3D asset management features
-                      <br className="d-lg-block d-block" />
-                      <br className="d-lg-block d-block" />
-                    </p>
-                  </div>
-
-                  <div className="posi">
-                    <img src={four} alt="Bottom Base" className="bottom-base-img img-fluid" />
-                  </div>
-                </div>
+                <RoadmapSection />
               </div>
             </div>
-          </section>
+          </motion.section>
 
           <section className="dropdown" id="FAQs">
             <div className="container">
@@ -2309,7 +2380,7 @@ const LandingPage = () => {
                       <div className="form-input">
                         <input
                           type="email"
-                          className="form-control"
+                          className="form-controls"
                           id="email"
                           placeholder="Enter email address*"
                           required=""
@@ -2352,7 +2423,9 @@ const LandingPage = () => {
 
                   <div className="alldiv">
                     <div className="btn-wrapper">
-                      <button className="btn btn-custom Sell">Sell your 3D Models</button>
+                      <Link to="/contributor/program">
+                        <button className="btn btn-custom Sell">Sell your 3D Models</button>
+                      </Link>
                     </div>
 
                     {/* Mobile Language Dropdown */}
@@ -2369,13 +2442,13 @@ const LandingPage = () => {
                         <FaChevronDown size={12} className="ms-2" />
                       </button>
 
-                      <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
+                      {/* <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
                         <li>
                           <a className="dropdown-item black" href="#">
                             English
                           </a>
                         </li>
-                      </ul>
+                      </ul> */}
                     </div>
 
                     {/* Mobile Currency Dropdown */}
@@ -2391,13 +2464,13 @@ const LandingPage = () => {
                         <FaChevronDown size={12} className="ms-2" />
                       </button>
 
-                      <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
+                      {/* <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
                         <li>
                           <a className="dropdown-item black" href="#">
                             $USD
                           </a>
                         </li>
-                      </ul>
+                      </ul> */}
                     </div>
 
                     {/* Desktop Language + Currency */}
@@ -2415,13 +2488,13 @@ const LandingPage = () => {
                           <FaChevronDown size={12} className="ms-2" />
                         </button>
 
-                        <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
+                        {/* <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
                           <li>
                             <a className="dropdown-item black" href="#">
                               English
                             </a>
                           </li>
-                        </ul>
+                        </ul> */}
                       </div>
 
                       <div className="dropdown btn-wrapper none">
@@ -2435,13 +2508,13 @@ const LandingPage = () => {
                           <FaChevronDown size={12} className="ms-2" />
                         </button>
 
-                        <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
+                        {/* <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
                           <li>
                             <a className="black" href="#">
                               $USD
                             </a>
                           </li>
-                        </ul>
+                        </ul> */}
                       </div>
                     </div>
                   </div>
@@ -2466,7 +2539,7 @@ const LandingPage = () => {
                               ? '/platform/subscription'
                               : item === 'About us'
                                 ? '#aboutus'
-                                : '#'
+                                : '/'
                           }
                         >
                           <img
@@ -2675,6 +2748,38 @@ const LandingPage = () => {
           </footer>
         </div>
       </div>
+
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.div
+            className="scroll-to-top"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            onClick={scrollToTop}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            style={{
+              position: 'fixed',
+              bottom: '40px',
+              right: '40px',
+              zIndex: 9999,
+              cursor: 'pointer',
+              backgroundColor: '#de3996',
+              borderRadius: '50%',
+              width: '50px',
+              height: '50px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              boxShadow: '0 4px 15px rgba(222, 57, 150, 0.4)',
+              border: '2px solid white',
+            }}
+          >
+            <FaArrowUp color="white" size={20} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Subscription Modal */}
       <LandingPageModal

@@ -160,15 +160,35 @@ const Referral = () => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+  const landingRef = useRef(null);
+  const [isScrolled, setIsScrolled] = useState(false);
 
+  useEffect(() => {
+    const section = landingRef.current;
+    if (!section) return;
+
+    const handleScroll = () => {
+      const scrollTop =
+        section.scrollTop || document.documentElement.scrollTop || document.body.scrollTop || 0;
+
+      console.log('Section Scroll:', scrollTop);
+      setIsScrolled(scrollTop > 30);
+    };
+
+    section.addEventListener('scroll', handleScroll);
+
+    return () => section.removeEventListener('scroll', handleScroll);
+  }, []);
   return (
     <>
-      <div className="ai_3d_landing">
+      <div className="landing-page-section ai_3d_landing" ref={landingRef}>
         <div className="main_head" style={{ backgroundColor: '#FFEDF7' }}>
           <main className="container pt-4">
             {/* ========================= navbar ======================= */}
 
-            <header className="a3d-header container-fluid bg-white mb-lg-0 mb-4 a3d-fade-in">
+            <header
+              className={`a3d-header container-fluid bg-white mb-4 a3d-fade-in ${isScrolled ? 'a3d-header-scrolled' : ''}`}
+            >
               <div className="d-flex justify-content-between align-items-center">
                 <Link to="/">
                   <img src={logo} alt="Logo" style={{ width: '70%' }} />
@@ -193,9 +213,9 @@ const Referral = () => {
                   >
                     Home
                   </Link>
-                  <a href="https://calendly.com/arslan-medtronix/30min" className="a3d-nav-link">
+                  <Link to="https://calendly.com/arslan-medtronix/30min" className={`a3d-nav-link`}>
                     Schedule Meeting
-                  </a>
+                  </Link>
 
                   <Link
                     to="/service"
@@ -204,32 +224,30 @@ const Referral = () => {
                     Services
                   </Link>
 
-                  <Link to="/#3d-Sample" className="a3d-nav-link">
+                  <a href="/#3d-Sample" className="a3d-nav-link">
                     3D Samples
-                  </Link>
+                  </a>
 
-                  <Link to="/#Leadership" className="a3d-nav-link">
+                  <a href="/#Leadership" className="a3d-nav-link">
                     Leadership
-                  </Link>
-                  <Link
-                    to="/referral"
+                  </a>
+                  <a
+                    href="/referral"
                     className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`}
                   >
                     Referral
-                  </Link>
+                  </a>
                 </nav>
 
                 <div className="d-none d-lg-flex gap-3 align-items-center">
-                  <Link to="/signin" className="a3d-nav-link">
-                    Sign-In
-                  </Link>
-
                   <Link to="/platform/">
                     <button className="a3d-join-btn">Join Us</button>
                   </Link>
                 </div>
               </div>
             </header>
+            {/* Spacer to prevent content overlap */}
+            <div className="a3d-header-offset"></div>
 
             {/* Mobile Sidebar */}
 
@@ -280,16 +298,15 @@ const Referral = () => {
                   Referral
                 </Link>
 
-                <Link to="/signin" className="a3d-nav-link">
+                {/* <Link to="/signin" className="a3d-nav-link">
                   Sign-In
-                </Link>
+                </Link> */}
 
                 <Link to="/platform/">
                   <button className="a3d-join-btn">Join Us</button>
                 </Link>
               </nav>
             </div>
-
             {/* Overlay for background click */}
 
             {isOpen && <div className="overlay" onClick={() => setIsOpen(false)}></div>}
@@ -299,9 +316,9 @@ const Referral = () => {
 
           <div className="container rafferal pb-5" style={{ paddingBottom: 20 }}>
             <div className="row align-items-center">
-              <div className="col-lg-7" style={{ marginTop : isMobile ? '0' : '-5rem' }}>
+              <div className="col-lg-7" style={{ marginTop: isMobile ? '0' : '-5rem' }}>
                 <h1 className="a3d-title a3d-slide-up">
-                  Spread the
+                  Spread the{" "}
                   <span className="perfect-heading">
                     Ma
                     <span className="ec-wrapper">
@@ -311,11 +328,11 @@ const Referral = () => {
                     c.
                   </span>
                   <span className="a3d-gradient-text">
-                    Stack
+                    {" "}Stack
                     <span className="d-none d-lg-inline">
                       <br />
                     </span>
-                    the Rewards.
+                    {" "}the Rewards.
                     <span className="circle-star">
                       <img src={airoplan} alt="" />
                     </span>
@@ -337,7 +354,7 @@ const Referral = () => {
                   src={refferal}
                   alt="3D Robot"
                   className="img-fluid main-image"
-                  style={{ maxWidth: 450, marginTop : isMobile ? '0' : '-3rem' }}
+                  style={{ maxWidth: 450, marginTop: isMobile ? '0' : '-3rem' }}
                 />
               </div>
             </div>
@@ -364,7 +381,7 @@ const Referral = () => {
                   Invite New Friends
                 </h5>
                 <p className="mb-0 sub-text-card " style={{ color: '#666' }}>
-                  Share your link with friends new to Ai3D.
+                  Share your link with friends new to 3DIO.
                 </p>
               </div>
               <div className="col-md-4">
@@ -411,8 +428,7 @@ const Referral = () => {
 
         {/* ========================= Footer ======================= */}
         <div className="aithreed">
-          
-          <section className="dropdown mt-5 bg-white pt-5" id='FAQs'>
+          <section className="dropdown mt-5 bg-white pt-5" id="FAQs">
             <div className="container">
               {/* Heading */}
               <div className="text-center mb-4">
@@ -494,7 +510,7 @@ const Referral = () => {
                       >
                         <img src={world} alt="World" style={{ width: 18, marginRight: 6 }} />
                         English
-                        <FaChevronDown size={12} className='ms-2' />
+                        <FaChevronDown size={12} className="ms-2" />
                       </button>
 
                       <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
@@ -516,7 +532,7 @@ const Referral = () => {
                         aria-expanded="false"
                       >
                         $USD
-                        <FaChevronDown size={12} className='ms-2' />
+                        <FaChevronDown size={12} className="ms-2" />
                       </button>
 
                       <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
@@ -540,7 +556,7 @@ const Referral = () => {
                         >
                           <img src={world} alt="World" style={{ width: 18, marginRight: 6 }} />
                           English
-                          <FaChevronDown size={12} className='ms-2' />
+                          <FaChevronDown size={12} className="ms-2" />
                         </button>
 
                         <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
@@ -560,7 +576,7 @@ const Referral = () => {
                           aria-expanded="false"
                         >
                           $USD
-                          <FaChevronDown size={12} className='ms-2' />
+                          <FaChevronDown size={12} className="ms-2" />
                         </button>
 
                         <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
@@ -594,7 +610,7 @@ const Referral = () => {
                               ? '/platform/subscription'
                               : item === 'About us'
                                 ? '/#aboutus'
-                                : '#'
+                                : '/'
                           }
                         >
                           <img
@@ -624,7 +640,7 @@ const Referral = () => {
                   <ul className="mt-1">
                     {['Help Center', 'FAQ'].map((item) => (
                       <li key={item}>
-                        <a  href={item === 'FAQ' ? '#FAQs' : '/#help'}>
+                        <a href={item === 'FAQ' ? '#FAQs' : '/#help'}>
                           <img
                             className="iconsize me-1"
                             src={arrow}

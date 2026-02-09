@@ -15,7 +15,8 @@ import ContributorApp from '../images/ContributorApp.svg';
 import world from '../images/worl.png';
 import line from '../images/line.png';
 import dot from '../images/do.png';
-import { FaChevronDown } from 'react-icons/fa';
+import { FaChevronDown, FaArrowUp } from 'react-icons/fa';
+import { motion, AnimatePresence } from 'framer-motion';
 import arrow from '../images/arri.png';
 import AI3dCreatorsPopUp from '../../components/popup/AI3dCreatorsPopUp';
 import PremiumQuality from '../images/PremiumQuality.svg';
@@ -42,20 +43,29 @@ const ContributorLandingPage = () => {
   const isMobile = useMediaQuery({ maxWidth: 768 });
 
   useEffect(() => {
-    if (!isMobile || !pillsRef.current) return;
-    let scrollAmount = 0;
-    const pillWidth = 130;
-    const interval = setInterval(() => {
-      scrollAmount += pillWidth;
-      if (scrollAmount >= pillsRef.current.scrollWidth - pillsRef.current.clientWidth) {
-        scrollAmount = 0;
+    if (!pillsRef.current) return;
+
+    // Only run auto-scroll on mobile views
+    if (!isMobile) return;
+
+    let animationFrameId;
+    // Speed: pixels per frame. Adjust for desired speed.
+    const speed = 0.5;
+
+    const animateScroll = () => {
+      if (pillsRef.current) {
+        pillsRef.current.scrollLeft += speed;
+        // If we've scrolled past half the content (the original set), reset to 0
+        if (pillsRef.current.scrollLeft >= pillsRef.current.scrollWidth / 2) {
+          pillsRef.current.scrollLeft = 0;
+        }
       }
-      pillsRef.current.scrollTo({
-        left: scrollAmount,
-        behavior: 'smooth',
-      });
-    }, 1800);
-    return () => clearInterval(interval);
+      animationFrameId = requestAnimationFrame(animateScroll);
+    };
+
+    animationFrameId = requestAnimationFrame(animateScroll);
+
+    return () => cancelAnimationFrame(animationFrameId);
   }, [isMobile]);
 
   const faqs = [
@@ -126,14 +136,46 @@ const ContributorLandingPage = () => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+  const landingRef = useRef(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const section = landingRef.current;
+    if (!section) return;
+
+    const handleScroll = () => {
+      const scrollTop =
+        section.scrollTop || document.documentElement.scrollTop || document.body.scrollTop || 0;
+
+      // console.log('Section Scroll:', scrollTop);
+      setIsScrolled(scrollTop > 30);
+      setShowScrollTop(scrollTop > 300);
+    };
+
+    section.addEventListener('scroll', handleScroll);
+
+    return () => section.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    if (landingRef.current) {
+      landingRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    }
+  };
 
   return (
-    <section className="landing-page-section ai_3d_landing">
+    <section className="landing-page-section ai_3d_landing" ref={landingRef}>
       <div className="main_head" style={{ backgroundColor: '#FFEDF7' }}>
         <main className="container py-sm-4 pt-4">
           {/* ========================= navbar ======================= */}
 
-          <header className="a3d-header container-fluid bg-white mb-4 a3d-fade-in">
+          <header
+            className={`a3d-header container-fluid bg-white mb-4 a3d-fade-in ${isScrolled ? 'a3d-header-scrolled' : ''}`}
+          >
             <div className="d-flex justify-content-between align-items-center">
               <Link to="/">
                 <img src={logo} alt="Logo" style={{ width: '70%' }} />
@@ -169,33 +211,30 @@ const ContributorLandingPage = () => {
                   Services
                 </Link>
 
-                <a href="#3d-Sample" className="a3d-nav-link">
+                <a href="/#3d-Sample" className="a3d-nav-link">
                   3D Samples
                 </a>
 
-                <a href="#Leadership" className="a3d-nav-link">
+                <a href="/#Leadership" className="a3d-nav-link">
                   Leadership
                 </a>
-                <Link
-                  to="/referral"
-                  className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`}
-                >
-                  Referral
-                </Link>
+                <a
+                    href="/referral"
+                    className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`}
+                  >
+                    Referral
+                  </a>
               </nav>
 
               <div className="d-none d-lg-flex gap-3 align-items-center">
-                <Link to="/signin" className="a3d-nav-link">
-                  Sign-In
-                </Link>
-
                 <Link to="/platform/">
                   <button className="a3d-join-btn">Join Us</button>
                 </Link>
               </div>
             </div>
           </header>
-
+          {/* Spacer to prevent content overlap */}
+          <div className="a3d-header-offset"></div>
           {/* Mobile Sidebar */}
 
           <div className={`mobile-sidebar ${isOpen ? 'open' : ''}`}>
@@ -262,59 +301,73 @@ const ContributorLandingPage = () => {
         <div className="container" style={{ paddingBottom: 20 }}>
           <div className="row align-items-center">
             <div className="col-lg-7 p-lg-0">
-              <h1 className="contributor-title a3d-slide-up">
+              <motion.h1
+                className="contributor-title"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+              >
                 Your Work. Our Platform.
                 <br />
                 Limitless Possibilities,
                 <br />
                 Endless Impact.
                 <img src={elipse} alt="Ellipse" className="ellipse-img-our" />
-              </h1>
+              </motion.h1>
 
-              <p className="a3d-description mt-4 a3d-slide-up" style={{ animationDelay: '0.2s' }}>
+              <motion.p
+                className="a3d-description mt-4"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+              >
                 Join forces with global visionaries and innovators to co-create next- <br />
                 generation 3D solutions, shaping the future of immersive design and <br />{' '}
                 collaboration.
-              </p>
+              </motion.p>
 
-              <div
-                className="a3d-pills-scroll d-flex gap-3 my-4 a3d-slide-up"
+              <motion.div
+                className="a3d-pills-scroll d-flex gap-3 my-4"
                 id="pillSlider"
                 ref={pillsRef}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
                 style={{
-                  overflowX: isMobile ? 'auto' : 'visible',
+                  overflowX: isMobile ? 'hidden' : 'visible', // Hide scrollbar but allow programmatic scroll
+                  whiteSpace: isMobile ? 'nowrap' : 'normal',
                   minHeight: 48,
-                  scrollBehavior: 'smooth',
                   scrollbarWidth: 'none',
                   msOverflowStyle: 'none',
+                  flexWrap: isMobile ? 'nowrap' : 'wrap',
                 }}
               >
-                {pills.map((pill, idx) => (
+                {/* Duplicate pills to create infinite illusion only on mobile */}
+                {(isMobile ? [...pills, ...pills] : pills).map((pill, idx) => (
                   <div
                     className="a3d-pill"
-                    key={pill.label}
-                    style={{ minWidth: 'auto' }}
+                    key={`${pill.label}-${idx}`}
+                    style={{ minWidth: 'auto', flexShrink: 0 }}
                     onClick={() => {
-                      const target = document.getElementById(pill.target);
-                      if (target) {
-                        target.scrollIntoView({ behavior: 'smooth' });
-                      }
+                      window.location.href = `/#${pill.target}`;
                     }}
                   >
                     <span>{pill.label}</span>
                     <img src={pill.icon} alt="" style={{ paddingTop: 2 }} />
                   </div>
                 ))}
-              </div>
+              </motion.div>
 
-              <div
-                className="a3d-btn d-flex align-items-center gap-3 flex-wrap a3d-slide-up"
-                style={{ animationDelay: '0.2s' }}
+              <motion.div
+                className="a3d-btn d-flex align-items-center gap-3 flex-wrap"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
               >
                 <button className="a3d-join-btn" onClick={() => setShowPopup(true)}>
                   Get Started as Contributor
                 </button>
-              </div>
+              </motion.div>
             </div>
 
             <div className="col-lg-5 p-lg-0 mt-4 mt-lg-0">
@@ -324,7 +377,13 @@ const ContributorLandingPage = () => {
         </div>
       </div>
 
-      <section className="service-cards a3d-fade-in mt-5 pt-md-0 pt-3">
+      <motion.section
+        className="service-cards mt-5 pt-md-0 pt-3"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+      >
         <div className="container">
           <div className="text-center mb-1">
             <h2 className="join-platform-text" style={{ fontSize: isMobile ? '29px' : '38px' }}>
@@ -409,9 +468,15 @@ const ContributorLandingPage = () => {
             </div>
           </section>
         </div>
-      </section>
+      </motion.section>
 
-      <section className="service-cards a3d-fade-in mt-5 pt-md-0 pt-3">
+      <motion.section
+        className="service-cards mt-5 pt-md-0 pt-3"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+      >
         <div className="container">
           <div className="text-center mb-1">
             <h2 className="join-platform-text" style={{ fontSize: isMobile ? '29px' : '38px' }}>
@@ -425,9 +490,16 @@ const ContributorLandingPage = () => {
             </p>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      <section className="our-services a3d-fade-in" id="Services">
+      <motion.section
+        className="our-services"
+        id="Services"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+      >
         <div className="container">
           <div className="business-section" id="aboutus">
             <div className="row">
@@ -512,9 +584,15 @@ const ContributorLandingPage = () => {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      <section className="contributor-tools-section a3d-fade-in my-5">
+      <motion.section
+        className="contributor-tools-section my-5"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+      >
         <div className="container">
           <div className="row">
             <div className="col-md-6 col-12 d-flex align-items-center">
@@ -539,9 +617,15 @@ const ContributorLandingPage = () => {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      <section className="contributor-app-section a3d-fade-in my-5">
+      <motion.section
+        className="contributor-app-section my-5"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+      >
         <div className="container">
           <div className="row">
             <div className="col-md-6 col-12">
@@ -568,7 +652,7 @@ const ContributorLandingPage = () => {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       <div className="aithreed">
         <section className="dropdown mt-5 bg-white pt-5" id="FAQs">
@@ -641,7 +725,9 @@ const ContributorLandingPage = () => {
 
                 <div className="alldiv">
                   <div className="btn-wrapper">
-                    <button className="btn btn-custom Sell">Sell your 3D Models</button>
+                    <Link to="/contributor/program">
+                      <button className="btn btn-custom Sell">Sell your 3D Models</button>
+                    </Link>
                   </div>
 
                   {/* Mobile Language Dropdown */}
@@ -755,7 +841,7 @@ const ContributorLandingPage = () => {
                             ? '/platform/subscription'
                             : item === 'About us'
                               ? '/#aboutus'
-                              : '#'
+                              : '/'
                         }
                       >
                         <img
@@ -957,6 +1043,37 @@ const ContributorLandingPage = () => {
       </div>
 
       {showPopup && <AI3dCreatorsPopUp onClose={() => setShowPopup(false)} />}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.div
+            className="scroll-to-top"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            onClick={scrollToTop}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            style={{
+              position: 'fixed',
+              bottom: '40px',
+              right: '40px',
+              zIndex: 9999,
+              cursor: 'pointer',
+              backgroundColor: '#de3996',
+              borderRadius: '50%',
+              width: '50px',
+              height: '50px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              boxShadow: '0 4px 15px rgba(222, 57, 150, 0.4)',
+              border: '2px solid white',
+            }}
+          >
+            <FaArrowUp color="white" size={20} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };

@@ -121,7 +121,7 @@ import { baseURL } from '../config';
 import { useAuth } from '../context/AuthContext';
 import RoadmapSection from './LandingPageRoadmap';
 import TestimonialSection from './TestimonialSection';
-// import LeardershipSection from './LeardershipSection';
+import LeadershipSection from './LeadershipSection';
 
 const LandingPage = () => {
   const { pathname, hash, key } = useLocation();
@@ -2110,8 +2110,8 @@ const LandingPage = () => {
                 )}
               </div>
 
-              {/* <LeardershipSection /> */}
-
+              <LeadershipSection />
+              
             </div>
           </section>
 

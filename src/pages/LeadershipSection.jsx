@@ -3,13 +3,13 @@ import $ceo from '../assets/images/leadership/ceo.png';
 import $joel from '../assets/images/leadership/joel.png';
 import $osama from '../assets/images/leadership/osama.png';
 import $hira from '../assets/images/leadership/hira.png';
-import $shehroz from '../assets/images/leadership/shehroz.png';
+import $shehroz from '../assets/images/leadership/Shehroz.png';
 import $mudassar from '../assets/images/leadership/mudassar.png';
 import $samia from '../assets/images/leadership/samia.png';
 import $sajeel from '../assets/images/leadership/sajeel.png';
 import CustomInfoModal from '../components/popup/CustomInfoModal';
 
-const LeardershipSection = () => {
+const LeadershipSection = () => {
   const [modalData, setModalData] = useState(null);
 
   const team = [
@@ -306,4 +306,4 @@ const LeardershipSection = () => {
   );
 };
 
-export default LeardershipSection;
+export default LeadershipSection;

@@ -66,22 +66,26 @@
 
       const toggleArrow = document.getElementById('toggleArrow1');
       const extraCards = document.querySelectorAll('.extra_card');
-      const arrowImage = toggleArrow.querySelector('img');
+      
+      if (toggleArrow) {
+        const arrowImage = toggleArrow.querySelector('img');
+        let expanded = false;
 
-      let expanded = false;
+        toggleArrow.addEventListener('click', () => {
+          expanded = !expanded;
 
-      toggleArrow.addEventListener('click', () => {
-        expanded = !expanded;
+          extraCards.forEach((card) => card.classList.toggle('d-none'));
+          toggleArrow.classList.toggle('rotate', expanded);
 
-        extraCards.forEach((card) => card.classList.toggle('d-none'));
-        toggleArrow.classList.toggle('rotate', expanded);
-
-        if (expanded) {
-          arrowImage.style.marginBottom = '6px';
-        } else {
-          arrowImage.style.marginBottom = '4px';
-        }
-      });
+          if (arrowImage) {
+            if (expanded) {
+              arrowImage.style.marginBottom = '6px';
+            } else {
+              arrowImage.style.marginBottom = '4px';
+            }
+          }
+        });
+      }
 
       document.addEventListener('DOMContentLoaded', function () {
         const video = document.getElementById('customVideo');

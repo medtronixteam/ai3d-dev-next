@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import './LandingPage.css';
@@ -111,17 +111,256 @@ import mudassarImg from '../assets/images/Mudassar.svg';
 import shehrozImg from '../assets/images/ShahrozImg.svg';
 import FrameWiseImg from '../assets/images/FrameWise-Logo.png';
 import { useMediaQuery } from 'react-responsive';
-import SubscriptionModal from '../components/popup/SubscriptionModal';
-import LandingPageModal from '../components/popup/LandingPageModal';
-import LoginPopup from '../components/popup/LoginPopup';
-import CustomInfoModal from '../components/popup/CustomInfoModal';
+const SubscriptionModal = React.lazy(() => import('../components/popup/SubscriptionModal'));
+const LandingPageModal = React.lazy(() => import('../components/popup/LandingPageModal'));
+const LoginPopup = React.lazy(() => import('../components/popup/LoginPopup'));
+const CustomInfoModal = React.lazy(() => import('../components/popup/CustomInfoModal'));
+
 import Robot_Loader from '../assets/images/RobotLoader.png';
 import { FiArrowRight } from 'react-icons/fi';
 import { baseURL } from '../config';
 import { useAuth } from '../context/AuthContext';
-import RoadmapSection from './LandingPageRoadmap';
-import TestimonialSection from './TestimonialSection';
-import LeadershipSection from './LeadershipSection';
+
+const RoadmapSection = React.lazy(() => import('./LandingPageRoadmap'));
+const TestimonialSection = React.lazy(() => import('./TestimonialSection'));
+const LeadershipSection = React.lazy(() => import('./LeadershipSection'));
+
+const flagColors = {
+  USA: '#B22234',
+  Spain: '#AA151B',
+  Singapore: '#ED2939',
+  'United States': '#B22234',
+  Australia: '#00008B',
+};
+
+const pills = [
+  { label: 'Construction', icon: rightarrow, target: '3d-Sample' },
+  { label: 'Gaming', icon: rightarrow, target: '3d-Sample' },
+  { label: 'VR', icon: rightarrow, target: '3d-Sample' },
+  { label: 'Retail', icon: rightarrow, target: '3d-Sample' },
+  { label: 'Manufacturing', icon: rightarrow, target: '3d-Sample' },
+  { label: 'Health', icon: rightarrow, target: '3d-Sample' },
+];
+
+const trustedLogos = [
+  { src: google, alt: 'Google', style: { width: 130, marginTop: 6, marginRight: 5 } },
+  { src: googleCloud, alt: 'Google Cloud', style: { width: 130, marginRight: 7 } },
+  { src: PITB, alt: 'PITB', style: { width: 37, marginRight: 10 } },
+  { src: reginalPlan, alt: 'regional-plan', style: { width: 66, marginRight: 10 } },
+  { src: consulting, alt: 'consulting', style: { width: 76, marginRight: 10 } },
+  { src: vera, alt: 'vera-ai', style: { width: 30 } },
+];
+
+const faqs = [
+  {
+    question: 'How long does it take to transform a single model?',
+    answer: ' With our AI powered processing, most 3D models are generated in seconds to a few minutes, depending on complexity and resolution settings.',
+  },
+  {
+    question: 'How do I create an account?',
+    answer: 'Simply click "Sign Up" on our website or mobile app, enter your details, and verify your email. You can start with a free trial immediately.',
+  },
+  {
+    question: 'How can I upgrade to the paid version?',
+    answer: 'You can upgrade anytime from your account dashboard by selecting a subscription plan and making a secure online payment.',
+  },
+  {
+    question: 'Do you offer discounts?',
+    answer: ' Yes-discounts are available for annual subscriptions, educational institutions, and bulk enterprise packages. Contact our sales team for details.',
+  },
+];
+
+const FullDataMap = {
+  'Arslan Ahmad': {
+    Image: ArslanImg2,
+    title: 'Founder - CEO & Product Lead',
+    desc: [
+      'Arslan drives the vision and product innovation at AI 3D Scanning Solutions Inc., leading end-to-end product development from concept to deployment. With a focus on cutting-edge AI and LLM integration, he spearheads strategic partnerships oversees market positioning, and ensures the platform delivers transformative value to global industries.',
+      ' His leadership blends deep technical understanding with a sharp business acumen to scale AI3D’s solutions across multiple sectors.',
+    ],
+    expertise: [
+      'AI-driven product innovation & development',
+      'Strategic partnerships & fundraising',
+      'Scalable platform architecture & go-to-market strategy',
+      'Team management & scaling',
+      'Product management',
+    ],
+    linkedin: 'https://www.linkedin.com/in/arslan-ahmad-4b123a1b5/',
+    philosophy:
+      'Build tech that’s not just advanced but accessible, impactful, and scalable for the world',
+  },
+  'Dr. Joel Hillier': {
+    Image: CeoImg,
+    title: 'Growth Co-Founder – Business & AI Strategy Advisor',
+    desc: [
+      'Dr. Hillier provides strategic guidance on business growth, market positioning, and AI development direction. With expertise spanning artificial intelligence, data-driven innovation, and commercial strategy, he ensures that AI3D’s technological roadmap aligns with evolving market demands.',
+      'His role bridges technical capabilities with high-impact business outcomes, supporting scalable adoption across diverse industries',
+    ],
+    expertise: [
+      'AI strategy & market alignment',
+      'Global business growth & scaling strategies',
+      'Bridging research with commercial applications',
+    ],
+    linkedin: 'https://www.linkedin.com/in/joelhillier/',
+    philosophy: '.........',
+  },
+  'Shehroz Shabbir': {
+    Image: SehrozSir,
+    title: 'Web Development Manager',
+    desc: [
+      'As the Full Stack Developer at AI3D Scanning Solutions, Shehroz Shabbir is the technical backbone behind the company’s innovative platforms. Skilled in both front-end and back-end development, he ensures that every digital product delivers a seamless, high-performance user experience.',
+      'Shehroz’s expertise spans coding, system architecture, and database management, enabling him to translate complex business needs into functional, efficient, and scalable solutions. His work powers the AI-driven and 3D scanning technologies that define the company’s cutting-edge services.',
+    ],
+    expertise: [
+      'Full Stack Web Development',
+      'Front-End & Back-End Programming',
+      'Database Design & Management',
+      'UI/UX Implementation',
+      'Scalable Software Solutions',
+    ],
+    linkedin: 'https://www.linkedin.com/in/m-shehroz-shabbir/',
+    philosophy:
+      '"Great technology isn’t just built — it’s crafted with precision, creativity, and purpose."',
+  },
+  'Hira Aziz': {
+    Image: hiraImg,
+    title: 'Creative Media Manager & Video Editor',
+    desc: [
+      'Hira is the creative force behind the visual identity of AI3D Scanning Solutions. With over 3 years of professional experience as a video editor and creative strategist, she transforms complex ideas into visually compelling stories that captivate audiences and strengthen the company’s brand presence.',
+      'As Creative Media Manager, Hira oversees the planning, production, and delivery of high-quality multimedia content. Her expertise in video editing, graphic design, and creative direction ensures that every project reflects the company’s commitment to innovation and excellence in AI and 3D scanning solutions.',
+    ],
+    expertise: [
+      'Creative Direction & Brand Storytelling',
+      'Video Editing & Post-Production',
+      'Motion Graphics & Visual Effects',
+      'Multimedia Campaign Development',
+      'Graphic Design & Visual Communication',
+      'Content Strategy & Execution',
+    ],
+    linkedin: 'https://www.linkedin.com/in/hira-chaudhary-287186287/',
+    philosophy: '"Great design doesn’t just capture attention it inspires connection."',
+  },
+  'Usama Ahmad': {
+    Image: UsamaSir,
+    title: 'Finance Manager',
+    desc: [
+      'As the Finance Manager at AI3D Scanning Solutions, Usama plays a pivotal role in ensuring the company’s financial health and long-term stability. With strong expertise in financial planning, budgeting, and strategic analysis, he oversees all aspects of accounting, reporting, and compliance, ensuring that business decisions are backed by accurate and insightful financial data.',
+      ' Usama is committed to optimizing resources, managing risks, and supporting the company’s rapid growth in the cutting-edge field of AI and 3D scanning technology. His meticulous approach to financial management empowers AI3D Scanning Solutions to maintain operational efficiency while driving innovation in the industry.',
+    ],
+    expertise: [
+      'Financial Planning & Analysis',
+      'Budget Development & Cost Control',
+      'Risk Assessment & Compliance',
+      'Cash Flow Management',
+      'Strategic Decision Support',
+      'Process Optimization',
+    ],
+    linkedin: 'https://www.linkedin.com/in/usama-khan-793960337/',
+    philosophy:
+      '"A strong financial foundation is the backbone of innovation. My mission is to ensure every number tells a story that drives the company forward.”',
+  },
+  'Sajeel Nisar': {
+    Image: SajeelSir,
+    title: 'AI Lead',
+    desc: [
+      'As an AI Engineer at AI3D Scanning Solutions, Sajeel specializes in designing and implementing intelligent systems that power the company’s 3D scanning and automation technologies. With a deep understanding of machine learning, computer vision, and data modeling, he transforms complex datasets into actionable insights and automated solutions.',
+      ' His work ensures that AI3D Scanning Solutions remains at the forefront of innovation, delivering smarter, faster, and more accurate scanning experiences for clients across industries. Sajeel’s approach blends technical precision with creative problem-solving to push the boundaries of what AI can achieve.',
+    ],
+    expertise: [
+      'Artificial Intelligence & Machine Learning',
+      'Computer Vision & Image Processing',
+      'Neural Network Architecture',
+      'Data Analysis & Predictive Modeling',
+      'Automation Systems Development',
+      'AI-Driven 3D Scanning Solutions',
+    ],
+    linkedin: 'https://www.linkedin.com/in/msajeel/',
+    philosophy:
+      '"The future belongs to intelligent systems — and I believe in building AI that makes technology more human."',
+  },
+  'Mudassar Farooq': {
+    Image: MudassarSir,
+    title: 'HR & Business Development Manager',
+    desc: [
+      'Mudassar is a dynamic professional at AI3D Scanning Solutions, combining strategic business development expertise with a strong foundation in human resources. In his business development role, he focuses on identifying growth opportunities, building partnerships, and expanding the company’s reach in the AI and 3D scanning industry.',
+      'Mudassar is a dynamic professional at AI3D Scanning Solutions, combining strategic business development expertise with a strong foundation in human resources. In his business development role, he focuses on identifying growth opportunities, building partnerships, and expanding the company’s reach in the AI and 3D scanning industry.',
+    ],
+    expertise: [
+      'Business Growth Strategy & Market Expansion',
+      'Client Relationship Management',
+      'Partnership Development & Networking',
+      'Talent Acquisition & Retention',
+      'Organizational Development',
+      'Strategic Planning & Execution',
+    ],
+    linkedin: 'https://www.linkedin.com/in/m-mudassar-farooq/',
+    philosophy:
+      '"Success is built on strong relationships — both with clients and within the team."',
+  },
+  'Samia Rasheed': {
+    Image: samiaImg,
+    title: 'Social Media Manager & Associate HR',
+    desc: [
+      'Samia brings creativity, communication expertise, and people-focused leadership to AI3D Scanning Solutions. As Social Media Manager, she crafts engaging digital content and manages the company’s online presence, ensuring the brand’s voice reaches the right audience with impact and consistency.',
+      ' In her role as Associate HR, Samia supports a positive and productive work environment by assisting in talent acquisition, employee engagement, and team coordination. Her unique blend of marketing insight and human resource skills helps bridge the gap between the company’s brand identity and its internal culture.',
+    ],
+    expertise: [
+      'Social Media Strategy & Content Creation',
+      'Brand Awareness & Audience Engagement',
+      'Talent Acquisition & Onboarding',
+      'Internal Communication & Collaboration',
+      'Creative Campaign Development',
+    ],
+    linkedin: 'https://www.linkedin.com/in/samiarasheed/',
+    philosophy:
+      '"A strong brand starts with inspired people — and inspired people create the stories worth sharing."',
+  },
+};
+
+const testimonials = [
+  {
+    name: 'Victoria Akyea',
+    role: 'USA',
+    text: 'It’s been a pleasure working and collaborating with Arslan and the AI 3D Scanning team! They are an amazingly innovative team that eagerly tackle even complex  projects in any sector with ease. We were amazed at the speed of execution they can deliver, and so appreciated their professionalism and expertise in helping us accomplish our vision. Truly honored to partner with a company that has such a bold and pioneering vision.',
+    image: FrameWiseImg,
+  },
+  {
+    name: 'Antonio Vegan',
+    role: 'Spain',
+    text: 'I HIGHLY recommend Medtronix for AI development services, especially working with Islaava and his team. Their CODE expertise and thorough DOCUMENTATION truly EXCEEDED my expectations, coupled with Islaava’s deep understanding and quick responsiveness. It was an AMAZING experience with great outcomes!',
+    image: client1,
+  },
+  {
+    name: 'Ganeshkumar',
+    role: 'Singapore',
+    text: 'Really an awesome person to work with, fast replies , quality work and hardworking ',
+    image: null,
+  },
+  {
+    name: 'Shakesfuture',
+    role: 'United States',
+    text: '5 stars all around. great guy to work with. will work with again',
+    image: null,
+  },
+  {
+    name: 'Neil Kemp',
+    role: 'Australia',
+    text: 'Ahmad completed my task perfectly. He was on budget, lightning fast and communicated with me when I asked a question. When he finished the task he sent me a video of the program working and a walk through comprehensive video on how to install and run the new program. I could not be any happier with the service. Neil. Sydney, Australia.',
+    image: null,
+  },
+  {
+    name: 'Zheyu X',
+    role: 'Australia',
+    text: 'Ahmad and his team are very hard workers producing for me excellent results. I can always run ideas past Ahmad to see if they can be done. Most times they can be done. He is very proffessional and i will be using many many more times. Thank you for all the hard work. I am super impressed with what you have delivered.',
+    image: null,
+  },
+  {
+    name: 'Edwin Koort',
+    role: 'Australia',
+    text: 'I hired this company to design my website, and I was completely satisfied. From the beginning, they showed a high level of professionalism, listened to my needs, and offered tailored solutions.The final design was modern, functional, and fully responsive. The process was transparent, with timely deliveries and great communication. Plus, the post-launch support has been outstanding.',
+    image: client2,
+  },
+];
 
 const LandingPage = () => {
   const { pathname, hash, key } = useLocation();
@@ -136,13 +375,20 @@ const LandingPage = () => {
     const section = landingRef.current;
     if (!section) return;
 
+    let ticking = false;
     const handleScroll = () => {
-      const scrollTop = section.scrollTop;
-      setIsScrolled(scrollTop > 30);
-      setShowScrollTop(scrollTop > 300);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollTop = section.scrollTop;
+          setIsScrolled(scrollTop > 30);
+          setShowScrollTop(scrollTop > 300);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
-    section.addEventListener('scroll', handleScroll);
+    section.addEventListener('scroll', handleScroll, { passive: true });
     return () => section.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -193,7 +439,7 @@ const LandingPage = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 2000);
+    }, 800);
 
     return () => clearTimeout(timer);
   }, []);
@@ -203,58 +449,7 @@ const LandingPage = () => {
     setShowLoginModal(true);
   };
 
-  const flagColors = {
-    USA: '#B22234',
-    Spain: '#AA151B',
-    Singapore: '#ED2939',
-    'United States': '#B22234',
-    Australia: '#00008B',
-  };
-
-  const testimonials = [
-    {
-      name: 'Victoria Akyea',
-      role: 'USA',
-      text: 'It’s been a pleasure working and collaborating with Arslan and the AI 3D Scanning team! They are an amazingly innovative team that eagerly tackle even complex  projects in any sector with ease. We were amazed at the speed of execution they can deliver, and so appreciated their professionalism and expertise in helping us accomplish our vision. Truly honored to partner with a company that has such a bold and pioneering vision.',
-      image: FrameWiseImg,
-    },
-    {
-      name: 'Antonio Vegan',
-      role: 'Spain',
-      text: 'I HIGHLY recommend Medtronix for AI development services, especially working with Islaava and his team. Their CODE expertise and thorough DOCUMENTATION truly EXCEEDED my expectations, coupled with Islaava’s deep understanding and quick responsiveness. It was an AMAZING experience with great outcomes!',
-      image: client1,
-    },
-    {
-      name: 'Ganeshkumar',
-      role: 'Singapore',
-      text: 'Really an awesome person to work with, fast replies , quality work and hardworking ',
-      image: null,
-    },
-    {
-      name: 'Shakesfuture',
-      role: 'United States',
-      text: '5 stars all around. great guy to work with. will work with again',
-      image: null,
-    },
-    {
-      name: 'Neil Kemp',
-      role: 'Australia',
-      text: 'Ahmad completed my task perfectly. He was on budget, lightning fast and communicated with me when I asked a question. When he finished the task he sent me a video of the program working and a walk through comprehensive video on how to install and run the new program. I could not be any happier with the service. Neil. Sydney, Australia.',
-      image: null,
-    },
-    {
-      name: 'Zheyu X',
-      role: 'Australia',
-      text: 'Ahmad and his team are very hard workers producing for me excellent results. I can always run ideas past Ahmad to see if they can be done. Most times they can be done. He is very proffessional and i will be using many many more times. Thank you for all the hard work. I am super impressed with what you have delivered.',
-      image: null,
-    },
-    {
-      name: 'Edwin Koort',
-      role: 'Australia',
-      text: 'I hired this company to design my website, and I was completely satisfied. From the beginning, they showed a high level of professionalism, listened to my needs, and offered tailored solutions.The final design was modern, functional, and fully responsive. The process was transparent, with timely deliveries and great communication. Plus, the post-launch support has been outstanding.',
-      image: client2,
-    },
-  ];
+  // Data constants moved outside to optimize performance
 
   const [activeIndex, setActiveIndex] = useState(1);
   const [scaledIndex, setScaledIndex] = useState(null);
@@ -313,33 +508,31 @@ const LandingPage = () => {
   //   };
   // }, []);
 
-  const pills = [
-    { label: 'Construction', icon: rightarrow, target: '3d-Sample' },
-    { label: 'Gaming', icon: rightarrow, target: '3d-Sample' },
-    { label: 'VR', icon: rightarrow, target: '3d-Sample' },
-    { label: 'Retail', icon: rightarrow, target: '3d-Sample' },
-    { label: 'Manufacturing', icon: rightarrow, target: '3d-Sample' },
-    { label: 'Health', icon: rightarrow, target: '3d-Sample' },
-  ];
+  // Static sections moved out
 
   const pillsRef = useRef(null);
   const isMobile = useMediaQuery({ maxWidth: 768 });
 
   useEffect(() => {
     if (!pillsRef.current) return;
-
-    // Only run auto-scroll on mobile views
     if (!isMobile) return;
 
     let animationFrameId;
-    // Speed: pixels per frame. Adjust for desired speed.
     const speed = 0.5;
+    
+    // Cache the scroll width once to avoid forced reflow every frame
+    let cachedScrollWidth = pillsRef.current.scrollWidth;
+    
+    const updateWidth = () => {
+      if (pillsRef.current) cachedScrollWidth = pillsRef.current.scrollWidth;
+    };
+    window.addEventListener('resize', updateWidth);
 
     const animateScroll = () => {
       if (pillsRef.current) {
         pillsRef.current.scrollLeft += speed;
-        // If we've scrolled past half the content (the original set), reset to 0
-        if (pillsRef.current.scrollLeft >= pillsRef.current.scrollWidth / 2) {
+        // Check against cached value
+        if (pillsRef.current.scrollLeft >= cachedScrollWidth / 2) {
           pillsRef.current.scrollLeft = 0;
         }
       }
@@ -348,38 +541,47 @@ const LandingPage = () => {
 
     animationFrameId = requestAnimationFrame(animateScroll);
 
-    return () => cancelAnimationFrame(animationFrameId);
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('resize', updateWidth);
+    };
   }, [isMobile]);
 
-  const trustedLogos = [
-    { src: google, alt: 'Google', style: { width: 130, marginTop: 6, marginRight: 5 } },
-    { src: googleCloud, alt: 'Google Cloud', style: { width: 130, marginRight: 7 } },
-    { src: PITB, alt: 'PITB', style: { width: 37, marginRight: 10 } },
-    { src: reginalPlan, alt: 'regional-plan', style: { width: 66, marginRight: 10 } },
-    { src: consulting, alt: 'consulting', style: { width: 76, marginRight: 10 } },
-    { src: vera, alt: 'vera-ai', style: { width: 30 } },
-  ];
+  // Logos moved out
 
   const trustedLogosRef = useRef(null);
 
   useEffect(() => {
     if (!isMobile || !trustedLogosRef.current) return;
+    
+    let animationFrameId;
+    const scrollContainer = trustedLogosRef.current;
     let scrollAmount = 0;
     const logoWidth = 140;
+    
+    // Cache dimensions
+    let totalScrollableWidth = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+    
     const interval = setInterval(() => {
       scrollAmount += logoWidth;
-      if (
-        scrollAmount >=
-        trustedLogosRef.current.scrollWidth - trustedLogosRef.current.clientWidth
-      ) {
+      if (scrollAmount >= totalScrollableWidth) {
         scrollAmount = 0;
       }
-      trustedLogosRef.current.scrollTo({
+      scrollContainer.scrollTo({
         left: scrollAmount,
         behavior: 'smooth',
       });
     }, 1800);
-    return () => clearInterval(interval);
+
+    const updateDimensions = () => {
+      totalScrollableWidth = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+    };
+    window.addEventListener('resize', updateDimensions);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('resize', updateDimensions);
+    };
   }, [isMobile]);
 
   useEffect(() => {
@@ -440,35 +642,7 @@ const LandingPage = () => {
 
   // FAQ data
 
-  const faqs = [
-    {
-      question: 'How long does it take to transform a single model?',
-
-      answer:
-        ' With our AI powered processing, most 3D models are generated in seconds to a few minutes, depending on complexity and resolution settings.',
-    },
-
-    {
-      question: 'How do I create an account?',
-
-      answer:
-        'Simply click "Sign Up" on our website or mobile app, enter your details, and verify your email. You can start with a free trial immediately.',
-    },
-
-    {
-      question: 'How can I upgrade to the paid version?',
-
-      answer:
-        'You can upgrade anytime from your account dashboard by selecting a subscription plan and making a secure online payment.',
-    },
-
-    {
-      question: 'Do you offer discounts?',
-
-      answer:
-        ' Yes-discounts are available for annual subscriptions, educational institutions, and bulk enterprise packages. Contact our sales team for details.',
-    },
-  ];
+  // FAQs moved out
 
   const toggleFAQ = (index) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -691,160 +865,7 @@ const LandingPage = () => {
       const role = slide.querySelector('.twocards, .teamtitle')?.textContent || '';
       const desc = slide.querySelector('p')?.textContent || '';
 
-      const fullDataMap = {
-        'Arslan Ahmad': {
-          Image: ArslanImg2,
-          title: 'Founder - CEO & Product Lead',
-          desc: [
-            'Arslan drives the vision and product innovation at AI 3D Scanning Solutions Inc., leading end-to-end product development from concept to deployment. With a focus on cutting-edge AI and LLM integration, he spearheads strategic partnerships oversees market positioning, and ensures the platform delivers transformative value to global industries.',
-            ' His leadership blends deep technical understanding with a sharp business acumen to scale AI3D’s solutions across multiple sectors.',
-          ],
-          expertise: [
-            'AI-driven product innovation & development',
-            'Strategic partnerships & fundraising',
-            'Scalable platform architecture & go-to-market strategy',
-            'Team management & scaling',
-            'Product management',
-          ],
-          linkedin: 'https://www.linkedin.com/in/arslan-ahmad-4b123a1b5/',
-          philosophy:
-            'Build tech that’s not just advanced but accessible, impactful, and scalable for the world',
-        },
-
-        'Dr. Joel Hillier': {
-          Image: CeoImg,
-          title: 'Growth Co-Founder – Business & AI Strategy Advisor',
-
-          desc: [
-            'Dr. Hillier provides strategic guidance on business growth, market positioning, and AI development direction. With expertise spanning artificial intelligence, data-driven innovation, and commercial strategy, he ensures that AI3D’s technological roadmap aligns with evolving market demands.',
-            'His role bridges technical capabilities with high-impact business outcomes, supporting scalable adoption across diverse industries',
-          ],
-          expertise: [
-            'AI strategy & market alignment',
-            'Global business growth & scaling strategies',
-            'Bridging research with commercial applications',
-          ],
-          linkedin: 'https://www.linkedin.com/in/joelhillier/',
-          philosophy: '.........',
-        },
-        'Shehroz Shabbir': {
-          Image: SehrozSir,
-          title: 'Web Development Manager',
-          desc: [
-            'As the Full Stack Developer at AI3D Scanning Solutions, Shehroz Shabbir is the technical backbone behind the company’s innovative platforms. Skilled in both front-end and back-end development, he ensures that every digital product delivers a seamless, high-performance user experience.',
-            'Shehroz’s expertise spans coding, system architecture, and database management, enabling him to translate complex business needs into functional, efficient, and scalable solutions. His work powers the AI-driven and 3D scanning technologies that define the company’s cutting-edge services.',
-          ],
-          expertise: [
-            'Full Stack Web Development',
-            'Front-End & Back-End Programming',
-            'Database Design & Management',
-            'UI/UX Implementation',
-            'Scalable Software Solutions',
-          ],
-          linkedin: 'https://www.linkedin.com/in/m-shehroz-shabbir/',
-          philosophy:
-            '"Great technology isn’t just built — it’s crafted with precision, creativity, and purpose."',
-        },
-        'Hira Aziz': {
-          Image: hiraImg,
-          title: 'Creative Media Manager & Video Editor',
-
-          desc: [
-            'Hira is the creative force behind the visual identity of AI3D Scanning Solutions. With over 3 years of professional experience as a video editor and creative strategist, she transforms complex ideas into visually compelling stories that captivate audiences and strengthen the company’s brand presence.',
-            'As Creative Media Manager, Hira oversees the planning, production, and delivery of high-quality multimedia content. Her expertise in video editing, graphic design, and creative direction ensures that every project reflects the company’s commitment to innovation and excellence in AI and 3D scanning solutions.',
-          ],
-          expertise: [
-            'Creative Direction & Brand Storytelling',
-            'Video Editing & Post-Production',
-            'Motion Graphics & Visual Effects',
-            'Multimedia Campaign Development',
-            'Graphic Design & Visual Communication',
-            'Content Strategy & Execution',
-          ],
-          linkedin: 'https://www.linkedin.com/in/hira-chaudhary-287186287/',
-          philosophy: '"Great design doesn’t just capture attention it inspires connection."',
-        },
-        'Usama Ahmad': {
-          Image: UsamaSir,
-          title: 'Finance Manager',
-
-          desc: [
-            'As the Finance Manager at AI3D Scanning Solutions, Usama plays a pivotal role in ensuring the company’s financial health and long-term stability. With strong expertise in financial planning, budgeting, and strategic analysis, he oversees all aspects of accounting, reporting, and compliance, ensuring that business decisions are backed by accurate and insightful financial data.',
-            ' Usama is committed to optimizing resources, managing risks, and supporting the company’s rapid growth in the cutting-edge field of AI and 3D scanning technology. His meticulous approach to financial management empowers AI3D Scanning Solutions to maintain operational efficiency while driving innovation in the industry.',
-          ],
-          expertise: [
-            'Financial Planning & Analysis',
-            'Budget Development & Cost Control',
-            'Risk Assessment & Compliance',
-            'Cash Flow Management',
-            'Strategic Decision Support',
-            'Process Optimization',
-          ],
-          linkedin: 'https://www.linkedin.com/in/usama-khan-793960337/',
-          philosophy:
-            '"A strong financial foundation is the backbone of innovation. My mission is to ensure every number tells a story that drives the company forward.”',
-        },
-        'Sajeel Nisar': {
-          Image: SajeelSir,
-          title: 'AI Lead',
-
-          desc: [
-            'As an AI Engineer at AI3D Scanning Solutions, Sajeel specializes in designing and implementing intelligent systems that power the company’s 3D scanning and automation technologies. With a deep understanding of machine learning, computer vision, and data modeling, he transforms complex datasets into actionable insights and automated solutions.',
-            ' His work ensures that AI3D Scanning Solutions remains at the forefront of innovation, delivering smarter, faster, and more accurate scanning experiences for clients across industries. Sajeel’s approach blends technical precision with creative problem-solving to push the boundaries of what AI can achieve.',
-          ],
-          expertise: [
-            'Artificial Intelligence & Machine Learning',
-            'Computer Vision & Image Processing',
-            'Neural Network Architecture',
-            'Data Analysis & Predictive Modeling',
-            'Automation Systems Development',
-            'AI-Driven 3D Scanning Solutions',
-          ],
-          linkedin: 'https://www.linkedin.com/in/msajeel/',
-          philosophy:
-            '"The future belongs to intelligent systems — and I believe in building AI that makes technology more human."',
-        },
-        'Mudassar Farooq': {
-          Image: MudassarSir,
-          title: 'HR & Business Development Manager',
-          desc: [
-            'Mudassar is a dynamic professional at AI3D Scanning Solutions, combining strategic business development expertise with a strong foundation in human resources. In his business development role, he focuses on identifying growth opportunities, building partnerships, and expanding the company’s reach in the AI and 3D scanning industry.',
-            'Mudassar is a dynamic professional at AI3D Scanning Solutions, combining strategic business development expertise with a strong foundation in human resources. In his business development role, he focuses on identifying growth opportunities, building partnerships, and expanding the company’s reach in the AI and 3D scanning industry.',
-          ],
-          expertise: [
-            'Business Growth Strategy & Market Expansion',
-            'Client Relationship Management',
-            'Partnership Development & Networking',
-            'Talent Acquisition & Retention',
-            'Organizational Development',
-            'Strategic Planning & Execution',
-          ],
-          linkedin: 'https://www.linkedin.com/in/m-mudassar-farooq/',
-          philosophy:
-            '"Success is built on strong relationships — both with clients and within the team."',
-        },
-        'Samia Rasheed': {
-          Image: samiaImg,
-          title: 'Social Media Manager & Associate HR',
-
-          desc: [
-            'Samia brings creativity, communication expertise, and people-focused leadership to AI3D Scanning Solutions. As Social Media Manager, she crafts engaging digital content and manages the company’s online presence, ensuring the brand’s voice reaches the right audience with impact and consistency.',
-            ' In her role as Associate HR, Samia supports a positive and productive work environment by assisting in talent acquisition, employee engagement, and team coordination. Her unique blend of marketing insight and human resource skills helps bridge the gap between the company’s brand identity and its internal culture.',
-          ],
-          expertise: [
-            'Social Media Strategy & Content Creation',
-            'Brand Awareness & Audience Engagement',
-            'Talent Acquisition & Onboarding',
-            'Internal Communication & Collaboration',
-            'Creative Campaign Development',
-          ],
-          linkedin: 'https://www.linkedin.com/in/samiarasheed/',
-          philosophy:
-            '"A strong brand starts with inspired people — and inspired people create the stories worth sharing."',
-        },
-      };
-
-      const detailed = fullDataMap[name] || {
+      const detailed = FullDataMap[name] || {
         title: role,
         description: desc,
         expertise: [],
@@ -908,7 +929,7 @@ const LandingPage = () => {
         {/* ========================= navbar ======================= */}
 
         <div className="main_head" style={{ backgroundColor: '#FFEDF7' }}>
-          <main className="container py-sm-4 pt-4">
+          <div className="container py-sm-4 pt-4">
             {/* ========================= navbar ======================= */}
 
             <header
@@ -1037,7 +1058,7 @@ const LandingPage = () => {
             {/* Overlay for background click */}
 
             {isOpen && <div className="overlay" onClick={() => setIsOpen(false)}></div>}
-          </main>
+          </div>
 
           {/* ========================= Hero Section ======================= */}
 
@@ -1050,13 +1071,7 @@ const LandingPage = () => {
                 className="col-lg-7 p-lg-0"
                 // style={{ marginTop: isMobile ? '0rem' : '-2rem' }}
               >
-                <motion.h1
-                  className="a3d-title"
-                  style={{ marginTop: 30 }}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8 }}
-                >
+                <h1 className="a3d-title LCP-Hero-Title" style={{ marginTop: 30 }}>
                   <span className="a3d-gradient-span-text">
                     <img src={elipse} alt="Ellipse" className="ellipse-img-ec" />
                     Perfect place where
@@ -1066,20 +1081,15 @@ const LandingPage = () => {
                     <span>Model Creation</span>
                   </span>
                   <span></span>
-                </motion.h1>
+                </h1>
 
-                <motion.p
-                  className="a3d-description mt-4"
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                >
+                <p className="a3d-description mt-4 LCP-Hero-Desc">
                   AI-powered platform for live 3D model generation, editing and{' '}
                   <span className="d-none d-lg-inline">
                     <br />
                   </span>{' '}
                   collaboration - no expensive hardware needed.
-                </motion.p>
+                </p>
 
                 <div
                   className="a3d-pills-scroll d-flex gap-3 my-4 a3d-slide-up"
@@ -2110,7 +2120,9 @@ const LandingPage = () => {
                 )}
               </div>
 
-              <LeadershipSection />
+              <Suspense fallback={<div className="p-5 text-center">Loading...</div>}>
+                <LeadershipSection />
+              </Suspense>
               
             </div>
           </section>
@@ -2176,7 +2188,9 @@ const LandingPage = () => {
                 </div>
               </div>
             </section> */}
-            <TestimonialSection />
+            <Suspense fallback={null}>
+              <TestimonialSection />
+            </Suspense>
 
             {/* Navigation */}
             {/* <div className="custom-nav">
@@ -2213,7 +2227,9 @@ const LandingPage = () => {
                     through a carefully planned development journey.
                   </p>
                 </div>
-                <RoadmapSection />
+                <Suspense fallback={null}>
+                  <RoadmapSection />
+                </Suspense>
               </div>
             </div>
           </motion.section>
@@ -2707,20 +2723,22 @@ const LandingPage = () => {
       </AnimatePresence>
 
       {/* Subscription Modal */}
-      <LandingPageModal
-        open={subscriptionModalOpen}
-        onClose={() => setSubscriptionModalOpen(false)}
-        onRequireLogin={handleOpenLogin}
-      />
-
-      {showLoginModal && (
-        <LoginPopup
-          onClose={() => setShowLoginModal(false)}
-          onSuccess={() => {
-            setShowLoginModal(false);
-          }}
+      <Suspense fallback={null}>
+        <LandingPageModal
+          open={subscriptionModalOpen}
+          onClose={() => setSubscriptionModalOpen(false)}
+          onRequireLogin={handleOpenLogin}
         />
-      )}
+
+        {showLoginModal && (
+          <LoginPopup
+            onClose={() => setShowLoginModal(false)}
+            onSuccess={() => {
+              setShowLoginModal(false);
+            }}
+          />
+        )}
+      </Suspense>
     </>
   );
 };

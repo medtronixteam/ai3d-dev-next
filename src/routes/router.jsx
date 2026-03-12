@@ -1,26 +1,15 @@
 /* eslint-disable react-refresh/only-export-components */
 import { Suspense, lazy } from 'react';
-import { Outlet, createBrowserRouter } from 'react-router-dom';
+import { Outlet, createBrowserRouter, Navigate } from 'react-router-dom';
 import Splash from 'components/loader/Splash';
 import PageLoader from 'components/loader/PageLoader';
 import ProtectedRoute from 'components/ProtectedRoute';
-import CardPayment from '../pages/subscription/CardPayment';
-import ApiSdkComingSoon from '../pages/api-sdk';
-import Support from '../pages/support';
-import Service from '../pages/Service';
-import Referral from '../pages/referral';
-import ReferralPage from '../pages/settings/ReferralPage';
-import { Navigate } from 'react-router-dom';
-import ContributorLandingPage from '../pages/ContributorPage/ContributorLandingPage';
-import GetStartedPage from '../pages/ContributorPage/GetStartedPage';
-import TicketHistory from '../pages/SupportPages/TicketHistory';
-import SupportTicketDetails from '../pages/SupportPages/SupportTicketDetails';
+import App from '../App';
+import LandingPage from 'pages/LandingPage';
 
 // LAZY IMPORTS
-const App = lazy(() => import('../App'));
 const MainLayout = lazy(() => import('layouts/main-layout'));
 const AuthLayout = lazy(() => import('layouts/auth-layout'));
-const LandingPage = lazy(() => import('pages/LandingPage'));
 const Schedule = lazy(() => import('pages/schedule'));
 const Dashboard = lazy(() => import('pages/dashboard'));
 const SignIn = lazy(() => import('pages/authentication/SignIn'));
@@ -49,13 +38,20 @@ const Notification = lazy(() => import('pages/notification'));
 const PurchaseHistory = lazy(() => import('pages/settings/PurchaseHistory'));
 const SessionHistory = lazy(() => import('pages/settings/SessionHistory'));
 
+const CardPayment = lazy(() => import('../pages/subscription/CardPayment'));
+const ApiSdkComingSoon = lazy(() => import('../pages/api-sdk'));
+const Support = lazy(() => import('../pages/support'));
+const Service = lazy(() => import('../pages/Service'));
+const Referral = lazy(() => import('../pages/referral'));
+const ReferralPage = lazy(() => import('../pages/settings/ReferralPage'));
+const ContributorLandingPage = lazy(() => import('../pages/ContributorPage/ContributorLandingPage'));
+const GetStartedPage = lazy(() => import('../pages/ContributorPage/GetStartedPage'));
+const TicketHistory = lazy(() => import('../pages/SupportPages/TicketHistory'));
+const SupportTicketDetails = lazy(() => import('../pages/SupportPages/SupportTicketDetails'));
+
 const routes = [
   {
-    element: (
-      <Suspense fallback={<Splash />}>
-        <App />
-      </Suspense>
-    ),
+    element: <App />,
     children: [
       // Landing Page
       {

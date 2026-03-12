@@ -256,7 +256,6 @@ const Service = () => {
         {/* ========================= Service Content Section ======================= */}
 
         <section className="services-section">
-          {/* Removed redundant title here as it overlaps with hero title */}
 
           <p className="service-herosection2-description a3d-slide-up" style={{ animationDelay: '0.2s' }}>
               From concept to deployment, AI3D Scanning Solutions delivers end-to-end technology

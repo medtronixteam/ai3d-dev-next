@@ -28,16 +28,17 @@ import HalfEllipse from '../assets/images/HalfEllipse.svg';
 import { useMediaQuery } from 'react-responsive';
 import Cards from '../components/Cards/Cards';
 import Circle from './Animation/Circle';
-import { FaChevronDown } from 'react-icons/fa';
+import { FaChevronDown, FaArrowUp } from 'react-icons/fa';
+import { motion, AnimatePresence } from 'framer-motion';
 const Service = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const { pathname, hash, key } = useLocation();
   const pills = [
-    { label: 'AI Development', icon: rightarrow, target : "AI-Development" },
-    { label: 'Flutter App', icon: rightarrow, target : "Flutter" },
-    { label: 'Website Development', icon: rightarrow , target : "Website-Development" },
-    { label: 'Desktop App', icon: rightarrow, target : "Desktop-App" },
+    { label: 'AI Development', icon: rightarrow, target: "AI-Development" },
+    { label: 'Flutter App', icon: rightarrow, target: "Flutter" },
+    { label: 'Website Development', icon: rightarrow, target: "Website-Development" },
+    { label: 'Desktop App', icon: rightarrow, target: "Desktop-App" },
     // { label: 'Manufacturing', icon: rightarrow },
     // { label: 'Health', icon: rightarrow },
   ];
@@ -113,10 +114,75 @@ const Service = () => {
       }, 0);
     }
   }, [pathname, hash, key]);
+  const landingRef = useRef(null);
+  const [isScrolled, setIsScrolled] = useState(false);
 
+
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const section = landingRef.current;
+    if (!section) return;
+
+    const handleScroll = () => {
+      const scrollTop =
+        section.scrollTop ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop ||
+        0;
+
+      // console.log("Section Scroll:", scrollTop);
+      setIsScrolled(scrollTop > 30);
+      setShowScrollTop(scrollTop > 300);
+    };
+
+    section.addEventListener("scroll", handleScroll);
+
+    return () => section.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    if (landingRef.current) {
+      landingRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    }
+  };
   return (
     <>
-      <div className="service-section-page ai_3d_landing">
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.div
+            className="scroll-to-top"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            onClick={scrollToTop}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            style={{
+              position: 'fixed',
+              bottom: '40px',
+              right: '40px',
+              zIndex: 9999,
+              cursor: 'pointer',
+              backgroundColor: '#de3996',
+              borderRadius: '50%',
+              width: '50px',
+              height: '50px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              boxShadow: '0 4px 15px rgba(222, 57, 150, 0.4)',
+              border: '2px solid white'
+            }}
+          >
+            <FaArrowUp color="white" size={20} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <div className="landing-page-section service-section-page ai_3d_landing" ref={landingRef}>
         <div className="main_head" style={{ backgroundColor: '#FFEDF7' }}>
           {/* <main className="container"> */}
           {/* </main> */}
@@ -129,34 +195,94 @@ const Service = () => {
 
               {/* ========================= navbar ======================= */}
 
-            <header className="a3d-header container-fluid bg-white mb-4 a3d-fade-in">
-              <div className="d-flex justify-content-between align-items-center">
-                <Link to="/">
-                  <img src={logo} alt="Logo" style={{ width: '70%' }} />
-                </Link>
+              <header
+                className={`a3d-header container-fluid bg-white mb-4 a3d-fade-in ${isScrolled ? 'a3d-header-scrolled' : ''}`}
+              >
+                <div className="d-flex justify-content-between align-items-center">
+                  <Link to="/">
+                    <img src={logo} alt="Logo" style={{ width: '70%' }} />
+                  </Link>
 
-                {/* Menu Button for Mobile */}
+                  {/* Menu Button for Mobile */}
 
-                <button
-                  className="navbar-toggler d-lg-none border-0"
-                  type="button"
-                  onClick={() => setIsOpen(true)}
-                >
-                  <i className="fas fa-bars" />
-                </button>
+                  <button
+                    className="navbar-toggler d-lg-none border-0"
+                    type="button"
+                    onClick={() => setIsOpen(true)}
+                  >
+                    <i className="fas fa-bars" />
+                  </button>
 
-                {/* Desktop Nav */}
+                  {/* Desktop Nav */}
 
-                <nav className="d-none d-lg-flex gap-4">
+                  <nav className="d-none d-lg-flex gap-4">
+                    <Link
+                      to="/"
+                      className={`a3d-nav-link ${location.pathname === '/' ? 'active' : ''}`}
+                    >
+                      Home
+                    </Link>
+                    <Link to="https://calendly.com/arslan-medtronix/30min" className={`a3d-nav-link`}>
+                      Schedule Meeting
+                    </Link>
+
+                    <Link
+                      to="/service"
+                      className={`a3d-nav-link ${location.pathname === '/service' ? 'active' : ''}`}
+                    >
+                      Services
+                    </Link>
+
+                    <a href="/#3d-Sample" className="a3d-nav-link">
+                      3D Samples
+                    </a>
+
+                    <a href="/#Leadership" className="a3d-nav-link">
+                      Leadership
+                    </a>
+                    <Link
+                      to="/referral"
+                      className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`}
+                    >
+                      Referral
+                    </Link>
+                  </nav>
+
+                  <div className="d-none d-lg-flex gap-3 align-items-center">
+                    <Link to="/platform/">
+                      <button className="a3d-join-btn">Join Us</button>
+                    </Link>
+                  </div>
+                </div>
+              </header>
+              {/* Spacer to prevent content overlap */}
+              <div className="a3d-header-offset"></div>
+              {/* Mobile Sidebar */}
+
+              <div className={`mobile-sidebar ${isOpen ? 'open' : ''}`}>
+                <div className="sidebar-header d-flex justify-content-between align-items-center px-3 py-2">
+                  <Link to="/">
+                    <img src={logo} alt="Logo" style={{ width: '70%' }} />
+                  </Link>
+
+                  <button
+                    type="button"
+                    className="btn-close"
+                    aria-label="Close"
+                    onClick={() => setIsOpen(false)}
+                  />
+                </div>
+
+                <nav className="d-flex flex-column gap-2 px-3 pb-3">
                   <Link
                     to="/"
                     className={`a3d-nav-link ${location.pathname === '/' ? 'active' : ''}`}
                   >
                     Home
                   </Link>
-                  <a href="https://calendly.com/arslan-medtronix/30min" className="a3d-nav-link">
+                  <Link to="https://calendly.com/arslan-medtronix/30min" className="a3d-nav-link">
                     Schedule Meeting
-                  </a>
+                  </Link>
 
                   <Link
                     to="/service"
@@ -178,103 +304,55 @@ const Service = () => {
                   >
                     Referral
                   </Link>
-                </nav>
 
-                <div className="d-none d-lg-flex gap-3 align-items-center">
-                  <Link to="/signin" className="a3d-nav-link">
-                    Sign-In
-                  </Link>
+                  {/* <Link to="/signin" className="a3d-nav-link">
+                  Sign-In
+                </Link> */}
 
                   <Link to="/platform/">
                     <button className="a3d-join-btn">Join Us</button>
                   </Link>
-                </div>
-              </div>
-            </header>
-
-            {/* Mobile Sidebar */}
-
-            <div className={`mobile-sidebar ${isOpen ? 'open' : ''}`}>
-              <div className="sidebar-header d-flex justify-content-between align-items-center px-3 py-2">
-                <Link to="/">
-                  <img src={logo} alt="Logo" style={{ width: '70%' }} />
-                </Link>
-
-                <button
-                  type="button"
-                  className="btn-close"
-                  aria-label="Close"
-                  onClick={() => setIsOpen(false)}
-                />
+                </nav>
               </div>
 
-              <nav className="d-flex flex-column gap-2 px-3 pb-3">
-                <Link
-                  to="/"
-                  className={`a3d-nav-link ${location.pathname === '/' ? 'active' : ''}`}
-                >
-                  Home
-                </Link>
-                <Link to="https://calendly.com/arslan-medtronix/30min" className="a3d-nav-link">
-                  Schedule Meeting
-                </Link>
+              {/* Overlay for background click */}
 
-                <Link
-                  to="/service"
-                  className={`a3d-nav-link ${location.pathname === '/service' ? 'active' : ''}`}
-                >
-                  Services
-                </Link>
+              {isOpen && <div className="overlay" onClick={() => setIsOpen(false)}></div>}
 
-                <Link to="/#3d-Sample" className="a3d-nav-link">
-                  3D Samples
-                </Link>
-
-                <Link to="/#Leadership" className="a3d-nav-link">
-                  Leadership
-                </Link>
-                <Link
-                  to="/referral"
-                  className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`}
-                >
-                  Referral
-                </Link>
-
-                <Link to="/signin" className="a3d-nav-link">
-                  Sign-In
-                </Link>
-
-                <Link to="/platform/">
-                  <button className="a3d-join-btn">Join Us</button>
-                </Link>
-              </nav>
-            </div>
-
-            {/* Overlay for background click */}
-
-            {isOpen && <div className="overlay" onClick={() => setIsOpen(false)}></div>}
-            
             </main>
 
-            <h1 className="service-herosection-title a3d-slide-up">
+            <motion.h1
+              className="service-herosection-title"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
               Our Full Range of AI &{' '}
               <span>
                 Software Services
                 <img src={HalfEllipse} alt="icon" className="service-title-img" />
               </span>
-            </h1>
+            </motion.h1>
 
-            <p className="service-herosection-description a3d-slide-up" style={{ animationDelay: '0.2s' }}>
+            <motion.p
+              className="service-herosection-description"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
               From concept to deployment, AI3D Scanning Solutions delivers end-to-end technology
               services that combine innovation, precision and scalability. Our expert team transform
               ideas into reality with cutting-edge design, development and customization solutions
               tailored to your business goals.
-            </p>
+            </motion.p>
 
-            <div
-              className="a3d-pills-scroll-service d-flex gap-3 my-4 a3d-slide-up"
+            <motion.div
+              className="a3d-pills-scroll-service d-flex gap-3 my-4"
               id="pillSlider"
               ref={pillsRef}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
               style={{
                 overflowX: isMobile ? 'auto' : 'visible',
                 minHeight: 48,
@@ -285,18 +363,18 @@ const Service = () => {
             >
               {pills.map((pill, idx) => (
                 <div className="a3d-pill" key={pill.label} style={{ minWidth: 'auto' }}
-                onClick={() => {
+                  onClick={() => {
                     const target = document.getElementById(pill.target)
-                    if(target){
-                      target.scrollIntoView({ behavior : "smooth" })
-                  }
-                }}
+                    if (target) {
+                      target.scrollIntoView({ behavior: "smooth" })
+                    }
+                  }}
                 >
                   <span>{pill.label}</span>
                   <img src={pill.icon} alt="" style={{ paddingTop: 2 }} />
                 </div>
               ))}
-            </div>
+            </motion.div>
 
             <div className="circle-cards-wrapper a3d-slide-up" style={{ animationDelay: '0.2s' }}>
               <Cards position="top" />
@@ -322,26 +400,33 @@ const Service = () => {
           </h3>
 
           <p className="service-herosection2-description a3d-slide-up" style={{ animationDelay: '0.2s' }}>
-              From concept to deployment, AI3D Scanning Solutions delivers end-to-end technology
-              services that combine innovation, precision and scalability. Our expert team transform
-              ideas into reality with cutting-edge design, development and customization solutions
-              tailored to your business goals.
-            </p>
+            From concept to deployment, AI3D Scanning Solutions delivers end-to-end technology
+            services that combine innovation, precision and scalability. Our expert team transform
+            ideas into reality with cutting-edge design, development and customization solutions
+            tailored to your business goals.
+          </p>
 
           <h6 className="services-description-sub a3d-slide-up text-center">
             We don't just build, we partner with you to create future ready products that drive
             growth and efficiency.
           </h6>
 
-           {/* ========================= Service Content Section End ======================= */}
+          {/* ========================= Service Content Section End ======================= */}
 
           <div className="container">
             {/* =================== AI Development ===================== */}
-            <div className="row align-items-center mb-5 py-2" id='AI-Development'>
+            <motion.div
+              className="row align-items-center mb-5 py-2"
+              id='AI-Development'
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
               {/* Left content */}
               <div className="col-lg-6 mb-lg-0 mb-4">
-                <h2 className="services-title a3d-slide-up">AI Development &amp; Solutions</h2>
-                <ul className="service-list a3d-slide-up">
+                <h2 className="services-title">AI Development &amp; Solutions</h2>
+                <ul className="service-list">
                   <li>
                     <i className="bx bx-check-circle" /> Custom AI model design and training
                   </li>
@@ -361,17 +446,23 @@ const Service = () => {
               <div className="col-lg-5 services-img text-center text-lg-end">
                 <img src={AiImg} alt="AI Services Image" />
               </div>
-            </div>
+            </motion.div>
             {/* =================== Flutter App Development ===================== */}
-            <div className="row align-items-center mt-lg-5 mt-3 py-lg-5 mt-3">
+            <motion.div
+              className="row align-items-center mt-lg-5 mt-3 py-lg-5 mt-3"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
               {/* Left image */}
               <div className="col-lg-5 services-img text-center text-lg-end order-lg-1 order-2 mb-lg-0 mb-4">
                 <img src={AppImg} alt="App Development Image" />
               </div>
               {/* Right content */}
               <div className="col-lg-6 mb-4 mb-lg-0 offset-lg-1 order-lg-2 order-1" id='Flutter'>
-                <h2 className="services-title a3d-slide-up">Flutter App Development</h2>
-                <ul className="service-list a3d-slide-up">
+                <h2 className="services-title">Flutter App Development</h2>
+                <ul className="service-list">
                   <li>
                     <i className="bx bx-check-circle" />
                     Cross-platform mobile apps for iOS &amp; Android
@@ -386,13 +477,20 @@ const Service = () => {
                   </li>
                 </ul>
               </div>
-            </div>
+            </motion.div>
             {/* =================== Website Development ===================== */}
-            <div className="row align-items-center mt-lg-5 mt-3 py-lg-5 mt-3" id='Website-Development'>
+            <motion.div
+              className="row align-items-center mt-lg-5 mt-3 py-lg-5 mt-3"
+              id='Website-Development'
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
               {/* Left content */}
               <div className="col-lg-6 mb-4 mb-lg-0">
-                <h2 className="services-title a3d-slide-up">Website Development</h2>
-                <ul className="service-list a3d-slide-up">
+                <h2 className="services-title">Website Development</h2>
+                <ul className="service-list">
                   <li>
                     <i className="bx bx-check-circle" /> Responsive, high-performance websites
                   </li>
@@ -412,17 +510,24 @@ const Service = () => {
               <div className="col-lg-5 services-img text-center text-lg-end mb-lg-0 mb-4">
                 <img src={GraphicImg} alt="Website Services Image" />
               </div>
-            </div>
+            </motion.div>
             {/* =================== Desktop App Development ===================== */}
-            <div className="row align-items-center mt-lg-5 mt-3 py-lg-5 mt-3" id='Desktop-App'>
+            <motion.div
+              className="row align-items-center mt-lg-5 mt-3 py-lg-5 mt-3"
+              id='Desktop-App'
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
               {/* Left image */}
               <div className="col-lg-5 services-img text-center text-lg-end order-lg-1 order-2 mb-lg-0 mb-4">
                 <img src={DesktopImg} alt="Desktop App Services Image" />
               </div>
               {/* Right content */}
               <div className="col-lg-6 mb-4 mb-lg-0 offset-lg-1 order-lg-2 order-1">
-                <h2 className="services-title a3d-slide-up">Desktop App Development</h2>
-                <ul className="service-list a3d-slide-up">
+                <h2 className="services-title">Desktop App Development</h2>
+                <ul className="service-list">
                   <li>
                     <i className="bx bx-check-circle" /> Windows, macOS, and Linux desktop solutions
                   </li>
@@ -434,13 +539,19 @@ const Service = () => {
                   </li>
                 </ul>
               </div>
-            </div>
+            </motion.div>
             {/* =================== Bus. Dev. & Consulting ===================== */}
-            <div className="row align-items-center mt-lg-5 mt-3 py-lg-5 mt-3">
+            <motion.div
+              className="row align-items-center mt-lg-5 mt-3 py-lg-5 mt-3"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
               {/* Left content */}
               <div className="col-lg-6 mb-lg-0 mb-4">
-                <h2 className="services-title a3d-slide-up">Bus. Dev. &amp; Consulting</h2>
-                <ul className="service-list a3d-slide-up">
+                <h2 className="services-title">Bus. Dev. &amp; Consulting</h2>
+                <ul className="service-list">
                   <li>
                     <i className="bx bx-check-circle" /> Go-to-market strategies
                   </li>
@@ -459,17 +570,23 @@ const Service = () => {
               <div className="col-lg-5 services-img text-center text-lg-end mb-lg-0 mb-4">
                 <img src={Business} alt="Consulting Services Image" />
               </div>
-            </div>
+            </motion.div>
             {/* =================== Creative Media ===================== */}
-            <div className="row align-items-center mt-lg-5 mt-3 py-lg-5 mt-3">
+            <motion.div
+              className="row align-items-center mt-lg-5 mt-3 py-lg-5 mt-3"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
               {/* Left image */}
               <div className="col-lg-5 services-img text-center text-lg-end order-lg-1 order-2 mb-lg-0 mb-4">
                 <img src={CreativeMedia} alt="Creative Media Image" />
               </div>
               {/* Right content */}
               <div className="col-lg-6 mb-4 mb-lg-0 offset-lg-1 order-lg-2 order-1">
-                <h2 className="services-title a3d-slide-up">Creative Media</h2>
-                <ul className="service-list a3d-slide-up">
+                <h2 className="services-title">Creative Media</h2>
+                <ul className="service-list">
                   <li>
                     <i className="bx bx-check-circle" /> Brand identity design
                   </li>
@@ -484,7 +601,7 @@ const Service = () => {
                   </li>
                 </ul>
               </div>
-            </div>
+            </motion.div>
           </div>
         </section>
 
@@ -508,101 +625,103 @@ const Service = () => {
                     secure.
                   </p>
 
-                  <div className="alldiv">
-                    <div className="btn-wrapper">
-                      <button className="btn btn-custom Sell">Sell your 3D Models</button>
-                    </div>
-
-                    {/* Mobile Language Dropdown */}
-
-                    <div className="dropdown btn-wrapper d-lg-none d-md-none d-sm-none d-block">
-                      <button
-                        className="btn english"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        <img src={world} alt="World" style={{ width: 18, marginRight: 6 }} />
-                        English
-                        <FaChevronDown size={12} className='ms-2' />
-                      </button>
-
-                      <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
-                        <li>
-                          <a className="dropdown-item black" href="#">
-                            English
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-
-                    {/* Mobile Currency Dropdown */}
-
-                    <div className="dropdown btn-wrapper d-lg-none d-md-none d-sm-none d-block">
-                      <button
-                        className="btn usd"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        $USD
-                        <FaChevronDown size={12} className='ms-2' />
-                      </button>
-
-                      <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
-                        <li>
-                          <a className="dropdown-item black" href="#">
-                            $USD
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-
-                    {/* Desktop Language + Currency */}
-
-                    <div className="d-flex gap-2 none">
-                      <div className="dropdown btn-wrapper none">
-                        <button
-                          className="btn english"
-                          type="button"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="false"
-                        >
-                          <img src={world} alt="World" style={{ width: 18, marginRight: 6 }} />
-                          English
-                          <FaChevronDown size={12} className='ms-2' />
-                        </button>
-
-                        <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
-                          <li>
-                            <a className="dropdown-item black" href="#">
-                              English
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-
-                      <div className="dropdown btn-wrapper none">
-                        <button
-                          className="btn usd"
-                          type="button"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="false"
-                        >
-                          $USD
-                          <FaChevronDown size={12} className='ms-2' />
-                        </button>
-
-                        <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
-                          <li>
-                            <a className="black" href="#">
-                              $USD
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
+                 <div className="alldiv">
+                                    <div className="btn-wrapper">
+                                      <Link to="/contributor/program">
+                                        <button className="btn btn-custom Sell">Sell your 3D Models</button>
+                                      </Link>
+                                    </div>
+                
+                                    {/* Mobile Language Dropdown */}
+                
+                                    <div className="dropdown btn-wrapper d-lg-none d-md-none d-sm-none d-block">
+                                      <button
+                                        className="btn english"
+                                        type="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                      >
+                                        <img src={world} alt="World" style={{ width: 18, marginRight: 6 }} />
+                                        English
+                                        <FaChevronDown size={12} className="ms-2" />
+                                      </button>
+                
+                                      {/* <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
+                                        <li>
+                                          <a className="dropdown-item black" href="#">
+                                            English
+                                          </a>
+                                        </li>
+                                      </ul> */}
+                                    </div>
+                
+                                    {/* Mobile Currency Dropdown */}
+                
+                                    <div className="dropdown btn-wrapper d-lg-none d-md-none d-sm-none d-block">
+                                      <button
+                                        className="btn usd"
+                                        type="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                      >
+                                        $USD
+                                        <FaChevronDown size={12} className="ms-2" />
+                                      </button>
+                
+                                      {/* <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
+                                        <li>
+                                          <a className="dropdown-item black" href="#">
+                                            $USD
+                                          </a>
+                                        </li>
+                                      </ul> */}
+                                    </div>
+                
+                                    {/* Desktop Language + Currency */}
+                
+                                    <div className="d-flex gap-2 none">
+                                      <div className="dropdown btn-wrapper none">
+                                        <button
+                                          className="btn english"
+                                          type="button"
+                                          data-bs-toggle="dropdown"
+                                          aria-expanded="false"
+                                        >
+                                          <img src={world} alt="World" style={{ width: 18, marginRight: 6 }} />
+                                          English
+                                          <FaChevronDown size={12} className="ms-2" />
+                                        </button>
+                
+                                        {/* <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
+                                          <li>
+                                            <a className="dropdown-item black" href="#">
+                                              English
+                                            </a>
+                                          </li>
+                                        </ul> */}
+                                      </div>
+                
+                                      <div className="dropdown btn-wrapper none">
+                                        <button
+                                          className="btn usd"
+                                          type="button"
+                                          data-bs-toggle="dropdown"
+                                          aria-expanded="false"
+                                        >
+                                          $USD
+                                          <FaChevronDown size={12} className="ms-2" />
+                                        </button>
+                
+                                        {/* <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
+                                          <li>
+                                            <a className="black" href="#">
+                                              $USD
+                                            </a>
+                                          </li>
+                                        </ul> */}
+                                      </div>
+                                    </div>
+                                  </div>
                 </div>
 
                 {/* Quick Links */}
@@ -624,7 +743,7 @@ const Service = () => {
                               ? '/platform/subscription'
                               : item === 'About us'
                                 ? '/#aboutus'
-                                : '#'
+                                : '/'
                           }
                         >
                           <img

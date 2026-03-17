@@ -2,7 +2,7 @@
     font-family: 'DM Sans', sans-serif;
     color: #333333;
     line-height: 1.6;
-    padding: 0 1.25rem;
+    padding: 0;
     display: flex;
     justify-content: center;
     min-height: 100vh;
@@ -23,6 +23,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 0 !important;
 }
 
 .pricing-container .yearly-plan {
@@ -558,75 +559,3 @@
 [data-theme='dark'] #subscription-hero-subtitle {
     color: #fff !important;
 }
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.popup-box {
-  background: #fff;
-  border-radius: 10px;
-  max-width: 500px;
-  width: 100%;
-  height: 300px;
-  max-height: 90vh;
-  overflow-y: auto;
-  position: relative;
-  box-sizing: border-box;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  scrollbar-width: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-
-[data-theme = 'dark'] .popup-box {
-    background: #23232a !important;
-    color: #fff !important;
-    border: 1px solid #444 !important;
-    box-shadow: 0 0px 8px rgba(255, 255, 255, 0.1);
-}
-
-.popup-box h3 {
-    margin-top: 1rem !important;
-}
-
-.popup-box img {
-    border-radius: 8px;
-}
-
-.close-popup-btn {
- position: absolute;
-  top: 20px;
-  right: 20px;
-  background: #e6339a;
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  color: white;
-  font-size: 20px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-  transition: all 0.3s ease;
-}
-
-.close-popup-btn:hover {
-  background: #b92e7b;
-}
-

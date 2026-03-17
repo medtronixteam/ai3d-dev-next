@@ -13,7 +13,7 @@
     animation: fadeInLogo 1.2s ease-in-out;
 }
 
-.signup-form .card {
+.signup-form .cards {
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(103, 99, 99, 0.377);
     animation: slideIn 1s ease-out;
@@ -148,7 +148,7 @@
     background: #0f0f14 !important;
 }
 
-[data-theme='dark'] .signup-form .card {
+[data-theme='dark'] .signup-form .cards {
     background: #110E20 !important;
     color: #f3f3fa !important;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;

@@ -3,26 +3,27 @@ import IconifyIcon from 'components/base/IconifyIcon';
 import './ThemeToggle.css';
 
 const ThemeToggle = () => {
-  // Detect system theme
-  const getSystemTheme = () =>
-    window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  // Define the forced default theme
+  const forcedDefaultTheme = 'dark'; // Change this to 'light' if you want to force light mode instead
 
-  // Only load localStorage theme if it exists
+  // Initialize state: Use saved theme from localStorage OR fallback to forced default
   const [theme, setTheme] = useState(() => {
     const savedTheme = localStorage.getItem('theme');
-    return savedTheme ? savedTheme : getSystemTheme();
+    return savedTheme || forcedDefaultTheme;
   });
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
-  // Listen for system theme changes, ONLY if user hasn't manually selected a theme
+  // Listen for system theme changes
+  // Only update the theme if the user hasn't manually selected one (i.e., no 'theme' in localStorage)
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
     const handleSystemChange = (e) => {
       const savedTheme = localStorage.getItem('theme');
+      // If user has NOT manually selected a theme, update based on system change
       if (!savedTheme) {
         const newSystemTheme = e.matches ? 'dark' : 'light';
         setTheme(newSystemTheme);
@@ -39,7 +40,7 @@ const ThemeToggle = () => {
   // User manually changes theme
   const handleThemeChange = (newTheme) => {
     setTheme(newTheme);
-    localStorage.setItem('theme', newTheme); // persist user choice
+    localStorage.setItem('theme', newTheme); // Persist user's choice
   };
 
   return (

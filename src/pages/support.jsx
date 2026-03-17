@@ -3,10 +3,30 @@ import { MdApi } from 'react-icons/md';
 import './support.css';
 import SupportTicket from '../pages/images/SupportTicket.svg';
 import DarkSupportTicket from '../pages/images/DarkSupportTicket.svg';
-
+import BasicTicket from '../pages/images/BasicTicket.svg';
+import PrivacyTicket from '../pages/images/PrivacyTicket.svg';
+import ProgramTicket from '../pages/images/ProgramTicket.svg';
+import BillingTicket from '../pages/images/BillingTicket.svg';
+import ModelsTicket from '../pages/images/ModelsTicket.svg';
+import ImageTicket from '../pages/images/ImageTicket.svg';
+import Success from '../assets/images/success-img.png';
+import { baseURL } from '../config';
+import { useAuth } from '../context/AuthContext';
 import './ApiSdk.css';
 import { FiX } from 'react-icons/fi';
-import { CircleAlert, Clock, Headphones, Headset, Link, Link2, Plus, Search, UploadCloud } from 'lucide-react';
+import {
+  CircleAlert,
+  Clock,
+  Headphones,
+  Headset,
+  Link,
+  Link2,
+  Plus,
+  Search,
+  UploadCloud,
+} from 'lucide-react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 export default function Support() {
   const [showPopup, setShowPopup] = useState(false);
@@ -15,7 +35,18 @@ export default function Support() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [activeTerm, setActiveTerm] = useState(false);
   const [openIndex, setOpenIndex] = useState(null);
-  const [activeTab, setActiveTab] = useState("Enterprise");
+  const [activeTab, setActiveTab] = useState('Enterprise');
+  const { token } = useAuth();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    axios
+      .get(`${baseURL}/user`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => setUser(res.data.user))
+      .catch(() => setUser(null));
+  }, [token]);
 
   useEffect(() => {
     const checkTheme = () => {
@@ -55,27 +86,33 @@ export default function Support() {
     {
       title: 'Basics',
       description: 'Discover how AI3D works and start creating your first 3D model.',
+      icon: BasicTicket,
     },
     {
       title: 'Data and Privacy',
       description: 'Learn how we protect your uploads, prompts, and personal data.',
+      icon: PrivacyTicket,
     },
     {
       title: 'Your Profile',
       description: 'Manage your account information and personal settings.',
+      icon: ProgramTicket,
     },
     {
       title: 'Subscription Billing',
       description: 'Find help with plans, credits, and payment management.',
+      icon: BillingTicket,
     },
     {
       title: 'About Models',
       description: 'Explore model types, formats, and quality optimization tips.',
+      icon: ModelsTicket,
     },
     {
       title: 'AI Prompts & Image Guide',
       description:
         'Learn how to write effective text prompts and use clear images for accurate results.',
+      icon: ImageTicket,
     },
   ];
 
@@ -160,20 +197,22 @@ export default function Support() {
   return (
     <div style={{ background: isDarkMode ? '#000' : '#fdf8fc' }}>
       <div className="support-ticket-system-container">
-        <h1 className="support-ticket-system-h1-tag">Hi Adam, we’re here to help.</h1>
+        <h1 className="support-ticket-system-h1-tag">
+          Hi {user?.name || 'Adam'}, we’re here to help.
+        </h1>
         <p className="support-ticket-system-p-tag">Manage and track your support requests</p>
 
         <div className="support-tab-container mt-4">
-        {["Individual", "Team", "Enterprise"].map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={activeTab === tab ? "active" : ""}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
+          {['Individual', 'Team', 'Enterprise'].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={activeTab === tab ? 'active' : ''}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
 
         <div className="live-chat-banner">
           <CircleAlert className="mt-1" color="#DE3996" size={18} />
@@ -219,9 +258,17 @@ export default function Support() {
 
         {/* Or view your ticket history link */}
         <div className="ticket-history-link">
-          <span>
-            or <a href="/tickets">view your ticket history</a>
-          </span>
+          {user ? (
+            <span>
+              or <a href="/platform/support-ticket-history">view your ticket history</a>
+            </span>
+          ) : (
+            <span
+              style={{ color: '#db0c0cff', cursor: 'not-allowed', textDecoration: 'underline' }}
+            >
+              view your ticket history (please log in first)
+            </span>
+          )}
         </div>
 
         <div className="help-categories-grid">
@@ -229,7 +276,7 @@ export default function Support() {
             <div key={index} className="help-card">
               <div className="d-flex align-items-center gap-3">
                 <span className="linear-span-bg">
-                  <Clock size={18} />
+                  <img src={item.icon} alt={item.title} />
                 </span>
                 <h3>{item.title}</h3>
               </div>
@@ -259,6 +306,11 @@ export default function Support() {
                         }`}
                         type="button"
                         onClick={() => toggleFAQ(index)}
+                        style={{
+                          backgroundColor: isDarkMode ? '#110e20' : '#f5f5f5',
+                          color: isDarkMode ? '#fff' : '#414141',
+                          border: isDarkMode ? '1px solid #2a2a2a' : '1px solid #eee',
+                        }}
                       >
                         {faq.question}
                         <span className="icon-container">
@@ -276,7 +328,7 @@ export default function Support() {
                     {openIndex === index && (
                       <div className="accordion-collapse show">
                         <div className="cet">
-                          <div className="accordion-body text-muted">{faq.answer}</div>
+                          <div className="accordion-body" >{faq.answer}</div>
                         </div>
                       </div>
                     )}
@@ -288,20 +340,41 @@ export default function Support() {
         </div>
 
         <div className="support-center-container mt-5">
-          <span style={{
-            background: "#fff",
-            borderRadius: "50%",
-            padding: "10px",
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            boxShadow : '0 0 4px #00000050'
-          }}><Headset color='#DE3996' size={30} /></span>
-          <h2>Welcome to <span style={{color : '#DE3996'}}>Support</span> Center!</h2>
-          <p>You haven't created any support tickets yet. Browse our FAQs above to find quick answers, or <br /> create a new ticket if you need personalized assistance.</p>
-          <button className='a3d-ticket-btn mt-2' onClick={() => setShowPopup(true)}><Plus size={16} /> Create Your First Ticket</button>
+          <span
+            style={{
+              background: '#fff',
+              borderRadius: '50%',
+              padding: '10px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 0 4px #00000050',
+            }}
+          >
+            <Headset color="#DE3996" size={30} />
+          </span>
+          <h2>
+            Welcome to <span style={{ color: '#DE3996' }}>Support</span> Center!
+          </h2>
+          <p>
+            You haven't created any support tickets yet. Browse our FAQs above to find quick
+            answers, or <br /> create a new ticket if you need personalized assistance.
+          </p>
+          <button
+            className={`a3d-ticket-btn mt-2 ${!user ? 'disabled-danger' : ''}`}
+            onClick={() => user && setShowPopup(true)}
+            disabled={!user}
+            title={!user ? 'Please log in to create a support ticket.' : ''}
+            style={{
+              cursor: !user ? 'not-allowed' : 'pointer',
+              opacity: !user ? 0.6 : 1,
+              backgroundColor: !user ? '#e0245e' : '',
+              color: !user ? '#fff' : '',
+            }}
+          >
+            <Plus size={16} /> Create Your First Ticket
+          </button>
         </div>
-        
       </div>
       {showPopup && <SupportTicketPopup onClose={() => setShowPopup(false)} />}
     </div>
@@ -311,104 +384,204 @@ export default function Support() {
 export const SupportTicketPopup = ({ onClose }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [subject, setSubject] = useState('');
+  const [category, setCategory] = useState('Featured Issue');
+  const [description, setDescription] = useState('');
+  const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   useEffect(() => {
     const checkTheme = () => {
       setIsDarkMode(document.documentElement.getAttribute('data-theme') === 'dark');
     };
-
     checkTheme();
-
     const observer = new MutationObserver(checkTheme);
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ['data-theme'],
     });
-
     return () => observer.disconnect();
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  useEffect(() => {
+    if (showSuccessPopup) {
+      const timer = setTimeout(() => setShowSuccessPopup(false), 3000); // 3 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [showSuccessPopup]);
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!subject || !description) {
+      toast.error('Please fill in the subject and description fields.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append('subject', subject);
+      formData.append('category', category);
+      formData.append('description', description);
+
+      if (file) {
+        formData.append('attachment', file);
+      }
+
+      const response = await axios.post(`${baseURL}/support/ticket`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      console.log('Ticket Created:', response.data);
+      setShowSuccessPopup(true);
+      setSubject('');
+      setCategory('Featured Issue');
+      setDescription('');
+      setFile(null);
+    } catch (error) {
+      console.error('Error submitting ticket:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleReset = () => {
+    setSubject('');
+    setCategory('Featured Issue');
+    setDescription('');
+    setFile(null);
+  };
+
   return (
-    <div className="support-team-overlay">
-      <div className="support-account-popup">
-        <button className="support-close-btn" onClick={onClose}>
-          <FiX />
-        </button>
-        <div className="row">
-          <div className="col-md-6 d-flex flex-column align-items-center justify-content-center">
-            <img src={isDarkMode ? DarkSupportTicket : SupportTicket} alt="" />
-            <h2 className="support-ticket-h2-tag">Need Help?</h2>
-            <p className="support-ticket-p-tag">
-              We’re here to assist you. Submit a support ticket and our team will get back to you as
-              soon as possible.
-            </p>
-          </div>
+    <>
+      <div className="support-team-overlay">
+        <div className="support-account-popup">
+          <button className="support-close-btn" onClick={onClose}>
+            <FiX />
+          </button>
 
-          <div className="col-md-6 mt-3 p-0">
-            <div className="support-ticket-form-container">
-              <h2>Submit Support Ticket</h2>
-              <p>Fill out the form below and we’ll get back to you within 24 hours.</p>
-              <form className="ai3d-form mt-4">
-                <div className="mb-3">
-                  <label className="form-label">Subject</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Name of the issue......"
-                  />
-                </div>
+          <div className="row">
+            <div className="col-md-6 d-flex flex-column align-items-center justify-content-center">
+              <img src={isDarkMode ? DarkSupportTicket : SupportTicket} alt="Support" />
+              <h2 className="support-ticket-h2-tag">Need Help?</h2>
+              <p className="support-ticket-p-tag">
+                We’re here to assist you. Submit a support ticket and our team will get back to you
+                as soon as possible.
+              </p>
+            </div>
 
-                <div className="mb-3">
-                  <label className="form-label">Category</label>
-                  <select className="form-select">
-                    <option>Featured Issue</option>
-                    <option>Technical Request</option>
-                    <option>AI Processing</option>
-                    <option>Bug</option>
-                  </select>
-                </div>
+            {/* Right Section */}
+            <div className="col-md-6 mt-3 p-0">
+              <div className="support-ticket-form-container">
+                <h2>Submit Support Ticket</h2>
+                <p>Fill out the form below and we’ll get back to you within 24 hours.</p>
 
-                <div className="mb-3">
-                  <label className="form-label">Description</label>
-                  <textarea
-                    className="form-control"
-                    rows="3"
-                    maxLength={300}
-                    placeholder="Please provide detailed information about your issue, including any error message or steps you have already tried..................."
-                  ></textarea>
-                </div>
+                <form className="ai3d-form mt-4" onSubmit={handleSubmit}>
+                  <div className="mb-3">
+                    <label className="form-label">Subject</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Name of the issue..."
+                      value={subject}
+                      onChange={(e) => setSubject(e.target.value)}
+                    />
+                  </div>
 
-                <div className="mb-3">
-                  <label className="form-label">Attachments</label>
-                  <div className="upload-box">
-                    <span style={{ background: '#DE399612', borderRadius: '50%', padding: '5px' }}>
-                      <UploadCloud color="#DE3996" />
-                    </span>
-                    <p>Drop your file here or click to browser</p>
-                    <small style={{ color: '#919191', margin: 0, fontWeight: '500' }}>
-                      Supported formats: JPG, PNG, SVG, PSD, EPS
-                    </small>
-                    <button type="button" className="support-browse-btn">
-                      Browse File
+                  <div className="mb-3">
+                    <label className="form-label">Category</label>
+                    <select
+                      className="form-control"
+                      value={category}
+                      onChange={(e) => setCategory(e.target.value)}
+                    >
+                      <option>Featured Issue</option>
+                      <option>Technical Request</option>
+                      <option>AI Processing</option>
+                      <option>Bug</option>
+                    </select>
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">Description</label>
+                    <textarea
+                      className="form-control"
+                      rows="3"
+                      maxLength={300}
+                      placeholder="Please describe your issue..."
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                    ></textarea>
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">Attachments (optional)</label>
+                    <div className="upload-box">
+                      <span
+                        style={{ background: '#DE399612', borderRadius: '50%', padding: '5px' }}
+                      >
+                        <UploadCloud color="#DE3996" />
+                      </span>
+                      <p>Drop your file here or click to browse</p>
+                      <small style={{ color: '#919191', margin: 0, fontWeight: '500' }}>
+                        Supported formats: PDF, DOC, JPG, PNG
+                      </small>
+                      <input
+                        type="file"
+                        accept=".pdf,.doc,.jpg,.jpeg,.png"
+                        style={{ display: 'none' }}
+                        id="fileInput"
+                        onChange={handleFileChange}
+                      />
+                      <button
+                        type="button"
+                        className="support-browse-btn"
+                        onClick={() => document.getElementById('fileInput').click()}
+                      >
+                        {file ? file.name : 'Browse File'}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Buttons */}
+                  <div className="support-system-buttons">
+                    <button type="submit" className="a3d-ticket-btn" disabled={loading}>
+                      {loading ? 'Submitting...' : 'Submit Ticket'}
+                    </button>
+                    <button type="button" className="a3d-reset-btn" onClick={handleReset}>
+                      Reset
                     </button>
                   </div>
-                </div>
-
-                <div className="support-system-buttons">
-                  <button className="a3d-ticket-btn">Submit Ticket</button>
-                  <button className="a3d-reset-btn">Reset</button>
-                </div>
-              </form>
+                </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {showSuccessPopup && (
+        <div className="ticket-success-popup-overlay" onClick={onClose}>
+          <div className="ticket-success-popup">
+            <img src={Success} alt="" />
+            <h3>Ticket Submitted Successfully!</h3>
+            <p>Your support ticket has been submitted. Our team will get back to you soon.</p>
+          </div>
+        </div>
+      )}
+    </>
   );
 };

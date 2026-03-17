@@ -15,16 +15,13 @@ const RequestRefundPopup = ({ open, onClose }) => {
   const [loading, setLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Theme detection
   useEffect(() => {
     const checkTheme = () => {
       setIsDarkMode(document.documentElement.getAttribute('data-theme') === 'dark');
     };
 
-    // Check initial theme
     checkTheme();
 
-    // Listen for theme changes
     const observer = new MutationObserver(checkTheme);
     observer.observe(document.documentElement, {
       attributes: true,

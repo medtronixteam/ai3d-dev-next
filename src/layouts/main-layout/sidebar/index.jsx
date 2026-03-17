@@ -12,11 +12,11 @@ export function SidebarPopover({ show, top, left, itemHeight, colorCSS, title, d
     <div
       className={`sidebar-tooltip${show ? ' show' : ''}`}
       style={{
-        top: (top || 0) - (itemHeight ? itemHeight / 2 : 20) + 2, // Move tooltip 2px lower
+        top: (top || 0) - (itemHeight ? itemHeight / 2 : 20) + 2,
         left: (left || 0) + 12,
         background: 'transparent',
-        position: 'fixed', // Use fixed to avoid clipping by parent containers
-        zIndex: 99999, // Very high z-index to ensure always on top
+        position: 'fixed',
+        zIndex: 99999,
         pointerEvents: 'none',
       }}
     >
@@ -30,7 +30,6 @@ export function SidebarPopover({ show, top, left, itemHeight, colorCSS, title, d
   return createPortal(tooltip, document.body);
 }
 
-// Add CSS for the tooltip (can be moved to Sidebar.css)
 if (typeof document !== 'undefined' && !document.getElementById('sidebar-tooltip-style')) {
   const style = document.createElement('style');
   style.id = 'sidebar-tooltip-style';
@@ -40,9 +39,9 @@ if (typeof document !== 'undefined' && !document.getElementById('sidebar-tooltip
       opacity: 0;
       transition: opacity 0.28s cubic-bezier(.25,1.7,.45,1.32), transform 0.28s cubic-bezier(.25,1.7,.45,1.32);
       transform: translateY(10px) scale(0.98);
-      position: fixed; /* Use fixed to avoid clipping */
+      position: fixed;
       pointer-events: none;
-      z-index: 99999; /* Very high z-index to stay on top */
+      z-index: 99999;
     }
 
     .sidebar-tooltip.show {
@@ -72,7 +71,7 @@ if (typeof document !== 'undefined' && !document.getElementById('sidebar-tooltip
       font-size: 15px;
       margin-bottom: 1px;
       line-height: 1.2;
-      text-align: center; /* Center text */
+      text-align: center;
       width: 100%;
     }
 
@@ -82,7 +81,7 @@ if (typeof document !== 'undefined' && !document.getElementById('sidebar-tooltip
       opacity: 0.92;
       margin-top: 2px;
       line-height: 1.35;
-      text-align: center; /* Center text */
+      text-align: center;
       width: 100%;
     }
 
@@ -108,8 +107,8 @@ import Logo from 'assets/images/Logo.png';
 import ProfilePopup from 'components/popup/ProfilePopup';
 import axios from 'axios';
 import { baseURL } from '../../../config';
-import { FiSearch } from 'react-icons/fi';
-// SVG icon assets (explicit per request)
+import BuyerIcon from '../../../assets/icon/buyer.svg';
+import SellerIcon from '../../../assets/icon/seller.svg';
 import HomeIcon from 'assets/images/Home.svg';
 import ScanIcon from 'assets/images/scan.svg';
 import ApiIcon from 'assets/images/ApiSdk1.svg';
@@ -130,8 +129,8 @@ import Referal from '../../../assets/images/Referal.svg';
 import ProjectIcon from '../../../assets/images/project.svg';
 import AiModel from '../../../assets/images/aimodal.svg';
 import UpgradeCoin from '../../../assets/images/UpgradeCoin.svg';
+import { Gift, CheckCircle, XCircle } from 'lucide-react';
 
-// Unified SVG icon components for sidebar
 const Icon = (src, alt) => <img src={src} alt={alt} className="sidebar-svg-icon" />;
 const IconHome = () => Icon(HomeIcon, 'Home');
 const IconScan = () => Icon(ScanIcon, 'Scan');
@@ -144,94 +143,36 @@ const IconTeam = () => Icon(TeamIcon, 'Team');
 const IconAccount = () => Icon(AccountIcon, 'Account');
 const IconLogin = () => Icon(LoginIcon, 'Login');
 const IconSubscription = () => Icon(SubscriptionIcon, 'Subscription');
-const IconReferal = () => Icon(Referal, 'Referral');
-const IconProject = () => Icon(ProjectIcon, 'Project');
-const IconAIModal = () => Icon(AiModel, 'AI Modal');
+const IconReferal = () => <Gift className="sidebar-svg-icon" />;
 
 const sidebarOptions = [
-  {
-    title: 'Home',
-    icon: IconHome,
-    path: '/platform/',
-  },
-  {
-    title: 'Scan new',
-    icon: IconScan,
-    path: '/platform/scan',
-  },
-  {
-    title: 'API & SDK',
-    icon: IconApi,
-    path: '/platform/api-sdk',
-  },
-  {
-    title: 'Recent projects',
-    icon: IconRecent,
-    path: '/platform/recent-projects',
-  },
-  {
-    title: 'Settings',
-    icon: IconSettings,
-    path: '/platform/settings/profile',
-  },
-  {
-    title: 'Support',
-    icon: IconSupport,
-    path: '/platform/support',
-  },
-  // CustomSidebar items for authenticated users on mobile
-  {
-    title: 'Profile',
-    icon: IconProfile,
-    path: '/platform/settings/profile',
-  },
-  {
-    title: 'Team',
-    icon: IconTeam,
-    path: '/platform/settings/team',
-  },
-  {
-    title: 'Account',
-    icon: IconAccount,
-    path: '/platform/settings/account',
-  },
-  {
-    title: 'Login',
-    icon: IconLogin,
-    path: '/platform/settings/login',
-  },
-  {
-    title: 'Subscription',
-    icon: IconSubscription,
-    path: '/platform/settings/subscription',
-  },
-  {
-    title: 'Referral',
-    icon: IconReferal,
-    path: '/platform/settings/referal',
-  },
-  {
-    title: 'Project',
-    icon: IconProject,
-    path: '/platform/settings/project',
-  },
-  {
-    title: 'AI Modal',
-    icon: IconAIModal,
-    path: '/platform/settings/aimodal',
-  },
+  { title: 'Home', icon: IconHome, path: '/platform/' },
+  { title: 'Scan new', icon: IconScan, path: '/platform/new/scan' },
+  { title: 'API & SDK', icon: IconApi, path: '/platform/api-sdk' },
+  { title: 'Recent projects', icon: IconRecent, path: '/platform/recent-projects' },
+  { title: 'Settings', icon: IconSettings, path: '/platform/settings/profile' },
+  { title: 'Support', icon: IconSupport, path: '/platform/support' },
+  { title: 'Profile', icon: IconProfile, path: '/platform/settings/profile' },
+  { title: 'Team', icon: IconTeam, path: '/platform/settings/team' },
+  { title: 'Account', icon: IconAccount, path: '/platform/settings/account' },
+  { title: 'Login', icon: IconLogin, path: '/platform/settings/login' },
+  { title: 'Subscription', icon: IconSubscription, path: '/platform/settings/subscription' },
+  { title: 'Referral', icon: IconReferal, path: '/platform/settings/referal' },
 ];
 
-const Sidebar = ({ open = false, onClose }) => {
+const Sidebar = ({ open = false, onClose, disableExpand = false }) => {
   const [isCollapsed, toggleCollapse] = useSidebarCollapse();
   const { user, token, tokens, activeTeam } = useAuth();
   const [isProfileOpen, setProfileOpen] = useState(false);
   const [profile, setProfile] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(true);
-  const [search, setSearch] = useState('');
+  const [userType, setUserType] = useState('buyer');
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [coins, setCoins] = useState(0);
   const [loadingCoinSpinner, setLoadingCoinsSpinner] = useState(false);
+  const [contributorModalOpen, setContributorModalOpen] = useState(false);
+  const [contributorLoading, setContributorLoading] = useState(false);
+  const [contributorError, setContributorError] = useState('');
 
   const fetchCoins = async () => {
     if (!token) return;
@@ -262,39 +203,81 @@ const Sidebar = ({ open = false, onClose }) => {
 
   const location = useLocation();
   const isSettingsPage = location.pathname.startsWith('/platform/settings');
+  const isScanNewPage = location.pathname === '/platform/new/scan';
 
   useEffect(() => {
-    if (isSettingsPage && !isCollapsed) {
+    if ((isSettingsPage || isScanNewPage) && !isCollapsed) {
       toggleCollapse();
     }
-  }, [isSettingsPage, isCollapsed, toggleCollapse]);
+  }, [isSettingsPage, isScanNewPage, isCollapsed, toggleCollapse]);
   const handleToggleClick = () => {
-    if (!isSettingsPage) toggleCollapse();
+    if (!isSettingsPage && !disableExpand) toggleCollapse();
   };
 
-  // Tooltip for collapse button
   const [toggleHovered, setToggleHovered] = useState(false);
   const [togglePopoverPos, setTogglePopoverPos] = useState({ top: 0, left: 0, itemHeight: 0 });
   const toggleBtnRef = React.useRef(null);
 
+  const [buyerHovered, setBuyerHovered] = useState(false);
+  const [buyerPopoverPos, setBuyerPopoverPos] = useState({ top: 0, left: 0, itemHeight: 0 });
+  const buyerBtnRef = React.useRef(null);
+  const handleSellerClick = async () => {
+    // 👇 Mobile par sidebar band karo
+    if (isMobile && onClose) {
+      onClose();
+    }
+
+    setContributorError('');
+    setContributorLoading(true);
+    setContributorModalOpen(true);
+
+    try {
+      const response = await axios.get(`${baseURL}/redirect/contributor`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        timeout: 10000,
+      });
+
+      const redirectUrl = response.data?.url || response.data;
+      if (redirectUrl && typeof redirectUrl === 'string') {
+        setContributorModalOpen(false);
+        window.location.href = redirectUrl;
+      } else {
+        throw new Error('Invalid redirect URL received.');
+      }
+    } catch (err) {
+      console.error('Contributor redirect failed:', err);
+      let message = 'Failed to redirect. Please try again later.';
+      if (err.code === 'ECONNABORTED') {
+        message = 'Request timed out. Please try again.';
+      } else if (err.response?.status === 403) {
+        message = 'You do not have access to the contributor portal.';
+      } else if (err.response?.status === 401) {
+        message = 'Session expired. Please log in again.';
+      } else if (err.response?.data?.message) {
+        message = err.response.data.message;
+      }
+      setContributorError(message);
+    } finally {
+      setContributorLoading(false);
+    }
+  };
+
+  const [sellerHovered, setSellerHovered] = useState(false);
+  const [sellerPopoverPos, setSellerPopoverPos] = useState({ top: 0, left: 0, itemHeight: 0 });
+  const sellerBtnRef = React.useRef(null);
+
   const isMobile = useMediaQuery('(max-width:992px)');
 
-  // Theme detection
   useEffect(() => {
     const checkTheme = () => {
       setIsDarkMode(document.documentElement.getAttribute('data-theme') === 'dark');
     };
-
-    // Check initial theme
     checkTheme();
-
-    // Listen for theme changes
     const observer = new MutationObserver(checkTheme);
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ['data-theme'],
     });
-
     return () => observer.disconnect();
   }, []);
 
@@ -321,51 +304,30 @@ const Sidebar = ({ open = false, onClose }) => {
 
   const customSidebarItems = ['Profile', 'Team', 'Account', 'Login'];
 
-  const getFilteredItems = (items, searchTerm, isMobileView = false) => {
+  const getFilteredItems = (items, isMobileView = false) => {
     if (token) {
       if (isMobileView) {
         return items.filter((item) => {
-          // Hide Settings when team context is active
           if (activeTeam && item.title === 'Settings') return false;
-          if (item.title === 'Home') {
-            if (!searchTerm.trim()) return true;
-            return item.title?.toLowerCase().includes(searchTerm.trim().toLowerCase());
-          }
-          if (customSidebarItems.includes(item.title)) {
-            if (!searchTerm.trim()) return true;
-            return item.title?.toLowerCase().includes(searchTerm.trim().toLowerCase());
-          }
-          if (item.title === 'Subscription') {
-            if (!searchTerm.trim()) return true;
-            return item.title?.toLowerCase().includes(searchTerm.trim().toLowerCase());
-          }
-          if (!itemsToHideForAuthenticatedMobile.includes(item.title)) {
-            if (!searchTerm.trim()) return true;
-            return item.title?.toLowerCase().includes(searchTerm.trim().toLowerCase());
-          }
+          if (item.title === 'Home') return true;
+          if (customSidebarItems.includes(item.title)) return true;
+          if (item.title === 'Subscription') return true;
+          if (!itemsToHideForAuthenticatedMobile.includes(item.title)) return true;
           return false;
         });
       } else {
         return items.filter((item) => {
-          // Hide Settings when team context is active
           if (activeTeam && item.title === 'Settings') return false;
-          if (!searchTerm.trim()) return true;
-          return item.title?.toLowerCase().includes(searchTerm.trim().toLowerCase());
+          return true;
         });
       }
     } else {
-      // Unauthenticated users only see allowed items
-      return items.filter((item) => {
-        if (!allowedItemsForUnauthenticated.includes(item.title)) return false;
-        if (!searchTerm.trim()) return true;
-        return item.title?.toLowerCase().includes(searchTerm.trim().toLowerCase());
-      });
+      return items.filter((item) => allowedItemsForUnauthenticated.includes(item.title));
     }
   };
 
-  // Apply unified filtering to both desktop and mobile items
-  const filteredSidebarItems = getFilteredItems(allSidebarItems, search, false); // Desktop
-  const mobileSidebarOptions = getFilteredItems(sidebarOptions, search, isMobile); // Mobile
+  const filteredSidebarItems = getFilteredItems(allSidebarItems, false);
+  const mobileSidebarOptions = getFilteredItems(sidebarOptions, isMobile);
 
   useEffect(() => {
     if (!token) {
@@ -374,9 +336,7 @@ const Sidebar = ({ open = false, onClose }) => {
       return;
     }
 
-    // Active account find karte hain
     const activeAccount = tokens?.find((acc) => acc.is_active === 1);
-
     if (!activeAccount) {
       console.warn('No active account found');
       setProfile(null);
@@ -389,7 +349,7 @@ const Sidebar = ({ open = false, onClose }) => {
 
     axios
       .get(`${baseURL}/user`, {
-        headers: { Authorization: `Bearer ${activeAccount.token}` }, // Active account ka token use kar rahe hain
+        headers: { Authorization: `Bearer ${activeAccount.token}` },
       })
       .then((res) => {
         console.log('Profile fetched successfully:', res.data);
@@ -397,7 +357,6 @@ const Sidebar = ({ open = false, onClose }) => {
       })
       .catch((err) => {
         console.error('Failed to fetch profile:', err);
-        // Fallback: active account ke stored data use karte hain
         setProfile({
           name: activeAccount.name,
           email: activeAccount.email,
@@ -405,18 +364,16 @@ const Sidebar = ({ open = false, onClose }) => {
         });
       })
       .finally(() => setLoadingProfile(false));
-  }, [token, tokens]); // tokens dependency bhi add kar rahe hain
+  }, [token, tokens]);
 
   const toggleProfilePopup = () => setProfileOpen((prev) => !prev);
 
-  // Profile image logic (shows team if activeTeam exists)
   let profileImg = '';
   let displayName = '';
   let emailText = '';
   let showSignIn = false;
 
   if (activeTeam) {
-    // Team context active
     emailText = '';
     displayName = activeTeam.name || 'Team';
     if (activeTeam.avatar) {
@@ -425,7 +382,6 @@ const Sidebar = ({ open = false, onClose }) => {
         : `${baseURL}/storage/${activeTeam.avatar.replace(/^\//, '')}`;
     }
   } else if (!loadingProfile && profile && profile.email) {
-    // Profile API succeeded and email is present
     emailText = profile.email;
     if (profile?.avatar) {
       profileImg = profile.avatar.startsWith('http')
@@ -438,27 +394,22 @@ const Sidebar = ({ open = false, onClose }) => {
     }
     displayName = profile.name || user?.name || 'User';
   } else if (!loadingProfile && (!profile || !profile.email)) {
-    // Profile API failed or email missing
     if (token && user) {
-      // Agar token hai aur user context mein hai, to fallback data use karte hain
       displayName = user.name || 'User';
       emailText = user.email || '';
       profileImg = user.avatar || user.image || '';
     } else {
-      // Complete fallback: sign in option
       showSignIn = true;
       profileImg = Profile;
       displayName = 'Sign in';
       emailText = '';
     }
   } else {
-    // Loading or fallback
     profileImg = Profile;
     displayName = 'Loading...';
     emailText = '';
   }
 
-  // Get initials (first two letters, uppercase)
   const getInitials = (name) => {
     if (!name) return '';
     const parts = name.trim().split(' ');
@@ -466,7 +417,6 @@ const Sidebar = ({ open = false, onClose }) => {
     return (parts[0][0] + (parts[1][0] || parts[0][1] || '')).toUpperCase();
   };
 
-  // Greeting based on time
   function getGreeting() {
     const hour = new Date().getHours();
     if (hour < 12) return 'Good Morning!';
@@ -474,7 +424,6 @@ const Sidebar = ({ open = false, onClose }) => {
     return 'Good Evening!';
   }
 
-  // Tooltip handlers for toggle button
   const handleToggleMouseEnter = () => {
     if (toggleBtnRef.current) {
       const rect = toggleBtnRef.current.getBoundingClientRect();
@@ -488,10 +437,34 @@ const Sidebar = ({ open = false, onClose }) => {
   };
   const handleToggleMouseLeave = () => setToggleHovered(false);
 
-  // Responsive: show/hide sidebar on mobile
+  const handleBuyerMouseEnter = () => {
+    if (isCollapsed && buyerBtnRef.current) {
+      const rect = buyerBtnRef.current.getBoundingClientRect();
+      setBuyerPopoverPos({
+        top: rect.top + rect.height / 2,
+        left: rect.right,
+        itemHeight: rect.height,
+      });
+    }
+    setBuyerHovered(true);
+  };
+  const handleBuyerMouseLeave = () => setBuyerHovered(false);
+
+  const handleSellerMouseEnter = () => {
+    if (isCollapsed && sellerBtnRef.current) {
+      const rect = sellerBtnRef.current.getBoundingClientRect();
+      setSellerPopoverPos({
+        top: rect.top + rect.height / 2,
+        left: rect.right,
+        itemHeight: rect.height,
+      });
+    }
+    setSellerHovered(true);
+  };
+  const handleSellerMouseLeave = () => setSellerHovered(false);
+
   return (
     <>
-      {/* Overlay for mobile - only render if mobile and open */}
       {isMobile && open && <div className="sidebar-overlay show" onClick={onClose} />}
       <div className={`sidebar${isCollapsed ? ' collapsed' : ''}${open ? ' open' : ''}`}>
         <div className="sidebar-content">
@@ -503,25 +476,21 @@ const Sidebar = ({ open = false, onClose }) => {
                 </Link>
               </div>
             )}
-            {/* Sidebar toggle/collapse button: only show on desktop */}
             <button
               className="collapse-btn"
               ref={toggleBtnRef}
-              onClick={() => {
-                if (!isSettingsPage) toggleCollapse();
-              }}
+              onClick={handleToggleClick}
               onMouseEnter={handleToggleMouseEnter}
               onMouseLeave={handleToggleMouseLeave}
-              disabled={isSettingsPage} // completely disable on settings page
+              disabled={isSettingsPage || disableExpand}
               style={{
                 display: window.innerWidth > 992 ? 'flex' : 'none',
-                ...(isSettingsPage ? { cursor: 'not-allowed' } : {}),
+                ...(isSettingsPage || disableExpand ? { cursor: 'not-allowed' } : {}),
               }}
               aria-label={isCollapsed ? 'Expand Menu' : 'Close Menu'}
             >
               <img src={getToggleIcon()} alt="Toggle Sidebar" style={{ width: 22, height: 22 }} />
             </button>
-            {/* Tooltip for toggle button */}
             <SidebarPopover
               show={toggleHovered}
               top={togglePopoverPos.top}
@@ -533,25 +502,56 @@ const Sidebar = ({ open = false, onClose }) => {
             />
           </div>
 
-          <div className="search-bar">
-            <FiSearch className="search-icon" />
-            <input
-              type="text"
-              placeholder="Search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+          <div className="user-type-toggle">
+            <button
+              ref={buyerBtnRef}
+              className={`toggle-option ${userType === 'buyer' ? 'active' : ''}`}
+              onClick={() => setUserType('buyer')}
+              onMouseEnter={handleBuyerMouseEnter}
+              onMouseLeave={handleBuyerMouseLeave}
+            >
+              <img src={BuyerIcon} alt="Buyer" className="toggle-icon" />
+              {!isCollapsed && <span>Buyer</span>}
+            </button>
+            <button
+              ref={sellerBtnRef}
+              className={`toggle-option ${userType === 'seller' ? 'active' : ''}`}
+              onMouseEnter={handleSellerMouseEnter}
+              onMouseLeave={handleSellerMouseLeave}
+              onClick={handleSellerClick}
+            >
+              <img src={SellerIcon} alt="Seller" className="toggle-icon" />
+              {!isCollapsed && <span>Seller</span>}
+            </button>
           </div>
+
+          {isCollapsed && (
+            <>
+              <SidebarPopover
+                show={buyerHovered}
+                top={buyerPopoverPos.top}
+                left={buyerPopoverPos.left}
+                itemHeight={buyerPopoverPos.itemHeight}
+                colorCSS="var(--primary-color)"
+                title="Creator Mode"
+                desc=""
+              />
+              <SidebarPopover
+                show={sellerHovered}
+                top={sellerPopoverPos.top}
+                left={sellerPopoverPos.left}
+                itemHeight={sellerPopoverPos.itemHeight}
+                colorCSS="var(--primary-color)"
+                title="Seller Mode"
+                desc=""
+              />
+            </>
+          )}
 
           <div className="sidebar-menu">
             {isMobile ? (
               mobileSidebarOptions.map((item) => (
-                <SidebarItem
-                  key={item.path}
-                  item={item}
-                  isCollapsed={isCollapsed}
-                  //  onAutoCollapse={onAutoCollapse}
-                />
+                <SidebarItem key={item.path} item={item} isCollapsed={isCollapsed} />
               ))
             ) : filteredSidebarItems.length === 0 ? (
               <div style={{ padding: '1rem', color: '#aaa', textAlign: 'center' }}>
@@ -562,30 +562,19 @@ const Sidebar = ({ open = false, onClose }) => {
                 {filteredSidebarItems
                   .filter((item) => item.id < 7)
                   .map((item) => (
-                    <SidebarItem
-                      key={item.id}
-                      item={item}
-                      isCollapsed={isCollapsed}
-                      //  onAutoCollapse={onAutoCollapse}
-                    />
+                    <SidebarItem key={item.id} item={item} isCollapsed={isCollapsed} />
                   ))}
                 <hr className="sidebar-divider" />
                 {filteredSidebarItems
                   .filter((item) => item.id >= 7)
                   .map((item) => (
-                    <SidebarItem
-                      key={item.id}
-                      item={item}
-                      isCollapsed={isCollapsed}
-                      //  onAutoCollapse={onAutoCollapse}
-                    />
+                    <SidebarItem key={item.id} item={item} isCollapsed={isCollapsed} />
                   ))}
               </>
             )}
           </div>
-
-          {/* Fixed bottom section for profile and theme toggle */}
         </div>
+
         <div className="sidebar-bottom-fixed">
           <div
             className="user-profile"
@@ -669,7 +658,7 @@ const Sidebar = ({ open = false, onClose }) => {
                       alt=""
                       className={loadingCoinSpinner ? 'coin-spin' : ''}
                     />{' '}
-                    <span>{coins.toLocaleString()}</span>{' '}
+                    <span>{coins.toLocaleString()}</span>
                   </div>
                 </div>
               )}
@@ -678,8 +667,144 @@ const Sidebar = ({ open = false, onClose }) => {
           <ThemeToggle />
         </div>
       </div>
+
       {token && isProfileOpen && <ProfilePopup onClose={toggleProfilePopup} />}
-      
+
+      {/* 👇 CONTRIBUTOR REDIRECT MODAL WITH TOP-RIGHT CLOSE ICON */}
+      {contributorModalOpen && (
+        <div
+          className="create-team-overlay"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1060,
+          }}
+          onClick={() => {
+            if (!contributorLoading && !contributorError) {
+              setContributorModalOpen(false);
+            }
+          }}
+        >
+          <div
+            className="create-team-popup"
+            style={{
+              maxWidth: '420px',
+              width: '90%',
+              padding: '32px 24px 24px',
+              textAlign: 'center',
+              position: 'relative',
+              background: '#fff',
+              borderRadius: '12px',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close (X) icon — top right */}
+            {(contributorError || !contributorLoading) && (
+              <button
+                onClick={() => {
+                  setContributorModalOpen(false);
+                  setContributorError('');
+                }}
+                style={{
+                  position: 'absolute',
+                  top: '12px',
+                  right: '12px',
+                  background: 'transparent',
+                  border: 'none',
+                  fontSize: '24px',
+                  cursor: 'pointer',
+                  color: 'white',
+                  width: '32px',
+                  height: '32px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '50%',
+                  backgroundColor: '#e63399',
+                }}
+                aria-label="Close"
+              >
+                <span style={{ lineHeight: 1 }}>×</span>
+              </button>
+            )}
+
+            {/* Icon at top */}
+            {contributorLoading ? (
+              <div
+                style={{
+                  display: 'inline-block',
+                  width: '60px',
+                  height: '60px',
+                  border: '6px solid #f3f3f3',
+                  borderTop: '6px solid #e63399',
+                  borderRadius: '50%',
+                  animation: 'spin 1s linear infinite',
+                  margin: '0 auto 24px',
+                }}
+              />
+            ) : contributorError ? (
+              <div style={{ marginBottom: '24px', display: 'flex', justifyContent: 'center' }}>
+                <img src="/assets/images/danger.png" size={48} alt="" />
+              </div>
+            ) : (
+              <div style={{ marginBottom: '24px', display: 'flex', justifyContent: 'center' }}>
+                {/* <CheckCircle size={48} color="#28a745" /> */}
+                <img src="/assets/images/success-img.png" size={48} alt="" />
+              </div>
+            )}
+
+            <h3
+              style={{
+                margin: '0 0 12px',
+                fontWeight: 600,
+                fontSize: '1.25rem',
+                color: contributorError ? 'black' : contributorLoading ? '#555' : '#28a745',
+              }}
+            >
+              {contributorLoading
+                ? 'Processing...'
+                : contributorError
+                  ? 'Failed to Redirect'
+                  : 'Redirecting...'}
+            </h3>
+
+            {contributorLoading ? (
+              <p style={{ marginBottom: '20px', color: '#171E1DC7', fontSize: '14px' }}>
+                Please wait while we prepare your redirect...
+              </p>
+            ) : contributorError ? (
+              <div style={{ color: '#171E1DC7', fontSize: '14px' }}>
+                <p>{contributorError}</p>
+
+                <a
+                  href="https://dev_frontend.ai3dscanning.com/contributor/program"
+                  rel="noopener noreferrer"
+                  style={{
+                    textDecoration: 'underline',
+                    color: '#DE3996',
+                    fontWeight: '500',
+                  }}
+                >
+                  Join Contributor Program
+                </a>
+              </div>
+            ) : (
+              <p style={{ marginBottom: '24px', color: '#171E1DC7', fontSize: '14px' }}>
+                You’re being redirected to the contributor portal. This will take just a moment.
+              </p>
+            )}
+          </div>
+
+          <style>{`
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    `}</style>
+        </div>
+      )}
     </>
   );
 };

@@ -2,6 +2,7 @@
   display: flex;
   background-color: #bebcbc42;
   border-radius: 8px;
+  padding: 4.5px;
 }
 
 .sidebar.collapsed .theme-toggle {
@@ -16,6 +17,10 @@
   gap: 0px;
   padding: 3px;
   width: 85% !important;
+}
+
+[data-theme="dark"] .sidebar.collapsed .theme-toggle {
+  background-color: #3b3c3c !important;
 }
 
 .sidebar.collapsed .theme-toggle .toggle-btn {
@@ -33,7 +38,7 @@
 
 .toggle-btn {
   flex: 1;
-  padding: 8px 12px;
+  padding: 5px 8px;
   border: none;
   background-color: transparent !important;
   color: #757575 !important;
@@ -46,10 +51,12 @@
   font-weight: 600;
   transition: background-color 0.2s, color 0.2s;
   box-shadow: none;
+  font-size: 14.5px;
+  margin: 0;
 }
 
 .toggle-btn .iconify {
-  font-size: 26px !important;
+  font-size: 18px !important;
   color: #757575 !important;
   transition: color 0.2s;
 }

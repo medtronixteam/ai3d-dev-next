@@ -15,6 +15,10 @@ import ContributorLandingPage from '../pages/ContributorPage/ContributorLandingP
 import GetStartedPage from '../pages/ContributorPage/GetStartedPage';
 import TicketHistory from '../pages/SupportPages/TicketHistory';
 import SupportTicketDetails from '../pages/SupportPages/SupportTicketDetails';
+import NewModel from '../pages/preview/NewModel';
+import NewModelErrorPage from '../pages/preview/NewModelErrorPage';
+import TrashProjects from '../pages/dashboard/TrashProjects';
+import OpenModelButton from '../pages/preview/OpenModelButton';
 
 // LAZY IMPORTS
 const App = lazy(() => import('../App'));
@@ -33,6 +37,8 @@ const Subscription = lazy(() => import('pages/subscription'));
 const SubscriptionSuccess = lazy(() => import('pages/subscription/Success'));
 const Team = lazy(() => import('pages/team'));
 const ScanPage = lazy(() => import('../pages/scan'));
+const ScanNewPage = lazy(() => import('../pages/scan/ScanNewPage'));
+const ModelView = lazy(() => import('../pages/scan/ModelView'));
 const PreviewPage = lazy(() => import('pages/preview'));
 const SplatViewer = lazy(() => import('pages/splat-viewer'));
 const SettingsPage = lazy(() => import('pages/settings'));
@@ -63,7 +69,7 @@ const routes = [
         element: <LandingPage />,
       },
       {
-        path: '/contributor-landingpage',
+        path: '/contributor/program',
         element: <ContributorLandingPage />,
       },
       {
@@ -74,9 +80,21 @@ const routes = [
         path: '/referral',
         element: <Referral />,
       },
-       {
+      {
         path: '/service',
         element: <Service />,
+      },
+      {
+        path: '/render/model/:id',
+        element: <NewModel />,
+      },
+      {
+        path: '/render/btn',
+        element: <OpenModelButton />,
+      },
+      {
+        path: '/model/error/page',
+        element: <NewModelErrorPage />,
       },
 
       // Dashboard Routes (relative children)
@@ -91,14 +109,54 @@ const routes = [
         ),
         children: [
           { index: true, element: <Dashboard /> },
-          { path: 'recent-projects', element: <ProtectedRoute><RecentProjects /></ProtectedRoute> },
-          { path: 'simple', element: <ProtectedRoute><SimplePage /></ProtectedRoute> },
+          {
+            path: 'recent-projects',
+            element: (
+              <ProtectedRoute>
+                <RecentProjects />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: '/platform/trash/projects',
+            element: (
+              <ProtectedRoute>
+                <TrashProjects />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: 'simple',
+            element: (
+              <ProtectedRoute>
+                <SimplePage />
+              </ProtectedRoute>
+            ),
+          },
           { path: 'subscription', element: <Subscription /> },
-          { path: 'team', element: <ProtectedRoute><Team /></ProtectedRoute> },
-          { path: 'team/invite/accept/:token', element: <ProtectedRoute><InviteAccept /></ProtectedRoute> },
+          {
+            path: 'team',
+            element: (
+              <ProtectedRoute>
+                <Team />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: 'team/invite/accept/:token',
+            element: (
+              <ProtectedRoute>
+                <InviteAccept />
+              </ProtectedRoute>
+            ),
+          },
           {
             path: 'settings',
-            element: <ProtectedRoute><SettingsPage /></ProtectedRoute>,
+            element: (
+              <ProtectedRoute>
+                <SettingsPage />
+              </ProtectedRoute>
+            ),
             children: [
               { index: true, element: <Profile /> },
               { path: 'profile', element: <Profile /> },
@@ -115,14 +173,44 @@ const routes = [
             ],
           },
           { path: 'scan', element: <ScanPage /> },
-          { path: 'preview/:id', element: <ProtectedRoute><PreviewPage /></ProtectedRoute> },
-          { path: 'splat-viewer/:id', element: <ProtectedRoute><SplatViewer /></ProtectedRoute> },
+          { path: 'new/scan', element: <ScanNewPage /> },
+          { path: 'model/view', element: <ModelView /> },
+          {
+            path: 'preview/:id',
+            element: (
+              <ProtectedRoute>
+                <PreviewPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: 'splat-viewer/:id',
+            element: (
+              <ProtectedRoute>
+                <SplatViewer />
+              </ProtectedRoute>
+            ),
+          },
           { path: 'api-sdk', element: <ApiSdkComingSoon /> },
-          { path: 'notification', element: <ProtectedRoute><Notification /></ProtectedRoute> },
+          {
+            path: 'notification',
+            element: (
+              <ProtectedRoute>
+                <Notification />
+              </ProtectedRoute>
+            ),
+          },
           { path: 'support', element: <Support /> },
           { path: 'support-ticket-history', element: <TicketHistory /> },
-          { path: 'support-ticket-detail', element: <SupportTicketDetails /> },
-          { path: 'session-history', element: <ProtectedRoute><SessionHistory /></ProtectedRoute> },
+          { path: 'support-ticket-detail/:id', element: <SupportTicketDetails /> },
+          {
+            path: 'session-history',
+            element: (
+              <ProtectedRoute>
+                <SessionHistory />
+              </ProtectedRoute>
+            ),
+          },
         ],
       },
 
@@ -130,19 +218,27 @@ const routes = [
       { path: '/platform/subscription/card', element: <CardPayment /> },
       { path: '/login/success', element: <OAuthSuccess /> },
       { path: '/subscription/success', element: <SubscriptionSuccess /> },
-      { 
-        path: '/subscription/cancelled', 
-        element: <Navigate to="/platform/settings/subscription" replace /> 
+      {
+        path: '/subscription/cancelled',
+        element: <Navigate to="/platform/settings/subscription" replace />,
       },
 
       // Auth Routes
       {
         path: '/signin',
-        element: <AuthLayout><SignIn /></AuthLayout>,
+        element: (
+          <AuthLayout>
+            <SignIn />
+          </AuthLayout>
+        ),
       },
       {
         path: '/signup',
-        element: <AuthLayout><SignUp /></AuthLayout>,
+        element: (
+          <AuthLayout>
+            <SignUp />
+          </AuthLayout>
+        ),
       },
       { path: '/reset-password', element: <ResetPassword /> },
 

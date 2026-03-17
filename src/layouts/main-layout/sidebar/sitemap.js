@@ -33,7 +33,7 @@ export const sitemap = [
       dark: WhiteScan,
       active: ScanIcon,
     },
-    path: '/platform/scan',
+    path: '/platform/new/scan',
   },
   {
     id: 3,

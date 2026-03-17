@@ -33,7 +33,7 @@ const CustomInfoModal = ({ modalData, onClose }) => {
               <div className="row g-4 mt-4">
                 <div className="col-12 col-lg-4 text-center">
                   <div className="styled-img-container">
-                    <img src={modalQuoteImg} className="quote-img" alt="Quote Icon" />
+                    {/* <img src={modalQuoteImg} className="quote-img" alt="Quote Icon" /> */}
                     <img src={modalData.img || modalQuoteImg} className="profile-img" alt={modalData.name} />
                   </div>
                   <div className="mt-3">

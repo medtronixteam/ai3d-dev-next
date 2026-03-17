@@ -161,7 +161,7 @@ const SignIn = () => {
                     }}
                     onClick={() => setShowPassword((s) => !s)}
                   >
-                    {showPassword ? <FiEye size={20} /> : <FiEyeOff size={20} />}
+                    {showPassword ? <FiEye size={16} /> : <FiEyeOff size={16} />}
                   </span>
                 </div>
                 <div className="d-flex justify-content-between align-items-center mb-3">
@@ -209,7 +209,7 @@ const SignIn = () => {
                     type="button"
                     className="btn social-btn"
                     onClick={() => {
-                      window.location.href = 'https://app.ai3dscanning.com/auth/google';
+                      window.location.href = 'https://dev-backend.ai3dscanning.com/auth/google';
                     }}
                   >
                     <span className="social-icon">
@@ -221,7 +221,7 @@ const SignIn = () => {
                     type="button"
                     className="btn social-btn"
                     onClick={() => {
-                      window.location.href = 'https://app.ai3dscanning.com/auth/facebook';
+                      window.location.href = 'https://dev-backend.ai3dscanning.com/auth/facebook';
                     }}
                   >
                     <span className="social-icon">

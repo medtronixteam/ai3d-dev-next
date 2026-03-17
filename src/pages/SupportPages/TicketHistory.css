@@ -1,5 +1,8 @@
 .support-ticket-system-container {
   padding: 40px 20px;
+  height: 100vh !important;
+  overflow-y: auto;
+  scrollbar-width: thin;
 }
 
 .support-ticket-system-h1-tag {
@@ -42,7 +45,7 @@
   border: 1px solid #cbcbcb;
   border-radius: 6px;
   width: 100%;
-  min-width: 60vw;
+  min-width: 50vw;
   font-size: 14px;
   outline: none;
   background: #fff;
@@ -124,13 +127,14 @@
 
 .ticket-item {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: flex-start !important;
   background-color: #fff;
   border: 1px solid #0000001a;
   border-radius: 8px;
   padding: 20px;
   transition: transform 0.3s;
+  max-width: 1000px;
 }
 
 /* .ticket-item:hover {
@@ -237,20 +241,20 @@
 } */
 
 [data-theme='dark'] .ticket-search-box input {
-  background-color: #110E20;
+  background-color: #110e20;
   color: #fff;
-  border-color:  #DE3996;
+  border-color: #fff;
 }
 
 [data-theme='dark'] .filter-and-new-ticket select {
-  background-color: #110E20;
+  background-color: #110e20;
   color: #fff;
-  border-color: #DE3996;
+  border-color: #fff;
 }
 
 [data-theme='dark'] .ticket-item {
-  background-color: #110E20;
-  border-color: #FFFFFF;
+  background-color: #110e20;
+  border-color: #ffffff;
   color: #fff;
 }
 
@@ -271,9 +275,9 @@
 }
 
 [data-theme='dark'] .ticket-status.technical-issue {
-  background-color: #5F2132;
-  color: #BF3847;
-  border: 1px solid #BF3847;
+  background-color: #5f2132;
+  color: #bf3847;
+  border: 1px solid #bf3847;
   border-radius: 21px;
 }
 
@@ -285,12 +289,12 @@
 }
 
 [data-theme='dark'] .ticket-status.feature-request {
-  background-color: #2A1A4A;
-  color: #1E40AF;
-  border: 1px solid #1E40AF;
+  background-color: #2a1a4a;
+  color: #1e40af;
+  border: 1px solid #1e40af;
 }
 
-@media (max-width : 600px) {
+@media (max-width: 600px) {
   .ticket-actions-bar {
     display: flex;
     flex-direction: column !important;
@@ -304,5 +308,23 @@
   }
   .ticket-search-box {
     width: 100% !important;
+  }
+  .ticket-header h3 {
+    font-size: 1rem;
+  }
+  .ticket-header {
+    display: flex !important;
+    align-items: flex-start !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    margin-bottom: 5px !important;
+  }
+  .ticket-status,
+  .ticket-priority {
+    padding: 4px 6px;
+    font-size: 10px;
+  }
+  .ticket-description {
+    font-size: 13px;
   }
 }

@@ -322,4 +322,8 @@ input[type=number] {
   transition: 0.3s ease;
 }
 
+[data-theme='dark'] .share-coin-user-info p {
+  color: #fff;
+}
+
 

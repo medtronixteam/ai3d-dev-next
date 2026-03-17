@@ -746,8 +746,8 @@
   color: #f3f3fa !important;
 }
 [data-theme='dark'] .share-copy-btn {
-  background: #e6339a !important;
-  color: #fff !important;
+  /* background: #e6339a !important; */
+  color: #e6339a !important;
 }
 
 @media (min-width: 993px) {
@@ -881,7 +881,7 @@
 [data-theme='dark'] .form-control {
   background: #232334 !important;
   color: #f3f3fa !important;
-  border: none !important;
+  /* border: none !important; */
 }
 
 .dark .profile-input::placeholder,

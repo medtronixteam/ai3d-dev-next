@@ -1609,8 +1609,12 @@ const LandingPage = () => {
             <section className="client-services" style={{ paddingBottom: 35 }}>
               <div className="container">
                 <div className="row align-items-center" style={{ justifyContent: 'space-between' }}>
-                  <div
+                  <motion.div
                     className="col-lg-6 col-12 mb-4 order-lg-1 order-2"
+                    initial={{ opacity: 0, x: -50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.5 }}
                     style={{
                       display: 'flex',
 
@@ -1650,10 +1654,16 @@ const LandingPage = () => {
                         </button>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
 
-                  <div className="client-section col-lg-5 col-12 mb-4 order-lg-2 order-1">
-                    <div>
+                  <motion.div
+                    className="client-section col-lg-5 col-12 mb-4 order-lg-2 order-1"
+                    initial={{ opacity: 0, x: 50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.6 }}
+                  >
+                    <div className="client-section-content">
                       <div className="client-section-title text-center">
                         Our Services for Clients
                       </div>
@@ -1707,7 +1717,7 @@ const LandingPage = () => {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 </div>
               </div>
             </section>
@@ -1717,30 +1727,50 @@ const LandingPage = () => {
         <section className="scan_section py-5">
           <div className="container scan_container">
             <div className="row align-items-center justify-content-between">
-              <div className="col-lg-5 col-12 mb-5 mb-md-0">
-                <div className="scan_title">
-                  Our{' '}
-                  <span className="perfect-heading">
-                    <span className="">
-                      Adv
-                      <img src={elipse} alt="Ellipse" className="ellipse-img" />
-                      anc
-                    </span>
-                    ed
-                  </span>{' '}
-                  Scanning Features
-                </div>
+            <div className="col-lg-5 col-12 mb-5 mb-md-0">
+  <motion.div
+    initial={{ opacity: 0, y: 40 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.6 }}
+  >
+    <div className="scan_title">
+      Our{' '}
+      <span className="perfect-heading">
+        <span className="">
+          Adv
+          <img src={elipse} alt="Ellipse" className="ellipse-img" />
+          anc
+        </span>
+        ed
+      </span>{' '}
+      Scanning Features
+    </div>
 
-                <p className="scan_description" style={{ width: '95%', color: '#1A1A40B2' }}>
-                  3DIO combines cutting-edge AI algorithms with powerful cloud infrastructure to
-                  deliver studio-quality 3D scanning that's fast, accurate, and secure. Whether
-                  you're creating for gaming, e-commerce, design, or enterprise use, our features
-                  ensure your results are top-tier and ready for production.
-                </p>
-              </div>
+    <motion.p
+      className="scan_description"
+      style={{ width: '95%', color: '#1A1A40B2' }}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay: 0.2 }}
+    >
+      3DIO combines cutting-edge AI algorithms with powerful cloud infrastructure to
+      deliver studio-quality 3D scanning that's fast, accurate, and secure. Whether
+      you're creating for gaming, e-commerce, design, or enterprise use, our features
+      ensure your results are top-tier and ready for production.
+    </motion.p>
+  </motion.div>
+</div>
+
 
               <div className="col-lg-6 col-md-10 col-12 mb-5 mb-md-0">
-                <div className="square-wrapper">
+                <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                 className="square-wrapper">
                   <div className="square-container">
                     <img src={rectangle2} alt="" className="square-line top" />
 
@@ -1850,7 +1880,7 @@ const LandingPage = () => {
                       </a> */}
                     </div>
                   </div>
-                </div>
+                </motion.div>
               </div>
             </div>
           </div>
@@ -1898,7 +1928,16 @@ const LandingPage = () => {
 
                 return (
                   <div className="col-12 col-sm-6 col-lg-4" key={card.id || idx}>
-                    <div className="model_card">
+                    <motion.div
+                      initial={{ opacity: 0, y: 50 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{
+                        duration: 0.6,
+                        delay: idx * 0.2,
+                      }}
+                      className="model_card"
+                    >
                       <img
                         src={imgUrl}
                         className="model_image"
@@ -1916,7 +1955,7 @@ const LandingPage = () => {
                           <img src={modelButtonIcon} alt="Go" />
                         </a>
                       </div>
-                    </div>
+                    </motion.div>
                   </div>
                 );
               })}
@@ -1987,7 +2026,7 @@ const LandingPage = () => {
         <section className="video_section py-lg-4 py-1 mb-3" id="video">
           <div className="container">
             <div className="row justify-content-center g-0 px-0">
-              <div className="col-12 col-lg-12 col-xxl-10">
+              <motion.div className="col-12 col-lg-12 col-xxl-10" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.4 }}>
                 <div
                   className="video-wrapper position-relative ratio ratio-16x9"
                   id="videoWrapper"
@@ -2022,7 +2061,7 @@ const LandingPage = () => {
                     />
                   )}
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -2110,8 +2149,83 @@ const LandingPage = () => {
                 )}
               </div>
 
+              {/* Splide Slider for Team Members */}
+
+              {/* <div className="splide mt-4" id="team-slider" aria-label="Team Slider">
+                <div className="splide__track">
+                  <ul className="splide__list">
+                    {[
+                      {
+                        img: SehrozSir,
+                        name: 'Shehroz Shabbir',
+                        role: 'Web Development Manager',
+                        desc: 'Expertise spans coding, system architecture, and database management, enabling him to translate complex business needs into functional, efficient, and scalable solutions. His work powers the AI-driven and 3D scanning technologies that define the company’s cutting-edge services.',
+                      },
+
+                      {
+                        img: MudassarSir,
+                        name: 'Mudassar Farooq',
+                        role: 'HR & Business Development Manager',
+                        desc: 'Drives recruitment, culture, and leads business growth and client outreach efforts.',
+                      },
+                      {
+                        img: HiraMam,
+                        name: 'Hira Aziz',
+                        role: 'Creative Media Manager',
+                        desc: 'Leads visual communication, brand identity, and product design direction.',
+                      },
+                      {
+                        img: samiaImg,
+                        name: 'Samia Rasheed',
+                        role: 'HR Associate & Social Media Manager',
+                        desc: 'Supports hiring processes while managing brand voice and engagement across platforms.',
+                      },
+                      // Repeat for loop effect (optional)
+
+                      {
+                        img: osamaImg,
+                        name: 'Usama Ahmad',
+                        role: 'Admin & Finance Manager',
+                        desc: 'Manages company finances, budgeting, and administrative operations with precision and compliance.',
+                      },
+                      {
+                        img: SajeelSir,
+                        name: 'Sajeel Nisar',
+                        role: 'AI Lead',
+                        desc: 'Architecting and training core AI models driving 2D-to-3D transformation at AI3D.',
+                      },
+                    ].map((member, index) => (
+                      <li className="splide__slide" key={index}>
+                        <div className="team-slide">
+                          <div className="img-container image-container">
+                            <img src={member.img} alt={member.name} />
+                          </div>
+
+                          <div className="team-card image-card">
+                            <h5 className="teamname">{member.name}</h5>
+
+                            <small className="teamtitle">{member.role}</small>
+
+                            <p className="pera teampara">
+                              {member.desc.length > 100
+                                ? `${member.desc.substring(0, 100)}...`
+                                : member.desc}
+                            </p>
+
+                            <div className="mt-auto">
+                              <a href="javascript:void(0)" className="learn-more learn-m">
+                                Learn More
+                                <img src={learnImg} alt="" className="mt-1 left lef ms-2" />
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div> */}
               <LeadershipSection />
-              
             </div>
           </section>
 

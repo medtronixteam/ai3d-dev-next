@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-// import './Subscription.css'
 import './plan.css';
+import './new.css';
 import { useNavigate } from 'react-router-dom';
-import CardPayment from './CardPayment';
 import axios from 'axios';
 import { baseURL } from '../../config';
 import { useAuth } from '../../context/AuthContext';
 import vectoImage from '../../assets/images/Vector.svg';
 import videoGif from '../../assets/images/video.gif';
-import { FiPower, FiX, FiArrowRight, FiArrowLeft } from 'react-icons/fi';
 import LoginPopup from '../../components/popup/LoginPopup';
-import Construction from '../../assets/images/construction.jpeg';
+import freemiumTopIcon from '../../assets/icon/freeIcon.png';
+import starterTopIcon from '../../assets/icon/starterTopIcon.png';
+import premiumTopIcon from '../../assets/icon/premiumTopIcon.png';
+import enterpriseTopIcon from '../../assets/icon/enterpriseTopIcon.png';
 
 const Subscription = () => {
   const [billingPeriod, setBillingPeriod] = useState('monthly');
@@ -23,15 +24,6 @@ const Subscription = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loginModalVisible, setLoginModalVisible] = useState(false);
   const [subscribingPlan, setSubscribingPlan] = useState(null);
-  const [showPopup, setShowPopup] = useState(false);
-
-  const handleButtonClick = () => {
-    setShowPopup(true);
-  };
-
-  const closePopup = () => {
-    setShowPopup(false);
-  };
 
   useEffect(() => {
     if (showLoginModal) {
@@ -44,20 +36,28 @@ const Subscription = () => {
     setTimeout(() => setShowLoginModal(false), 250);
   };
 
-  const handlePlanClick = async (planInfo, e) => {
+  const handlePlanClick = async (planName, e) => {
     if (e) e.preventDefault();
-    if (activeTeam) return;
+
+    // Handle Enterprise separately
+    if (planName === 'Enterprise') {
+      window.open('https://ai3d.com/contact-sales', '_blank');
+      return;
+    }
+
     if (!token) {
       setShowLoginModal(true);
       return;
     }
+
+    if (activeTeam) return;
+
+    const period = billingPeriod === 'yearly' ? 'annually' : 'monthly';
+    const key = `${planName}-${period}`;
+    setSubscribingPlan(key);
+
     try {
-      const period = billingPeriod === 'yearly' ? 'annually' : 'monthly';
-      const payload = {
-        name: planInfo?.name,
-        period,
-      };
-      setSubscribingPlan(`${planInfo?.name}-${period}`);
+      const payload = { name: planName, period };
       const res = await axios.post(`${baseURL}/plan/subscribe`, payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -66,26 +66,21 @@ const Subscription = () => {
         window.location.href = redirectUrl;
       }
     } catch (err) {
-      // Fallback: keep previous behavior only if subscribe fails
-      try {
-        window.open('/platform/subscription/card', '_blank');
-      } catch (_) {}
+      console.error('Subscription error:', err);
+      // Optional: show message
     } finally {
       setSubscribingPlan(null);
     }
   };
 
+  // Fetch prices and update state
   useEffect(() => {
-    // Fetch all plans and set Starter/Pro prices for monthly and annually
     axios
       .get(`${baseURL}/plans`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       })
       .then((res) => {
         const data = res?.data || {};
-        // Expected flexible shapes:
-        // { monthly: [{name:'Starter', price:29},{name:'Pro', price:99}], annually: [...] }
-        // or { plans: { monthly: [...], annually: [...] } }
         const monthly = Array.isArray(data?.monthly)
           ? data?.monthly
           : Array.isArray(data?.plans?.monthly)
@@ -113,13 +108,13 @@ const Subscription = () => {
         setYearlyProPrice(getPrice(annually, 'pro', 990));
       })
       .catch(() => {
-        // keep defaults
+        // Fallbacks already set in useState — no action needed
       });
   }, [token]);
 
   return (
     <>
-      {/* =================== Hero Section ============= */}
+      {/* Hero Section */}
       <section
         className="subscription-hero-section p-5"
         style={{
@@ -127,12 +122,10 @@ const Subscription = () => {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
-
           height: '200px',
           minHeight: 'unset',
           maxHeight: '220px',
           overflow: 'hidden',
-
           overflowX: 'hidden',
         }}
       >
@@ -147,51 +140,9 @@ const Subscription = () => {
           </div>
         </div>
       </section>
-      {/* =================== Hero Section End ============= */}
 
-      {/* <div className="">
-  <h6><span>Save from 10%</span>with yearly</h6>
-  </div> */}
-      {/* Monthly Plans Section */}
       <div className="pricing-section" style={{ overflowX: 'hidden' }}>
         <div className="pricing-container" style={{ position: 'relative' }}>
-          {/* Floating icon for toggling plans with smooth animation */}
-          <div
-            className={`plan-toggle-float-btn-anim${billingPeriod === 'monthly' ? ' right' : ' left'}`}
-            onClick={() => setBillingPeriod(billingPeriod === 'monthly' ? 'yearly' : 'monthly')}
-            title={billingPeriod === 'monthly' ? 'Switch to Yearly' : 'Switch to Monthly'}
-            style={{ zIndex: 10 }}
-          >
-            {billingPeriod === 'monthly' ? <FiArrowRight size={24} /> : <FiArrowLeft size={24} />}
-          </div>
-          <style>{`
-            .plan-toggle-float-btn-anim {
-              position: absolute;
-              top: 50%;
-              transform: translateY(-50%);
-              background: #e6339a;
-              color: #fff;
-              border: none;
-              border-radius: 50%;
-              width: 40px;
-              height: 40px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              box-shadow: 0 2px 8px #e6339a33;
-              cursor: pointer;
-              transition: left 0.35s cubic-bezier(.4,1.7,.6,1), right 0.35s cubic-bezier(.4,1.7,.6,1);
-              padding: 0;
-            }
-            .plan-toggle-float-btn-anim.right {
-              right: -16px;
-              left: auto;
-            }
-            .plan-toggle-float-btn-anim.left {
-              left: -16px;
-              right: auto;
-            }
-          `}</style>
           <div className="plan-toggle">
             <div
               className={`toggle-option ${billingPeriod === 'monthly' ? 'active' : ''}`}
@@ -209,389 +160,285 @@ const Subscription = () => {
               Save from 20% <span style={{ color: '#000000' }}>with yearly</span>
             </div>
           </div>
+
           {billingPeriod === 'monthly' && (
-            <div className="pricing-cards monthly-plan">
-              {/* Monthly cards: Starter, Pro (Popular), Enterprise at third */}
-              <div className="pricing-card">
-                <div className="card-header">
-                  <span className="title">Starter</span>
-                  <div className="price-section">
-                    <div>
-                      <span className="price">{`$${monthlyStarterPrice}`}</span>
-                      <sub className="sub-class">/Month</sub>
-                    </div>
-                    <div>
-                      <span
-                        className="year-price"
-                        style={{ fontSize: '16px' }}
-                      >{`$${yearlyStarterPrice}`}</span>
-                      <sub className="year-sub-class" style={{ fontSize: '16px' }}>
-                        /Year
-                      </sub>
-                    </div>
-                    <p>Unlock more powerful design tools.</p>
-                  </div>
-                </div>
-                <div className="divider-container">
-                  <div className="divider" />
-                </div>
-                <div className="features">
-                  <h2>Features you'll get:</h2>
-                  <ul>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Instance 2D to 3D conversion
-                    </li>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Real-time preview &amp; exports
-                    </li>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Access to all tools &amp; APIs
-                    </li>
-                  </ul>
-                </div>
-                <p className="card-footer">
-                  At the end of 14 days, you can choose a plan that fits your needs. We'll notify
-                  you 2 days before your trial ends.
-                </p>
-                {/* <button
-                  className="plan-button"
-                  disabled={
-                    !!activeTeam ||
-                    subscribingPlan ===
-                      `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
-                  }
-                  onClick={(e) => handlePlanClick({ name: 'Starter' }, e)}
-                >
-                  {subscribingPlan ===
-                  `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
-                    ? 'Processing…'
-                    : 'Choose Starter'}
-                </button> */}
-                <button className="plan-button" onClick={handleButtonClick}>
-                  Choose Starter
-                </button>
-              </div>
-              <div className="popular-card">
-                <div className="popular-tag">Popular</div>
-                <div className="pricing-card">
-                  <div className="card-header">
-                    <span className="title">Pro Plan</span>
-                    <div className="price-section">
+            <div
+              className="new-Subscription-container d-flex align-items-center justify-content-center"
+              style={{ minHeight: '100vh' }}
+            >
+              <div className="new-subscription container py-5">
+                <div className="row justify-content-center g-4 d-flex align-items-stretch">
+                  {/* Freemium */}
+                  <div className="col-md-4 d-flex align-items-center">
+                    <div className="sub-card sub-card-small w-100 d-flex flex-column justify-content-between">
                       <div>
-                        <span className="price">{`$${monthlyProPrice}`}</span>
-                        <sub className="sub-class">/Month</sub>
+                        <div className="sub-top-icon">
+                          <img src={freemiumTopIcon} alt="Freemium" />
+                        </div>
+                        <h2 className="sub-title">Freemium</h2>
+                        <h3 className="sub-price">
+                          Free <span>/14 days</span>
+                        </h3>
+                        <p className="sub-description">
+                          Perfect for testing, personal projects and learning 3D creation with AI.
+                        </p>
+                        <div className="sub-divider"></div>
+                        <h4 className="sub-section-title">Features you'll get:</h4>
+                        <div className="sub-feature-list">
+                          <li><img src={vectoImage} alt="" /> 50 AI scans (2D → 3D or prompt → 3D)</li>
+                          <li><img src={vectoImage} alt="" /> Real-time preview and export</li>
+                          <li><img src={vectoImage} alt="" /> Access to all base design tools and APIs</li>
+                          <li><img src={vectoImage} alt="" /> Community access and learning hub</li>
+                          <li><img src={vectoImage} alt="" /> Cloud storage (2GB limit), Email support</li>
+                          <li><img src={vectoImage} alt="" /> Access to public 3D model library</li>
+                        </div>
                       </div>
                       <div>
-                        <span
-                          className="year-price"
-                          style={{ fontSize: '16px' }}
-                        >$990</span>
-                        <sub className="year-sub-class" style={{ fontSize: '16px' }}>
-                          /Year
-                        </sub>
+                        <p className="sub-bestfor">
+                          <b>Best for:</b> Individual creators, freelancers, and small-scale designers who want to explore AI powered 3D creation.
+                        </p>
+                        <button
+                          className="sub-btn"
+                          onClick={(e) => handlePlanClick('Freemium', e)}
+                          disabled={subscribingPlan === `Freemium-monthly`}
+                        >
+                          {subscribingPlan === `Freemium-monthly` ? 'Processing…' : 'Choose Freemium'}
+                        </button>
                       </div>
-                      <p>Unlock more powerful design tools.</p>
                     </div>
                   </div>
-                  <div className="divider-container">
-                    <div className="divider" />
+
+                  {/* Starter */}
+                  <div className="col-md-4 d-flex">
+                    <div className="sub-card sub-card-center w-100 d-flex flex-column justify-content-between">
+                      <div>
+                        <div className="sub-top-icon">
+                          <img src={starterTopIcon} alt="Starter" />
+                        </div>
+                        <h2 className="sub-title">Starter</h2>
+                        <h3 className="sub-price">
+                          ${monthlyStarterPrice} <span>/Month</span>
+                        </h3>
+                        <p className="sub-year">${yearlyStarterPrice}/Year</p>
+                        <p className="sub-description">
+                          Perfect for testing, personal projects and learning 3D creation with AI.
+                        </p>
+                        <div className="sub-divider"></div>
+                        <h4 className="sub-section-title">Features you'll get:</h4>
+                        <div className="sub-feature-list">
+                          <li><img src={vectoImage} alt="" /> 50 AI scans (2D → 3D or prompt → 3D)</li>
+                          <li><img src={vectoImage} alt="" /> Real-time preview and export</li>
+                          <li><img src={vectoImage} alt="" /> Access to all base design tools and APIs</li>
+                          <li><img src={vectoImage} alt="" /> Community access and learning hub</li>
+                          <li><img src={vectoImage} alt="" /> Cloud storage (2GB limit), Email support</li>
+                          <li><img src={vectoImage} alt="" /> Access to public 3D model library</li>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="sub-bestfor">
+                          <b>Best for:</b> Individual creators, freelancers, and small-scale designers who want to explore AI powered 3D creation.
+                        </p>
+                        <button
+                          className="sub-btn"
+                          disabled={!!activeTeam || subscribingPlan === `Starter-monthly`}
+                          onClick={(e) => handlePlanClick('Starter', e)}
+                        >
+                          {subscribingPlan === `Starter-monthly` ? 'Processing…' : 'Choose Starter'}
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  <div className="features">
-                    <h2>Features you'll get:</h2>
-                    <ul>
-                      <li>
-                        <img src={vectoImage} alt="" />
-                        Instance 2D to 3D conversion
-                      </li>
-                      <li>
-                        <img src={vectoImage} alt="" />
-                        Real-time preview &amp; exports
-                      </li>
-                      <li>
-                        <img src={vectoImage} alt="" />
-                        Access to all tools &amp; APIs
-                      </li>
-                    </ul>
-                  </div>
-                  <p className="card-footer">
-                    At the end of 14 days, you can choose a plan that fits your needs. We'll notify
-                    you 2 days before your trial ends.
-                  </p>
-                  {/* <button
-                    className="plan-button"
-                    disabled={
-                      !!activeTeam ||
-                      subscribingPlan ===
-                        `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
-                    }
-                    onClick={(e) => handlePlanClick({ name: 'Pro' }, e)}
-                  >
-                    {subscribingPlan ===
-                    `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
-                      ? 'Processing…'
-                      : 'Choose Pro'}
-                  </button> */}
-                  <button className="plan-button" onClick={handleButtonClick}>
-                  Choose Pro
-                </button>
-                </div>
-              </div>
-              <div className="pricing-card">
-                <div className="card-header">
-                  <span className="title">Enterprise Plan</span>
-                  <div className="price-section">
-                    <div style={{ marginBottom: '31px' }}>
-                      <span className="price">Custom</span>
-                      <sub className="sub-class">billing</sub>
+
+                  {/* Premium */}
+                  <div className="col-md-4 d-flex">
+                    <div className="sub-card sub-card-premium w-100 d-flex flex-column justify-content-between">
+                      <div>
+                        <div className="sub-badge">Most Popular</div>
+                        <div className="sub-top-icon">
+                          <img src={premiumTopIcon} alt="Premium" />
+                        </div>
+                        <h2 className="sub-title">Premium</h2>
+                        <h3 className="sub-price">
+                          ${monthlyProPrice} <span>/Month</span>
+                        </h3>
+                        <p className="sub-year">${yearlyProPrice}/Year</p>
+                        <p className="sub-description">
+                          Built for creators who need speed, team collaboration, and higher production volume.
+                        </p>
+                        <div className="sub-divider"></div>
+                        <h4 className="sub-section-title">Features you'll get:</h4>
+                        <div className="sub-feature-list">
+                          <li><img src={vectoImage} alt="" /> Multi-user team access (up to 4 members)</li>
+                          <li><img src={vectoImage} alt="" /> 500 AI scans/month</li>
+                          <li><img src={vectoImage} alt="" /> Priority processing & rendering queue</li>
+                          <li><img src={vectoImage} alt="" /> Access to advanced editing tools</li>
+                          <li><img src={vectoImage} alt="" /> Private 3D asset storage (up to 50GB)</li>
+                          <li><img src={vectoImage} alt="" /> Access to Beta AI features & research updates</li>
+                          <li><img src={vectoImage} alt="" /> Dedicated workspace for teams</li>
+                          <li><img src={vectoImage} alt="" /> Priority chat + email support</li>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="sub-bestfor">
+                          <b>Best for:</b> Small teams, studios or early-stage startups collaborating on 3D projects.
+                        </p>
+                        <button
+                          className="sub-btn"
+                          disabled={!!activeTeam || subscribingPlan === `Premium-monthly`}
+                          onClick={(e) => handlePlanClick('Premium', e)}
+                        >
+                          {subscribingPlan === `Premium-monthly` ? 'Processing…' : 'Choose Premium'}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div className="divider-container mt-lg-4">
-                  <div className="divider" />
-                </div>
-                <div className="features">
-                  <h2>Features you'll get:</h2>
-                  <ul>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Instance 2D to 3D conversion
-                    </li>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Real-time preview &amp; exports
-                    </li>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Access to all tools &amp; APIs
-                    </li>
-                  </ul>
-                </div>
-                <p className="card-footer">
-                  At the end of 14 days, you can choose a plan that fits your needs. We'll notify
-                  you 2 days before your trial ends.
-                </p>
-                {/* <button
-                  className="plan-button"
-                  disabled={!!activeTeam}
-                  onClick={(e) => handlePlanClick({ name: 'Enterprise' }, e)}
-                >
-                  Contact Sales
-                </button> */}
-                <button className="plan-button" onClick={handleButtonClick}>
-                  Contact Sales
-                </button>
               </div>
             </div>
           )}
+
           {billingPeriod === 'yearly' && (
-            <div className="pricing-cards yearly-plan">
-              {/* Yearly plan cards here (copy or adjust as needed) */}
-              <div className="pricing-card">
-                <div className="card-header">
-                  <span className="title">Starter Plan</span>
-                  <div className="price-section">
-                    <div>
-                      <span className="price">{`$${yearlyStarterPrice}`}</span>
-                      <sub className="sub-class">/Year</sub>
-                    </div>
-                    <div>
-                      <span
-                        className="month-price"
-                        style={{ fontSize: '16px' }}
-                      >$29</span>
-                      <sub className="month-sub-class" style={{ fontSize: '16px' }}>
-                        /Month
-                      </sub>
-                    </div>
-                    <p>Basic conversions</p>
-                  </div>
-                </div>
-                <div className="divider-container">
-                  <div className="divider" />
-                </div>
-                <div className="features">
-                  <h2>Features you'll get:</h2>
-                  <ul>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Instance 2D to 3D conversion
-                    </li>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Real-time preview &amp; exports
-                    </li>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Access to all tools &amp; APIs
-                    </li>
-                  </ul>
-                </div>
-                <p className="card-footer">
-                  At the end of 14 days, you can choose a plan that fits your needs. We'll notify
-                  you 2 days before your trial ends.
-                </p>
-                {/* <button
-                  className="plan-button"
-                  disabled={
-                    !!activeTeam ||
-                    subscribingPlan ===
-                      `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
-                  }
-                  onClick={(e) => handlePlanClick({ name: 'Starter' }, e)}
-                >
-                  {subscribingPlan ===
-                  `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
-                    ? 'Processing…'
-                    : 'Choose Starter'}
-                </button> */}
-                <button className="plan-button" onClick={handleButtonClick}>
-                  Choose Starter
-                </button>
-              </div>
-              <div className="popular-card">
-                <div className="popular-tag">Popular</div>
-                <div className="pricing-card">
-                  <div className="card-header">
-                    <span className="title">Pro Plan</span>
-                    <div className="price-section">
+            <div
+              className="new-Subscription-container d-flex align-items-center justify-content-center"
+              style={{ minHeight: '100vh' }}
+            >
+              <div className="new-subscription container py-5">
+                <div className="row justify-content-center g-4 d-flex align-items-stretch">
+                  {/* Starter */}
+                  <div className="col-md-4 d-flex">
+                    <div className="sub-card sub-card-center w-100 d-flex flex-column justify-content-between">
                       <div>
-                        <span className="price">{`$${yearlyProPrice}`}</span>
-                        <sub className="sub-class">/Year</sub>
+                        <div className="sub-top-icon">
+                          <img src={starterTopIcon} alt="Starter" />
+                        </div>
+                        <h2 className="sub-title">Starter</h2>
+                        <h3 className="sub-price">
+                          ${yearlyStarterPrice} <span>/Year</span>
+                        </h3>
+                        <p className="sub-year">${monthlyStarterPrice}/Month</p>
+                        <p className="sub-description">
+                          Perfect for testing, personal projects and learning 3D creation with AI.
+                        </p>
+                        <div className="sub-divider"></div>
+                        <h4 className="sub-section-title">Features you'll get:</h4>
+                        <div className="sub-feature-list">
+                          <li><img src={vectoImage} alt="" /> 50 AI scans (2D → 3D or prompt → 3D)</li>
+                          <li><img src={vectoImage} alt="" /> Real-time preview and export</li>
+                          <li><img src={vectoImage} alt="" /> Access to all base design tools and APIs</li>
+                          <li><img src={vectoImage} alt="" /> Community access and learning hub</li>
+                          <li><img src={vectoImage} alt="" /> Cloud storage (2GB limit), Email support</li>
+                          <li><img src={vectoImage} alt="" /> Access to public 3D model library</li>
+                        </div>
                       </div>
                       <div>
-                        <span
-                          className="month-price"
-                          style={{ fontSize: '16px' }}
-                        >{`$${monthlyProPrice}`}</span>
-                        <sub className="month-sub-class" style={{ fontSize: '16px' }}>
-                          /Month
-                        </sub>
+                        <p className="sub-bestfor">
+                          <b>Best for:</b> Individual creators, freelancers, and small-scale designers who want to explore AI powered 3D creation.
+                        </p>
+                        <button
+                          className="sub-btn"
+                          disabled={!!activeTeam || subscribingPlan === `Starter-annually`}
+                          onClick={(e) => handlePlanClick('Starter', e)}
+                        >
+                          {subscribingPlan === `Starter-annually` ? 'Processing…' : 'Choose Starter'}
+                        </button>
                       </div>
-                      <p>Unlock more powerful design tools.</p>
                     </div>
                   </div>
-                  <div className="divider-container">
-                    <div className="divider" />
-                  </div>
-                  <div className="features">
-                    <h2>Features you'll get:</h2>
-                    <ul>
-                      <li>
-                        <img src={vectoImage} alt="" />
-                        Instance 2D to 3D conversion
-                      </li>
-                      <li>
-                        <img src={vectoImage} alt="" />
-                        Real-time preview &amp; exports
-                      </li>
-                      <li>
-                        <img src={vectoImage} alt="" />
-                        Access to all tools &amp; APIs
-                      </li>
-                    </ul>
-                  </div>
-                  <p className="card-footer">
-                    At the end of 14 days, you can choose a plan that fits your needs. We'll notify
-                    you 2 days before your trial ends.
-                  </p>
-                  {/* <button
-                    className="plan-button"
-                    disabled={
-                      !!activeTeam ||
-                      subscribingPlan ===
-                        `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
-                    }
-                    onClick={(e) => handlePlanClick({ name: 'Pro' }, e)}
-                  >
-                    {subscribingPlan ===
-                    `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
-                      ? 'Processing…'
-                      : 'Choose Pro'}
-                  </button> */}
-                  <button className="plan-button" onClick={handleButtonClick}>
-                  Choose Pro
-                </button>
-                </div>
-              </div>
-              <div className="pricing-card">
-                <div className="card-header">
-                  <span className="title">Enterprise Plan</span>
-                  <div className="price-section">
-                    <div style={{ marginBottom: '31px' }}>
-                      <span className="price">Custom</span>
-                      <sub className="sub-class">billing</sub>
+
+                  {/* Premium */}
+                  <div className="col-md-4 d-flex">
+                    <div className="sub-card sub-card-premium w-100 d-flex flex-column justify-content-between">
+                      <div>
+                        <div className="sub-badge">Most Popular</div>
+                        <div className="sub-top-icon">
+                          <img src={premiumTopIcon} alt="Premium" />
+                        </div>
+                        <h2 className="sub-title">Premium</h2>
+                        <h3 className="sub-price">
+                          ${yearlyProPrice} <span>/Year</span>
+                        </h3>
+                        <p className="sub-year">${monthlyProPrice}/Month</p>
+                        <p className="sub-description">
+                          Built for creators who need speed, team collaboration, and higher production volume.
+                        </p>
+                        <div className="sub-divider"></div>
+                        <h4 className="sub-section-title">Features you'll get:</h4>
+                        <div className="sub-feature-list">
+                          <li><img src={vectoImage} alt="" /> Multi-user team access (up to 4 members)</li>
+                          <li><img src={vectoImage} alt="" /> 500 AI scans/month</li>
+                          <li><img src={vectoImage} alt="" /> Priority processing & rendering queue</li>
+                          <li><img src={vectoImage} alt="" /> Access to advanced editing tools</li>
+                          <li><img src={vectoImage} alt="" /> Private 3D asset storage (up to 50GB)</li>
+                          <li><img src={vectoImage} alt="" /> Access to Beta AI features & research updates</li>
+                          <li><img src={vectoImage} alt="" /> Dedicated workspace for teams</li>
+                          <li><img src={vectoImage} alt="" /> Priority chat + email support</li>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="sub-bestfor">
+                          <b>Best for:</b> Small teams, studios or early-stage startups collaborating on 3D projects.
+                        </p>
+                        <button
+                          className="sub-btn"
+                          disabled={!!activeTeam || subscribingPlan === `Premium-annually`}
+                          onClick={(e) => handlePlanClick('Premium', e)}
+                        >
+                          {subscribingPlan === `Premium-annually` ? 'Processing…' : 'Choose Premium'}
+                        </button>
+                      </div>
                     </div>
-                    {/* <p>
-                      Contact us for enterprise pricing
-                      <br />
-                      Unlock all features.
-                    </p> */}
+                  </div>
+
+                  {/* Enterprise */}
+                  <div className="col-md-4 d-flex">
+                    <div className="sub-card sub-card-center w-100 d-flex flex-column justify-content-between">
+                      <div>
+                        <div className="sub-top-icon">
+                          <img src={enterpriseTopIcon} alt="Enterprise" />
+                        </div>
+                        <h2 className="sub-title">Enterprise</h2>
+                        <h3 className="sub-price">
+                          Custom <span>Billing</span>
+                        </h3>
+                        <p className="sub-description mt-3">
+                          Ideal for enterprises and platforms scaling 3D asset production, integrating AI3D tech within their systems.
+                        </p>
+                        <div className="sub-divider"></div>
+                        <h4 className="sub-section-title">Features you'll get:</h4>
+                        <div className="sub-feature-list">
+                          <li><img src={vectoImage} alt="" /> Unlimited AI scans and conversions</li>
+                          <li><img src={vectoImage} alt="" /> Full API + SDK integration</li>
+                          <li><img src={vectoImage} alt="" /> White-label platform deployment</li>
+                          <li><img src={vectoImage} alt="" /> Advanced analytics dashboard</li>
+                          <li><img src={vectoImage} alt="" /> On-premise or private cloud hosting</li>
+                          <li><img src={vectoImage} alt="" /> Team & department-level user management</li>
+                          <li><img src={vectoImage} alt="" /> Priority GPU access</li>
+                          <li><img src={vectoImage} alt="" /> Legal & data compliance</li>
+                          <li><img src={vectoImage} alt="" /> Custom AI model training</li>
+                          <li><img src={vectoImage} alt="" /> 24/7 premium support</li>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="sub-bestfor">
+                          <b>Best for:</b> Large enterprises, agencies, or marketplaces needing high volume API integrations.
+                        </p>
+                        <button
+                          className="sub-btn"
+                          onClick={(e) => handlePlanClick('Enterprise', e)}
+                        >
+                          Contact Sales
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div className="divider-container mt-lg-4">
-                  <div className="divider" />
-                </div>
-                <div className="features">
-                  <h2>Features you'll get:</h2>
-                  <ul>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Instance 2D to 3D conversion
-                    </li>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Real-time preview &amp; exports
-                    </li>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Access to all tools &amp; APIs
-                    </li>
-                  </ul>
-                </div>
-                <p className="card-footer">
-                  At the end of 14 days, you can choose a plan that fits your needs. We'll notify
-                  you 2 days before your trial ends.
-                </p>
-                {/* <button
-                  className="plan-button"
-                  disabled={
-                    !!activeTeam ||
-                    subscribingPlan ===
-                      `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
-                  }
-                  onClick={(e) => handlePlanClick({ name: 'Enterprise' }, e)}
-                >
-                  {subscribingPlan ===
-                  `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`
-                    ? 'Processing…'
-                    : 'Contact Sales'}
-                </button> */}
-                <button className="plan-button" onClick={handleButtonClick}>
-                  Contact Sales
-                </button>
               </div>
-              {/* Optionally add Enterprise card here if you have one */}
             </div>
           )}
         </div>
       </div>
-      {/* Login Required Modal */}
-      {showLoginModal && <LoginPopup onClose={() => setShowLoginModal(false)} />}
-      {showPopup && (
-        <div className="popup-overlay">
-          <div className="popup-box">
-            <button onClick={closePopup} className="close-popup-btn">
-              <FiX size={20} />
-            </button>
-            <img src={Construction} alt="image" width={150} height={150} />
-            <h3>Under Development</h3>
-            <p className='text-center'>Our team is currently working on this feature</p>
-          </div>
-        </div>
-      )}
+
+      {showLoginModal && <LoginPopup onClose={handleCloseLoginModal} />}
     </>
   );
 };

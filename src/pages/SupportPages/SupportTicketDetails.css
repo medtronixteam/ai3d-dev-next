@@ -1,5 +1,8 @@
 .support-ticket-system-container {
   padding: 40px 20px;
+  height: 100vh !important;
+  overflow-y: auto;
+  scrollbar-width: thin;
 }
 
 .support-ticket-system-h1-tag {
@@ -25,7 +28,7 @@
   color: #fff;
 }
 
-.ticket-header {
+.ticket-header-section {
   display: flex;
   align-items: center;
   gap: 20px;
@@ -207,7 +210,7 @@
   color: #fff;
 }
 
-[data-theme='dark'] .ticket-header {
+[data-theme='dark'] .ticket-header-section {
   color: #fff;
 }
 
@@ -287,7 +290,7 @@
 @media (max-width : 600px) {
     .support-ticket-system-h1-tag {
         margin-top: 2.5rem;
-        font-size: 1.8rem;
+        font-size: 1.55rem;
     }
     .support-ticket-system-p-tag {
         line-height: 1.5;

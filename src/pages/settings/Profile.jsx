@@ -1104,16 +1104,17 @@ const Profile = () => {
                 color: '#fff',
                 border: 'none',
                 borderRadius: 8,
-                padding: '8px 18px',
+                padding: '8px 12px',
                 fontWeight: 500,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                fontSize : '14px',
                 gap: 8,
               }}
               onClick={openShareModal}
             >
-              <span className="btn-label">Share</span> <FiShare2 />
+              <span className="btn-label">Share</span> <FiShare2 size={16} />
             </button>
             <button
               className="profile-action-btn edit-btn"
@@ -1127,6 +1128,7 @@ const Profile = () => {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
+                fontSize : '14px',
                 gap: 8,
               }}
               onClick={() => {
@@ -1134,7 +1136,7 @@ const Profile = () => {
                 setShowEditModal(true);
               }}
             >
-              <span className="btn-label">Edit Profile</span> <FiArrowRight color="#ffffff" />
+              <span className="btn-label">Edit Profile</span> <FiArrowRight size={16} color="#ffffff" />
             </button>
           </div>
         </div>

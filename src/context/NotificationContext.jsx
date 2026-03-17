@@ -6,32 +6,27 @@ import { initializeApp } from 'firebase/app';
 import { toast } from 'react-toastify';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { v4 as uuidv4 } from 'uuid';
-import Subscription from '../pages/settings/Subscription';
 
 export const NotificationContext = createContext();
 export const useNotification = () => useContext(NotificationContext);
 
-export const NotificationProvider = ({ children,  fetchCoins }) => {
+export const NotificationProvider = ({ children, fetchCoins }) => {
   const { token } = useAuth();
   const [unreadCount, setUnreadCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
   const [togglingNotifications, setTogglingNotifications] = useState(new Set());
-
+  const [fcmToken, setFcmToken] = useState(null);
 
   const getUserUniqueId = useCallback(() => {
     let userId = localStorage.getItem('userUniqueId');
     if (!userId) {
       userId = uuidv4();
       localStorage.setItem('userUniqueId', userId);
-      console.log('New User Unique ID generated:', userId);
-    } else {
-      console.log('Existing User Unique ID:', userId);
     }
     return userId;
   }, []);
 
-  // 🔹 Firebase Config & Init
   const firebaseConfig = {
     apiKey: 'AIzaSyC98Sgqe_JTdWt9PXB5oaNsmD9aUFakEgo',
     authDomain: 'ai-3d-scanning.firebaseapp.com',
@@ -45,13 +40,11 @@ export const NotificationProvider = ({ children,  fetchCoins }) => {
   const app = initializeApp(firebaseConfig);
   const messaging = getMessaging(app);
 
-  // 🔹 Unauthorized handler
   const handleUnauthorized = useCallback(() => {
     localStorage.setItem('tokens', JSON.stringify([]));
     window.location.replace('/signin');
   }, []);
 
-  // 🔹 Fetch notifications
   const fetchNotifications = useCallback(async () => {
     if (!token) return;
     setLoading(true);
@@ -77,7 +70,6 @@ export const NotificationProvider = ({ children,  fetchCoins }) => {
     }
   }, [token, handleUnauthorized]);
 
-  // 🔹 Send FCM token to backend
   const sendFCMToken = async (fcmToken) => {
     try {
       const userUniqueId = getUserUniqueId();
@@ -89,49 +81,38 @@ export const NotificationProvider = ({ children,  fetchCoins }) => {
         },
         { headers: { Authorization: `Bearer ${token}` } },
       );
-      console.log(' ' + res.data.message);
+      console.log('✅ FCM Token sent to backend');
     } catch (err) {
-      console.error('FCM token update failed:', err.response?.data || err.message);
+      console.error('❌ FCM token update failed:', err.response?.data || err.message);
     }
   };
 
-  // 🔹 Compare and store FCM token (keep history, update latest only)
   const storeTokenInArray = async (fcmToken) => {
     let tokens = JSON.parse(localStorage.getItem('fcmTokens')) || [];
-    console.log('Previous tokens:', tokens);
 
-    // Sirf latest token ko backend bhejna hai
     if (tokens[0] !== fcmToken) {
-      console.log('New token detected, sending to backend...');
       await sendFCMToken(fcmToken);
-    } else {
-      console.log('Token same as previous, skipping API call');
     }
 
-    // History maintain karna hai → naya token hamesha pehle push hoga
     tokens = [fcmToken, ...tokens.filter((t) => t !== fcmToken)];
-
     localStorage.setItem('fcmTokens', JSON.stringify(tokens));
   };
 
-  // 🔹 Setup Firebase Messaging
   const setupFirebaseMessaging = useCallback(async () => {
     try {
-      const fcmToken = await getToken(messaging, {
+      const token = await getToken(messaging, {
         vapidKey:
           'BOU5C5tz_IZrKxNVrkDS40TfzmbJZX2OFPjoimXxx9SdoCvZsLzncmsDqLdbA9Tk9fv4lO_Ssx4ONi-ovdBygaA',
       });
 
-      if (fcmToken) {
-        console.log('✅ FCM Token:', fcmToken);
-        await storeTokenInArray(fcmToken);
+      if (token) {
+        setFcmToken(token);
+        await storeTokenInArray(token);
       } else {
         console.warn('⚠️ FCM token not generated.');
       }
 
       onMessage(messaging, async (payload) => {
-        console.log('📩 Foreground message:', payload);
-
         if (payload?.notification) {
           const newNotif = {
             id: Date.now(),
@@ -148,18 +129,29 @@ export const NotificationProvider = ({ children,  fetchCoins }) => {
             className: 'pink-toast',
           });
 
-          if (payload.notification.body.includes('notification')) {
-            console.log('Notification type received');
+          const body = payload.notification.body.toLowerCase();
+          
+          if (body.includes('notification')) {
             setTimeout(() => {
               fetchNotifications();
             }, 500);
-          } else if (payload.notification.body.includes('coin')) {
-            console.log('Coin type received');
+          } 
+          else if (body.includes('coin')) {
             if (typeof fetchCoins === 'function') {
               await fetchCoins();
             }
-          } else {
-            console.log('Unknown notification type:', payload.notification.body);
+          } 
+          else if (body.includes('extraction')) {
+            window.dispatchEvent(new CustomEvent('videoProcessingComplete', {
+              detail: { 
+                notification: payload.notification,
+                body: payload.notification.body 
+              }
+            }));
+            
+            setTimeout(() => {
+              fetchNotifications();
+            }, 500);
           }
         }
       });
@@ -168,7 +160,6 @@ export const NotificationProvider = ({ children,  fetchCoins }) => {
     }
   }, [messaging, fetchNotifications, fetchCoins]);
 
-  // 🔹 Setup on mount
   useEffect(() => {
     if (token) {
       fetchNotifications();
@@ -176,11 +167,10 @@ export const NotificationProvider = ({ children,  fetchCoins }) => {
     }
   }, [token, fetchNotifications, setupFirebaseMessaging]);
 
-  // 🔹 Mark all notifications as read
   const markAllAsRead = async () => {
     try {
-      await axios.post(
-        `${baseURL}/notifications/markasread`,
+      await axios.get(
+        `${baseURL}/notification/markasread`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -193,7 +183,6 @@ export const NotificationProvider = ({ children,  fetchCoins }) => {
     }
   };
 
-  // 🔹 Mark single notification as read
   const markAsRead = async (id) => {
     try {
       await axios.post(
@@ -212,7 +201,6 @@ export const NotificationProvider = ({ children,  fetchCoins }) => {
     }
   };
 
-  // 🔹 Toggle read/unread for a single notification
   const toggleNotificationRead = useCallback(
     async (notificationId) => {
       if (!token) return;
@@ -258,6 +246,7 @@ export const NotificationProvider = ({ children,  fetchCoins }) => {
         notifications,
         loading,
         togglingNotifications,
+        fcmToken,
         refresh: fetchNotifications,
         markAllAsRead,
         markAsRead,

@@ -14,7 +14,7 @@ import {
 
 // Get selected plan from localStorage
 let plan = {
-  name: 'Premium',    
+  name: 'Premium',
   price: 29.99,
   duration: 'Month',
   tax: 0.0,

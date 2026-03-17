@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './ChatScreen.css';
 import { FiArrowLeft, FiSend } from 'react-icons/fi';
-import FitBotIcon from '../../assets/images/chat.png';
+import FitBotIcon from '../../assets/images/chatbox.gif';
 import UserAvatar from '../../assets/images/Profile.png';
 import axios from 'axios';
 import { baseURL } from '../../config';
 import { useAuth } from '../../context/AuthContext';
+import { Link } from 'react-router-dom';
 
 const ChatScreen = ({ onClose }) => {
   const [messages, setMessages] = useState([
@@ -24,7 +25,7 @@ const ChatScreen = ({ onClose }) => {
   // Fetch user profile when chat opens and set avatar image
   useEffect(() => {
     let cancelled = false;
-    const toStorageUrl = (path) => `https://app.ai3dscanning.com/storage/${String(path || '').replace(/^\/+/, '')}`;
+    const toStorageUrl = (path) => `https://dev-backend.ai3dscanning.com/storage/${String(path || '').replace(/^\/+/, '')}`;
     async function fetchProfile() {
       if (!token) return; 
       try {
@@ -59,7 +60,7 @@ const ChatScreen = ({ onClose }) => {
 
     try {
       const encodedQuery = encodeURIComponent(trimmedMessage);
-      const url = `https://bot.ai3dscanning.com/query?query=${encodedQuery}`;
+      const url = `https://customer-chatbot.ai3dscanning.com/process_chat/query?query=${encodedQuery}`;
       const response = await fetch(url, { method: 'GET' });
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       const data = await response.json();
@@ -135,7 +136,7 @@ const ChatScreen = ({ onClose }) => {
         </button>
       </div>
       <div className="help-text">
-        Need more help? Help our <a href="#">visit center</a>
+        Need more help? Help our <Link to="/platform/support">visit center</Link>
       </div>
     </div>
   );

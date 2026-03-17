@@ -66,8 +66,8 @@ const SignUp = () => {
             <img src={Robot} alt="Robot" className="robot-img" />
           </div>
           {/* Right Form */}
-          <div className="col-md-8 col-lg-5 d-flex align-items-center justify-content-center">
-            <div className="card w-100 mx-md-3 mx-lg-4 mb-4">
+          <div className="col-md-7 col-lg-5 d-flex align-items-center justify-content-center pb-5">
+            <div className="cards w-100 mx-lg-4">
               <div className="card-body">
                 <h2>Sign up</h2>
                 <p>
@@ -139,7 +139,7 @@ const SignUp = () => {
                       }}
                       onClick={() => setShowPassword((s) => !s)}
                     >
-                      {showPassword ? <FiEye size={20} /> : <FiEyeOff size={20} />}
+                      {showPassword ? <FiEye size={16} /> : <FiEyeOff size={16} />}
                     </span>
                   </div>
                   <div

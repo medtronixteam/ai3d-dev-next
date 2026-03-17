@@ -1,7 +1,7 @@
 import React from 'react';
 import './ChatIcon.css';
 import { FiMessageSquare } from 'react-icons/fi';
-import FitBotIcon from '../../assets/images/chat.gif';
+import FitBotIcon from '../../assets/images/chatbox.gif';
 const ChatIcon = ({ onClick }) => {
   return (
     <button className="chat-icon" onClick={onClick}>

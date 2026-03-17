@@ -1,4 +1,5 @@
 .upload-container {
+
   overflow-x: hidden !important;
   width: 99.3%;
   margin: 3px auto;
@@ -8,6 +9,7 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
   /* margin-top: -45px !important; */
+
 }
 
 .prompt-box {
@@ -41,12 +43,12 @@
 
 .single-scanning-container {
   border-radius: 35px;
-  background: linear-gradient(to right, 
-              #9688EDB2, 
-              #D1C9FF, 
-              #DDD8FC, 
-              #FDC7D9, 
-              #FF92B6B2);
+  background: linear-gradient(to right,
+      #9688EDB2,
+      #D1C9FF,
+      #DDD8FC,
+      #FDC7D9,
+      #FF92B6B2);
   display: flex;
   /* flex-direction: column; */
   justify-content: center;
@@ -56,10 +58,10 @@
   gap: 20px;
 }
 
-[data-theme = 'dark'] .single-scanning-container {
-  background: linear-gradient(to right, 
-              #1d1733,
-              #6e1c4a);
+[data-theme='dark'] .single-scanning-container {
+  background: linear-gradient(to right,
+      #1d1733,
+      #6e1c4a);
   box-shadow: 0 0 5px #1d173367;
 }
 
@@ -78,8 +80,16 @@
   margin: 0;
 }
 
-[data-theme = 'dark'] .single-scanning-container p {
+[data-theme='dark'] .single-scanning-container p {
   color: #DADADA;
+}
+
+@media (max-width : 600px) {
+  .single-scanning-container {
+    display: flex;
+    flex-direction: column !important;
+    margin: 1rem 0 0 0 !important;
+  }
 }
 
 .single-scanning-input-field {
@@ -97,19 +107,22 @@
 .single-scanning-input-field::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   border-radius: 25px;
   padding: 1.5px;
   background: linear-gradient(to right, #DE3996, #D4CDFE);
-  -webkit-mask: 
-      linear-gradient(#fff 0 0) content-box, 
-      linear-gradient(#fff 0 0);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   -webkit-mask-composite: destination-out;
   mask-composite: exclude;
   pointer-events: none;
 }
 
-[data-theme = 'dark'] .single-scanning-input-field {
+[data-theme='dark'] .single-scanning-input-field {
   background: linear-gradient(to right, #110E20, #DE3996);
 }
 
@@ -118,8 +131,10 @@
   outline: none;
   box-shadow:
     0 0 8px 3px #e71aaa55,
-    /* glow */ 0 0 16px 6px #e71aaa44,
-    /* outer glow */ 0 4px 20px 0 #e6339a33;
+    /* glow */
+    0 0 16px 6px #e71aaa44,
+    /* outer glow */
+    0 4px 20px 0 #e6339a33;
   /* bottom glow */
   border: none;
   transition: all 0.3s ease;
@@ -170,6 +185,7 @@
   #generateBtn {
     margin-left: 15px;
   }
+
   .upload-container {
     padding: 50px 20px !important;
   }
@@ -195,12 +211,13 @@
     box-sizing: border-box;
   }
 
-  .drop-area > svg {
+  .drop-area>svg {
     font-size: 2rem !important;
   }
 }
 
 @media (min-width: 551px) and (max-width: 767.98px) {
+
   .prompt-box .col-md-10,
   .prompt-box .col-md-2 {
     flex: 0 0 auto !important;
@@ -271,7 +288,6 @@
   box-sizing: border-box;
 }
 
-/* Keep the upload cloud icon visible even when collapsed */
 .drop-area .upload-cloud-icon {
   color: #181818;
   display: block;
@@ -308,8 +324,8 @@
 
 /* When prompt expands, keep a fixed compact height to avoid bounce */
 .drop-area.img-upload-collapsed {
-  min-height: 210px;
-  max-height: 250px;
+  /* min-height: 210px;
+  max-height: 250px; */
   padding: 48px 20px 12px;
 }
 
@@ -319,6 +335,7 @@
     max-height: 320px;
     padding: 40px 12px 8px;
   }
+
   .upload-container {
     max-width: 100%;
     width: 100%;
@@ -330,6 +347,7 @@
     min-height: 50vh;
     padding: 5px;
   }
+
   .signup-form label {
     margin-bottom: 0 !important;
   }
@@ -356,20 +374,33 @@
   line-height: 1.4;
   margin-bottom: 20px;
   user-select: none;
+
+}
+
+.drop-area small {
+  font-size: 16px;
+}
+
+.drop-area .highlight {
+  font-size: 20px;
+}
+
+.img-upload-collapsed .highlight {
+  font-size: 10px;
 }
 
 .highlight {
   background-color: #DE3996;
   color: #fff;
   border-radius: 8px;
-  padding: 8px 12px;
+  padding: 8px !important;
   user-select: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 12px !important;
   gap: 8px;
 }
 
@@ -426,15 +457,47 @@
   user-select: none;
   transition: border-color 0.3s ease;
   box-shadow: 0px 0px 11px 0px #e129913b;
-border: 2px solid #4D4C4C73
+  border: 2px solid #4D4C4C73
+}
+
+[data-theme='dark'] .preview-item {
+  background: #110e20 !important;
 }
 
 .preview-item:hover {
   border-color: #ff4ecb;
 }
 
+.video-preview-item {
+  position: relative;
+  border-radius: 10px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  /* justify-content: center; */
+  overflow: hidden;
+  background: #fafafa;
+  cursor: pointer;
+  user-select: none;
+  transition: border-color 0.3s ease;
+  box-shadow: 0px 0px 11px 0px #e129913b;
+  border: 2px solid #4D4C4C73
+}
+
+
+
+.video-preview-item:hover {
+  border-color: #ff4ecb;
+}
+
 @media (max-width: 550px) {
   .preview-item {
+    width: 5em;
+    height: 5em;
+    max-width: 320px;
+    max-height: 320px;
+  }
+  .video-preview-item {
     width: 5em;
     height: 5em;
     max-width: 320px;
@@ -447,9 +510,22 @@ border: 2px solid #4D4C4C73
     width: 100px;
     height: 100px;
   }
+  .video-preview-item {
+    width: 100px;
+    height: 100px;
+  }
 }
 
 .preview-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  pointer-events: auto;
+  user-select: none;
+}
+
+.video-preview-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -478,7 +554,31 @@ border: 2px solid #4D4C4C73
   transition: background-color 0.2s ease;
 }
 
+.video-preview-item .remove {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 16px;
+  color: red;
+  cursor: pointer;
+  user-select: none;
+  line-height: 18px;
+  padding: 0;
+  text-align: center;
+  pointer-events: auto;
+  transition: background-color 0.2s ease;
+}
+
 .preview-item .remove:hover {
+  background-color: #333;
+}
+
+.video-preview-item .remove:hover {
   background-color: #333;
 }
 
@@ -815,7 +915,7 @@ border: 2px solid #4D4C4C73
   font-size: 1rem;
   margin-top: 30px;
 
-  
+
   margin-left: 1rem !important;
 }
 
@@ -918,7 +1018,12 @@ border: 2px solid #4D4C4C73
     height: 130px !important;
   }
 }
+
 .preview-item .remove svg {
+  margin-top: -3px;
+}
+
+.video-preview-item .remove svg {
   margin-top: -3px;
 }
 
@@ -936,4 +1041,323 @@ border: 2px solid #4D4C4C73
   transition:
     min-height 0.3s cubic-bezier(0.4, 1.7, 0.6, 1),
     max-height 0.3s cubic-bezier(0.4, 1.7, 0.6, 1) !important;
+}
+
+.sparkle-wrapper {
+  position: relative;
+  overflow: visible;
+  margin-top: 8px;
+  margin-right: 10px;
+  box-shadow: 0 0 4px #00000050;
+  transition: all 0.3s ease;
+}
+
+.sparkle-wrapper:hover {
+  transform: scale(1.05);
+}
+
+.sparkle-wrapper.clicked {
+  animation: clickPulse 0.6s ease-out;
+}
+
+@keyframes clickPulse {
+  0% {
+    box-shadow: 0 0 4px #00000050;
+    transform: scale(1);
+  }
+
+  50% {
+    box-shadow: 0 0 20px 8px rgba(255, 255, 255, 0.6);
+    transform: scale(1.1);
+  }
+
+  100% {
+    box-shadow: 0 0 4px #00000050;
+    transform: scale(1);
+  }
+}
+
+[data-theme="light"] .sparkle-wrapper.clicked {
+  animation: clickPulseLightMode 0.6s ease-out !important;
+}
+
+@keyframes clickPulseLightMode {
+  0% {
+    box-shadow: 0 0 4px #febbd1;
+    transform: scale(1);
+  }
+
+  50% {
+    box-shadow: 0 0 25px 10px rgba(254, 187, 209, 0.8);
+    transform: scale(1.1);
+  }
+
+  100% {
+    box-shadow: 0 0 4px #febbd1;
+    transform: scale(1);
+  }
+}
+
+.sparkle-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  padding: 3px;
+  background: linear-gradient(45deg, #DE3996, #ff7ad9, #febbd1, #DE3996);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.sparkle-wrapper.clicked::before {
+  opacity: 1;
+  animation: rotateBorder 1.5s linear;
+}
+
+@keyframes rotateBorder {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.main-sparkle {
+  animation: sparklePulse 2s infinite ease-in-out;
+  transition: transform 0.3s ease;
+}
+
+.sparkle-wrapper.clicked .main-sparkle {
+  animation: sparklePulse 2s infinite ease-in-out, clickSpin 0.6s ease-out;
+}
+
+@keyframes clickSpin {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+
+  50% {
+    transform: scale(1.3) rotate(180deg);
+  }
+
+  100% {
+    transform: scale(1) rotate(360deg);
+  }
+}
+
+@keyframes sparklePulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+    filter: brightness(1.3);
+  }
+}
+
+.sparkle-wrapper::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, #ff7ad9 0%, transparent 70%);
+  border-radius: 50%;
+  animation: sparkleMove 2s infinite ease-in-out;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes sparkleMove {
+  0% {
+    transform: translate(0, 0) scale(0.5);
+    opacity: 0.3;
+  }
+
+  25% {
+    transform: translate(-6px, -6px) scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: translate(5px, -8px) scale(0.8);
+    opacity: 0.8;
+  }
+
+  75% {
+    transform: translate(-3px, 5px) scale(1);
+    opacity: 0.6;
+  }
+
+  100% {
+    transform: translate(0, 0) scale(0.5);
+    opacity: 0;
+  }
+}
+
+.rotating-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/*  */
+
+
+/* Cooking Loader Styles */
+.video-cooking-loader-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.video-cooking-loader {
+  position: relative;
+  width: 220px;
+  height: 260px;
+  text-align: center;
+  color: #fff;
+}
+
+/* Pot */
+.video-cooking-pot {
+  position: absolute;
+  bottom: 70px;
+  left: 50%;
+  width: 160px;
+  height: 100px;
+  background: #555;
+  border-radius: 0 0 50px 50px;
+  transform: translateX(-50%);
+  animation: videoPotShake 0.6s infinite alternate;
+  overflow: hidden;
+}
+
+@keyframes videoPotShake {
+  from { transform: translateX(-50%) rotate(-1deg); }
+  to { transform: translateX(-50%) rotate(1deg); }
+}
+
+/* Soup */
+.video-cooking-soup {
+  position: absolute;
+  top: 25px;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(#ffcc80, #ff9800);
+  animation: videoBubble 1s infinite alternate;
+}
+
+@keyframes videoBubble {
+  from { transform: translateY(0); }
+  to { transform: translateY(-6px); }
+}
+
+/* Spoon */
+.video-cooking-spoon {
+  position: absolute;
+  width: 8px;
+  height: 110px;
+  background: #ddd;
+  top: 30px;
+  left: 50%;
+  border-radius: 4px;
+  transform-origin: bottom;
+  animation: videoStir 1s infinite ease-in-out;
+}
+
+@keyframes videoStir {
+  0% { transform: translateX(-50%) rotate(-30deg); }
+  50% { transform: translateX(-50%) rotate(30deg); }
+  100% { transform: translateX(-50%) rotate(-30deg); }
+}
+
+/* Fire */
+.video-cooking-fire {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  display: flex;
+  gap: 6px;
+  transform: translateX(-50%);
+}
+
+.video-cooking-fire span {
+  width: 20px;
+  height: 40px;
+  background: radial-gradient(circle, #ffd000, #ff4500);
+  border-radius: 50% 50% 50% 50%;
+  animation: videoFlame 0.4s infinite alternate;
+}
+
+.video-cooking-fire span:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.video-cooking-fire span:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+@keyframes videoFlame {
+  from { transform: scaleY(1); opacity: 0.8; }
+  to { transform: scaleY(1.3); opacity: 1; }
+}
+
+/* Steam */
+.video-cooking-steam {
+  position: absolute;
+  width: 20px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  top: 10px;
+  animation: videoSteam 2s infinite;
+}
+
+.video-cooking-steam1 { 
+  left: 80px; 
+}
+
+.video-cooking-steam2 { 
+  left: 120px; 
+  animation-delay: 1s; 
+}
+
+@keyframes videoSteam {
+  from { opacity: 0; transform: translateY(0); }
+  to { opacity: 1; transform: translateY(-40px); }
+}
+
+/* Text */
+.video-cooking-loader p {
+  position: absolute;
+  bottom: -10px;
+  width: 100%;
+  font-size: 16px;
+  letter-spacing: 1px;
+  font-weight: 600;
+  color: #fff;
 }

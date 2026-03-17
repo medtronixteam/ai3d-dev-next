@@ -11,6 +11,7 @@ import SubscriptionIcon from '../../../assets/images/subscriptionIcon.svg';
 import ProjectIcon from '../../../assets/images/project.svg';
 import AiModel from '../../../assets/images/aimodal.svg'
 import Referal from '../../../assets/images/Referal.svg'
+import { Gift } from 'lucide-react';
 
 const CustomSidebar = ({ onClose }) => {
   return (
@@ -51,7 +52,7 @@ const CustomSidebar = ({ onClose }) => {
               <img src={AiModel} alt="" style={{ width: '19px' }} /> AI Model
             </NavLink> */}
             <NavLink to="/platform/settings/referal" className="nav-link mb-2">
-              <img src={Referal} alt="" style={{ width: '19px' }} /> Referral
+              <Gift size={19} /> Referral
             </NavLink>
           </nav>
         </div>

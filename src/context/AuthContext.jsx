@@ -116,7 +116,7 @@ export const AuthProvider = ({ children }) => {
 // AuthContext.js mein ye login function replace kar dein
 
 const login = (newToken, userData) => {
-  console.log('Login function called with:', { newToken, userData });
+  // console.log('Login function called with:', { newToken, userData });
   
   if (!newToken) {
     console.error('No token provided');
@@ -133,10 +133,10 @@ const login = (newToken, userData) => {
     return;
   }
 
-  console.log('Logging in user:', userData.email);
+  // console.log('Logging in user:', userData.email);
 
   setTokens((prev) => {
-    console.log('Previous tokens:', prev);
+    // console.log('Previous tokens:', prev);
     
     const exists = prev.find((acc) => acc?.email === userData.email);
     let updated;
@@ -148,17 +148,17 @@ const login = (newToken, userData) => {
           ? { ...acc, ...userData, token: newToken, is_active: 1 }
           : { ...acc, is_active: 0 }, // Baaki sab ko inactive
       );
-      console.log('Updated existing account:', userData.email);
+      // console.log('Updated existing account:', userData.email);
     } else {
       // Naya account add kar rahe hain
       updated = [
         ...prev.map((acc) => ({ ...acc, is_active: 0 })), // Purane sab inactive
         { ...userData, token: newToken, is_active: 1 }, // Naya active
       ];
-      console.log('Added new account:', userData.email);
+      // console.log('Added new account:', userData.email);
     }
 
-    console.log('Updated tokens array:', updated);
+    // console.log('Updated tokens array:', updated);
     return updated;
   });
 

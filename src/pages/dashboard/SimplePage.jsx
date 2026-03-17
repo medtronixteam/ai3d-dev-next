@@ -80,7 +80,7 @@ const SimplePage = () => {
   const getFullVideoUrl = (url) => {
     if (!url) return '';
     if (url.startsWith('http')) return url;
-    return `https://app.ai3dscanning.com/storage/${url.replace(/^\/+/, '')}`;
+    return `https://dev-backend.ai3dscanning.com/storage/${url.replace(/^\/+/, '')}`;
   };
 
   useEffect(() => {
@@ -175,9 +175,9 @@ const SimplePage = () => {
             <div className="model-list-row">
               {models.map((model, idx) => {
                 const imgUrl = model.thumbnail
-                  ? `https://app.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/,'')}`
+                  ? `https://dev-backend.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/,'')}`
                   : model.image
-                    ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/,'')}`
+                    ? `https://dev-backend.ai3dscanning.com/storage/${model.image.replace(/^\/+/,'')}`
                     : require('../../assets/images/dashboard-page/shoes.jpg');
                 return (
                   <div key={model.id} className="card mb-4 shadow-sm border-0" style={{ maxWidth: 540, borderRadius: 18, margin: '0 auto', overflow: 'hidden', boxShadow: '0 4px 24px rgba(230,51,154,0.07)' }}>

@@ -24,6 +24,7 @@ import axios from 'axios';
 import { baseURL } from '../../config';
 import SwitchAccountsPopup, { ManageAccountsPopup } from './SwitchAccountsPopup';
 import LoginPopup from './LoginPopup';
+import { Trash2 } from 'lucide-react';
 
 const ProfilePopup = ({ onClose, successMessage, onAddAccount, onManageAccount }) => {
   const { token, logout, activeTeam } = useAuth();
@@ -338,28 +339,28 @@ if (showManagePopup) {
             <div className="popup-menu">
               {!activeTeam ? (
                 <Link to="/platform/settings/profile" className="menu-item" onClick={onClose}>
-                  <FiSettings />
+                  <FiSettings size={18} />
                   <span>Settings</span>
                 </Link>
               ) : null}
               <div className="menu-item" onClick={handleOpenMyTeam} style={{ cursor: 'pointer' }}>
-                <FiUsers />
+                <FiUsers size={18} />
                 <span>My Teams</span>
               </div>
               <Link to="/support" className="menu-item" onClick={onClose}>
-                <FiHelpCircle />
+                <FiHelpCircle size={18} />
                 <span>Help & resources</span>
               </Link>
               <Link to="/platform/subscription" className="menu-item" onClick={onClose}>
-                <FiGift />
+                <FiGift size={18} />
                 <span>Plan & pricing</span>
               </Link>
-              <Link to="/settings/purchase-history" className="menu-item" onClick={onClose}>
-                <FiCreditCard />
-                <span>Purchase history</span>
+              <Link to="/platform/trash/projects" className="menu-item" onClick={onClose}>
+                <Trash2 size={18} />
+                <span>Trash</span>
               </Link>
               <Link to="/session-history" className="menu-item" onClick={onClose}>
-                <FiClock />
+                <FiClock size={18} />
                 <span>Session history</span>
               </Link>
             </div>
@@ -370,7 +371,7 @@ if (showManagePopup) {
                 onClick={handleOpenConfirmLogout}
                 style={{ cursor: 'pointer' }}
               >
-                <FiLogOut />
+                <FiLogOut size={18} />
                 <span>Log out</span>
               </div>
             </div>

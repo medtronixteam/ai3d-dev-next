@@ -991,7 +991,7 @@ body {
 }
 
 .ai_3d_landing .client-section {
-  margin-top: 6.25rem;
+  margin-top: 6.25rem !important;
 }
 
 .ai_3d_landing .client-section-title {
@@ -2061,8 +2061,10 @@ li {
   }
 }
 
-.leap-img {
-  margin-top: 20% !important;
+@media (min-width:992px) {
+  .leap-img {
+    margin-top: 20% !important;
+  }
 }
 
 /* @media (min-width: 1400px) {
@@ -4633,9 +4635,9 @@ li {
     font-size: 1.6875rem;
   }
 
-  .aithreed .cards .marb {
+  /* .aithreed .cards .marb {
     margin-bottom: -1rem !important;
-  }
+  } */
 
   .aithreed .cards .team-card h5 {
     font-size: 0.8rem !important;

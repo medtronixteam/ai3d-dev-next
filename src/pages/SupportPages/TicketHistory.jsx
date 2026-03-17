@@ -11,7 +11,7 @@ import {
   Trash2,
   X,
 } from 'lucide-react';
-import DeletePlan from '../../assets/images/DeletePlan.svg';
+import DeletePlan from '../images/DeletePlan.svg';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { baseURL } from '../../config';

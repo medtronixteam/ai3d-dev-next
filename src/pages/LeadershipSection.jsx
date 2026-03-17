@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import $ceo from '../assets/images/leadership/ceo.png';
-import $joel from '../assets/images/leadership/joel.png';
-import $osama from '../assets/images/leadership/osama.png';
-import $hira from '../assets/images/leadership/hira.png';
-import $shehroz from '../assets/images/leadership/Shehroz.png';
-import $mudassar from '../assets/images/leadership/mudassar.png';
-import $samia from '../assets/images/leadership/samia.png';
-import $sajeel from '../assets/images/leadership/sajeel.png';
+import $ceo from '../assets/images/leardership/ceo.png';
+import $joel from '../assets/images/leardership/joel.png';
+import $osama from '../assets/images/leardership/osama.png';
+import $hira from '../assets/images/leardership/hira.png';
+import $shehroz from '../assets/images/leardership/Shehroz.png';
+import $mudassar from '../assets/images/leardership/mudassar.png';
+import $samia from '../assets/images/leardership/samia.png';
+import $sajeel from '../assets/images/leardership/sajeel.png';
 import CustomInfoModal from '../components/popup/CustomInfoModal';
 
 const LeadershipSection = () => {
@@ -235,73 +235,161 @@ const LeadershipSection = () => {
       {modalData && <CustomInfoModal modalData={modalData} onClose={() => setModalData(null)} />}
 
       <style>{`
-        .ai3d_ld_v3_main_wrapper { padding:0px 0px 60px 0; background: transparent; font-family: 'Poppins', sans-serif; }
-        .ai3d_ld_v3__inner { max-width: 1300px; margin: 0 auto; padding: 0 20px; }
-        
-        /* Force slides to be the same height */
-        .ai3d_ld_v3__slide { height: auto !important; display: flex; }
-        
-        .ai3d_ld_v3__card { 
-          width: 100%; 
-          text-align: center; 
-          transition: 0.3s; 
-          padding: 10px; 
-          display: flex; 
-          flex-direction: column; 
-          background: #fff; 
-          border-radius: 12px;
-        }
+  .ai3d_ld_v3_main_wrapper {
+    padding: 0 0 60px 0;
+    background: transparent;
+    font-family: 'Poppins', sans-serif;
+  }
 
-        .ai3d_ld_v3__img_wrap { width: 100%; height: 240px; overflow: hidden; border-radius: 10px; flex-shrink: 0; }
-        .ai3d_ld_v3__img { width: 100%; height: 100%; object-fit: contain; }
+  .ai3d_ld_v3__inner {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
 
-        /* Content area grows to fill space, pushing button down */
-        .ai3d_ld_v3__content { 
-          flex-grow: 1; 
-          display: flex; 
-          flex-direction: column; 
-          justify-content: space-between; 
-          padding-top: 15px; 
-        }
+  .ai3d_ld_v3__slide {
+    height: auto !important;
+    display: flex;
+  }
 
-        .ai3d_ld_v3__name { font-size: 1.2rem; font-weight: 700; color: #333; margin-bottom: 5px; }
-        .ai3d_ld_v3__highlight { color: #df3c9c; }
-        
-        /* Set min-height on role to keep text consistent */
-        .ai3d_ld_v3__role { 
-          font-size: 0.85rem; 
-          color: #718096; 
-          margin-bottom: 12px; 
-          font-weight: 500; 
-          text-transform: uppercase; 
-          min-height: 40px; 
-          display: flex; 
-          align-items: center; 
-          justify-content: center;
-        }
+  /* Card (clean – no bg, no border, no shadow) */
+  .ai3d_ld_v3__card {
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    background: transparent;
+    transition: transform 0.35s ease, opacity 0.35s ease;
+    animation: fadeUp 0.6s ease forwards;
+    opacity: 0;
+  }
 
-        /* Line clamping for description + fixed height */
-        .ai3d_ld_v3__desc { 
-          font-size: 0.88rem; 
-          color: #4a5568; 
-          line-height: 1.6; 
-          margin-bottom: 15px; 
-          display: -webkit-box; 
-          -webkit-line-clamp: 3; 
-          -webkit-box-orient: vertical; 
-          overflow: hidden; 
-          text-overflow: ellipsis;
-          height: 4.8em; /* Ensures 3 lines of space even if text is shorter */
-        }
+  /* Subtle hover animation only */
+  .ai3d_ld_v3__card:hover {
+    transform: translateY(-4px);
+  }
 
-        .ai3d_ld_v3__more_btn { 
-            background: none; border: none; color: #df3c9c; font-weight: 600; 
-            font-size: 0.9rem; cursor: pointer; padding: 0; 
-            display: inline-flex; align-items: center; justify-content: center;
-            margin-top: auto; /* Always sticks to the bottom of the card */
-            padding-bottom: 10px;
-        }
-      `}</style>
+  /* Image */
+  .ai3d_ld_v3__img_wrap {
+    width: 100%;
+    height: 240px;
+    overflow: hidden;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+
+  .ai3d_ld_v3__img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.4s ease;
+  }
+
+  /* Image zoom on hover */
+  .ai3d_ld_v3__card:hover .ai3d_ld_v3__img {
+    transform: scale(1.05);
+  }
+
+  /* Content */
+  .ai3d_ld_v3__content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .ai3d_ld_v3__name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 5px;
+  }
+
+  .ai3d_ld_v3__highlight {
+    color: #df3c9c;
+  }
+
+  .ai3d_ld_v3__role {
+    font-size: 0.85rem;
+    color: #718096;
+    margin-bottom: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai3d_ld_v3__desc {
+    font-size: 0.88rem;
+    color: #4a5568;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 4.8em;
+  }
+
+  .ai3d_ld_v3__more_btn {
+    background: none;
+    border: none;
+    color: #df3c9c;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: auto;
+    padding-bottom: 10px;
+  }
+
+  /* Fade-up animation */
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ---------- Responsive ---------- */
+
+  @media (max-width: 1024px) {
+    .ai3d_ld_v3__img_wrap {
+      height: 220px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .ai3d_ld_v3__img_wrap {
+      height: 200px;
+    }
+    .ai3d_ld_v3__name {
+      font-size: 1.1rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .ai3d_ld_v3__img_wrap {
+      height: 180px;
+    }
+    .ai3d_ld_v3__desc {
+      font-size: 0.85rem;
+    }
+  }
+`}</style>
+
     </section>
   );
 };

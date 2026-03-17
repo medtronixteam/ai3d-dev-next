@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FiX, FiArrowRight, FiArrowLeft } from 'react-icons/fi';
+import { FiX } from 'react-icons/fi';
 import axios from 'axios';
 import { baseURL } from '../../config';
 import { useAuth } from '../../context/AuthContext';
@@ -8,13 +8,19 @@ import videoGif from '../../assets/images/video.gif';
 import LoginPopup from './LoginPopup';
 import './LandingPageModal.css';
 
-const LandingPageModal = ({ open, onClose, onRequireLogin }) => {
+// Icons for new design
+import freemiumTopIcon from '../../assets/icon/freeIcon.png';
+import starterTopIcon from '../../assets/icon/starterTopIcon.png';
+import premiumTopIcon from '../../assets/icon/premiumTopIcon.png';
+import enterpriseTopIcon from '../../assets/icon/enterpriseTopIcon.png';
+
+const LandingPageModal = ({ open, onClose }) => {
   const [billingPeriod, setBillingPeriod] = useState('monthly');
   const [monthlyStarterPrice, setMonthlyStarterPrice] = useState(29);
   const [monthlyProPrice, setMonthlyProPrice] = useState(99);
-  const [yearlyStarterPrice, setYearlyStarterPrice] = useState(990);
+  const [yearlyStarterPrice, setYearlyStarterPrice] = useState(290);
   const [yearlyProPrice, setYearlyProPrice] = useState(990);
-  const { token } = useAuth();
+  const { token, activeTeam } = useAuth(); // ✅ FIXED: added activeTeam
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loginModalVisible, setLoginModalVisible] = useState(false);
   const [subscribingPlan, setSubscribingPlan] = useState(null);
@@ -32,22 +38,27 @@ const LandingPageModal = ({ open, onClose, onRequireLogin }) => {
 
   const handleLoginSuccess = () => {
     setShowLoginModal(false);
-    // Refresh the token state to reflect the new login
-    // The useAuth hook should automatically update the token
-    // Don't close the subscription modal, let user continue with plan selection
   };
 
-  // Handler for plan buttons
-  const handlePlanClick = async (planInfo, e) => {
+  const handlePlanClick = async (planName, e) => {
     if (e) e.preventDefault();
+
+    if (planName === 'Enterprise') {
+      window.open('https://ai3d.com/contact-sales', '_blank');
+      return;
+    }
+
     if (!token) {
       setShowLoginModal(true);
       return;
     }
+
+    const period = billingPeriod === 'yearly' ? 'annually' : 'monthly';
+    const key = `${planName}-${period}`;
+    setSubscribingPlan(key);
+
     try {
-      const period = billingPeriod === 'yearly' ? 'annually' : 'monthly';
-      const payload = { name: planInfo?.name, period };
-      setSubscribingPlan(`${planInfo?.name}-${period}`);
+      const payload = { name: planName, period };
       const res = await axios.post(`${baseURL}/plan/subscribe`, payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -56,16 +67,13 @@ const LandingPageModal = ({ open, onClose, onRequireLogin }) => {
         window.location.href = redirectUrl;
       }
     } catch (err) {
-      try {
-        window.location.href = '/platform/subscription/card';
-      } catch (_) {}
+      console.error('Subscription error:', err);
     } finally {
       setSubscribingPlan(null);
     }
   };
 
   useEffect(() => {
-    // Fetch all plans and set Starter/Pro prices for monthly and annually
     axios
       .get(`${baseURL}/plans`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -95,11 +103,11 @@ const LandingPageModal = ({ open, onClose, onRequireLogin }) => {
 
         setMonthlyStarterPrice(getPrice(monthly, 'starter', 29));
         setMonthlyProPrice(getPrice(monthly, 'pro', 99));
-        setYearlyStarterPrice(getPrice(annually, 'starter', 990));
+        setYearlyStarterPrice(getPrice(annually, 'starter', 290));
         setYearlyProPrice(getPrice(annually, 'pro', 990));
       })
       .catch(() => {
-        // keep defaults
+        // Keep defaults
       });
   }, [token]);
 
@@ -109,12 +117,10 @@ const LandingPageModal = ({ open, onClose, onRequireLogin }) => {
     <>
       <div className="sublanding-modal-overlay" onClick={onClose}>
         <div className="sublanding-modal-content" onClick={(e) => e.stopPropagation()}>
-          {/* Close button */}
           <button className="sublanding-modal-close" onClick={onClose}>
             <FiX />
           </button>
 
-          {/* Modal Header */}
           <div
             className="sublanding-modal-header"
             style={{
@@ -133,7 +139,6 @@ const LandingPageModal = ({ open, onClose, onRequireLogin }) => {
             <p>Flexible Plans to Power Your 3D Needs</p>
           </div>
 
-          {/* Plan Toggle */}
           <div className="sublanding-modal-toggle-container">
             <div className="sublanding-plan-toggle">
               <div
@@ -154,274 +159,285 @@ const LandingPageModal = ({ open, onClose, onRequireLogin }) => {
             </div>
           </div>
 
-          {/* Monthly Plans */}
+          {/* ============ NEW DESIGN ============ */}
           {billingPeriod === 'monthly' && (
-            <div className="sublanding-modal-cards monthly-plan">
-              <div className="sublanding-modal-card">
-                <div className="sublanding-card-header">
-                  <span className="sublanding-title mb-0">Starter</span>
-                  <div className="sublanding-price-section">
-                    <div className="mx-4 mb-0 sublanding-para-text">
-                      <span className="sublanding-price">{`$${monthlyStarterPrice}`}</span>
-                      <sub className="sublanding-sub-class">/Month</sub>
+            <div
+              className="new-Subscription-container d-flex align-items-center justify-content-center"
+              style={{ minHeight: '100vh' }}
+            >
+              <div className="new-subscription container">
+                <div className="row justify-content-center g-4 d-flex align-items-stretch">
+                  {/* Freemium */}
+                  <div className="col-md-4 d-flex align-items-center">
+                    <div className="sub-card sub-card-small w-100 d-flex flex-column justify-content-between">
+                      <div>
+                        <div className="sub-top-icon">
+                          <img src={freemiumTopIcon} alt="Freemium" />
+                        </div>
+                        <h2 className="sub-title">Freemium</h2>
+                        <h3 className="sub-price">
+                          Free <span>/14 days</span>
+                        </h3>
+                        <p className="sub-description">
+                          Perfect for testing, personal projects and learning 3D creation with AI.
+                        </p>
+                        <div className="sub-divider"></div>
+                        <h4 className="sub-section-title">Features you'll get:</h4>
+                        <div className="sub-feature-list">
+                          <li><img src={vectoImage} alt="" /> 50 AI scans (2D → 3D or prompt → 3D)</li>
+                          <li><img src={vectoImage} alt="" /> Real-time preview and export</li>
+                          <li><img src={vectoImage} alt="" /> Access to all base design tools and APIs</li>
+                          <li><img src={vectoImage} alt="" /> Community access and learning hub</li>
+                          <li><img src={vectoImage} alt="" /> Cloud storage (2GB limit), Email support</li>
+                          <li><img src={vectoImage} alt="" /> Access to public 3D model library</li>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="sub-bestfor">
+                          <b>Best for:</b> Individual creators, freelancers, and small-scale designers who want to explore AI powered 3D creation.
+                        </p>
+                        <button
+                          className="sub-btn"
+                          onClick={(e) => handlePlanClick('Freemium', e)}
+                          disabled={subscribingPlan === `Freemium-monthly`}
+                        >
+                          {subscribingPlan === `Freemium-monthly` ? 'Processing…' : 'Choose Freemium'}
+                        </button>
+                      </div>
                     </div>
-                    <p className="mx-4 mt-0 mb-0 sublanding-para-text">
-                      Unlock more powerful design tools.
-                    </p>
                   </div>
-                </div>
-                <div className="sublanding-divider-container mt-0">
-                  <div className="sublanding-divider" />
-                </div>
-                <div className="sublanding-features">
-                  <h2>Features you'll get:</h2>
-                  <ul>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Instance 2D to 3D conversion
-                    </li>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Real-time preview &amp; exports
-                    </li>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Access to all tools &amp; APIs
-                    </li>
-                  </ul>
-                </div>
-                <p className="sublanding-card-footer">
-                  At the end of 14 days, you can choose a plan that fits your needs. We'll notify
-                  you 2 days before your trial ends.
-                </p>
-                <button className="sublanding-plan-button" disabled={subscribingPlan === `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`} onClick={(e) => handlePlanClick({ name: 'Starter' }, e)}>
-                  {subscribingPlan === `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Choose Starter'}
-                </button>
-              </div>
 
-              <div className="sublanding-modal-card sublanding-popular-card">
-                <div className="sublanding-popular-tag">Popular</div>
-                <div className="sublanding-card-header">
-                  <span className="sublanding-title mb-0">Pro Plan</span>
-                  <div className="sublanding-price-section">
-                    <div className="mb-0 mx-4">
-                      <span className="sublanding-price">{`$${monthlyProPrice}`}</span>
-                      <sub className="sublanding-sub-class">/Month</sub>
+                  {/* Starter */}
+                  <div className="col-md-4 d-flex">
+                    <div className="sub-card sub-card-center w-100 d-flex flex-column justify-content-between">
+                      <div>
+                        <div className="sub-top-icon">
+                          <img src={starterTopIcon} alt="Starter" />
+                        </div>
+                        <h2 className="sub-title">Starter</h2>
+                        <h3 className="sub-price">
+                          ${monthlyStarterPrice} <span>/Month</span>
+                        </h3>
+                        <p className="sub-year">${yearlyStarterPrice}/Year</p>
+                        <p className="sub-description">
+                          Perfect for testing, personal projects and learning 3D creation with AI.
+                        </p>
+                        <div className="sub-divider"></div>
+                        <h4 className="sub-section-title">Features you'll get:</h4>
+                        <div className="sub-feature-list">
+                          <li><img src={vectoImage} alt="" /> 50 AI scans (2D → 3D or prompt → 3D)</li>
+                          <li><img src={vectoImage} alt="" /> Real-time preview and export</li>
+                          <li><img src={vectoImage} alt="" /> Access to all base design tools and APIs</li>
+                          <li><img src={vectoImage} alt="" /> Community access and learning hub</li>
+                          <li><img src={vectoImage} alt="" /> Cloud storage (2GB limit), Email support</li>
+                          <li><img src={vectoImage} alt="" /> Access to public 3D model library</li>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="sub-bestfor">
+                          <b>Best for:</b> Individual creators, freelancers, and small-scale designers who want to explore AI powered 3D creation.
+                        </p>
+                        <button
+                          className="sub-btn"
+                          disabled={!!activeTeam || subscribingPlan === `Starter-monthly`}
+                          onClick={(e) => handlePlanClick('Starter', e)}
+                        >
+                          {subscribingPlan === `Starter-monthly` ? 'Processing…' : 'Choose Starter'}
+                        </button>
+                      </div>
                     </div>
-                    <p className="sublanding-para-text mt-0 mb-0 mx-4">
-                      Unlock more powerful design tools.
-                    </p>
                   </div>
-                </div>
-                <div className="sublanding-divider-container mt-0">
-                  <div className="sublanding-divider" />
-                </div>
-                <div className="sublanding-features">
-                  <h2>Features you'll get:</h2>
-                  <ul>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Instance 2D to 3D conversion
-                    </li>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Real-time preview &amp; exports
-                    </li>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Access to all tools &amp; APIs
-                    </li>
-                  </ul>
-                </div>
-                <p className="sublanding-card-footer">
-                  At the end of 14 days, you can choose a plan that fits your needs. We'll notify
-                  you 2 days before your trial ends.
-                </p>
-                <button className="sublanding-plan-button" disabled={subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`} onClick={(e) => handlePlanClick({ name: 'Pro' }, e)}>
-                  {subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Choose Pro'}
-                </button>
-              </div>
 
-              <div className="sublanding-modal-card">
-                <div className="sublanding-card-header">
-                  <span className="sublanding-title mb-0">Enterprise Plan</span>
-                  <div className="sublanding-price-section">
-                    <div className="mb-0 mx-4 mt-0 sublanding-para-text">
-                      <span className="sublanding-price">Custom</span>
-                      <sub className="sublanding-sub-class">billing</sub>
+                  {/* Premium */}
+                  <div className="col-md-4 d-flex">
+                    <div className="sub-card sub-card-premium w-100 d-flex flex-column justify-content-between">
+                      <div>
+                        <div className="sub-badge">Most Popular</div>
+                        <div className="sub-top-icon">
+                          <img src={premiumTopIcon} alt="Premium" />
+                        </div>
+                        <h2 className="sub-title">Premium</h2>
+                        <h3 className="sub-price">
+                          ${monthlyProPrice} <span>/Month</span>
+                        </h3>
+                        <p className="sub-year">${yearlyProPrice}/Year</p>
+                        <p className="sub-description">
+                          Built for creators who need speed, team collaboration, and higher production volume.
+                        </p>
+                        <div className="sub-divider"></div>
+                        <h4 className="sub-section-title">Features you'll get:</h4>
+                        <div className="sub-feature-list">
+                          <li><img src={vectoImage} alt="" /> Multi-user team access (up to 4 members)</li>
+                          <li><img src={vectoImage} alt="" /> 500 AI scans/month</li>
+                          <li><img src={vectoImage} alt="" /> Priority processing & rendering queue</li>
+                          <li><img src={vectoImage} alt="" /> Access to advanced editing tools</li>
+                          <li><img src={vectoImage} alt="" /> Private 3D asset storage (up to 50GB)</li>
+                          <li><img src={vectoImage} alt="" /> Access to Beta AI features & research updates</li>
+                          <li><img src={vectoImage} alt="" /> Dedicated workspace for teams</li>
+                          <li><img src={vectoImage} alt="" /> Priority chat + email support</li>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="sub-bestfor">
+                          <b>Best for:</b> Small teams, studios or early-stage startups collaborating on 3D projects.
+                        </p>
+                        <button
+                          className="sub-btn"
+                          disabled={!!activeTeam || subscribingPlan === `Premium-monthly`}
+                          onClick={(e) => handlePlanClick('Premium', e)}
+                        >
+                          {subscribingPlan === `Premium-monthly` ? 'Processing…' : 'Choose Premium'}
+                        </button>
+                      </div>
                     </div>
-                    {/* <p className="sublanding-para-text mt-0 mb-0 mx-4">
-                      $990/Year <br />
-                      Unlock more powerful design tools.
-                    </p> */}
                   </div>
                 </div>
-                <div className="sublanding-divider-container mt-0">
-                  <div className="sublanding-divider" />
-                </div>
-                <div className="sublanding-features">
-                  <h2>Features you'll get:</h2>
-                  <ul>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Instance 2D to 3D conversion
-                    </li>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Real-time preview &amp; exports
-                    </li>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Access to all tools &amp; APIs
-                    </li>
-                  </ul>
-                </div>
-                <p className="sublanding-card-footer">
-                  At the end of 14 days, you can choose a plan that fits your needs. We'll notify
-                  you 2 days before your trial ends.
-                </p>
-                <button className="sublanding-plan-button" disabled={subscribingPlan === `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`} onClick={(e) => handlePlanClick({ name: 'Enterprise' }, e)}>
-                  {subscribingPlan === `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Contact Sales'}
-                </button>
               </div>
             </div>
           )}
 
-          {/* Yearly Plans */}
           {billingPeriod === 'yearly' && (
-            <div className="sublanding-modal-cards sublanding-yearly-plan">
-              <div className="sublanding-modal-card">
-                <div className="sublanding-card-header">
-                  <span className="sublanding-title mb-0">Starter Plan</span>
-                  <div className="sublanding-price-section">
-                    <div className="mb-0 mx-4 sublanding-para-text">
-                      <span className="sublanding-price">{`$${yearlyStarterPrice}`}</span>
-                      <sub className="sublanding-sub-class">/Year</sub>
+            <div
+              className="new-Subscription-container d-flex align-items-center justify-content-center"
+              style={{ minHeight: '100vh' }}
+            >
+              <div className="new-subscription container ">
+                <div className="row justify-content-center g-4 d-flex align-items-stretch">
+                  {/* Starter */}
+                  <div className="col-md-4 d-flex">
+                    <div className="sub-card sub-card-center w-100 d-flex flex-column justify-content-between">
+                      <div>
+                        <div className="sub-top-icon">
+                          <img src={starterTopIcon} alt="Starter" />
+                        </div>
+                        <h2 className="sub-title">Starter</h2>
+                        <h3 className="sub-price">
+                          ${yearlyStarterPrice} <span>/Year</span>
+                        </h3>
+                        <p className="sub-year">${monthlyStarterPrice}/Month</p>
+                        <p className="sub-description">
+                          Perfect for testing, personal projects and learning 3D creation with AI.
+                        </p>
+                        <div className="sub-divider"></div>
+                        <h4 className="sub-section-title">Features you'll get:</h4>
+                        <div className="sub-feature-list">
+                          <li><img src={vectoImage} alt="" /> 50 AI scans (2D → 3D or prompt → 3D)</li>
+                          <li><img src={vectoImage} alt="" /> Real-time preview and export</li>
+                          <li><img src={vectoImage} alt="" /> Access to all base design tools and APIs</li>
+                          <li><img src={vectoImage} alt="" /> Community access and learning hub</li>
+                          <li><img src={vectoImage} alt="" /> Cloud storage (2GB limit), Email support</li>
+                          <li><img src={vectoImage} alt="" /> Access to public 3D model library</li>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="sub-bestfor">
+                          <b>Best for:</b> Individual creators, freelancers, and small-scale designers who want to explore AI powered 3D creation.
+                        </p>
+                        <button
+                          className="sub-btn"
+                          disabled={!!activeTeam || subscribingPlan === `Starter-annually`}
+                          onClick={(e) => handlePlanClick('Starter', e)}
+                        >
+                          {subscribingPlan === `Starter-annually` ? 'Processing…' : 'Choose Starter'}
+                        </button>
+                      </div>
                     </div>
-                    <p className="mx-4 mt-0 mb-0 sublanding-para-text">Basic conversions</p>
                   </div>
-                </div>
-                <div className="sublanding-divider-container mt-0">
-                  <div className="sublanding-divider" />
-                </div>
-                <div className="sublanding-features">
-                  <h2>Features you'll get:</h2>
-                  <ul>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Instance 2D to 3D conversion
-                    </li>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Real-time preview &amp; exports
-                    </li>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Access to all tools &amp; APIs
-                    </li>
-                  </ul>
-                </div>
-                <p className="sublanding-card-footer">
-                  At the end of 14 days, you can choose a plan that fits your needs. We'll notify
-                  you 2 days before your trial ends.
-                </p>
-                <button className="sublanding-plan-button" disabled={subscribingPlan === `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`} onClick={(e) => handlePlanClick({ name: 'Starter' }, e)}>
-                  {subscribingPlan === `Starter-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Choose Starter'}
-                </button>
-              </div>
 
-              <div className="sublanding-modal-card">
-                <div className="popular-tag">Popular</div>
-                <div className="sublanding-card-header">
-                  <span className="sublanding-title mb-0">Pro Plan</span>
-                  <div className="sublanding-price-section">
-                    <div className="mb-0 mx-4">
-                      <span className="sublanding-price">{`$${yearlyProPrice}`}</span>
-                      <sub className="sublanding-sub-class">/Year</sub>
+                  {/* Premium */}
+                  <div className="col-md-4 d-flex">
+                    <div className="sub-card sub-card-premium w-100 d-flex flex-column justify-content-between">
+                      <div>
+                        <div className="sub-badge">Most Popular</div>
+                        <div className="sub-top-icon">
+                          <img src={premiumTopIcon} alt="Premium" />
+                        </div>
+                        <h2 className="sub-title">Premium</h2>
+                        <h3 className="sub-price">
+                          ${yearlyProPrice} <span>/Year</span>
+                        </h3>
+                        <p className="sub-year">${monthlyProPrice}/Month</p>
+                        <p className="sub-description">
+                          Built for creators who need speed, team collaboration, and higher production volume.
+                        </p>
+                        <div className="sub-divider"></div>
+                        <h4 className="sub-section-title">Features you'll get:</h4>
+                        <div className="sub-feature-list">
+                          <li><img src={vectoImage} alt="" /> Multi-user team access (up to 4 members)</li>
+                          <li><img src={vectoImage} alt="" /> 500 AI scans/month</li>
+                          <li><img src={vectoImage} alt="" /> Priority processing & rendering queue</li>
+                          <li><img src={vectoImage} alt="" /> Access to advanced editing tools</li>
+                          <li><img src={vectoImage} alt="" /> Private 3D asset storage (up to 50GB)</li>
+                          <li><img src={vectoImage} alt="" /> Access to Beta AI features & research updates</li>
+                          <li><img src={vectoImage} alt="" /> Dedicated workspace for teams</li>
+                          <li><img src={vectoImage} alt="" /> Priority chat + email support</li>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="sub-bestfor">
+                          <b>Best for:</b> Small teams, studios or early-stage startups collaborating on 3D projects.
+                        </p>
+                        <button
+                          className="sub-btn"
+                          disabled={!!activeTeam || subscribingPlan === `Premium-annually`}
+                          onClick={(e) => handlePlanClick('Premium', e)}
+                        >
+                          {subscribingPlan === `Premium-annually` ? 'Processing…' : 'Choose Premium'}
+                        </button>
+                      </div>
                     </div>
-                    <p className="mx-4 mt-0 mb-0 sublanding-para-text">
-                      Unlock more powerful design tools.
-                    </p>
                   </div>
-                </div>
-                <div className="sublanding-divider-container mt-0">
-                  <div className="sublanding-divider" />
-                </div>
-                <div className="sublanding-features">
-                  <h2>Features you'll get:</h2>
-                  <ul>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Instance 2D to 3D conversion
-                    </li>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Real-time preview &amp; exports
-                    </li>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Access to all tools &amp; APIs
-                    </li>
-                  </ul>
-                </div>
-                <p className="sublanding-card-footer">
-                  At the end of 14 days, you can choose a plan that fits your needs. We'll notify
-                  you 2 days before your trial ends.
-                </p>
-                <button className="sublanding-plan-button" disabled={subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`} onClick={(e) => handlePlanClick({ name: 'Pro' }, e)}>
-                  {subscribingPlan === `Pro-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Choose Pro'}
-                </button>
-              </div>
 
-              <div className="sublanding-modal-card">
-                <div className="sublanding-card-header">
-                  <span className="sublanding-title mb-0">Enterprise Plan</span>
-                  <div className="sublanding-price-section">
-                    <div className="mx-4" style={{ marginBottom: '31px' }}>
-                      <span className="sublanding-price">Custom</span>
-                      <sub className="sublanding-sub-class">billing</sub>
+                  {/* Enterprise */}
+                  <div className="col-md-4 d-flex">
+                    <div className="sub-card sub-card-center w-100 d-flex flex-column justify-content-between">
+                      <div>
+                        <div className="sub-top-icon">
+                          <img src={enterpriseTopIcon} alt="Enterprise" />
+                        </div>
+                        <h2 className="sub-title">Enterprise</h2>
+                        <h3 className="sub-price">
+                          Custom <span>Billing</span>
+                        </h3>
+                        <p className="sub-description mt-3">
+                          Ideal for enterprises and platforms scaling 3D asset production, integrating AI3D tech within their systems.
+                        </p>
+                        <div className="sub-divider"></div>
+                        <h4 className="sub-section-title">Features you'll get:</h4>
+                        <div className="sub-feature-list">
+                          <li><img src={vectoImage} alt="" /> Unlimited AI scans and conversions</li>
+                          <li><img src={vectoImage} alt="" /> Full API + SDK integration</li>
+                          <li><img src={vectoImage} alt="" /> White-label platform deployment</li>
+                          <li><img src={vectoImage} alt="" /> Advanced analytics dashboard</li>
+                          <li><img src={vectoImage} alt="" /> On-premise or private cloud hosting</li>
+                          <li><img src={vectoImage} alt="" /> Team & department-level user management</li>
+                          <li><img src={vectoImage} alt="" /> Priority GPU access</li>
+                          <li><img src={vectoImage} alt="" /> Legal & data compliance</li>
+                          <li><img src={vectoImage} alt="" /> Custom AI model training</li>
+                          <li><img src={vectoImage} alt="" /> 24/7 premium support</li>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="sub-bestfor">
+                          <b>Best for:</b> Large enterprises, agencies, or marketplaces needing high volume API integrations.
+                        </p>
+                        <button
+                          className="sub-btn"
+                          onClick={(e) => handlePlanClick('Enterprise', e)}
+                        >
+                          Contact Sales
+                        </button>
+                      </div>
                     </div>
-                    {/* <p>
-                                      Contact us for enterprise pricing
-                                      <br />
-                                      Unlock all features.
-                                    </p> */}
                   </div>
                 </div>
-                <div className="sublanding-divider-container mt-2">
-                  <div className="sublanding-divider" />
-                </div>
-                <div className="sublanding-features">
-                  <h2>Features you'll get:</h2>
-                  <ul>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Instance 2D to 3D conversion
-                    </li>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Real-time preview &amp; exports
-                    </li>
-                    <li>
-                      <img src={vectoImage} alt="" />
-                      Access to all tools &amp; APIs
-                    </li>
-                  </ul>
-                </div>
-                <p className="sublanding-card-footer">
-                  At the end of 14 days, you can choose a plan that fits your needs. We'll notify
-                  you 2 days before your trial ends.
-                </p>
-                <button className="sublanding-plan-button" disabled={subscribingPlan === `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}`} onClick={(e) => handlePlanClick({ name: 'Enterprise' }, e)}>
-                  {subscribingPlan === `Enterprise-${billingPeriod === 'yearly' ? 'annually' : 'monthly'}` ? 'Processing…' : 'Contact Sales'}
-                </button>
               </div>
             </div>
           )}
+          {/* ============ NEW DESIGN END ============ */}
         </div>
       </div>
 
-      {/* Login Required Modal */}
       {showLoginModal && (
         <LoginPopup onClose={handleCloseLoginModal} onLoginSuccess={handleLoginSuccess} />
       )}

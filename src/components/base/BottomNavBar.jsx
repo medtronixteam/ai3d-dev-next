@@ -16,7 +16,7 @@ const BottomNavBar = () => {
         <LuCalendarRange className="bottom-nav-icon" />
         <span className="bottom-nav-label">API SDK</span>
       </NavLink>
-      <NavLink to="/platform/scan" className="bottom-nav-scan">
+      <NavLink to="/platform/new/scan" className="bottom-nav-scan">
         <div className="scan-btn">
           <BiScan className="scan-icon" style={{ color: '#fff', fontSize: 32 }} />
         </div>

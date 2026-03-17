@@ -663,7 +663,7 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-height: 4em;
+  /* max-height: 4em; */
   line-height: 1.5em;
   white-space: normal;
   word-break: break-word;

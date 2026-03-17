@@ -351,6 +351,7 @@
 }
 
 @-moz-document url-prefix() {
+
   .profile-section .custom-select,
   .profile-section .custom-input {
     padding-right: 2.5rem;
@@ -358,7 +359,9 @@
 }
 
 /* For IE10+ */
-@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+@media screen and (-ms-high-contrast: active),
+(-ms-high-contrast: none) {
+
   .profile-section .custom-select,
   .profile-section .custom-input {
     padding-right: 2.5rem;
@@ -423,6 +426,7 @@
       min-width: auto !important;
       max-width: auto !important;
     }
+
     .profile-actions {
       /* max-width: 62%; */
       /* Restrict width only on larger screens */
@@ -517,11 +521,11 @@
         margin-bottom: 0;
     } */
 
-  .form-row > .form-group {
+  .form-row>.form-group {
     margin-bottom: 1rem;
   }
 
-  .form-row > .form-group:last-child {
+  .form-row>.form-group:last-child {
     margin-bottom: 0;
   }
 
@@ -529,7 +533,7 @@
     width: 100%;
   }
 
-  .input-group > .form-control:not(:first-child) {
+  .input-group>.form-control:not(:first-child) {
     width: calc(100% - 100px);
   }
 }
@@ -538,9 +542,11 @@
   .profile-top-row {
     margin-bottom: 0 !important;
   }
+
   .edit-btn {
     margin-right: 0.5rem !important;
   }
+
   .profile-section {
     padding-left: 15px !important;
     padding-right: 15px !important;
@@ -592,7 +598,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin:  20px auto 0 auto;
+  margin: 20px auto 0 auto;
   gap: 1rem;
   flex-wrap: nowrap;
   overflow-x: auto;
@@ -601,10 +607,10 @@
 }
 
 .share-through-icons::-webkit-scrollbar {
-  display: none; 
+  display: none;
 }
 
-.share-through-icons > div {
+.share-through-icons>div {
   flex: 0 0 auto;
 }
 
@@ -652,7 +658,8 @@
   position: absolute;
   top: 20px;
   right: 20px;
-  background: #de3996; /* Pink background */
+  background: #de3996;
+  /* Pink background */
   color: #fff;
   border: none;
   cursor: pointer;
@@ -668,8 +675,8 @@
 
 @media (max-width : 600px) {
   .share-input {
-  padding: 10px 40px 10px 12px !important;
-}
+    padding: 10px 40px 10px 12px !important;
+  }
 }
 
 .share-close:hover {
@@ -737,14 +744,17 @@
   color: #f3f3fa !important;
   box-shadow: 0 10px 36px rgba(0, 0, 0, 0.4) !important;
 }
+
 [data-theme='dark'] .share-subtitle {
   color: #b3b3c6 !important;
 }
+
 [data-theme='dark'] .share-input {
   background: #110e20 !important;
   border-color: #474749 !important;
   color: #f3f3fa !important;
 }
+
 [data-theme='dark'] .share-copy-btn {
   /* background: #e6339a !important; */
   color: #e6339a !important;
@@ -1520,15 +1530,19 @@ select:-webkit-autofill:focus {
   position: absolute;
   top: 16px;
   right: 16px;
-  background: #de3996; /* Circular button background */
+  background: #de3996;
+  /* Circular button background */
   border: none;
   width: 36px;
   height: 36px;
-  border-radius: 50%; /* Make it perfectly circular */
-  display: flex; /* Center the icon */
+  border-radius: 50%;
+  /* Make it perfectly circular */
+  display: flex;
+  /* Center the icon */
   align-items: center;
   justify-content: center;
-  color: #fff; /* Icon color */
+  color: #fff;
+  /* Icon color */
   cursor: pointer;
   transition:
     background 0.3s ease,
@@ -1537,9 +1551,11 @@ select:-webkit-autofill:focus {
 
 .close-btn i,
 .close-btn svg {
-  font-size: 18px; /* Icon size */
+  font-size: 18px;
+  /* Icon size */
   line-height: 1;
-  display: block; /* Removes extra inline spacing */
+  display: block;
+  /* Removes extra inline spacing */
 }
 
 .add-email-modal h3 {
@@ -1600,7 +1616,8 @@ select:-webkit-autofill:focus {
     padding: 18px 12px 18px 12px !important;
     border-radius: 10px;
     min-width: auto !important;
-    max-width: calc(100vw - 24px) !important; /* 12px gap on both sides */
+    max-width: calc(100vw - 24px) !important;
+    /* 12px gap on both sides */
     margin: 0 12px !important;
   }
 }
@@ -1914,8 +1931,9 @@ select:-webkit-autofill:focus {
     width: 100% !important;
     min-width: 100% !important;
     min-height: 100% !important;
-    height: 100% !important   ;
+    height: 100% !important;
   }
+
   .profile-main-card {
     border-radius: 12px !important;
     margin: 0 !important;
@@ -2006,6 +2024,7 @@ select:-webkit-autofill:focus {
     box-shadow: none !important;
     z-index: 1001 !important;
   }
+
   .edit-modal-backdrop {
     align-items: top;
   }
@@ -2505,24 +2524,29 @@ select:-webkit-autofill:focus {
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
 }
+
 @keyframes forgotModalSlideIn {
   0% {
     opacity: 0;
     transform: translateY(-50px) scale(0.9);
   }
+
   60% {
     opacity: 1;
     transform: translateY(10px) scale(1.02);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
 }
+
 .forgot-modal-backdrop {
   position: fixed;
   top: 0;
@@ -2547,6 +2571,7 @@ select:-webkit-autofill:focus {
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
   animation: forgotModalSlideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+
 [data-theme='dark'] .forgot-modal-content {
   background: #000000;
   border: 1px solid #333;
@@ -2563,16 +2588,19 @@ select:-webkit-autofill:focus {
   width: 35px;
   height: 35px;
   border-radius: 50%;
-  display: flex; /* Flexbox for centering */
+  display: flex;
+  /* Flexbox for centering */
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
   padding: 0;
-  line-height: 0; /* Fix inline element misalignment */
+  line-height: 0;
+  /* Fix inline element misalignment */
 }
 
 .forgot-modal-close svg {
-  display: block; /* Remove inline space around SVG */
+  display: block;
+  /* Remove inline space around SVG */
 }
 
 .forgot-modal-close:hover {
@@ -2583,6 +2611,7 @@ select:-webkit-autofill:focus {
   .forgot-modal-close {
     top: 24px;
   }
+
   .forgot-modal-content {
     min-width: 380px;
   }
@@ -2622,7 +2651,7 @@ select:-webkit-autofill:focus {
 /* media query */
 @media (max-width: 528px) {
 
- .change-password-modal {
+  .change-password-modal {
     min-width: 360px;
     padding: 40px 20px;
   }
@@ -2630,7 +2659,7 @@ select:-webkit-autofill:focus {
 
 @media (max-width: 360px) {
 
- .change-password-modal {
+  .change-password-modal {
     min-width: 330px !important;
     margin-left: 15px;
     margin-right: 15px;
@@ -2640,7 +2669,7 @@ select:-webkit-autofill:focus {
 
 @media (max-width: 322px) {
 
- .change-password-modal {
+  .change-password-modal {
     min-width: 302px !important;
     margin-left: 15px;
     margin-right: 15px;
@@ -2662,6 +2691,7 @@ select:-webkit-autofill:focus {
     opacity: 0;
     transform: scale(0.96);
   }
+
   100% {
     opacity: 1;
     transform: scale(1);

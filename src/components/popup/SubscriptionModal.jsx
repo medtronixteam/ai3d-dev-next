@@ -156,7 +156,6 @@ const SubscriptionModal = ({ open, onClose }) => {
           {billingPeriod === 'monthly' && (
             <div
               className="new-Subscription-container d-flex align-items-center justify-content-center"
-              style={{ minHeight: '100vh' }}
             >
               <div className="new-subscription container">
                 <div className="row justify-content-center g-4 d-flex align-items-stretch">
@@ -339,7 +338,6 @@ const SubscriptionModal = ({ open, onClose }) => {
           {billingPeriod === 'yearly' && (
             <div
               className="new-Subscription-container d-flex align-items-center justify-content-center"
-              style={{ minHeight: '100vh' }}
             >
               <div className="new-subscription container">
                 <div className="row justify-content-center g-4 d-flex align-items-stretch">

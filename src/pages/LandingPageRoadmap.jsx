@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './RoadmapSection.css';
 import snakeImg from '../assets/images/snakeImg.png';
 import arrowStart from '../assets/images/arrowStart.png';
@@ -45,26 +45,30 @@ const RoadmapSection = ({ elipse }) => {
     ];
 
     const sectionRef = useRef(null);
+    const containerRef = useRef(null);
     const nodesRef = useRef([]);
+    const [activeIndex, setActiveIndex] = useState(-1);
+    
+    // Check initial window width to set isMobile accurately.
+    const [isMobile, setIsMobile] = useState(
+        typeof window !== 'undefined' ? window.innerWidth <= 900 : false
+    );
 
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 900);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    // Intersection observer triggers the base animations (arrows, line) for ALL devices
+    // For mobile, it also triggers the nodes.
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
-                        // Add animation class to the main section
                         entry.target.classList.add('animate-in');
                         
-                        // Animate nodes with staggered delay
-                        nodesRef.current.forEach((node, index) => {
-                            if (node) {
-                                setTimeout(() => {
-                                    node.classList.add('animate-in');
-                                }, index * 200); // Stagger animation
-                            }
-                        });
-                        
-                        // Start snake path animation
                         const snakePath = entry.target.querySelector('.snake-svg path');
                         if (snakePath) {
                             setTimeout(() => {
@@ -72,126 +76,183 @@ const RoadmapSection = ({ elipse }) => {
                             }, 300);
                         }
                         
-                        // Animate start arrow
                         const startArrow = entry.target.querySelector('.start-arrow');
                         if (startArrow) {
-                            setTimeout(() => {
-                                startArrow.classList.add('pulse');
-                            }, 400);
+                            setTimeout(() => startArrow.classList.add('pulse'), 400);
                         }
                         
-                        // Animate end target
                         const endTarget = entry.target.querySelector('.end-target');
                         if (endTarget) {
-                            setTimeout(() => {
-                                endTarget.classList.add('pulse-slow');
-                            }, 500);
+                            setTimeout(() => endTarget.classList.add('pulse-slow'), 500);
+                        }
+
+                        // On mobile, just animate all nodes right away
+                        if (isMobile) {
+                            nodesRef.current.forEach((node, index) => {
+                                if (node) {
+                                    setTimeout(() => {
+                                        node.classList.add('animate-in');
+                                    }, index * 200);
+                                }
+                            });
                         }
                     }
                 });
             },
-            {
-                threshold: 0.2,
-                rootMargin: '0px 0px -50px 0px'
-            }
+            { threshold: 0.2, rootMargin: '0px 0px -50px 0px' }
         );
 
-        if (sectionRef.current) {
-            observer.observe(sectionRef.current);
-        }
-
+        if (sectionRef.current) observer.observe(sectionRef.current);
         return () => {
-            if (sectionRef.current) {
-                observer.unobserve(sectionRef.current);
-            }
+            if (sectionRef.current) observer.unobserve(sectionRef.current);
         };
-    }, []);
+    }, [isMobile]);
+
+    // Handle scroll purely for updating the active index on Desktop
+    useEffect(() => {
+        if (!isMobile) {
+            const getScrollParent = (node) => {
+                if (node == null) return null;
+                if (node.scrollHeight > node.clientHeight) {
+                    const overflowY = window.getComputedStyle(node).overflowY;
+                    if (overflowY === 'auto' || overflowY === 'scroll') return node;
+                }
+                return getScrollParent(node.parentNode);
+            };
+
+            const scrollContainer = getScrollParent(containerRef.current) || window;
+
+            const handleScroll = () => {
+                if (!containerRef.current || !sectionRef.current) return;
+                
+                const rect = containerRef.current.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                
+                const startOffset = windowHeight * 0.15; 
+                const scrollableDistance = rect.height - windowHeight;
+                
+                // Haven't reached the pinning point yet
+                if (rect.top > startOffset + 50) {
+                    setActiveIndex(-1);
+                    return;
+                }
+                
+                let currentProgress = (startOffset - rect.top) / scrollableDistance;
+                currentProgress = Math.max(0, Math.min(1, currentProgress));
+                
+                let newIndex = -1;
+                // Add breakpoints for the 4 steps
+                // The first step should show up as soon as it begins to pin (or is pinned)
+                if (currentProgress >= 0) newIndex = 0;
+                if (currentProgress > 0.25) newIndex = 1;
+                if (currentProgress > 0.5) newIndex = 2;
+                if (currentProgress > 0.75) newIndex = 3;
+
+                setActiveIndex(newIndex);
+            };
+
+            scrollContainer.addEventListener('scroll', handleScroll);
+            handleScroll(); // initial check
+            return () => scrollContainer.removeEventListener('scroll', handleScroll);
+        }
+    }, [isMobile]);
+
+    // Sync activeIndex visually
+    useEffect(() => {
+        if (!isMobile) {
+            nodesRef.current.forEach((node, index) => {
+                if (node) {
+                    if (index <= activeIndex) {
+                        node.classList.add('animate-in');
+                    } else {
+                        node.classList.remove('animate-in');
+                    }
+                }
+            });
+        }
+    }, [activeIndex, isMobile]);
 
     return (
-        <section className="roadmap-section" ref={sectionRef}>
-            <div className="container">
-                {/* <div className="header-wrapper">
-                    <h2 className="title">Our Roadmap</h2>
-                    {elipse && (
-                        <img src={elipse} className="elipse-bg" alt="" />
-                    )}
-                </div> */}
-
-                <div className="roadmap-main">
-                    {/* Desktop Graphics: Path, Start Arrow, End Target */}
-                    <div className="desktop-only-assets">
-                        {snakeImg ? (
-                            <img
-                                src={snakeImg}
-                                className="snake-img"
-                                alt="road path"
-                            />
-                        ) : (
-                            <svg
-                                className="snake-svg"
-                                viewBox="0 0 1200 400"
-                                preserveAspectRatio="none"
-                            >
-                                <path
-                                    d="M0,200 L100,200 C130,200 130,60 250,60 C370,60 370,340 500,340 C630,340 630,60 750,60 C870,60 870,340 1000,340 C1130,340 1130,200 1200,200"
-                                    fill="none"
-                                    stroke="#e6e6e6"
-                                    strokeWidth="3"
-                                    strokeDasharray="6,8"
-                                />
-                            </svg>
-                        )}
-                        <img src={arrowStart} className="start-arrow" alt="" />
-                        <div className="end-target-wrap">
-                            <img
-                                src={targetEnd}
-                                className="end-target"
-                                alt=""
-                            />
-                            <div className="end-target-arrow"></div>
-                        </div>
-                    </div>
-
-                    <div className="nodes-container">
-                        {roadmapData.map((item, index) => (
-                            <div
-                                key={index}
-                                className={`roadmap-node ${item.pos}`}
-                                style={{
-                                    '--left': item.left,
-                                    '--top': item.top,
-                                    '--delay': `${index * 0.1}s`
-                                }}
-                                ref={(el) => (nodesRef.current[index] = el)}
-                            >
-                                {/* Logic for Desktop vs Mobile is handled in CSS */}
-                                <div className="node-wrapper-inner">
-                                    <div className="icon-wrap">
-                                        <div className="icon-box">
-                                            <img src={item.icon} alt="" />
-                                        </div>
-                                    </div>
-
-                                    <div className="connector-line">
-                                        <div
-                                            className={`node-anchor ${item.pos === 'up' ? 'top' : 'bottom'}`}
-                                        ></div>
-                                    </div>
-
-                                    <div className="text-content">
-                                        <span className="mobile-step">
-                                            Step 0{index + 1}
-                                        </span>
-                                        <h6>{item.title}</h6>
-                                        <p>{item.desc}</p>
-                                    </div>
+        <div ref={containerRef} className="roadmap-sticky-wrapper" style={{ height: isMobile ? 'auto' : '400vh', position: 'relative' }}>
+            <div className="roadmap-sticky-content" style={{ position: isMobile ? 'static' : 'sticky', top: isMobile ? 'auto' : '15vh', height: isMobile ? 'auto' : '70vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <section className="roadmap-section" ref={sectionRef}>
+                    <div className="container">
+                        <div className="roadmap-main">
+                            {/* Desktop Graphics: Path, Start Arrow, End Target */}
+                            <div className="desktop-only-assets">
+                                {snakeImg ? (
+                                    <img
+                                        src={snakeImg}
+                                        className="snake-img"
+                                        alt="road path"
+                                    />
+                                ) : (
+                                    <svg
+                                        className="snake-svg"
+                                        viewBox="0 0 1200 400"
+                                        preserveAspectRatio="none"
+                                    >
+                                        <path
+                                            d="M0,200 L100,200 C130,200 130,60 250,60 C370,60 370,340 500,340 C630,340 630,60 750,60 C870,60 870,340 1000,340 C1130,340 1130,200 1200,200"
+                                            fill="none"
+                                            stroke="#e6e6e6"
+                                            strokeWidth="3"
+                                            strokeDasharray="6,8"
+                                        />
+                                    </svg>
+                                )}
+                                <img src={arrowStart} className="start-arrow" alt="" />
+                                <div className="end-target-wrap">
+                                    <img
+                                        src={targetEnd}
+                                        className="end-target"
+                                        alt=""
+                                    />
+                                    <div className="end-target-arrow"></div>
                                 </div>
                             </div>
-                        ))}
+
+                            <div className="nodes-container">
+                                {roadmapData.map((item, index) => (
+                                    <div
+                                        key={index}
+                                        className={`roadmap-node ${item.pos}`}
+                                        style={{
+                                            '--left': item.left,
+                                            '--top': item.top,
+                                            '--delay': isMobile ? `${index * 0.1}s` : '0s'
+                                        }}
+                                        ref={(el) => (nodesRef.current[index] = el)}
+                                    >
+                                        <div className="node-wrapper-inner">
+                                            <div className="icon-wrap">
+                                                <div className="icon-box">
+                                                    <img src={item.icon} alt="" />
+                                                </div>
+                                            </div>
+
+                                            <div className="connector-line">
+                                                <div
+                                                    className={`node-anchor ${item.pos === 'up' ? 'top' : 'bottom'}`}
+                                                ></div>
+                                            </div>
+
+                                            <div className="text-content">
+                                                <span className="mobile-step">
+                                                    Step 0{index + 1}
+                                                </span>
+                                                <h6>{item.title}</h6>
+                                                <p>{item.desc}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </section>
             </div>
-        </section>
+        </div>
     );
 };
 

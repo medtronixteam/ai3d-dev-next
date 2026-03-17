@@ -168,6 +168,10 @@ const LeadershipSection = () => {
         new window.Swiper('.ai3d_ld_v3__swiper_container', {
           loop: true,
           spaceBetween: 30,
+          autoplay: {
+            delay: 3000,
+            disableOnInteraction: false,
+          },
           navigation: {
             nextEl: '#nextBtn',
             prevEl: '#prevBtn',

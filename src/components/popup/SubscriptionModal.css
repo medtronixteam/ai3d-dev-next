@@ -97,7 +97,8 @@
   text-align: center;
   margin-bottom: 30px;
   position: relative;
-  background-image: url('../../assets/images/video.gif'); /* apna correct path dalna */
+  background-image: url('../../assets/images/video.gif');
+  /* apna correct path dalna */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -106,17 +107,17 @@
   position: relative;
 }
 
-[data-theme = 'dark'] .subscription-modal-header {
-  background-image: url('../../assets/images/dark.gif'); /* apna correct path dalna */
+[data-theme='dark'] .subscription-modal-header {
+  background-image: url('../../assets/images/dark.gif');
+  /* apna correct path dalna */
 }
 
 [data-theme='dark'] .subscription-modal-header h2,
 .subscription-modal-header p {
- color: white;
+  color: white;
 }
 
-[data-theme ='dark'] 
-.subscription-modal-header p{
+[data-theme='dark'] .subscription-modal-header p {
   color: white;
 }
 
@@ -244,16 +245,24 @@
 [data-theme='dark'] .teams-section {
   border: none !important;
 }
+
 [data-theme='dark'] .my-team-popup {
   border: 1px solid #454545 !important;
   backdrop-filter: blur(52.38954544067383px);
 }
 
 .subscription-modal-card:hover {
-  transform: scale(1.1);
-  transition: all 0.2s ease;
-  background-color: #000;
-  color: white;
+  transform: scale(1.05);
+  transition: all 0.3s ease;
+  background-color: #ffffff;
+  color: #333333;
+  box-shadow: 0 10px 30px rgba(230, 51, 154, 0.15),
+              0 0 10px rgba(222, 57, 150, 0.1) inset;
+}
+
+[data-theme='dark'] .subscription-modal-card:hover {
+  background-color: #000000;
+  color: #ffffff;
   backdrop-filter: blur(3.8408rem);
   box-shadow:
     0 0.48rem 0.8644rem rgba(255, 255, 255, 0.1),
@@ -450,6 +459,7 @@
     max-height: 95vh;
     overflow-x: hidden;
   }
+
   [data-theme='dark'].personal-account-item {
     color: white !important;
   }
@@ -471,6 +481,7 @@
     padding: 25px;
     margin: 0.5rem auto;
   }
+
   /* #generateBtn {
     width: 90% !important;
   } */
@@ -490,10 +501,10 @@
     backdrop-filter: blur(3.8408rem);
     /* box-shadow: none !important; */
     box-shadow: 0 0.48rem 0.8644rem rgba(255, 255, 255, 0.1),
-        0 -0.3844rem 0.3844rem rgba(222, 57, 150, 0.8) inset,
-        -0.3538rem 0 0.3538rem rgba(222, 57, 150, 0.8) inset,
-        0 0.3538rem 0.3538rem rgba(222, 57, 150, 0.8) inset,
-        0.3538rem 0 0.3538rem rgba(222, 57, 150, 0.8) inset;
+      0 -0.3844rem 0.3844rem rgba(222, 57, 150, 0.8) inset,
+      -0.3538rem 0 0.3538rem rgba(222, 57, 150, 0.8) inset,
+      0 0.3538rem 0.3538rem rgba(222, 57, 150, 0.8) inset,
+      0.3538rem 0 0.3538rem rgba(222, 57, 150, 0.8) inset;
   }
 
   .subscription-modal-card:hover .card-header .title,

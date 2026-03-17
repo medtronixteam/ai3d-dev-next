@@ -912,7 +912,7 @@ const LandingPage = () => {
             {/* ========================= navbar ======================= */}
 
             <header
-              className={`a3d-header container-fluid bg-white mb-4 a3d-fade-in ${isScrolled ? 'a3d-header-scrolled' : ''}`}
+              className={`a3d-header container-fluid mb-4 a3d-fade-in ${isScrolled ? 'a3d-header-scrolled' : ''}`}
             >
               <div className="d-flex justify-content-between align-items-center">
                 <Link to="/">
@@ -1048,7 +1048,7 @@ const LandingPage = () => {
             >
               <div
                 className="col-lg-7 p-lg-0"
-                // style={{ marginTop: isMobile ? '0rem' : '-2rem' }}
+              // style={{ marginTop: isMobile ? '0rem' : '-2rem' }}
               >
                 <motion.h1
                   className="a3d-title"
@@ -1727,50 +1727,50 @@ const LandingPage = () => {
         <section className="scan_section py-5">
           <div className="container scan_container">
             <div className="row align-items-center justify-content-between">
-            <div className="col-lg-5 col-12 mb-5 mb-md-0">
-  <motion.div
-    initial={{ opacity: 0, y: 40 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ duration: 0.6 }}
-  >
-    <div className="scan_title">
-      Our{' '}
-      <span className="perfect-heading">
-        <span className="">
-          Adv
-          <img src={elipse} alt="Ellipse" className="ellipse-img" />
-          anc
-        </span>
-        ed
-      </span>{' '}
-      Scanning Features
-    </div>
+              <div className="col-lg-5 col-12 mb-5 mb-md-0">
+                <motion.div
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6 }}
+                >
+                  <div className="scan_title">
+                    Our{' '}
+                    <span className="perfect-heading">
+                      <span className="">
+                        Adv
+                        <img src={elipse} alt="Ellipse" className="ellipse-img" />
+                        anc
+                      </span>
+                      ed
+                    </span>{' '}
+                    Scanning Features
+                  </div>
 
-    <motion.p
-      className="scan_description"
-      style={{ width: '95%', color: '#1A1A40B2' }}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6, delay: 0.2 }}
-    >
-      3DIO combines cutting-edge AI algorithms with powerful cloud infrastructure to
-      deliver studio-quality 3D scanning that's fast, accurate, and secure. Whether
-      you're creating for gaming, e-commerce, design, or enterprise use, our features
-      ensure your results are top-tier and ready for production.
-    </motion.p>
-  </motion.div>
-</div>
+                  <motion.p
+                    className="scan_description"
+                    style={{ width: '95%', color: '#1A1A40B2' }}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                  >
+                    3DIO combines cutting-edge AI algorithms with powerful cloud infrastructure to
+                    deliver studio-quality 3D scanning that's fast, accurate, and secure. Whether
+                    you're creating for gaming, e-commerce, design, or enterprise use, our features
+                    ensure your results are top-tier and ready for production.
+                  </motion.p>
+                </motion.div>
+              </div>
 
 
               <div className="col-lg-6 col-md-10 col-12 mb-5 mb-md-0">
                 <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                 className="square-wrapper">
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  className="square-wrapper">
                   <div className="square-container">
                     <img src={rectangle2} alt="" className="square-line top" />
 
@@ -2353,9 +2353,8 @@ const LandingPage = () => {
                   <div className="accordion-item border-0 mb-3" key={index}>
                     <h2 className="accordion-header justify">
                       <button
-                        className={`accordion-button fw-semibold widthh ${
-                          openIndex === index ? '' : 'collapsed'
-                        }`}
+                        className={`accordion-button fw-semibold widthh ${openIndex === index ? '' : 'collapsed'
+                          }`}
                         type="button"
                         onClick={() => toggleFAQ(index)}
                       >

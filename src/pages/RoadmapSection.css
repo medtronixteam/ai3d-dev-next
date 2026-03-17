@@ -356,7 +356,7 @@
         width: 50px;
     }
 
-    /* Text content animation */
+    /* Text content animation */    
     .text-content {
         opacity: 0;
         transform: translateY(10px);
@@ -481,7 +481,7 @@
         display: block;
         font-size: 0.7rem;
         font-weight: 800;
-        color: #FF9CBE;
+        color: rgb(223, 60, 156);
         text-transform: uppercase;
         margin-bottom: 4px;
         opacity: 0;

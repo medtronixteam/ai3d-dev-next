@@ -150,7 +150,20 @@ const LeadershipSection = () => {
   ];
 
   useEffect(() => {
-    const initSwiper = () => {
+    if (!document.getElementById('swiper-bundle-css')) {
+      const link = document.createElement('link');
+      link.id = 'swiper-bundle-css';
+      link.rel = 'stylesheet';
+      link.href = 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css';
+      document.head.appendChild(link);
+    }
+
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js';
+    script.async = true;
+    document.body.appendChild(script);
+
+    script.onload = () => {
       if (window.Swiper) {
         new window.Swiper('.ai3d_ld_v3__swiper_container', {
           loop: true,
@@ -166,13 +179,8 @@ const LeadershipSection = () => {
             1280: { slidesPerView: 4 },
           },
         });
-      } else {
-        // Fallback if script hasn't loaded yet
-        setTimeout(initSwiper, 100);
       }
     };
-
-    initSwiper();
   }, []);
 
   return (

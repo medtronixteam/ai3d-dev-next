@@ -141,14 +141,21 @@ const ContributorLandingPage = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
+    const section = landingRef.current;
+    if (!section) return;
+
     const handleScroll = () => {
-      const scrollTop = window.scrollY;
+      const scrollTop =
+        section.scrollTop || document.documentElement.scrollTop || document.body.scrollTop || 0;
+
+      // console.log('Section Scroll:', scrollTop);
       setIsScrolled(scrollTop > 30);
       setShowScrollTop(scrollTop > 300);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    section.addEventListener('scroll', handleScroll);
+
+    return () => section.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollToTop = () => {
@@ -161,55 +168,135 @@ const ContributorLandingPage = () => {
   };
 
   return (
-    <section className="landing-page-section ai_3d_landing">
+    <section className="landing-page-section ai_3d_landing" ref={landingRef}>
       <div className="main_head" style={{ backgroundColor: '#FFEDF7' }}>
-        <header className={`a3d-header container-fluid bg-white mb-4 a3d-fade-in ${isScrolled ? 'a3d-header-scrolled' : ''}`}>
-          <div className="d-flex justify-content-between align-items-center">
-            <Link to="/">
-              <img src={logo} alt="Logo" style={{ width: '70%' }} />
-            </Link>
-            <button
-              className="navbar-toggler d-lg-none border-0"
-              type="button"
-              onClick={() => setIsOpen(true)}
-            >
-              <i className="fas fa-bars" />
-            </button>
-            <nav className="d-none d-lg-flex gap-4">
-              <Link to="/" className={`a3d-nav-link ${location.pathname === '/' ? 'active' : ''}`}>Home</Link>
-              <Link to="https://calendly.com/arslan-medtronix/30min" className="a3d-nav-link">Schedule Meeting</Link>
-              <Link to="/service" className={`a3d-nav-link ${location.pathname === '/service' ? 'active' : ''}`}>Services</Link>
-              <Link to="/#3d-Sample" className="a3d-nav-link">3D Samples</Link>
-              <Link to="/#Leadership" className="a3d-nav-link">Leadership</Link>
-              <Link to="/referral" className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`}>Referral</Link>
-            </nav>
-            <div className="d-none d-lg-flex gap-3 align-items-center">
-              <Link to="/platform/"><button className="a3d-join-btn">Join Us</button></Link>
-            </div>
-          </div>
+        <main className="container py-sm-4 pt-4">
+          {/* ========================= navbar ======================= */}
 
+          <header
+            className={`a3d-header container-fluid bg-white mb-4 a3d-fade-in ${isScrolled ? 'a3d-header-scrolled' : ''}`}
+          >
+            <div className="d-flex justify-content-between align-items-center">
+              <Link to="/">
+                <img src={logo} alt="Logo" style={{ width: '70%' }} />
+              </Link>
+
+              {/* Menu Button for Mobile */}
+
+              <button
+                className="navbar-toggler d-lg-none border-0"
+                type="button"
+                onClick={() => setIsOpen(true)}
+              >
+                <i className="fas fa-bars" />
+              </button>
+
+              {/* Desktop Nav */}
+
+              <nav className="d-none d-lg-flex gap-4">
+                <Link
+                  to="/"
+                  className={`a3d-nav-link ${location.pathname === '/' ? 'active' : ''}`}
+                >
+                  Home
+                </Link>
+                <Link to="https://calendly.com/arslan-medtronix/30min" className={`a3d-nav-link`}>
+                  Schedule Meeting
+                </Link>
+
+                <Link
+                  to="/service"
+                  className={`a3d-nav-link ${location.pathname === '/service' ? 'active' : ''}`}
+                >
+                  Services
+                </Link>
+
+                <a href="/#3d-Sample" className="a3d-nav-link">
+                  3D Samples
+                </a>
+
+                <a href="/#Leadership" className="a3d-nav-link">
+                  Leadership
+                </a>
+                <a
+                    href="/referral"
+                    className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`}
+                  >
+                    Referral
+                  </a>
+              </nav>
+
+              <div className="d-none d-lg-flex gap-3 align-items-center">
+                <Link to="/platform/">
+                  <button className="a3d-join-btn">Join Us</button>
+                </Link>
+              </div>
+            </div>
+          </header>
+          {/* Spacer to prevent content overlap */}
+          <div className="a3d-header-offset"></div>
           {/* Mobile Sidebar */}
+
           <div className={`mobile-sidebar ${isOpen ? 'open' : ''}`}>
             <div className="sidebar-header d-flex justify-content-between align-items-center px-3 py-2">
-              <Link to="/" onClick={() => setIsOpen(false)}><img src={logo} alt="Logo" style={{ width: '70%' }} /></Link>
-              <button type="button" className="btn-close" aria-label="Close" onClick={() => setIsOpen(false)} />
+              <Link to="/">
+                <img src={logo} alt="Logo" style={{ width: '70%' }} />
+              </Link>
+
+              <button
+                type="button"
+                className="btn-close"
+                aria-label="Close"
+                onClick={() => setIsOpen(false)}
+              />
             </div>
+
             <nav className="d-flex flex-column gap-2 px-3 pb-3">
-              <Link to="/" className={`a3d-nav-link ${location.pathname === '/' ? 'active' : ''}`} onClick={() => setIsOpen(false)}>Home</Link>
-              <Link to="https://calendly.com/arslan-medtronix/30min" className="a3d-nav-link" onClick={() => setIsOpen(false)}>Schedule Meeting</Link>
-              <Link to="/service" className={`a3d-nav-link ${location.pathname === '/service' ? 'active' : ''}`} onClick={() => setIsOpen(false)}>Services</Link>
-              <Link to="/#3d-Sample" className="a3d-nav-link" onClick={() => setIsOpen(false)}>3D Samples</Link>
-              <Link to="/#Leadership" className="a3d-nav-link" onClick={() => setIsOpen(false)}>Leadership</Link>
-              <Link to="/referral" className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`} onClick={() => setIsOpen(false)}>Referral</Link>
-              <Link to="/signin" className="a3d-nav-link" onClick={() => setIsOpen(false)}>Sign-In</Link>
-              <Link to="/platform/" onClick={() => setIsOpen(false)}><button className="a3d-join-btn">Join Us</button></Link>
+              <Link to="/" className={`a3d-nav-link ${location.pathname === '/' ? 'active' : ''}`}>
+                Home
+              </Link>
+              <Link
+                to="https://calendly.com/arslan-medtronix/30min"
+                className={`a3d-nav-link ${location.pathname === '/schedule' ? 'active' : ''}`}
+              >
+                Schedule Meeting
+              </Link>
+
+              <Link
+                to="/service"
+                className={`a3d-nav-link ${location.pathname === '/service' ? 'active' : ''}`}
+              >
+                Services
+              </Link>
+
+              <a href="#3d-Sample" className="a3d-nav-link">
+                3D Samples
+              </a>
+
+              <a href="#Leadership" className="a3d-nav-link">
+                Leadership
+              </a>
+              <Link
+                to="/referral"
+                className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`}
+              >
+                Referral
+              </Link>
+
+              <Link to="/signin" className="a3d-nav-link">
+                Sign-In
+              </Link>
+
+              <Link to="/platform/">
+                <button className="a3d-join-btn">Join Us</button>
+              </Link>
             </nav>
           </div>
-          {isOpen && <div className="overlay" onClick={() => setIsOpen(false)}></div>}
-        </header>
 
-        <div className="a3d-header-offset"></div>
-        <main className="container py-sm-4 pt-4">
+          {/* Overlay for background click */}
+
+          {isOpen && <div className="overlay" onClick={() => setIsOpen(false)}></div>}
+        </main>
 
         <div className="container" style={{ paddingBottom: 20 }}>
           <div className="row align-items-center">
@@ -288,7 +375,6 @@ const ContributorLandingPage = () => {
             </div>
           </div>
         </div>
-        </main>
       </div>
 
       <motion.section

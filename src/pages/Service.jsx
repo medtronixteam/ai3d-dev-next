@@ -196,7 +196,7 @@ const Service = () => {
               {/* ========================= navbar ======================= */}
 
               <header
-                className={`a3d-header container-fluid bg-white mb-4 a3d-fade-in ${isScrolled ? 'a3d-header-scrolled' : ''}`}
+                className={`a3d-header container-fluid mb-4 a3d-fade-in ${isScrolled ? 'a3d-header-scrolled' : ''}`}
               >
                 <div className="d-flex justify-content-between align-items-center">
                   <Link to="/">
@@ -625,103 +625,103 @@ const Service = () => {
                     secure.
                   </p>
 
-                 <div className="alldiv">
-                                    <div className="btn-wrapper">
-                                      <Link to="/contributor/program">
-                                        <button className="btn btn-custom Sell">Sell your 3D Models</button>
-                                      </Link>
-                                    </div>
-                
-                                    {/* Mobile Language Dropdown */}
-                
-                                    <div className="dropdown btn-wrapper d-lg-none d-md-none d-sm-none d-block">
-                                      <button
-                                        className="btn english"
-                                        type="button"
-                                        data-bs-toggle="dropdown"
-                                        aria-expanded="false"
-                                      >
-                                        <img src={world} alt="World" style={{ width: 18, marginRight: 6 }} />
-                                        English
-                                        <FaChevronDown size={12} className="ms-2" />
-                                      </button>
-                
-                                      {/* <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
+                  <div className="alldiv">
+                    <div className="btn-wrapper">
+                      <Link to="/contributor/program">
+                        <button className="btn btn-custom Sell">Sell your 3D Models</button>
+                      </Link>
+                    </div>
+
+                    {/* Mobile Language Dropdown */}
+
+                    <div className="dropdown btn-wrapper d-lg-none d-md-none d-sm-none d-block">
+                      <button
+                        className="btn english"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        <img src={world} alt="World" style={{ width: 18, marginRight: 6 }} />
+                        English
+                        <FaChevronDown size={12} className="ms-2" />
+                      </button>
+
+                      {/* <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
                                         <li>
                                           <a className="dropdown-item black" href="#">
                                             English
                                           </a>
                                         </li>
                                       </ul> */}
-                                    </div>
-                
-                                    {/* Mobile Currency Dropdown */}
-                
-                                    <div className="dropdown btn-wrapper d-lg-none d-md-none d-sm-none d-block">
-                                      <button
-                                        className="btn usd"
-                                        type="button"
-                                        data-bs-toggle="dropdown"
-                                        aria-expanded="false"
-                                      >
-                                        $USD
-                                        <FaChevronDown size={12} className="ms-2" />
-                                      </button>
-                
-                                      {/* <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
+                    </div>
+
+                    {/* Mobile Currency Dropdown */}
+
+                    <div className="dropdown btn-wrapper d-lg-none d-md-none d-sm-none d-block">
+                      <button
+                        className="btn usd"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        $USD
+                        <FaChevronDown size={12} className="ms-2" />
+                      </button>
+
+                      {/* <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
                                         <li>
                                           <a className="dropdown-item black" href="#">
                                             $USD
                                           </a>
                                         </li>
                                       </ul> */}
-                                    </div>
-                
-                                    {/* Desktop Language + Currency */}
-                
-                                    <div className="d-flex gap-2 none">
-                                      <div className="dropdown btn-wrapper none">
-                                        <button
-                                          className="btn english"
-                                          type="button"
-                                          data-bs-toggle="dropdown"
-                                          aria-expanded="false"
-                                        >
-                                          <img src={world} alt="World" style={{ width: 18, marginRight: 6 }} />
-                                          English
-                                          <FaChevronDown size={12} className="ms-2" />
-                                        </button>
-                
-                                        {/* <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
+                    </div>
+
+                    {/* Desktop Language + Currency */}
+
+                    <div className="d-flex gap-2 none">
+                      <div className="dropdown btn-wrapper none">
+                        <button
+                          className="btn english"
+                          type="button"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          <img src={world} alt="World" style={{ width: 18, marginRight: 6 }} />
+                          English
+                          <FaChevronDown size={12} className="ms-2" />
+                        </button>
+
+                        {/* <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
                                           <li>
                                             <a className="dropdown-item black" href="#">
                                               English
                                             </a>
                                           </li>
                                         </ul> */}
-                                      </div>
-                
-                                      <div className="dropdown btn-wrapper none">
-                                        <button
-                                          className="btn usd"
-                                          type="button"
-                                          data-bs-toggle="dropdown"
-                                          aria-expanded="false"
-                                        >
-                                          $USD
-                                          <FaChevronDown size={12} className="ms-2" />
-                                        </button>
-                
-                                        {/* <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
+                      </div>
+
+                      <div className="dropdown btn-wrapper none">
+                        <button
+                          className="btn usd"
+                          type="button"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          $USD
+                          <FaChevronDown size={12} className="ms-2" />
+                        </button>
+
+                        {/* <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
                                           <li>
                                             <a className="black" href="#">
                                               $USD
                                             </a>
                                           </li>
                                         </ul> */}
-                                      </div>
-                                    </div>
-                                  </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Quick Links */}

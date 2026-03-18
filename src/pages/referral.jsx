@@ -187,7 +187,7 @@ const Referral = () => {
             {/* ========================= navbar ======================= */}
 
             <header
-              className={`a3d-header container-fluid bg-white mb-4 a3d-fade-in ${isScrolled ? 'a3d-header-scrolled' : ''}`}
+              className={`a3d-header container-fluid mb-4 a3d-fade-in ${isScrolled ? 'a3d-header-scrolled' : ''}`}
             >
               <div className="d-flex justify-content-between align-items-center">
                 <Link to="/">
@@ -444,9 +444,8 @@ const Referral = () => {
                   <div className="accordion-item border-0 mb-3" key={index}>
                     <h2 className="accordion-header justify">
                       <button
-                        className={`accordion-button fw-semibold widthh ${
-                          openIndex === index ? '' : 'collapsed'
-                        }`}
+                        className={`accordion-button fw-semibold widthh ${openIndex === index ? '' : 'collapsed'
+                          }`}
                         type="button"
                         onClick={() => toggleFAQ(index)}
                       >

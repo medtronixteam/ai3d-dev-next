@@ -174,7 +174,7 @@ const ContributorLandingPage = () => {
           {/* ========================= navbar ======================= */}
 
           <header
-            className={`a3d-header container-fluid bg-white mb-4 a3d-fade-in ${isScrolled ? 'a3d-header-scrolled' : ''}`}
+            className={`a3d-header container-fluid mb-4 a3d-fade-in ${isScrolled ? 'a3d-header-scrolled' : ''}`}
           >
             <div className="d-flex justify-content-between align-items-center">
               <Link to="/">
@@ -219,11 +219,11 @@ const ContributorLandingPage = () => {
                   Leadership
                 </a>
                 <a
-                    href="/referral"
-                    className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`}
-                  >
-                    Referral
-                  </a>
+                  href="/referral"
+                  className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`}
+                >
+                  Referral
+                </a>
               </nav>
 
               <div className="d-none d-lg-flex gap-3 align-items-center">
@@ -671,9 +671,8 @@ const ContributorLandingPage = () => {
                 <div className="accordion-item border-0 mb-3" key={index}>
                   <h2 className="accordion-header justify">
                     <button
-                      className={`accordion-button fw-semibold widthh ${
-                        openIndex === index ? '' : 'collapsed'
-                      }`}
+                      className={`accordion-button fw-semibold widthh ${openIndex === index ? '' : 'collapsed'
+                        }`}
                       type="button"
                       onClick={() => toggleFAQ(index)}
                     >

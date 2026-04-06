@@ -82,7 +82,7 @@ body {
 
 
 .ai_3d_landing .a3d-header.a3d-header-scrolled {
-  max-width: 55rem;
+  max-width: 62rem;
   padding: 0.6rem .80rem !important;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   background-color: white;
@@ -198,7 +198,7 @@ body {
 .ai_3d_landing .a3d-header-scrolled .a3d-join-btn {
   /* padding: 0.35rem 1rem; */
   font-size: 0.9rem;
-  margin-left: 30px;
+  /* margin-left: 30px; */
 }
 
 .ai_3d_landing .a3d-header-offset {

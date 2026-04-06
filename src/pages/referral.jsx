@@ -218,8 +218,8 @@ const Referral = () => {
                   </Link>
 
                   <Link
-                    to="/service"
-                    className={`a3d-nav-link ${location.pathname === '/service' ? 'active' : ''}`}
+                    to="/services"
+                    className={`a3d-nav-link ${location.pathname === '/services' ? 'active' : ''}`}
                   >
                     Services
                   </Link>
@@ -277,8 +277,8 @@ const Referral = () => {
                 </Link>
 
                 <Link
-                  to="/service"
-                  className={`a3d-nav-link ${location.pathname === '/service' ? 'active' : ''}`}
+                  to="/services"
+                  className={`a3d-nav-link ${location.pathname === '/services' ? 'active' : ''}`}
                 >
                   Services
                 </Link>

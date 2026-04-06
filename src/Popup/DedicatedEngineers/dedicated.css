@@ -1,0 +1,254 @@
+.ded-page {
+  position: fixed;
+  inset: 0;
+  background: #fff;
+  z-index: 9000;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  font-family: 'DM Sans', sans-serif;
+  padding: 1.5rem 0rem 4rem;
+}
+
+.ded-page::-webkit-scrollbar { display: none; }
+
+.dem-topbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding: 0 2rem !important;
+}
+
+.dem-heading-wrap {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.dem-title {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 800;
+  font-size: 1.8rem;
+  color: #000;
+  margin-bottom: 0.35rem;
+  line-height: 1.25;
+}
+
+.dem-arch-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.dem-arch {
+  position: absolute;
+  top: -26px;
+  left: 40%;
+  transform: translateX(-50%);
+  width: 62px;
+  pointer-events: none;
+}
+
+.dem-subtitle {
+  font-size: 0.85rem;
+  color: #1A1A40B2;
+  font-weight: 500;
+  margin: 0;
+}
+
+
+/* ══════════════════════════════════════════
+   Our Process Section
+══════════════════════════════════════════ */
+
+.dem-process-section {
+  position: relative;
+  padding: 1.5rem 1.75rem 2.5rem;
+  margin-top: 1rem;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 300px;
+}
+
+.dem-process-bg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  opacity: 0.9;
+  z-index: 0;
+}
+
+.dem-process-title {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #020817;
+  margin: 2rem 0 0;
+  position: relative;
+  z-index: 1;
+  padding: 0 2rem !important;
+}
+
+.dem-process-track {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.dem-proc-arrow-wrap {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+}
+
+.dem-proc-arrow-wrap.arrow-top {
+  align-self: flex-start;
+  padding-top: 36px;
+}
+
+.dem-proc-arrow-wrap.arrow-bottom {
+  align-self: flex-end;
+}
+
+.dem-proc-arrow {
+  width: 48px;
+  height: auto;
+  object-fit: contain;
+}
+
+.dem-proc-card {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 0.5rem;
+  background: transparent;
+}
+
+.dem-proc-icon-row {
+  position: relative;
+  display: inline-flex;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.dem-proc-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.dem-proc-num {
+  position: absolute;
+  top: 0px;
+  right: -3rem;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 800;
+  font-size: 2rem;
+  color: #DE3996;
+  line-height: 1;
+}
+
+.dem-proc-label {
+  font-family: 'Urbanist', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #000000;
+  margin: 0 0 0.35rem;
+  line-height: 1.3;
+}
+
+.dem-proc-desc {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.7rem;
+  color: #545454;
+  line-height: 1.55;
+  margin: 0;
+  font-weight: 400;
+}
+
+.browse-service-btn {
+  background: #DE3996;
+  padding: 0.6rem 1rem;
+  width: fit-content;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  border: none;
+  outline: none;
+}
+
+.browse-free-call {
+  background: #FF9C3E;
+  padding: 0.6rem 1rem;
+  width: fit-content;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  border: none;
+  outline: none;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .dem-proc-arrow { width: 36px; }
+  .dem-proc-arrow-wrap { width: 40px; }
+}
+
+@media (max-width: 700px) {
+  .dem-process-track {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .dem-proc-arrow-wrap { display: none; }
+
+  .dem-title {
+    font-size: 1.5rem !important;
+    padding: 1rem 1rem 0 !important;
+  }
+
+  .dem-subtitle {
+    padding: 0 1rem;
+  }
+
+  .dem-topbar {
+    padding: 0 1rem !important;
+  }
+
+  .dem-process-title {
+   padding: 0 1rem !important;
+  }
+
+  .dem-proc-card {
+    align-items: center;
+    text-align: left;
+    flex-direction: column;
+    gap: 0.85rem;
+    padding: 0;
+  }
+
+  .dem-proc-num {
+    right: -1.5rem;
+  }
+
+  .dem-proc-icon-row { margin-bottom: 0; flex-shrink: 0; }
+
+  .dem-process-bg { opacity: 0.35; }
+}

@@ -182,6 +182,7 @@ const Service = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
       <div className="landing-page-section service-section-page ai_3d_landing" ref={landingRef}>
         <div className="main_head" style={{ backgroundColor: '#FFEDF7' }}>
           {/* <main className="container"> */}
@@ -255,6 +256,7 @@ const Service = () => {
                   </div>
                 </div>
               </header>
+              
               {/* Spacer to prevent content overlap */}
               <div className="a3d-header-offset"></div>
               {/* Mobile Sidebar */}

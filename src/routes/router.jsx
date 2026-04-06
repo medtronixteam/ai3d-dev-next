@@ -8,6 +8,7 @@ import CardPayment from '../pages/subscription/CardPayment';
 import ApiSdkComingSoon from '../pages/api-sdk';
 import Support from '../pages/support';
 import Service from '../pages/Service';
+import ServicePage from '../pages/Service/ServicePage';
 import Referral from '../pages/referral';
 import ReferralPage from '../pages/settings/ReferralPage';
 import { Navigate } from 'react-router-dom';
@@ -83,6 +84,10 @@ const routes = [
       {
         path: '/service',
         element: <Service />,
+      },
+      {
+        path: '/services',
+        element: <ServicePage />,
       },
       {
         path: '/render/model/:id',

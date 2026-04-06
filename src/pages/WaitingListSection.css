@@ -1,0 +1,312 @@
+/* src/pages/WaitingListSection.css */
+
+.WL_wrapper {
+    width: 100%;
+    padding: 80px 0;
+    background: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.WL_inner_container {
+    max-width: 1200px;
+    width: 90%;
+    position: relative;
+}
+
+.WL_card_main {
+    width: 100%;
+    border-radius: 40px;
+
+    padding: 60px 40px;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(222, 57, 150, 0.05);
+}
+
+/* Wavy Background Elements */
+.WL_wave_bg {
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: auto;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.WL_wave_overlay {
+    position: absolute;
+    top: 10%;
+    left: -10%;
+    width: 120%;
+    height: 100%;
+    background: radial-gradient(circle at 10% 10%, #fde0ef 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, #fde0ef 0%, transparent 40%);
+    z-index: 0;
+    filter: blur(50px);
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.WL_content_body {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.WL_accent_span {
+    position: relative;
+    display: inline-block;
+    padding: 0 5px;
+}
+
+.WL_title_arc {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 45px;
+    height: auto;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+
+
+
+
+
+
+.WL_main_title {
+    font-size: 30px;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin-bottom: 10px;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    text-align: center;
+    width: 100%;
+}
+
+
+
+
+
+
+
+.WL_main_desc {
+    font-size: 14px;
+    color: #666;
+    max-width: 550px;
+    line-height: 1.5;
+    margin-bottom: 30px;
+    font-weight: 500;
+}
+
+
+
+
+
+.WL_text_pink {
+    color: #DE3996;
+    font-weight: 600;
+}
+
+/* Social Proof (Avatars) */
+.WL_social_proof {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.WL_avatar_group {
+    display: flex;
+    align-items: center;
+}
+
+.WL_user_img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 3px solid #ffffff;
+    object-fit: cover;
+    margin-left: -15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background: #eee;
+}
+
+.WL_user_img:first-child {
+    margin-left: 0;
+}
+
+.WL_avatar_more {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3px solid #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #DE3996;
+    margin-left: -15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.WL_counter_text {
+    font-size: 16px;
+    color: #666;
+    font-weight: 500;
+}
+
+.WL_count_num {
+    color: #DE3996;
+    font-weight: 800;
+    font-size: 18px;
+}
+
+/* Timer Section */
+.WL_countdown_section {
+    margin-bottom: 50px;
+}
+
+.WL_timer_wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.WL_time_unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.WL_time_box {
+    width: 60px;
+    height: 60px;
+    background: #ffffff;
+    border: 1px solid #DE3996;
+    /* Pink border as requested */
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 900;
+    font-style: italic;
+    /* Italic styling for numbers */
+    color: #1a1a1a;
+    box-shadow: 0 4px 15px rgba(222, 57, 150, 0.05);
+}
+
+
+
+.WL_time_label {
+    font-size: 10px;
+    font-weight: 800;
+    color: #DE3996;
+    letter-spacing: 1.5px;
+}
+
+.WL_time_dots {
+    font-size: 28px;
+    font-weight: 900;
+    color: #DE3996;
+    /* Fully opaque pink dots */
+    margin-top: -25px;
+    opacity: 1;
+}
+
+
+/* Submit Button */
+.WL_submit_btn {
+    background: #DE3996;
+    color: #ffffff;
+    border: none;
+    padding: 12px 35px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(222, 57, 150, 0.25);
+}
+
+
+.WL_btn_arrow_img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+
+.WL_submit_btn:hover {
+    transform: translateY(-2px);
+}
+
+.WL_submit_btn:hover .WL_btn_arrow_img {
+    transform: translateX(5px);
+}
+
+
+/* Responsive Styles */
+@media (max-width: 991px) {
+    .WL_main_title {
+        font-size: 38px;
+    }
+}
+
+@media (max-width: 768px) {
+    .WL_card_main {
+        padding: 50px 20px;
+        border-radius: 15px;
+    }
+
+    .WL_main_title {
+        font-size: 32px;
+    }
+
+    .WL_time_box {
+        width: 55px;
+        height: 65px;
+        font-size: 26px;
+    }
+
+    .WL_time_dots {
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 480px) {
+    .WL_main_title {
+        font-size: 28px;
+    }
+
+    .WL_timer_wrap {
+        gap: 8px;
+    }
+
+    .WL_time_box {
+        width: 50px;
+        height: 60px;
+        font-size: 22px;
+    }
+}

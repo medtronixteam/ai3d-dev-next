@@ -122,6 +122,8 @@ import { useAuth } from '../context/AuthContext';
 import RoadmapSection from './LandingPageRoadmap';
 import TestimonialSection from './TestimonialSection';
 import LeadershipSection from './LeadershipSection';
+import WaitingListSection from './WaitingListSection';
+
 
 const LandingPage = () => {
   const { pathname, hash, key } = useLocation();
@@ -2226,6 +2228,8 @@ const LandingPage = () => {
                 </div>
               </div> */}
               <LeadershipSection />
+              <WaitingListSection />
+
             </div>
           </section>
 

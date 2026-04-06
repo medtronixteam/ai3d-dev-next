@@ -151,7 +151,7 @@ const HeroSection = ({ scrollContainerRef }) => {
                   <Link to="https://calendly.com/arslan-medtronix/30min" className="a3d-nav-link">
                     Schedule Meeting
                   </Link>
-                  <Link to="/service" className={`a3d-nav-link ${location.pathname === '/service' ? 'active' : ''}`}>
+                  <Link to="/services" className={`a3d-nav-link ${location.pathname === '/services' ? 'active' : ''}`}>
                     Services
                   </Link>
                   <a href="/#3d-Sample"  className="a3d-nav-link">3D Samples</a>
@@ -193,7 +193,7 @@ const HeroSection = ({ scrollContainerRef }) => {
             <nav className="d-flex flex-column gap-2 px-3 pb-3">
               <Link to="/"        className={`a3d-nav-link ${location.pathname === '/'        ? 'active' : ''}`}>Home</Link>
               <Link to="https://calendly.com/arslan-medtronix/30min" className="a3d-nav-link">Schedule Meeting</Link>
-              <Link to="/service" className={`a3d-nav-link ${location.pathname === '/service' ? 'active' : ''}`}>Services</Link>
+              <Link to="/services" className={`a3d-nav-link ${location.pathname === '/services' ? 'active' : ''}`}>Services</Link>
               <a href="#3d-Sample"  className="a3d-nav-link">3D Samples</a>
               <a href="#Leadership" className="a3d-nav-link">Leadership</a>
               <a href="/referral"   className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`}>Referral</a>

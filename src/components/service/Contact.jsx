@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Fb from '../../assets/icon/Fb.svg'
 import Tk from '../../assets/icon/Tk.svg'
+import elipse from '../../pages/images/heading_ellipse.png';
 
 const Contact = () => {
   const [agreed, setAgreed] = useState(false);
@@ -26,11 +27,7 @@ const Contact = () => {
           <h2 className="ctc-title">
             Let's Build{' '}
             <span className="ctc-arch-wrap">
-              <svg className="ctc-arch" viewBox="0 0 80 28" fill="none">
-                <path d="M4 24 C20 4, 60 4, 76 24"
-                  stroke="#de3996" strokeWidth="3.5"
-                  fill="none" strokeLinecap="round"/>
-              </svg>
+              <img src={elipse} alt="elipse" className="ctc-arch"  />
               Something
             </span>
             {' '}Amazing

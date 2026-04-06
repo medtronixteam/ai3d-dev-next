@@ -945,8 +945,8 @@ const LandingPage = () => {
                   </Link>
 
                   <Link
-                    to="/service"
-                    className={`a3d-nav-link ${location.pathname === '/service' ? 'active' : ''}`}
+                    to="/services"
+                    className={`a3d-nav-link ${location.pathname === '/services' ? 'active' : ''}`}
                   >
                     Services
                   </Link>
@@ -1006,8 +1006,8 @@ const LandingPage = () => {
                 </Link>
 
                 <Link
-                  to="/service"
-                  className={`a3d-nav-link ${location.pathname === '/service' ? 'active' : ''}`}
+                  to="/services"
+                  className={`a3d-nav-link ${location.pathname === '/services' ? 'active' : ''}`}
                 >
                   Services
                 </Link>
@@ -1287,7 +1287,7 @@ const LandingPage = () => {
                       </p>
                       <div className="footer-wrapper">
                         <div className="service-footer">
-                          <Link to="/service" className="circle-btn" aria-label="arrow">
+                          <Link to="/services" className="circle-btn" aria-label="arrow">
                             <svg
                               viewBox="0 0 24 24"
                               width={18}

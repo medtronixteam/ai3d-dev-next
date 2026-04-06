@@ -934,10 +934,10 @@
 
 .ctc-arch {
   position: absolute;
-  top: -18px;
-  left: 50%;
+  top: -13px;
+  left: 28%;
   transform: translateX(-50%);
-  width: 60px;
+  width: 45px;
   height: auto;
   pointer-events: none;
 }
@@ -1199,6 +1199,40 @@
   transform: translateY(-1px);
 }
 
+@media (max-width : 800px) {
+  .wms-cards {
+    padding: 0 !important;
+  }
+
+  .hwt-connector {
+    width: 80px !important;
+  }
+
+  .pti-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .ctc-title {
+    font-size: 1.5rem !important;
+  }
+
+  .ctc-card {
+    padding: 1.5rem 1rem !important;
+  }
+
+  .ctc-section {
+    padding: 0 1rem !important;
+  }
+
+  .ctc-right {
+    padding: 1rem !important;
+  }
+
+  .ctc-form-row {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 @media (max-width : 600px) {
   .wms-title {
     font-size: 1.5rem !important;
@@ -1249,7 +1283,7 @@
   .ctc-card {
     display: flex !important;
     flex-direction: column !important;
-    padding: 1rem !important;
+    padding: 1.5rem 1rem !important;
   }
 
   .ctc-section {
@@ -1290,7 +1324,7 @@
   }
 
   .hwt-connector {
-    width: 40px;
+    width: 40px !important;
   }
 
   .hwt-icon {

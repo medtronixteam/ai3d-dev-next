@@ -126,7 +126,8 @@
 
 .WM_title_arc {
     position: absolute;
-    top: -30px; /* Moved up from -24px */
+    top: -20px;
+    /* Moved up from -24px */
     left: 50%;
     transform: translateX(-50%);
     width: 40px;
@@ -136,7 +137,8 @@
 
 
 .WM_main_title {
-    font-size: 40px; /* Increased from 38px */
+    font-size: 40px;
+    /* Increased from 38px */
     font-weight: 850;
     color: #1a1a1a;
     line-height: 1.1;
@@ -413,4 +415,33 @@
     .WM_form_title {
         font-size: 18px;
     }
+}
+
+/* Success State Styles */
+.WM_success_state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+    animation: modalAppear 0.4s ease;
+}
+
+.WM_check_icon_large {
+    font-size: 60px;
+    color: #DE3996;
+    margin-bottom: 20px;
+}
+
+.WM_success_state h3 {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    color: #1a1a1a;
+}
+
+.WM_success_state p {
+    color: #666;
+    font-size: 15px;
 }

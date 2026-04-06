@@ -1,13 +1,70 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './WaitlistModal.css';
 import { motion, AnimatePresence } from 'framer-motion';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { baseURL } from '../../config';
+import { useAuth } from '../../context/AuthContext';
 import logo from '../../pages/images/logo.png';
 import headingEllipse from '../../pages/images/heading_ellipse.png';
 import astronautImg from '../../pages/images/astronaut.png';
 
 
 const WaitlistModal = ({ isOpen, onClose }) => {
+    const { token } = useAuth();
+    const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState(false);
+    
+    // Form State
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        hear_about: '',
+        use_for: ''
+    });
+
     if (!isOpen) return null;
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        
+        if (!formData.name || !formData.email) {
+            toast.error("Please fill in your name and email.");
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const response = await axios.post(`${baseURL}/waiting/list`, formData, {
+                headers: {
+                    ...(token && { Authorization: `Bearer ${token}` })
+                }
+            });
+
+            if (response.status === 200 || response.status === 201) {
+                setSuccess(true);
+                toast.success("Successfully joined the waiting list!");
+                // Clear form
+                setFormData({ name: '', email: '', hear_about: '', use_for: '' });
+                // Automatically close after 3 seconds
+                setTimeout(() => {
+                    onClose();
+                    setSuccess(false);
+                }, 3000);
+            }
+        } catch (error) {
+            console.error("Waitlist error:", error);
+            const errorMsg = error.response?.data?.message || "Failed to join waiting list. Please try again.";
+            toast.error(errorMsg);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <AnimatePresence>
@@ -76,37 +133,76 @@ const WaitlistModal = ({ isOpen, onClose }) => {
                             </div>
 
 
-                            <form onSubmit={(e) => e.preventDefault()}>
-                                <div className="WM_input_row">
-                                    <div className="WM_input_group">
-                                        <label className="WM_input_label">Name</label>
-                                        <input type="text" placeholder="John" className="WM_input" />
+                            {success ? (
+                                <div className="WM_success_state">
+                                    <div className="WM_check_icon_large"><i className="fa-solid fa-circle-check"></i></div>
+                                    <h3>You're on the list!</h3>
+                                    <p>We'll notify you as soon as you have access.</p>
+                                    <button className="WM_submit_btn" onClick={onClose} style={{ marginTop: 20 }}>Close</button>
+                                </div>
+                            ) : (
+                                <form onSubmit={handleSubmit}>
+                                    <div className="WM_input_row">
+                                        <div className="WM_input_group">
+                                            <label className="WM_input_label">Name</label>
+                                            <input 
+                                                type="text" 
+                                                name="name"
+                                                placeholder="John" 
+                                                className="WM_input" 
+                                                value={formData.name}
+                                                onChange={handleChange}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="WM_input_group">
+                                            <label className="WM_input_label">Email Address</label>
+                                            <input 
+                                                type="email" 
+                                                name="email"
+                                                placeholder="john@gmail.com" 
+                                                className="WM_input" 
+                                                value={formData.email}
+                                                onChange={handleChange}
+                                                required
+                                            />
+                                        </div>
                                     </div>
-                                    <div className="WM_input_group">
-                                        <label className="WM_input_label">Email Address</label>
-                                        <input type="email" placeholder="john@gmail.com" className="WM_input" />
+
+                                    <div className="WM_input_group" style={{ marginBottom: 20 }}>
+                                        <label className="WM_input_label">Where did you hear about us?</label>
+                                        <input 
+                                            type="text" 
+                                            name="hear_about"
+                                            placeholder="Enter here..." 
+                                            className="WM_input" 
+                                            value={formData.hear_about}
+                                            onChange={handleChange}
+                                        />
                                     </div>
-                                </div>
 
-                                <div className="WM_input_group" style={{ marginBottom: 20 }}>
-                                    <label className="WM_input_label">Where did you hear about us?</label>
-                                    <input type="text" placeholder="Enter here..." className="WM_input" />
-                                </div>
+                                    <div className="WM_input_group" style={{ marginBottom: 20 }}>
+                                        <label className="WM_input_label">What will you use 3dio for?</label>
+                                        <textarea 
+                                            name="use_for"
+                                            placeholder="Add placement text..." 
+                                            className="WM_input WM_textarea"
+                                            value={formData.use_for}
+                                            onChange={handleChange}
+                                        ></textarea>
+                                    </div>
 
-                                <div className="WM_input_group" style={{ marginBottom: 20 }}>
-                                    <label className="WM_input_label">What will you use 3dio for?</label>
-                                    <textarea placeholder="Add placement text..." className="WM_input WM_textarea"></textarea>
-                                </div>
+                                    <label className="WM_checkbox_row">
+                                        <input type="checkbox" required />
+                                        <span>I agree to the Terms and Condition</span>
+                                    </label>
 
-                                <label className="WM_checkbox_row">
-                                    <input type="checkbox" required />
-                                    <span>I agree to the Terms and Condition</span>
-                                </label>
+                                    <button type="submit" className="WM_submit_btn" disabled={loading}>
+                                        {loading ? "Joining..." : "Join Waitlist"} <i className="fa-solid fa-arrow-right"></i>
+                                    </button>
+                                </form>
+                            )}
 
-                                <button type="submit" className="WM_submit_btn">
-                                    Join Waitlist <i className="fa-solid fa-arrow-right"></i>
-                                </button>
-                            </form>
                         </div>
                     </div>
                     </motion.div>

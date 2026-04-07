@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../../pages/images/logo.png';
+import elipse from '../../pages/images/heading_ellipse.png';
 
 const TICKER_ITEMS = [
   'AI Development',
@@ -214,7 +215,10 @@ const HeroSection = ({ scrollContainerRef }) => {
         {/* ── Hero ── */}
         <div className="service-section-page-content">
           <h1 className="service-section-page-title">
-            Expert 3D Scanning &amp;{' '}<br />AI Solutions
+            Expert <span className="ctc-arch-wrap">
+            <img src={elipse} alt="elipse" className="hero-arch"  />
+              3D
+            </span> Scanning &amp;{' '}<br />AI Solutions
           </h1>
           <p className="service-section-page-subtitle">
             Whether you need a one-off project or a full-time dedicated engineering

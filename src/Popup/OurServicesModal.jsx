@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './ourServices.css';
 import { SERVICES, ArrowBack, Project, ProcessBg, ourProcess, ArrowDown, ArrowUp } from './servicesData';
 import elipse from '../pages/images/heading_ellipse.png';
+import Mv from '../assets/service/Mv.svg'
 
 /* ── avatar */
 const Avatar = ({ letter, color }) => (
@@ -32,6 +33,7 @@ const OurServicesModal = ({ isOpen, onClose, defaultModel = 'Project to Project'
            <span className="osm-back-icon"><img src={ArrowBack} alt="Back" className='mt-3' /></span>
           Change Model
         </span>
+         <div style={{ width: '1px', height: '22px', background: '#0000001A' }} />
         <div className="osm-breadcrumb">
           <span className="osm-project-icon"><img src={Project} alt="Back" width={14} height={14} /></span>
           {defaultModel}
@@ -70,9 +72,7 @@ const OurServicesModal = ({ isOpen, onClose, defaultModel = 'Project to Project'
               <img src={s.icon} alt={s.label} className="osm-sidebar-icon" />
               <span>{s.label}</span>
               {activeId === s.id && (
-                <svg className="osm-sidebar-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M6 4l4 4-4 4" stroke="#de3996" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+                 <img src={Mv}  className="osm-sidebar-arrow" width={15} height={15} />
               )}
             </button>
           ))}

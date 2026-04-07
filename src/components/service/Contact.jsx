@@ -114,8 +114,8 @@ const Contact = () => {
                   <circle cx="17.5" cy="6.5" r="1" fill="#de3996" stroke="none"/>
                 </svg>
               </a>
-              <a href="https://www.linkedin.com/company/ai3d-scanning-solutions-inc/?" target="_blank" className="bd-social-btn" aria-label="Instagram">
-                <img src={Ln} alt="tk" width="15" height="15" />
+              <a href="https://www.linkedin.com/company/ai3d-scanning-solutions-inc/?" target="_blank" className="ctc-social-btn" aria-label="Instagram">
+                <img src={Ln} alt="tk" width="19" height="19" />
               </a>
 
 

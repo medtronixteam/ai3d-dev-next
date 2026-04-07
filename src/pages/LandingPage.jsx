@@ -713,22 +713,22 @@ const LandingPage = () => {
             'Build tech that’s not just advanced but accessible, impactful, and scalable for the world',
         },
 
-        'Dr. Joel Hillier': {
-          Image: CeoImg,
-          title: 'Growth Co-Founder – Business & AI Strategy Advisor',
+        // 'Dr. Joel Hillier': {
+        //   Image: CeoImg,
+        //   title: 'Growth Co-Founder – Business & AI Strategy Advisor',
 
-          desc: [
-            'Dr. Hillier provides strategic guidance on business growth, market positioning, and AI development direction. With expertise spanning artificial intelligence, data-driven innovation, and commercial strategy, he ensures that AI3D’s technological roadmap aligns with evolving market demands.',
-            'His role bridges technical capabilities with high-impact business outcomes, supporting scalable adoption across diverse industries',
-          ],
-          expertise: [
-            'AI strategy & market alignment',
-            'Global business growth & scaling strategies',
-            'Bridging research with commercial applications',
-          ],
-          linkedin: 'https://www.linkedin.com/in/joelhillier/',
-          philosophy: '.........',
-        },
+        //   desc: [
+        //     'Dr. Hillier provides strategic guidance on business growth, market positioning, and AI development direction. With expertise spanning artificial intelligence, data-driven innovation, and commercial strategy, he ensures that AI3D’s technological roadmap aligns with evolving market demands.',
+        //     'His role bridges technical capabilities with high-impact business outcomes, supporting scalable adoption across diverse industries',
+        //   ],
+        //   expertise: [
+        //     'AI strategy & market alignment',
+        //     'Global business growth & scaling strategies',
+        //     'Bridging research with commercial applications',
+        //   ],
+        //   linkedin: 'https://www.linkedin.com/in/joelhillier/',
+        //   philosophy: '.........',
+        // },
         'Shehroz Shabbir': {
           Image: SehrozSir,
           title: 'Web Development Manager',

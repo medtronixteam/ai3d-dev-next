@@ -33,19 +33,19 @@ const LeadershipSection = () => {
       philosophy:
         'Build tech that’s not just advanced but accessible, impactful, and scalable for the world',
     },
-    {
-      name: 'Dr. Joel',
-      lastName: 'Hillier',
-      img: $joel,
-      role: 'Business Strategy Advisor & Board Member',
-      desc: [
-        'Dr. Hillier provides strategic guidance on business growth, market positioning, and AI development direction. With expertise spanning artificial intelligence, data-driven innovation, and commercial strategy.',
-        'His role bridges technical capabilities with high-impact business outcomes, supporting scalable adoption across diverse industries',
-      ],
-      expertise: ['AI strategy & market alignment', 'Global business growth', 'Scaling strategies'],
-      linkedin: 'https://www.linkedin.com/in/joelhillier/',
-      philosophy: 'Innovation is about bridging the gap between today and tomorrow.',
-    },
+    // {
+    //   name: 'Dr. Joel',
+    //   lastName: 'Hillier',
+    //   img: $joel,
+    //   role: 'Business Strategy Advisor & Board Member',
+    //   desc: [
+    //     'Dr. Hillier provides strategic guidance on business growth, market positioning, and AI development direction. With expertise spanning artificial intelligence, data-driven innovation, and commercial strategy.',
+    //     'His role bridges technical capabilities with high-impact business outcomes, supporting scalable adoption across diverse industries',
+    //   ],
+    //   expertise: ['AI strategy & market alignment', 'Global business growth', 'Scaling strategies'],
+    //   linkedin: 'https://www.linkedin.com/in/joelhillier/',
+    //   philosophy: 'Innovation is about bridging the gap between today and tomorrow.',
+    // },
     {
       name: 'Hira',
       lastName: 'Aziz',

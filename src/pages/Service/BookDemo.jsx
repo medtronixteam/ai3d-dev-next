@@ -18,6 +18,7 @@ import line from '../../pages/images/line.png';
 import dot from '../../pages/images/do.png';
 import arrow from '../../pages/images/arri.png';
 import { FaChevronDown, FaArrowUp } from 'react-icons/fa';
+import WaitlistModal from '../../components/popup/WaitlistModal';
 
 const STATS = [
   { label: 'No Commitment' },
@@ -124,6 +125,7 @@ const BookDemo = ({ scrollContainerRef }) => {
     message: '',
   });
   const [loading, setLoading] = useState(false);
+  const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -331,9 +333,7 @@ const BookDemo = ({ scrollContainerRef }) => {
                   <Link to="/book-demo">
                     <button className="a3d-book-demo-btn">Book a Demo</button>
                   </Link>
-                  <Link to="/platform/">
-                    <button className="a3d-join-btn">Join Waitlist</button>
-                  </Link>
+                  <button className="a3d-join-btn" onClick={() => setIsWaitlistOpen(true)}>Join Waitlist</button>
                 </div>
               </div>
             </header>
@@ -382,9 +382,7 @@ const BookDemo = ({ scrollContainerRef }) => {
                 <Link to="/book-demo">
                   <button className="a3d-book-demo-btn">Book a Demo</button>
                 </Link>
-                <Link to="/platform/">
-                  <button className="a3d-join-btn">Join Waitlist</button>
-                </Link>
+                <button className="a3d-join-btn" onClick={() => { setIsWaitlistOpen(true); setIsOpen(false); }}>Join Waitlist</button>
               </div>
             </nav>
           </div>
@@ -958,6 +956,7 @@ const BookDemo = ({ scrollContainerRef }) => {
           </div>
         </footer>
       </div>
+      <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
     </div>
   );
 };

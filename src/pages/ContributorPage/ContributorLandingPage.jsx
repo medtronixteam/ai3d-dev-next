@@ -24,11 +24,15 @@ import GrowBrand from '../images/GrowBrand.svg';
 import ProtectedWork from '../images/ProtectedWork.svg';
 import EarnMore from '../images/EarnMore.svg';
 import EasyUpload from '../images/EasyUpload.svg';
+import WaitlistModal from '../../components/popup/WaitlistModal';
+import { useLocation } from 'react-router-dom';
 
 const ContributorLandingPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [openIndex, setOpenIndex] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
+  const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
+  const location = useLocation();
 
   const pills = [
     { label: 'Construction', icon: rightarrow, target: '3d-Sample' },
@@ -227,9 +231,7 @@ const ContributorLandingPage = () => {
               </nav>
 
               <div className="d-none d-lg-flex gap-3 align-items-center">
-                <Link to="/platform/">
-                  <button className="a3d-join-btn">Join Us</button>
-                </Link>
+                <button className="a3d-join-btn" onClick={() => setIsWaitlistOpen(true)}>Join Waitlist</button>
               </div>
             </div>
           </header>
@@ -287,9 +289,7 @@ const ContributorLandingPage = () => {
                 Sign-In
               </Link>
 
-              <Link to="/platform/">
-                <button className="a3d-join-btn">Join Us</button>
-              </Link>
+              <button className="a3d-join-btn" onClick={() => { setIsWaitlistOpen(true); setIsOpen(false); }}>Join Waitlist</button>
             </nav>
           </div>
 
@@ -1073,6 +1073,7 @@ const ContributorLandingPage = () => {
           </motion.div>
         )}
       </AnimatePresence>
+      <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
     </section>
   );
 };

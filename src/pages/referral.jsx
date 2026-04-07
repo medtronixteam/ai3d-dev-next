@@ -31,6 +31,7 @@ import plusIcon from './images/plus.png';
 import minusIcon from './images/minus.png';
 import { useMediaQuery } from 'react-responsive';
 import { FaArrowAltCircleUp, FaChevronDown } from 'react-icons/fa';
+import WaitlistModal from '../components/popup/WaitlistModal';
 
 const Referral = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -162,6 +163,7 @@ const Referral = () => {
   }, []);
   const landingRef = useRef(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
 
   useEffect(() => {
     const section = landingRef.current;
@@ -243,9 +245,7 @@ const Referral = () => {
                   <Link to="/book-demo">
                     <button className="a3d-book-demo-btn">Book a Demo</button>
                   </Link>
-                  <Link to="/platform/">
-                    <button className="a3d-join-btn">Join Waitlist</button>
-                  </Link>
+                  <button className="a3d-join-btn" onClick={() => setIsWaitlistOpen(true)}>Join Waitlist</button>
                 </div>
               </div>
             </header>
@@ -309,9 +309,7 @@ const Referral = () => {
                   <Link to="/book-demo">
                     <button className="a3d-book-demo-btn">Book a Demo</button>
                   </Link>
-                  <Link to="/platform/">
-                    <button className="a3d-join-btn">Join Waitlist</button>
-                  </Link>
+                  <button className="a3d-join-btn" onClick={() => { setIsWaitlistOpen(true); setIsOpen(false); }}>Join Waitlist</button>
                 </div>
               </nav>
             </div>
@@ -818,6 +816,7 @@ const Referral = () => {
           </footer>
         </div>
       </div>
+      <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
     </>
   );
 };

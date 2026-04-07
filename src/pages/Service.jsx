@@ -30,6 +30,7 @@ import Cards from '../components/Cards/Cards';
 import Circle from './Animation/Circle';
 import { FaChevronDown, FaArrowUp } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
+import WaitlistModal from '../components/popup/WaitlistModal';
 const Service = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
@@ -116,6 +117,7 @@ const Service = () => {
   }, [pathname, hash, key]);
   const landingRef = useRef(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
 
 
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -250,9 +252,7 @@ const Service = () => {
                   </nav>
 
                   <div className="d-none d-lg-flex gap-3 align-items-center">
-                    <Link to="/platform/">
-                      <button className="a3d-join-btn">Join Us</button>
-                    </Link>
+                    <button className="a3d-join-btn" onClick={() => setIsWaitlistOpen(true)}>Join Waitlist</button>
                   </div>
                 </div>
               </header>
@@ -311,9 +311,7 @@ const Service = () => {
                   Sign-In
                 </Link> */}
 
-                  <Link to="/platform/">
-                    <button className="a3d-join-btn">Join Us</button>
-                  </Link>
+                  <button className="a3d-join-btn" onClick={() => { setIsWaitlistOpen(true); setIsOpen(false); }}>Join Waitlist</button>
                 </nav>
               </div>
 
@@ -946,6 +944,7 @@ const Service = () => {
           </footer>
         </div>
       </div>
+      <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
     </>
   );
 };

@@ -98,6 +98,7 @@ import HiraMam from '../assets/images/HiraMam.svg';
 import SamiaMam from '../assets/images/SamiaMam.svg';
 import UsamaSir from '../assets/images/UsamaSir.jpeg';
 import MudassarSir from '../assets/images/mudassar.jpeg';
+import WaitlistModal from '../components/popup/WaitlistModal';
 import ArslanSir from '../assets/images/Arslan.png';
 import CeoSir from '../assets/images/CeoSir.svg';
 import SajeelSir from '../assets/images/SajeelSir.jpeg';
@@ -559,6 +560,7 @@ const LandingPage = () => {
     }
   }, []);
 
+  const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -976,9 +978,7 @@ const LandingPage = () => {
                   <Link to="/book-demo">
                     <button className="a3d-book-demo-btn">Book a Demo</button>
                   </Link>
-                  <Link to="/platform/">
-                    <button className="a3d-join-btn">Join Waitlist</button>
-                  </Link>
+                  <button className="a3d-join-btn" onClick={() => setIsWaitlistOpen(true)}>Join Waitlist</button>
                 </div>
               </div>
             </header>
@@ -1043,9 +1043,7 @@ const LandingPage = () => {
                   <Link to="/book-demo">
                     <button className="a3d-book-demo-btn">Book a Demo</button>
                   </Link>
-                  <Link to="/platform/">
-                    <button className="a3d-join-btn">Join Waitlist</button>
-                  </Link>
+                  <button className="a3d-join-btn" onClick={() => { setIsWaitlistOpen(true); setIsOpen(false); }}>Join Waitlist</button>
                 </div>
               </nav>
             </div>
@@ -2867,6 +2865,7 @@ const LandingPage = () => {
           }}
         />
       )}
+      <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
     </>
   );
 };

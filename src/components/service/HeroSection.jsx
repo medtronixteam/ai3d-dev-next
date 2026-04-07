@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../../pages/images/logo.png';
+import elipse from '../../pages/images/heading_ellipse.png';
 
 const TICKER_ITEMS = [
   'AI Development',
@@ -162,7 +163,7 @@ const HeroSection = ({ scrollContainerRef }) => {
                 </nav>
 
                 <div className="d-none d-lg-flex gap-2 align-items-center">
-                  <Link to="/platform/">
+                  <Link to="/book-demo">
                     <button className="a3d-book-demo-btn">Book a Demo</button>
                   </Link>
                   <Link to="/platform/">
@@ -197,9 +198,14 @@ const HeroSection = ({ scrollContainerRef }) => {
               <a href="#3d-Sample"  className="a3d-nav-link">3D Samples</a>
               <a href="#Leadership" className="a3d-nav-link">Leadership</a>
               <a href="/referral"   className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`}>Referral</a>
-              <Link to="/platform/">
-                <button className="a3d-join-btn">Join Us</button>
-              </Link>
+              <div className="d-flex flex-column gap-2">
+                  <Link to="/book-demo">
+                    <button className="a3d-book-demo-btn">Book a Demo</button>
+                  </Link>
+                  <Link to="/platform/">
+                    <button className="a3d-join-btn">Join Waitlist</button>
+                  </Link>
+              </div>
             </nav>
           </div>
 
@@ -209,7 +215,10 @@ const HeroSection = ({ scrollContainerRef }) => {
         {/* ── Hero ── */}
         <div className="service-section-page-content">
           <h1 className="service-section-page-title">
-            Expert 3D Scanning &amp;{' '}<br />AI Solutions
+            Expert <span className="ctc-arch-wrap">
+            <img src={elipse} alt="elipse" className="hero-arch"  />
+              3D
+            </span> Scanning &amp;{' '}<br />AI Solutions
           </h1>
           <p className="service-section-page-subtitle">
             Whether you need a one-off project or a full-time dedicated engineering

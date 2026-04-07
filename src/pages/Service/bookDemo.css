@@ -1,0 +1,570 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+/* ── Hero Wrapper ─────────────────────────────────────────────── */
+.bd-hero-wrap {
+  position: relative;
+  width: 100%;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  padding: 0 1.5rem 4rem;
+  background: transparent;
+}
+
+/* ── Background ───────────────────────────────────────────────── */
+.bd-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bd-bg-gradient {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 15% 30%, rgba(255, 182, 220, 0.55) 0%, transparent 65%),
+    radial-gradient(ellipse 55% 50% at 85% 20%, #E1E1FF82 0%, transparent 60%),
+    radial-gradient(ellipse 60% 55% at 50% 80%, rgba(255, 210, 235, 0.4) 0%, transparent 65%),
+    linear-gradient(135deg, #fdf0f8 0%, #f8f0ff 40%, #fff5fb 70%, #ffedf7 100%);
+}
+
+/* ── Hero Text ────────────────────────────────────────────────── */
+.bd-hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 0.5rem auto;
+}
+
+.bd-hero-title {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 800;
+  font-size: 34px;
+  line-height: 1.2;
+  color: #1A1A40;
+  margin-bottom: 0.9rem;
+}
+
+.bd-hero-subtitle {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #1A1A40CC;
+  max-width: 550px;
+  margin: 0 auto 0.75rem auto;
+}
+
+/* ── Stats Row ────────────────────────────────────────────────── */
+.bd-stats-row {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 700px;
+  margin: 0 auto;
+}
+
+.bd-stat-item {
+  flex: 1;
+  text-align: center;
+}
+
+.bd-stat-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #1A1A40CC;
+  display: inline-block;
+  margin-top: 0.75rem;
+}
+
+.bd-stat-sep {
+  color: #de3996;
+  font-size: 1rem;
+}
+
+/* ================================================================
+   MAIN CARD
+   ================================================================ */
+.bd-card-section {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 1050px;
+  margin: -6rem auto 2rem;
+}
+
+.bd-card {
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 6px 40px #0000001A;
+  overflow: hidden;
+  padding: 1.5rem 1rem;
+}
+
+/* ── Top Info Bar ─────────────────────────────────────────────── */
+.bd-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #DCDCDC;
+  background: #fff;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 1rem 3rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+.bd-top-contacts {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.bd-contact-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bd-contact-icon {
+  width: 26px;
+  height: 26px;
+  background: transparent;
+  border: 1px solid #DCDCDC;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.bd-contact-label {
+  font-family: 'Urbanist', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #000;
+}
+
+.bd-contact-value {
+  font-family: 'Urbanist', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: #0000006d;
+  text-decoration: none;
+}
+
+/* Social bar */
+.bd-top-social {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bd-social-label {
+  font-family: 'Urbanist', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #000;
+  margin-right: 0.25rem;
+  white-space: nowrap;
+}
+
+.bd-social-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #DCDCDC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.bd-social-btn:hover {
+  transform: translateY(-2px);
+  border-color: #de3996;
+}
+
+/* ── Card Body (Left + Right) ─────────────────────────────────── */
+.bd-body {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+}
+
+/* ================================================================
+   LEFT PANEL
+   ================================================================ */
+.bd-left {
+  position: relative;
+  padding: 2rem 1rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.bd-left-title {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 800;
+  font-size: 1.55rem;
+  color: #000000;
+  line-height: 1.3;
+  margin-bottom: 0.85rem;
+}
+
+.bd-left-title-accent {
+  color: #1a1a40;
+}
+
+.bd-arch-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.bd-arch {
+  position: absolute;
+  top: -50px;
+  left: 65%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: auto;
+  pointer-events: none;
+}
+
+.bd-left-subtitle {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #1A1A40B2;
+  line-height: 1.6;
+  margin-bottom: 1.4rem;
+}
+
+.bd-steps-heading {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #000000;
+  margin-bottom: 0.85rem;
+}
+
+/* ── Steps ────────────────────────────────────────────────────── */
+.bd-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-top: 0.5rem;
+}
+
+.bd-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+}
+
+.bd-step-icon {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(90deg, #F0F0FF, #FFEDF7);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #DE3996;
+  font-weight: 600;
+  font-size: 0.8rem;
+  box-shadow: 0 2px 8px rgba(222, 57, 150, 0.12);
+}
+
+.bd-step-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.bd-step-title {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #000000;
+  margin: 0 0 0.15rem 0;
+  line-height: 1.3;
+}
+
+.bd-step-desc {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: #00000073;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Decorative blob at bottom of left panel */
+.bd-left-deco {
+  position: absolute;
+  bottom: -40px;
+  left: -30px;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(222, 57, 150, 0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ================================================================
+   RIGHT PANEL — FORM
+   ================================================================ */
+.bd-right {
+  padding: 1.5rem;
+  background: #fff;
+  border: 1px solid #0000001A;
+  border-radius: 12px;
+  margin-top: 1rem;
+}
+
+.bd-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.bd-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+
+.bd-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+/* Label */
+.bd-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #00000066;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Input */
+.bd-input {
+  height: 40px;
+  border: 1px solid #DCDCDC;
+  border-radius: 8px;
+  padding: 0 0.85rem;
+  font-size: 0.85rem;
+  font-family: 'DM Sans', sans-serif;
+  color: #000;
+  outline: none;
+  background: #fff;
+  font-weight: 500;
+  transition: border-color 0.2s ease;
+}
+
+.bd-input::placeholder {
+  color: #000000;
+}
+
+.bd-input:focus {
+  border-color: #de3996;
+}
+
+/* Select */
+.bd-select {
+  height: 40px;
+  border: 1px solid #DCDCDC;
+  border-radius: 8px;
+  padding: 0 2rem 0 0.85rem;
+  font-size: 0.85rem;
+  font-family: 'DM Sans', sans-serif;
+  color: #000;
+  outline: none;
+  background: #fff url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23999' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 0.85rem center;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+  width: 100%;
+}
+
+.bd-select:focus {
+  border-color: #de3996;
+}
+
+/* Textarea */
+.bd-textarea {
+  border: 1px solid #DCDCDC !important;
+  border-radius: 8px;
+  padding: 0.7rem 0.85rem;
+  font-size: 0.85rem;
+  font-family: 'DM Sans', sans-serif;
+  color: #000;
+  outline: none;
+  resize: none;
+  background: #fff;
+  line-height: 1.55;
+  transition: border-color 0.2s ease;
+  width: 100%;
+}
+
+.bd-textarea::placeholder {
+  color: #000 !important;
+}
+
+.bd-textarea:focus {
+  border-color: #de3996 !important;
+}
+
+/* Checkbox */
+.bd-checkbox-wrap {
+  display: flex;
+  align-items: flex-start;
+}
+
+.bd-checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.75rem;
+  color: #1A1A40CC;
+  cursor: pointer;
+  user-select: none;
+  line-height: 1.5;
+}
+
+.bd-checkbox-input {
+  display: none;
+}
+
+.bd-checkbox-box {
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  border-radius: 4px;
+  border: 1.5px solid #de3996;
+  background: #de3996;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+  transition: background 0.2s ease;
+}
+
+.bd-checkbox-input:not(:checked) ~ .bd-checkbox-box {
+  background: #fff;
+}
+
+/* Submit button */
+.bd-submit {
+  width: 100%;
+  height: 46px;
+  background: #de3996;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 18px rgba(222, 57, 150, 0.3);
+  margin-top: 0.25rem;
+}
+
+.bd-submit:hover {
+  background: #c73081;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(222, 57, 150, 0.4);
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+@media (max-width: 900px) {
+  .bd-body {
+    grid-template-columns: 1fr;
+  }
+
+  .bd-left {
+    border-radius: 0;
+    padding: 1.5rem 0rem;
+  }
+
+  .bd-right {
+    padding: 1.5rem 1rem;
+  }
+
+  .bd-top-bar {
+    padding: 0.75rem 1.25rem;
+  }
+
+  .bd-stats-row {
+    min-width: unset;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .bd-hero-title {
+    font-size: 1.5rem;
+  }
+
+  .bd-hero-subtitle {
+    font-size: 0.88rem;
+  }
+
+  .bd-stats-row {
+    min-width: unset;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+
+  .bd-form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .bd-top-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0.75rem 1rem;
+  }
+
+  .bd-top-contacts {
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .bd-left-title {
+    font-size: 1.35rem;
+  }
+
+  .bd-card-section {
+    margin: 1rem auto 0;
+  }
+
+  .bd-hero-wrap {
+    padding: 0 1rem 3rem;
+  }
+}

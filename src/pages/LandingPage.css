@@ -619,8 +619,9 @@ body {
 } */
 
 .ai_3d_landing .a3d-join-btn {
-  padding: 0.8125rem 1.3125rem;
+  padding: 0.6rem 1rem !important;
   border-radius: 8px;
+  font-size: 15px !important;
 }
 
 .ai_3d_landing .btn-warning {

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import Fb from '../../assets/icon/Fb.svg'
 import Tk from '../../assets/icon/Tk.svg'
+import Ln from '../../assets/service/LN.svg';
 import elipse from '../../pages/images/heading_ellipse.png';
+import { Link } from 'react-router-dom';
 
 const Contact = () => {
   const [agreed, setAgreed] = useState(false);
@@ -52,7 +54,10 @@ const Contact = () => {
               </span>
               <div>
                 <p className="ctc-info-label">Email US</p>
-                <p className="ctc-info-value">ai3dscanningsolu@gmail.com</p>
+                <Link 
+                to="https://mail.google.com/mail/?view=cm&fs=1&to=contact@ai3dscanning.com"
+                target="_blank"
+                className="ctc-info-value">ai3dscanningsolu@gmail.com</Link>
               </div>
             </div>
 
@@ -92,23 +97,27 @@ const Contact = () => {
             <div className="ctc-social-icons">
 
               {/* Facebook */}
-              <a href="#" className="ctc-social-btn" aria-label="Facebook">
+              <a href="https://www.facebook.com/share/1Bbvpcm4EU/?mibextid=wwXIfr" target="_blank" className="ctc-social-btn" aria-label="Facebook">
                 <img src={Fb} alt="fb" width="19" height="19" />
               </a>
 
               {/* TikTok */}
-              <a href="#" className="ctc-social-btn" aria-label="TikTok">
+              {/* <a href="#" className="ctc-social-btn" aria-label="TikTok">
                 <img src={Tk} alt="fb" width="19" height="19" />
-              </a>
+              </a> */}
 
               {/* Instagram */}
-              <a href="#" className="ctc-social-btn" aria-label="Instagram">
+              <a href="https://www.instagram.com/ai3d_scanning_solutions?igshid=MWd1bzRmaDBpcXcycg%3D%3D&utm_source=qr" target="_blank" className="ctc-social-btn" aria-label="Instagram">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#de3996" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
                   <circle cx="12" cy="12" r="4"/>
                   <circle cx="17.5" cy="6.5" r="1" fill="#de3996" stroke="none"/>
                 </svg>
               </a>
+              <a href="https://www.linkedin.com/company/ai3d-scanning-solutions-inc/?" target="_blank" className="ctc-social-btn" aria-label="Instagram">
+                <img src={Ln} alt="tk" width="19" height="19" />
+              </a>
+
 
             </div>
           </div>

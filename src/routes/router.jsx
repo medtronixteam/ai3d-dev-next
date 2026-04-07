@@ -20,6 +20,7 @@ import NewModel from '../pages/preview/NewModel';
 import NewModelErrorPage from '../pages/preview/NewModelErrorPage';
 import TrashProjects from '../pages/dashboard/TrashProjects';
 import OpenModelButton from '../pages/preview/OpenModelButton';
+import BookDemo from '../pages/Service/BookDemo';
 
 // LAZY IMPORTS
 const App = lazy(() => import('../App'));
@@ -84,6 +85,10 @@ const routes = [
       {
         path: '/service',
         element: <Service />,
+      },
+      {
+        path: '/book-demo',
+        element: <BookDemo />,
       },
       {
         path: '/services',

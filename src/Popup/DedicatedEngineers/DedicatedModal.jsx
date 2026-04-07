@@ -18,6 +18,7 @@ const DedicatedModal = ({ isOpen, onClose }) => {
           </span>
           Change Model
         </span>
+        <div style={{ width: '1px', height: '22px', background: '#0000001A' }} />
         <div className="osm-breadcrumb">
           <span className="osm-project-icon">
             <img src={Dedicated} alt="Dedicated" width={14} height={14} />

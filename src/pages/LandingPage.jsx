@@ -966,9 +966,18 @@ const LandingPage = () => {
                   </a>
                 </nav>
 
-                <div className="d-none d-lg-flex gap-3 align-items-center">
+                {/* <div className="d-none d-lg-flex gap-3 align-items-center">
                   <Link to="/platform/">
                     <button className="a3d-join-btn">Join Us</button>
+                  </Link>
+                </div> */}
+
+                <div className="d-none d-lg-flex gap-2 align-items-center">
+                  <Link to="/book-demo">
+                    <button className="a3d-book-demo-btn">Book a Demo</button>
+                  </Link>
+                  <Link to="/platform/">
+                    <button className="a3d-join-btn">Join Waitlist</button>
                   </Link>
                 </div>
               </div>
@@ -1030,9 +1039,14 @@ const LandingPage = () => {
                   Sign-In
                 </Link> */}
 
-                <Link to="/platform/">
-                  <button className="a3d-join-btn">Join Us</button>
-                </Link>
+                <div className="d-flex flex-column gap-2">
+                  <Link to="/book-demo">
+                    <button className="a3d-book-demo-btn">Book a Demo</button>
+                  </Link>
+                  <Link to="/platform/">
+                    <button className="a3d-join-btn">Join Waitlist</button>
+                  </Link>
+                </div>
               </nav>
             </div>
 

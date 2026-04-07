@@ -219,7 +219,7 @@
     flex: 1.2;
     /* Increased flex for wider form */
     min-width: 420px;
-    padding: 26px 60px 50px 0;
+    padding: 26px 60px 26px 0;
     /* Reduced top/bottom padding */
     display: flex;
     justify-content: center;
@@ -233,7 +233,7 @@
     width: 100%;
     background: #fff;
     border: 1px solid #0000000a;
-    border-radius: 25px;
+    border-radius: 15px;
     padding: 40px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
     position: relative;

@@ -162,7 +162,7 @@ const HeroSection = ({ scrollContainerRef }) => {
                 </nav>
 
                 <div className="d-none d-lg-flex gap-2 align-items-center">
-                  <Link to="/platform/">
+                  <Link to="/book-demo">
                     <button className="a3d-book-demo-btn">Book a Demo</button>
                   </Link>
                   <Link to="/platform/">
@@ -197,9 +197,14 @@ const HeroSection = ({ scrollContainerRef }) => {
               <a href="#3d-Sample"  className="a3d-nav-link">3D Samples</a>
               <a href="#Leadership" className="a3d-nav-link">Leadership</a>
               <a href="/referral"   className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`}>Referral</a>
-              <Link to="/platform/">
-                <button className="a3d-join-btn">Join Us</button>
-              </Link>
+              <div className="d-none d-lg-flex gap-2 align-items-center">
+                  <Link to="/book-demo">
+                    <button className="a3d-book-demo-btn">Book a Demo</button>
+                  </Link>
+                  <Link to="/platform/">
+                    <button className="a3d-join-btn">Join Waitlist</button>
+                  </Link>
+              </div>
             </nav>
           </div>
 

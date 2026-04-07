@@ -1131,17 +1131,18 @@ const LandingPage = () => {
                   className="a3d-btn d-flex align-items-center gap-3 flex-wrap a3d-slide-up"
                   style={{ animationDelay: '0.2s' }}
                 >
-                  <Link to="/platform/">
-                    <button className="a3d-join-btn">Join For Free</button>
+                  <Link to="/book-demo">
+                    <button className="a3d-join-btn">Book a Demo</button>
                   </Link>
                   {/* <Link to="/platform/subscription"> */}
-                  <button
-                    className="btn btn-warning text-white"
-                    style={{ backgroundColor: '#FF9C3E' }}
-                    onClick={() => setSubscriptionModalOpen(true)}
-                  >
-                    See Plans
-                  </button>
+                  <Link to="/services">
+                    <button
+                      className="btn btn-warning text-white"
+                      style={{ backgroundColor: '#FF9C3E' }}
+                    >
+                      Services
+                    </button>
+                  </Link>
                   {/* </Link> */}
 
                   <a href="#video">

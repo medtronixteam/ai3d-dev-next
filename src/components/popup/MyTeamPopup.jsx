@@ -4,11 +4,11 @@ import { FiX, FiCheck, FiPlus, FiMoreHorizontal, FiTrash2, FiSettings } from 're
 import TeamSettingsPopup from './TeamSettingsPopup';
 import CreateTeamPopup from './CreateTeamPopup';
 import { baseURL } from '../../config';
-import ConfirmModal from './ConfirmLogoutPopup'; 
+import ConfirmModal from './ConfirmLogoutPopup';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 
-const MyTeamPopup = ({ onClose, user, teams, onTeamUpdate }) => { 
+const MyTeamPopup = ({ onClose, user, teams, onTeamUpdate }) => {
   const [showDeleteFor, setShowDeleteFor] = useState(null);
   const [isTeamSettingsOpen, setTeamSettingsOpen] = useState(false);
   const [isCreateTeamOpen, setCreateTeamOpen] = useState(false);
@@ -58,11 +58,11 @@ const MyTeamPopup = ({ onClose, user, teams, onTeamUpdate }) => {
   if (user?.avatar) {
     profileImg = user.avatar.startsWith('http')
       ? user.avatar
-      : `https://dev-backend.ai3dscanning.com/storage/${user.avatar.replace(/^\//, '')}`;
+      : `https://app.ai3dscanning.com/storage/${user.avatar.replace(/^\//, '')}`;
   } else if (user?.image) {
     profileImg = user.image.startsWith('http')
       ? user.image
-      : `https://dev-backend.ai3dscanning.com/storage/${user.image.replace(/^\//, '')}`;
+      : `https://app.ai3dscanning.com/storage/${user.image.replace(/^\//, '')}`;
   }
 
   useEffect(() => {
@@ -121,15 +121,15 @@ const MyTeamPopup = ({ onClose, user, teams, onTeamUpdate }) => {
   };
 
   const handleMemberChanged = async (teamId) => {
-   try {
+    try {
       const res = await axios.get(`${baseURL}/team/${teamId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      
+
       if (res.data?.data) {
         const updatedTeams = teamsState.map((team) =>
-          team.id === teamId 
-            ? { ...team, total_members: res.data.data.total_members } 
+          team.id === teamId
+            ? { ...team, total_members: res.data.data.total_members }
             : team
         );
         setTeamsState(updatedTeams);
@@ -176,7 +176,7 @@ const MyTeamPopup = ({ onClose, user, teams, onTeamUpdate }) => {
           {activeTeam && (
             <div className="personal-account-item" style={{ marginBottom: 16 }}>
               <div className="user-initials">
-                {(activeTeam.name || '?').substring(0,1).toUpperCase()}
+                {(activeTeam.name || '?').substring(0, 1).toUpperCase()}
               </div>
               <div className="account-details">
                 <span className="account-name">{activeTeam.name}</span>
@@ -198,11 +198,11 @@ const MyTeamPopup = ({ onClose, user, teams, onTeamUpdate }) => {
               <div className="user-initials">
                 {user?.name
                   ? user.name
-                      .split(' ')
-                      .map((w) => w[0])
-                      .join('')
-                      .slice(0, 2)
-                      .toUpperCase()
+                    .split(' ')
+                    .map((w) => w[0])
+                    .join('')
+                    .slice(0, 2)
+                    .toUpperCase()
                   : ''}
               </div>
             )}
@@ -226,44 +226,44 @@ const MyTeamPopup = ({ onClose, user, teams, onTeamUpdate }) => {
               teamsState
                 .filter((team) => !activeTeam || team.id !== activeTeam.id)
                 .map((team) => (
-                <div key={team.id} className="team-card-item" onClick={() => openSelectConfirm(team)} style={{ cursor: 'pointer' }}>
-                  <div className="team-card-icon">
-                    {team.name ? team.name[0].toUpperCase() : '?'}
+                  <div key={team.id} className="team-card-item" onClick={() => openSelectConfirm(team)} style={{ cursor: 'pointer' }}>
+                    <div className="team-card-icon">
+                      {team.name ? team.name[0].toUpperCase() : '?'}
+                    </div>
+                    <div className="team-card-info">
+                      <span className="team-card-name">{team.name}</span>
+                      <span className="team-card-members">
+                        {team.total_members} {team.total_members === 1 ? 'member' : 'members'}
+                      </span>
+                    </div>
+                    <div className="team-card-actions" onClick={(e) => e.stopPropagation()}>
+                      <button className="team-card-menu-btn" onClick={(e) => { e.stopPropagation(); toggleDelete(team.id); }}>
+                        <FiMoreHorizontal />
+                      </button>
+                      {showDeleteFor === team.id && (
+                        <div className="team-card-dropdown">
+                          <button
+                            className="dropdown-item"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedTeamId(team.id);
+                              setTeamSettingsOpen(true);
+                              setShowDeleteFor(null);
+                            }}
+                          >
+                            <FiSettings /> Team Setting
+                          </button>
+                          <button
+                            className="dropdown-item remove"
+                            onClick={(e) => { e.stopPropagation(); handleRemoveTeam(team.id); }}
+                          >
+                            <FiTrash2 /> Remove Team
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  <div className="team-card-info">
-                    <span className="team-card-name">{team.name}</span>
-                    <span className="team-card-members">
-                      {team.total_members} {team.total_members === 1 ? 'member' : 'members'}
-                    </span>
-                  </div>
-                  <div className="team-card-actions" onClick={(e) => e.stopPropagation()}>
-                    <button className="team-card-menu-btn" onClick={(e) => { e.stopPropagation(); toggleDelete(team.id); }}>
-                      <FiMoreHorizontal />
-                    </button>
-                    {showDeleteFor === team.id && (
-                      <div className="team-card-dropdown">
-                        <button
-                          className="dropdown-item"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedTeamId(team.id);
-                            setTeamSettingsOpen(true);
-                            setShowDeleteFor(null);
-                          }}
-                        >
-                          <FiSettings /> Team Setting
-                        </button>
-                        <button
-                          className="dropdown-item remove"
-                          onClick={(e) => { e.stopPropagation(); handleRemoveTeam(team.id); }}
-                        >
-                          <FiTrash2 /> Remove Team
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))
+                ))
             ) : (
               <div style={{ color: '#888', fontSize: 15, padding: 12, textAlign: 'center' }}>
                 No teams found.

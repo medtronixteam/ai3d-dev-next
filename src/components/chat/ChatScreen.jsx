@@ -25,9 +25,9 @@ const ChatScreen = ({ onClose }) => {
   // Fetch user profile when chat opens and set avatar image
   useEffect(() => {
     let cancelled = false;
-    const toStorageUrl = (path) => `https://dev-backend.ai3dscanning.com/storage/${String(path || '').replace(/^\/+/, '')}`;
+    const toStorageUrl = (path) => `https://app.ai3dscanning.com/storage/${String(path || '').replace(/^\/+/, '')}`;
     async function fetchProfile() {
-      if (!token) return; 
+      if (!token) return;
       try {
         const res = await axios.get(`${baseURL}/user`, { headers: { Authorization: `Bearer ${token}` } });
         const profile = res.data?.user || res.data;
@@ -119,7 +119,7 @@ const ChatScreen = ({ onClose }) => {
               )}
             </div>
             {/* Very basic consecutive message logic */}
-            {(messages[index+1]?.sender !== message.sender) && <div className="message-spacer"></div> }
+            {(messages[index + 1]?.sender !== message.sender) && <div className="message-spacer"></div>}
           </React.Fragment>
         ))}
       </div>

@@ -417,26 +417,26 @@ const LandingPage = () => {
 
   const { token } = useAuth();
 
+  const fetchModels = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      const response = await fetch(`${baseURL}/home/models`, { headers });
+      const data = await response.json();
+      console.log('Full model API response:', data);
+
+      setModels(data.models || data);
+    } catch (error) {
+      console.error('Error fetching models:', error);
+      setError('Failed to load models.');
+      setModels([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchModels = async () => {
-      setLoading(true);
-      setError('');
-      try {
-        const headers = token ? { Authorization: `Bearer ${token}` } : {};
-        const response = await fetch(`${baseURL}/home/models`, { headers });
-        const data = await response.json();
-        console.log('Full model API response:', data);
-
-        setModels(data.models || data);
-      } catch (error) {
-        console.error('Error fetching models:', error);
-        setError('Failed to load models.');
-        setModels([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchModels();
   }, []);
 
@@ -1923,44 +1923,59 @@ const LandingPage = () => {
         <section className="model_section py-4 ai_3d_landing">
           <div className="container">
             <div className="row g-md-4">
-              {(showAllModels ? models : models.slice(0, 6)).map((card, idx) => {
-                const imgUrl = card.image
-                  ? `https://dev-backend.ai3dscanning.com/storage/${card.image.replace(/^\/+/, '')}`
-                  : modelFallback;
-
-                return (
-                  <div className="col-12 col-sm-6 col-lg-4" key={card.id || idx}>
-                    <motion.div
-                      initial={{ opacity: 0, y: 50 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{
-                        duration: 0.6,
-                        delay: idx * 0.2,
-                      }}
-                      className="model_card"
-                    >
-                      <img
-                        src={imgUrl}
-                        className="model_image"
-                        alt={card.title}
-                        onError={(e) => (e.target.src = modelFallback)}
-                      />
-
-                      <div className="model_footer">
-                        <div className="model_label">
-                          {card.title}
-                          {/* <span className="model_price">23K</span> */}
-                        </div>
-
-                        <a href="#" className="model_card_button">
-                          <img src={modelButtonIcon} alt="Go" />
-                        </a>
-                      </div>
-                    </motion.div>
+              {error || (models.length === 0 && !loading) ? (
+                <div className="col-12">
+                  <div className="models-state-container">
+                    <div className="models-state-icon">
+                      <i className="fa-solid fa-cubes-stacked"></i>
+                    </div>
+                    <h3 className="models-state-title">3D Gallery Updating Soon</h3>
+                    <p className="models-state-desc">
+                      We are currently curating an exclusive collection of high-precision 3D samples.
+                      Stay tuned – our latest innovations will be appearing here shortly!
+                    </p>
                   </div>
-                );
-              })}
+                </div>
+              ) : (
+                (showAllModels ? models : models.slice(0, 6)).map((card, idx) => {
+                  const imgUrl = card.image
+                    ? `https://app.ai3dscanning.com/storage/${card.image.replace(/^\/+/, '')}`
+                    : modelFallback;
+
+                  return (
+                    <div className="col-12 col-sm-6 col-lg-4" key={card.id || idx}>
+                      <motion.div
+                        initial={{ opacity: 0, y: 50 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{
+                          duration: 0.6,
+                          delay: idx * 0.2,
+                        }}
+                        className="model_card"
+                      >
+                        <img
+                          src={imgUrl}
+                          className="model_image"
+                          alt={card.title}
+                          onError={(e) => (e.target.src = modelFallback)}
+                        />
+
+                        <div className="model_footer">
+                          <div className="model_label">
+                            {card.title}
+                            {/* <span className="model_price">23K</span> */}
+                          </div>
+
+                          <a href="#" className="model_card_button">
+                            <img src={modelButtonIcon} alt="Go" />
+                          </a>
+                        </div>
+                      </motion.div>
+                    </div>
+                  );
+                })
+              )}
 
               <div className="col-12 d-flex justify-content-end">
                 <button

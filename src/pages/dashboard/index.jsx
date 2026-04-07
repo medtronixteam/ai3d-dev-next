@@ -55,13 +55,13 @@ const CATEGORIES = [
 const getModelImageUrl = (image) => {
   if (!image) return model1;
   if (image.startsWith('http')) return image;
-  return `https://dev-backend.ai3dscanning.com/storage/${image.replace(/^\//, '')}`;
+  return `https://app.ai3dscanning.com/storage/${image.replace(/^\//, '')}`;
 };
 
 const getFullVideoUrl = (url) => {
   if (!url) return '';
   if (url.startsWith('http')) return url;
-  return `https://dev-backend.ai3dscanning.com/storage/${url.replace(/^\/+/, '')}`;
+  return `https://app.ai3dscanning.com/storage/${url.replace(/^\/+/, '')}`;
 };
 
 function VideoModalWithLoader({ videoUrl, onClose }) {
@@ -422,7 +422,7 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
   //           const hexColor = rgbToHex(r, g, b);
   //           console.log('Extracted color for model:', modelId, 'Color:', hexColor);
   //           setModalBgColor(hexColor);
-            
+
   //           // Always call API when color is extracted
   //           console.log('Calling API with model_id:', modelId, 'bg_color:', hexColor);
   //           updateBgColor(modelId, hexColor)
@@ -829,16 +829,16 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
                 justifyContent: 'center',
               }}
             >
-            <img
-              src={imageUrl}
-              alt="Fallback Preview"
-              onLoad={handleLoad}
-              onError={handleError}
-              style={{
-                maxWidth: '100%',
-                maxHeight: '60vh',
+              <img
+                src={imageUrl}
+                alt="Fallback Preview"
+                onLoad={handleLoad}
+                onError={handleError}
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '60vh',
                   borderRadius: '18px 18px 0 0',
-                objectFit: 'contain',
+                  objectFit: 'contain',
                 }}
               />
               {modalBgColor && (
@@ -870,24 +870,24 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
                     justifyContent: 'center',
                   }}
                 >
-                <video
-                  src={fileUrl}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  controls
-                  onLoadedData={handleLoad}
-                  onError={(err) => {
-                    setIsVideoMode(false);
-                    handleError(err);
-                  }}
-                  style={{
-                    maxWidth: '100%',
-                    maxHeight: '70vh',
+                  <video
+                    src={fileUrl}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    controls
+                    onLoadedData={handleLoad}
+                    onError={(err) => {
+                      setIsVideoMode(false);
+                      handleError(err);
+                    }}
+                    style={{
+                      maxWidth: '100%',
+                      maxHeight: '70vh',
                       borderRadius: '18px 18px 0 0',
-                    opacity: loading ? 0 : 1,
-                    transition: 'opacity 0.3s ease',
+                      opacity: loading ? 0 : 1,
+                      transition: 'opacity 0.3s ease',
                     }}
                   />
                   {/* Background color display below video */}
@@ -917,25 +917,25 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
                     justifyContent: 'center',
                   }}
                 >
-                <model-viewer
-                  ref={modelViewerRef}
-                  key={modelUrl}
-                  src={modelUrl}
-                  alt="3D Model"
-                  auto-rotate
-                  camera-controls
-                  ar
-                  ar-modes="webxr scene-viewer quick-look"
-                  shadow-intensity="1"
-                  style={{
-                    width: '100%',
-                    height: '50vh',
+                  <model-viewer
+                    ref={modelViewerRef}
+                    key={modelUrl}
+                    src={modelUrl}
+                    alt="3D Model"
+                    auto-rotate
+                    camera-controls
+                    ar
+                    ar-modes="webxr scene-viewer quick-look"
+                    shadow-intensity="1"
+                    style={{
+                      width: '100%',
+                      height: '50vh',
                       borderRadius: '18px 18px 0 0',
-                    opacity: loading ? 0 : 1,
-                    transition: 'opacity 0.3s ease',
-                  }}
-                  onLoad={handleLoad}
-                  onError={handleError}
+                      opacity: loading ? 0 : 1,
+                      transition: 'opacity 0.3s ease',
+                    }}
+                    onLoad={handleLoad}
+                    onError={handleError}
                   />
                   {/* Background color display below 3D model */}
                   {modalBgColor && (
@@ -964,18 +964,18 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
                     justifyContent: 'center',
                   }}
                 >
-                <img
-                  src={imageUrl}
-                  alt="Model Preview"
-                  onLoad={handleLoad}
-                  onError={handleError}
-                  style={{
-                    maxWidth: '100%',
-                    maxHeight: '60vh',
+                  <img
+                    src={imageUrl}
+                    alt="Model Preview"
+                    onLoad={handleLoad}
+                    onError={handleError}
+                    style={{
+                      maxWidth: '100%',
+                      maxHeight: '60vh',
                       borderRadius: '18px 18px 0 0',
-                    objectFit: 'contain',
-                    opacity: loading ? 0 : 1,
-                    transition: 'opacity 0.3s ease',
+                      objectFit: 'contain',
+                      opacity: loading ? 0 : 1,
+                      transition: 'opacity 0.3s ease',
                     }}
                   />
                   {modalBgColor && (
@@ -1454,14 +1454,14 @@ const Dashboard = () => {
       fetchModels(selectedType, 1, false);
     }
   };
-  
+
   const [imgLoadedArr, setImgLoadedArr] = React.useState([]);
   React.useEffect(() => {
     setImgLoadedArr(Array(models.length).fill(false));
     if (models.length === 0) return;
     let cancelled = false;
     const toStorageUrl = (path) =>
-      `https://dev-backend.ai3dscanning.com/storage/${String(path || '').replace(/^\/+/, '')}`;
+      `https://app.ai3dscanning.com/storage/${String(path || '').replace(/^\/+/, '')}`;
     models.forEach((model, idx) => {
       const url = model?.thumbnail
         ? toStorageUrl(model.thumbnail)
@@ -1804,9 +1804,9 @@ const Dashboard = () => {
             <div className="model-list-row">
               {currentModels.map((model, idx) => {
                 const imgUrl = model.thumbnail
-                  ? `https://dev-backend.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
+                  ? `https://app.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
                   : model.image
-                    ? `https://dev-backend.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
+                    ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
                     : model1;
                 return (
                   <div
@@ -1820,7 +1820,7 @@ const Dashboard = () => {
                         (model.data && (model.data.video_url || model.data.url));
 
                       const imgUrl = model.image
-                        ? `https://dev-backend.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
+                        ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
                         : null;
 
                       if (rawUrl || imgUrl) {
@@ -1870,7 +1870,7 @@ const Dashboard = () => {
                           ></span>
                         </div>
                       )}
-                     
+
                       <img
                         src={imgUrl}
                         alt={model.title || model.name}
@@ -2007,9 +2007,9 @@ const Dashboard = () => {
               </div>
               {/* Loading text */}
               {isLoadingMore && (
-                <span style={{ 
-                  fontSize: 12, 
-                  color: '#DE3996', 
+                <span style={{
+                  fontSize: 12,
+                  color: '#DE3996',
                   fontWeight: 500,
                   animation: 'pulse 1.5s ease-in-out infinite',
                 }}>
@@ -2050,7 +2050,7 @@ const Dashboard = () => {
       )}
 
       {/* Modal for model details */}
-            {/* Modal for model details */}
+      {/* Modal for model details */}
       {modalModel &&
         (() => {
           const [isModalImgLoaded, setModalImgLoaded] = React.useState(false);
@@ -2258,7 +2258,7 @@ const Dashboard = () => {
         fileUrl={modelFileUrl}
         imageUrl={
           selectedModelData?.image
-            ? `https://dev-backend.ai3dscanning.com/storage/${selectedModelData.image.replace(/^\/+/, '')}`
+            ? `https://app.ai3dscanning.com/storage/${selectedModelData.image.replace(/^\/+/, '')}`
             : null
         }
         modelId={selectedModelData?.id}

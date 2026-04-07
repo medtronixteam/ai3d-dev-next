@@ -29,7 +29,7 @@ const SignIn = () => {
       if (email === 'demo@demo.com' && password === 'demo123') {
         const demoUser = { email: 'demo@demo.com', name: 'Demo User' };
         login('demo-token', demoUser);
-        
+
         // Login ke baad wait karte hain ke state update ho jaye
         setTimeout(() => {
           const inviteToken = localStorage.getItem('invite_token');
@@ -39,7 +39,7 @@ const SignIn = () => {
             navigate('/platform/');
           }
         }, 100);
-        
+
         setLoading(false);
         return;
       }
@@ -49,17 +49,17 @@ const SignIn = () => {
         { email, password },
         { skipAuthInterceptor: true },
       );
-      
+
       // Debug: Response ko check karte hain
       console.log('API Response:', res.data);
       console.log('Token:', res.data.token);
       console.log('User data:', res.data.user);
-      
+
       // Check karte hain ke response mein proper data hai ya nahi
       if (!res.data.token) {
         throw new Error('Token not received from server');
       }
-      
+
       // User data ko validate aur format karte hain
       let userData = res.data.user;
       if (!userData || !userData.email) {
@@ -70,12 +70,12 @@ const SignIn = () => {
           ...res.data // Baaki jo bhi data hai wo merge kar dete hain
         };
       }
-      
+
       console.log('Formatted user data:', userData);
-      
+
       // Login function call karte hain
       login(res.data.token, userData);
-      
+
       // Login ke baad wait karte hain ke state update ho jaye
       setTimeout(() => {
         const inviteToken = localStorage.getItem('invite_token');
@@ -85,7 +85,7 @@ const SignIn = () => {
           navigate('/platform/');
         }
       }, 100);
-      
+
     } catch (err) {
       toast.error(err?.response?.data?.message || 'Login failed');
     } finally {
@@ -101,7 +101,7 @@ const SignIn = () => {
         navigate(`/platform/team/invite/accept/${inviteToken}`);
       }
     }
-  }, []); 
+  }, []);
 
 
   return (
@@ -124,7 +124,7 @@ const SignIn = () => {
               <p className="mb-3">
                 New user? <Link to="/signup">Create an account.</Link>
               </p>
-            <form onSubmit={handleSubmit} autoComplete="off">
+              <form onSubmit={handleSubmit} autoComplete="off">
                 <div className="mb-3">
                   <label className="form-label">Email address</label>
                   <input
@@ -173,7 +173,7 @@ const SignIn = () => {
                       checked={rememberMe}
                       onChange={(e) => setRememberMe(e.target.checked)}
                     />
-                    <label className="form-check-label mx-1 mt-1" style={{fontSize: '15px !importamt'}} htmlFor="rememberMe">
+                    <label className="form-check-label mx-1 mt-1" style={{ fontSize: '15px !importamt' }} htmlFor="rememberMe">
                       Remember me
                     </label>
                   </div>
@@ -209,7 +209,7 @@ const SignIn = () => {
                     type="button"
                     className="btn social-btn"
                     onClick={() => {
-                      window.location.href = 'https://dev-backend.ai3dscanning.com/auth/google';
+                      window.location.href = 'https://app.ai3dscanning.com/auth/google';
                     }}
                   >
                     <span className="social-icon">
@@ -221,7 +221,7 @@ const SignIn = () => {
                     type="button"
                     className="btn social-btn"
                     onClick={() => {
-                      window.location.href = 'https://dev-backend.ai3dscanning.com/auth/facebook';
+                      window.location.href = 'https://app.ai3dscanning.com/auth/facebook';
                     }}
                   >
                     <span className="social-icon">

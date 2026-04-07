@@ -42,12 +42,12 @@ const LoginPopup = ({ onClose, onLoginSuccess }) => {
       console.log('API Response:', res.data);
       console.log('Token:', res.data.token);
       console.log('User data:', res.data.user);
-      
+
       // Check karte hain ke response mein proper data hai ya nahi
       if (!res.data.token) {
         throw new Error('Token not received from server');
       }
-      
+
 
       // User data ko validate aur format karte hain
       let userData = res.data.user;
@@ -59,19 +59,19 @@ const LoginPopup = ({ onClose, onLoginSuccess }) => {
           ...res.data // Baaki jo bhi data hai wo merge kar dete hain
         };
       }
-      
+
       console.log('Formatted user data:', userData);
-      
+
       // Login function call karte hain
       login(res.data.token, userData);
 
       toast.success(res.data?.message || 'Login successful!');
       handleClose();
-      
+
       // Call onLoginSuccess callback if provided, otherwise reload page
       if (onLoginSuccess) {
         onLoginSuccess();
-      } 
+      }
     } catch (err) {
       toast.error(err?.response?.data?.message || 'Login failed. Please check your credentials.');
     } finally {
@@ -86,7 +86,7 @@ const LoginPopup = ({ onClose, onLoginSuccess }) => {
         <div className="login-form-container">
           <h3 className="fw-bold mb-2">Sign in</h3>
           <p className="mb-3">
-            New user? <Link to="/signup" onClick={handleClose} style={{color: '#e6339a'}}>Create an account.</Link>
+            New user? <Link to="/signup" onClick={handleClose} style={{ color: '#e6339a' }}>Create an account.</Link>
           </p>
           <form onSubmit={handleSubmit} autoComplete='off'>
             <div className="mb-3">
@@ -153,7 +153,7 @@ const LoginPopup = ({ onClose, onLoginSuccess }) => {
               <button type="button" className="btn social-btn" onClick={() => {
                 // For social login, we'll need to handle the redirect back
                 // For now, just redirect and let the main app handle the success
-                window.location.href = 'https://dev-backend.ai3dscanning.com/auth/google';
+                window.location.href = 'https://app.ai3dscanning.com/auth/google';
               }}>
                 <span className="social-icon">
                   <img src={Google} alt="Google" />
@@ -163,7 +163,7 @@ const LoginPopup = ({ onClose, onLoginSuccess }) => {
               <button type="button" className="btn social-btn" onClick={() => {
                 // For social login, we'll need to handle the redirect back
                 // For now, just redirect and let the main app handle the success
-                window.location.href = 'https://dev-backend.ai3dscanning.com/auth/facebook';
+                window.location.href = 'https://app.ai3dscanning.com/auth/facebook';
               }}>
                 <span className="social-icon">
                   <img src={Facebook} alt="Facebook" />

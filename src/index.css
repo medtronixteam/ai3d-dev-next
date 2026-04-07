@@ -283,6 +283,11 @@ ul {
    fill: #DE3996 !important;
 }
 
+/* Ensure toast notifications are above modals */
+.Toastify__toast-container {
+  z-index: 99999 !important;
+}
+
 /* Scrollbar hide ONLY when dashboard-active class is present */
 body.dashboard-active,
 body.dashboard-active * {

@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { baseURL } from '../../config';
 import '../LandingPage.css';
 import './ServicePage.css';
 import Fb from '../../assets/icon/Fb.svg';
@@ -120,11 +123,52 @@ const BookDemo = ({ scrollContainerRef }) => {
     service: '',
     message: '',
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!agreed) {
+      toast.warning("Please agree to the terms to proceed.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const payload = {
+        name: form.name,
+        email: form.email,
+        company: form.company,
+        services: form.service,
+        description: form.message
+      };
+
+      const response = await axios.post(`${baseURL}/booking`, payload);
+      
+      toast.success(response.data.message || "Demo booked successfully! We'll contact you soon.");
+      
+      // Reset form
+      setForm({
+        name: '',
+        email: '',
+        company: '',
+        service: '',
+        message: '',
+      });
+      setAgreed(false);
+
+    } catch (error) {
+      console.error("Booking error:", error);
+      const rawMsg = error.response?.data?.message;
+      const friendlyMsg = (rawMsg && !rawMsg.toLowerCase().includes("server error"))
+        ? rawMsg
+        : "We're experiencing a minor technical hiccup. Please try again in a moment!";
+      toast.error(friendlyMsg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -565,8 +609,11 @@ const BookDemo = ({ scrollContainerRef }) => {
                 </div>
 
                 {/* Submit */}
-                <button type="submit" className="bd-submit">
-                  Speak with an expert
+                <button type="submit" className="bd-submit" disabled={loading}>
+                  {loading ? (
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  ) : null}
+                  {loading ? "Sending..." : "Speak with an expert"}
                 </button>
               </form>
             </div>

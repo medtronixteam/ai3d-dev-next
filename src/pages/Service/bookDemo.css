@@ -378,7 +378,7 @@
 }
 
 .bd-input::placeholder {
-  color: #000000;
+  color: rgba(0, 0, 0, 0.4);
 }
 
 .bd-input:focus {
@@ -424,7 +424,7 @@
 }
 
 .bd-textarea::placeholder {
-  color: #000 !important;
+  color: rgba(0, 0, 0, 0.4) !important;
 }
 
 .bd-textarea:focus {

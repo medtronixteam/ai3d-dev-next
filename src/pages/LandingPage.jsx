@@ -942,9 +942,7 @@ const LandingPage = () => {
                   >
                     Home
                   </Link>
-                  <Link to="https://calendly.com/arslan-medtronix/30min" className={`a3d-nav-link`}>
-                    Schedule Meeting
-                  </Link>
+
 
                   <Link
                     to="/services"
@@ -1006,12 +1004,6 @@ const LandingPage = () => {
                   className={`a3d-nav-link ${location.pathname === '/' ? 'active' : ''}`}
                 >
                   Home
-                </Link>
-                <Link
-                  to="https://calendly.com/arslan-medtronix/30min"
-                  className={`a3d-nav-link ${location.pathname === '/schedule' ? 'active' : ''}`}
-                >
-                  Schedule Meeting
                 </Link>
 
                 <Link

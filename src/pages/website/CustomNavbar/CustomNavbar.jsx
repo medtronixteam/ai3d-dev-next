@@ -5,10 +5,6 @@ import logo from "../../../assets/images/logo2.png";
 
 const CustomNavbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const handleScheduleMeeting = () => {
-    const meetingLink = "https://calendly.com/arslan-medtronix/30min";
-    window.open(meetingLink, "_blank");
-  };
   return (
     <header className="custom-navbar">
       <div className="custom-navbar-container">
@@ -41,9 +37,6 @@ const CustomNavbar = () => {
           <ul>
             <li>
               <Link to="/">Home</Link>
-            </li>
-            <li>
-              <a href="#" onClick={handleScheduleMeeting}>Schedule Meeting</a>
             </li>
             <li>
               <a href="#services">Services</a>

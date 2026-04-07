@@ -225,9 +225,6 @@ const Service = () => {
                     >
                       Home
                     </Link>
-                    <Link to="https://calendly.com/arslan-medtronix/30min" className={`a3d-nav-link`}>
-                      Schedule Meeting
-                    </Link>
 
                     <Link
                       to="/service"
@@ -281,9 +278,6 @@ const Service = () => {
                     className={`a3d-nav-link ${location.pathname === '/' ? 'active' : ''}`}
                   >
                     Home
-                  </Link>
-                  <Link to="https://calendly.com/arslan-medtronix/30min" className="a3d-nav-link">
-                    Schedule Meeting
                   </Link>
 
                   <Link

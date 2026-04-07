@@ -13,7 +13,7 @@ import WaitlistModal from '../components/popup/WaitlistModal';
 
 const WaitingListSection = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    
+
     // Countdown logic: Set target to April 30, 2026
     const targetDate = new Date('2026-04-30T00:00:00');
 
@@ -21,7 +21,7 @@ const WaitingListSection = () => {
     const calculateTimeLeft = () => {
         const now = new Date();
         const difference = targetDate - now;
-        
+
         let timeLeft = {
             days: 0,
             hours: 0,
@@ -64,7 +64,7 @@ const WaitingListSection = () => {
                     </div>
 
                     <div className="WL_content_body">
-                        <motion.h2 
+                        <motion.h2
                             initial={{ opacity: 0, y: 10 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6 }}
@@ -75,7 +75,7 @@ const WaitingListSection = () => {
 
 
 
-                        <motion.p 
+                        <motion.p
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: 0.1 }}
@@ -84,7 +84,7 @@ const WaitingListSection = () => {
                             Be the <span className="WL_text_pink">first to experience</span> our revolutionary <span className="WL_text_pink">3D model creation</span> platform. Early members get exclusive benefits and priority access.
                         </motion.p>
 
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.5, delay: 0.2 }}
@@ -98,7 +98,7 @@ const WaitingListSection = () => {
                             </div>
 
                             <p className="WL_counter_text">
-                                <span className="WL_count_num">2,400+</span> people already on the waiting list
+                                <span className="WL_count_num">500+</span> people already on the waiting list
                             </p>
                         </motion.div>
 
@@ -126,7 +126,7 @@ const WaitingListSection = () => {
                             </div>
                         </div>
 
-                        <motion.button 
+                        <motion.button
                             whileHover={{ scale: 1.05, boxShadow: '0 15px 30px rgba(222, 57, 150, 0.4)' }}
                             whileTap={{ scale: 0.95 }}
                             className="WL_submit_btn"

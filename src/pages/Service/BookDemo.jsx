@@ -5,6 +5,7 @@ import '../LandingPage.css';
 import './ServicePage.css';
 import Fb from '../../assets/icon/Fb.svg';
 import Tk from '../../assets/icon/Tk.svg';
+import Ln from '../../assets/service/LN.svg';
 import elipse from '../../pages/images/heading_ellipse.png';
 import './bookDemo.css';
 import { Mail, Phone } from 'lucide-react';
@@ -126,17 +127,17 @@ const BookDemo = ({ scrollContainerRef }) => {
     e.preventDefault();
   };
 
-useEffect(() => {
-  const container = landingRef.current;
-  if (!container) return;
+  useEffect(() => {
+    const container = landingRef.current;
+    if (!container) return;
 
-  const handleScroll = () => {
-    setIsScrolled(container.scrollTop > 30);
-  };
+    const handleScroll = () => {
+      setIsScrolled(container.scrollTop > 30);
+    };
 
-  container.addEventListener('scroll', handleScroll, { passive: true });
-  return () => container.removeEventListener('scroll', handleScroll);
-}, []);
+    container.addEventListener('scroll', handleScroll, { passive: true });
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const { pathname, hash, key } = useLocation();
 
@@ -333,6 +334,14 @@ useEffect(() => {
               >
                 Referral
               </a>
+              <div className="d-flex flex-column gap-2">
+                <Link to="/book-demo">
+                  <button className="a3d-book-demo-btn">Book a Demo</button>
+                </Link>
+                <Link to="/platform/">
+                  <button className="a3d-join-btn">Join Waitlist</button>
+                </Link>
+              </div>
             </nav>
           </div>
           {isOpen && <div className="overlay" onClick={() => setIsOpen(false)} />}
@@ -370,7 +379,9 @@ useEffect(() => {
                 </span>
                 <div className="d-flex flex-column">
                   <span className="bd-contact-label">Email</span>
-                  <span className="bd-contact-value">ai3dscanningsolu@gmail.com</span>
+                  <Link 
+                  to="https://mail.google.com/mail/?view=cm&fs=1&to=contact@ai3dscanning.com"
+                  target="_blank" className="bd-contact-value">ai3dscanningsolu@gmail.com</Link>
                 </div>
               </div>
             </div>
@@ -387,13 +398,13 @@ useEffect(() => {
 
             <div className="bd-top-social">
               <span className="bd-social-label">Follow us</span>
-              <a href="#" className="bd-social-btn" aria-label="Facebook">
+              <a href="https://www.facebook.com/share/1Bbvpcm4EU/?mibextid=wwXIfr" target="_blank" className="bd-social-btn" aria-label="Facebook">
                 <img src={Fb} alt="fb" width="15" height="15" />
               </a>
-              <a href="#" className="bd-social-btn" aria-label="TikTok">
+              {/* <a href="https://www.linkedin.com/company/ai3d-scanning-solutions-inc/?" target="_blank" className="bd-social-btn" aria-label="Linkedin">
                 <img src={Tk} alt="tk" width="15" height="15" />
-              </a>
-              <a href="#" className="bd-social-btn" aria-label="Instagram">
+              </a> */}
+              <a href="https://www.instagram.com/ai3d_scanning_solutions?igshid=MWd1bzRmaDBpcXcycg%3D%3D&utm_source=qr" target="_blank" className="bd-social-btn" aria-label="Instagram">
                 <svg
                   width="15"
                   height="15"
@@ -409,20 +420,8 @@ useEffect(() => {
                   <circle cx="17.5" cy="6.5" r="1" fill="#de3996" stroke="none" />
                 </svg>
               </a>
-              <a href="#" className="bd-social-btn" aria-label="LinkedIn">
-                <svg
-                  width="15"
-                  height="15"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#de3996"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <rect x="2" y="2" width="20" height="20" rx="4" />
-                  <path d="M7 10v7M7 7v.01M12 17v-4a2 2 0 014 0v4M12 10v7" />
-                </svg>
+              <a href="https://www.linkedin.com/company/ai3d-scanning-solutions-inc/?" target="_blank" className="bd-social-btn" aria-label="Instagram">
+                <img src={Ln} alt="tk" width="15" height="15" />
               </a>
             </div>
           </div>

@@ -14,13 +14,9 @@ import WaitlistModal from '../components/popup/WaitlistModal';
 const WaitingListSection = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     
-    // Countdown logic: Set target to some future date (e.g., 30 days from now)
+    // Countdown logic: Set target to April 30, 2026
+    const targetDate = new Date('2026-04-30T00:00:00');
 
-    const [targetDate] = useState(() => {
-        const date = new Date();
-        date.setDate(date.getDate() + 30);
-        return date;
-    });
 
     const calculateTimeLeft = () => {
         const now = new Date();

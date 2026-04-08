@@ -440,7 +440,7 @@ const BookDemo = ({ scrollContainerRef }) => {
               </span>
               <div className="d-flex flex-column">
                 <span className="bd-contact-label">Phone</span>
-                <span className="bd-contact-value">+44 753586 2444</span>
+                <span className="bd-contact-value">+923443228863 , +12088076899</span>
               </div>
             </div>
 

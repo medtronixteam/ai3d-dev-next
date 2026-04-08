@@ -1029,7 +1029,7 @@
   font-size: 0.8rem;
   font-weight: 600;
   color: #000;
-  margin: 0 0 0.1rem 0;
+  margin: 0;
 }
 
 .ctc-info-value {
@@ -1038,6 +1038,7 @@
   color: #00000073;
   font-weight: 400;
   margin: 0;
+  text-decoration: none;
 }
 
 /* social */

@@ -73,9 +73,14 @@ const Projects = () => {
           <div
             className="pti-card"
             key={i}
-            onClick={() => openModal(i)}
-            style={{ cursor: 'pointer' }}
-          >
+            onClick={() => {
+                if (p.title === 'Fitness products E commerce') {
+                  window.open('https://portfolio.ai3dscanning.com/projects', '_blank');
+                } else {
+                  openModal(i);
+                }
+              }}            
+              style={{ cursor: 'pointer' }}>
             <span className="pti-deco pti-deco-1">✦</span>
             <span className="pti-deco pti-deco-2" />
             <span className="pti-deco pti-deco-3">✦</span>

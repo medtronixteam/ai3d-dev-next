@@ -198,7 +198,7 @@ const ProjectsDetail = ({ projectIndex, onClose }) => {
           <div className="view-project-section">
             <span>View Project at </span>
             <span className='arrow-diagonal-move'><img src={Diagonal} alt="diagonal" width={12} height={12} /></span>
-             <Link className='view-project-section-link'>www.furniture4you.com</Link>
+             <Link to='https://furniture-frontend.ai3dscanning.com/' target='_blank' className='view-project-section-link'>www.furniture4you.com</Link>
           </div>
 
         </div>

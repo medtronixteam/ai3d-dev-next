@@ -20,7 +20,7 @@ const Contact = () => {
   };
 
   return (
-    <section className="ctc-section">
+    <section className="ctc-section" id='contact'>
       <div className="ctc-card">
 
         {/* ── LEFT ─────────────────────────────────────────── */}
@@ -71,7 +71,7 @@ const Contact = () => {
               </span>
               <div>
                 <p className="ctc-info-label">Call Us</p>
-                <p className="ctc-info-value">+44 753586 2444</p>
+                <p className="ctc-info-value">+923443228863 , +12088076899</p>
               </div>
             </div>
 
@@ -86,7 +86,7 @@ const Contact = () => {
               </span>
               <div>
                 <p className="ctc-info-label">Book a Demo</p>
-                <p className="ctc-info-value">Schedule meeting</p>
+                <Link to='https://calendly.com/arslan-medtronix/30min' target='_blank' className="ctc-info-value">Schedule meeting</Link>
               </div>
             </div>
           </div>

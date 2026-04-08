@@ -312,8 +312,12 @@
 .WM_textarea {
     min-height: 100px;
     resize: none;
-    border: 1px solid #eee;
+    border: 1px solid #eee !important;
     /* Added explicit border */
+}
+
+.WM_textarea:focus {
+    border-color: #DE3996 !important;
 }
 
 

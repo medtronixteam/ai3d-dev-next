@@ -20,8 +20,8 @@ jobs:
       run: |
         echo "$SSH_KEY" > /tmp/deploy_key
         chmod 600 /tmp/deploy_key
-        ssh -i /tmp/deploy_key -o StrictHostKeyChecking=no framewise8@$SERVER_IP <<EOF
-          cd /home/framewise8/cipa-project/AI_3d_scanning
+        ssh -i /tmp/deploy_key -o StrictHostKeyChecking=no ubuntu@$SERVER_IP <<EOF
+          cd /home/ubuntu/3Dio-project/AI_3d_scanning
           
           git pull origin main
           cd ..

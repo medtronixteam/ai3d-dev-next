@@ -48,11 +48,11 @@ const DedicatedModal = ({ isOpen, onClose }) => {
       <div className="dem-process-section">
         <img src={ProcessBg} alt="" className="dem-process-bg" aria-hidden="true" />
 
-        <div className="dem-process-track">
+        <div className="dem-process-trackk">
           {ourProcess.map((step, index) => (
             <React.Fragment key={step.step}>
 
-              <div className="dem-proc-card">
+              <div className={`dem-proc-card ${index % 2 === 0 ? 'em-proc-card--top' : 'em-proc-card--bottom'}`}>
                 {/* Icon + number badge */}
                 <div className="dem-proc-icon-row">
                   <div className="">
@@ -65,11 +65,11 @@ const DedicatedModal = ({ isOpen, onClose }) => {
               </div>
 
               {index < ourProcess.length - 1 && (
-                <div className={`dem-proc-arrow-wrap ${index % 2 === 0 ? 'arrow-top' : 'arrow-bottom'}`}>
+                <div className={`dem-proc-arrow-wrap ${index % 2 === 0 ? 'arrow-topp' : 'arrow-bottomm'}`}>
                   <img
                     src={index % 2 === 0 ? ArrowUp : ArrowDown}
                     alt=""
-                    className="dem-proc-arrow"
+                    className="em-proc-arrow"
                     aria-hidden="true"
                   />
                 </div>

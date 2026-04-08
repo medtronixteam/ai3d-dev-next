@@ -15,8 +15,8 @@ const TICKER_ITEMS = [
 ];
 
 const STATS = [
-  { number: '300', suffix: '+',  label: 'Happy Client' },
-  { number: '50',  suffix: '+',  label: 'Amazing Engineers' },
+  { number: '100', suffix: '+',  label: 'Happy Client' },
+  { number: '30',  suffix: '+',  label: 'Amazing Engineers' },
   { number: '98',  suffix: '%',  label: 'On-time Delivery' },
   { number: '24',  suffix: '/7', label: 'Support Available' },
 ];

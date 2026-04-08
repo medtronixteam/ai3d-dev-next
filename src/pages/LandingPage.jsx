@@ -943,6 +943,9 @@ const LandingPage = () => {
                     Home
                   </Link>
 
+                  <Link to="https://calendly.com/arslan-medtronix/30min" className="a3d-nav-link">
+                    Schedule Meeting
+                  </Link>
 
                   <Link
                     to="/services"
@@ -1004,6 +1007,10 @@ const LandingPage = () => {
                   className={`a3d-nav-link ${location.pathname === '/' ? 'active' : ''}`}
                 >
                   Home
+                </Link>
+
+                <Link to="https://calendly.com/arslan-medtronix/30min" className="a3d-nav-link">
+                    Schedule Meeting
                 </Link>
 
                 <Link
@@ -1080,11 +1087,11 @@ const LandingPage = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
                 >
-                  AI-powered platform for live 3D model generation, editing and{' '}
-                  <span className="d-none d-lg-inline">
+                  Building the "Canva of 3D" an AI native end-to-end platform that turns images, video and text into 3D assets in minutes,
+                  {/* <span className="d-none d-lg-inline">
                     <br />
-                  </span>{' '}
-                  collaboration - no expensive hardware needed.
+                  </span>{' '} */}
+                  with editing, asset management and developer APIs built in.
                 </motion.p>
 
                 <div

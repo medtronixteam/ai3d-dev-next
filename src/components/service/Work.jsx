@@ -89,9 +89,9 @@ const Work = () => {
 
           {/* divider */}
           <div className="wms-divider">
-            <span className="wms-divider-line" />
+            <span className="wms-divider-line left" />
             <span className="wms-divider-label">What we Offer</span>
-            <span className="wms-divider-line" />
+            <span className="wms-divider-line right" />
           </div>
 
           {/* features */}

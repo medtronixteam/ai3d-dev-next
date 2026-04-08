@@ -5,9 +5,19 @@ import elipse from '../pages/images/heading_ellipse.png';
 import Mv from '../assets/service/Mv.svg'
 
 /* ── avatar */
-const Avatar = ({ letter, color }) => (
-  <div className="osm-avatar" style={{ background: color }}>{letter}</div>
+const MEMBER_DATA = [
+  { src: null, letter: 'A' },
+  { src: 'https://randomuser.me/api/portraits/men/32.jpg', letter: 'B' },
+  { src: 'https://randomuser.me/api/portraits/women/44.jpg', letter: 'C' },
+  { src: null, letter: 'D' },
+];
+
+const Avatar = ({ src, letter, color }) => (
+  src
+    ? <img className="osm-avatar osm-avatar-img" src={src} alt={letter} />
+    : <div className="osm-avatar osm-avatar-initial" style={{ background: color }}>{letter}</div>
 );
+
 const AVATAR_COLORS = ['#de3996', '#a052b5', '#ff85ca', '#7c3aed', '#059669', '#0ea5e9'];
 
 const STEP_POSITIONS = [
@@ -114,7 +124,12 @@ const OurServicesModal = ({ isOpen, onClose, defaultModel = 'Project to Project'
                 <div className="osm-members-wrap">
                     <div className="osm-avatars">
                     {Array.from({ length: Math.min(active.members, 4) }).map((_, i) => (
-                        <Avatar key={i} letter={String.fromCharCode(65 + i)} color={AVATAR_COLORS[i % AVATAR_COLORS.length]} />
+                      <Avatar
+                        key={i}
+                        src={MEMBER_DATA[i]?.src}
+                        letter={MEMBER_DATA[i]?.letter || String.fromCharCode(65 + i)}
+                        color={AVATAR_COLORS[i % AVATAR_COLORS.length]}
+                      />
                     ))}
                     </div>
                     <span className="osm-members-count">{active.members} members</span>
@@ -154,7 +169,7 @@ const OurServicesModal = ({ isOpen, onClose, defaultModel = 'Project to Project'
                   {ourProcess.map((step, index) => (
                     <React.Fragment key={step.step}>
         
-                      <div className="dem-proc-card">
+                      <div className={`dem-proc-card ${index % 2 === 0 ? 'dem-proc-card--top' : 'dem-proc-card--bottom'}`}>
                         <div className="dem-proc-icon-row">
                           <div className="">
                             <img src={step.icon} alt={step.title} className="dem-proc-icon" />

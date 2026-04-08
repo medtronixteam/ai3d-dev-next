@@ -94,6 +94,15 @@
   padding: 0 2rem !important;
 }
 
+.dem-process-trackk {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  position: relative;
+  z-index: 1;
+  height: stretch;
+}
+
 .dem-process-track {
   display: flex;
   align-items: center;
@@ -115,12 +124,44 @@
   padding-top: 36px;
 }
 
+.dem-proc-arrow-wrap.arrow-topp {
+  align-self: flex-start;
+  padding-top: 60px;
+}
+
 .dem-proc-arrow-wrap.arrow-bottom {
   align-self: flex-end;
 }
 
+.dem-proc-arrow-wrap.arrow-bottomm {
+  align-self: flex-end;
+  padding-bottom: 20px;
+}
+
+.dem-proc-card--top {
+  transform: translateY(-30px);
+}
+
+.dem-proc-card--bottom {
+  transform: translateY(40px);
+}
+
+.em-proc-card--top {
+  transform: translateY(-10px);
+}
+
+.em-proc-card--bottom {
+  transform: translateY(20px);
+}
+
 .dem-proc-arrow {
-  width: 48px;
+  width: 80px;
+  height: auto;
+  object-fit: contain;
+}
+
+.em-proc-arrow {
+  width: 70px;
   height: auto;
   object-fit: contain;
 }
@@ -152,7 +193,7 @@
 .dem-proc-num {
   position: absolute;
   top: 0px;
-  right: -3rem;
+  right: -4rem;
   font-family: 'Manrope', sans-serif;
   font-weight: 800;
   font-size: 2rem;

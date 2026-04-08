@@ -19,6 +19,7 @@ import dot from '../../pages/images/do.png';
 import arrow from '../../pages/images/arri.png';
 import { FaChevronDown, FaArrowUp } from 'react-icons/fa';
 import WaitlistModal from '../../components/popup/WaitlistModal';
+import DemoBg from '../../assets/service/DemoBg.svg'
 
 const STATS = [
   { label: 'No Commitment' },
@@ -385,7 +386,12 @@ const BookDemo = ({ scrollContainerRef }) => {
 
         {/* ── Hero section  ── */}
         <div className="bd-hero-content">
-          <h1 className="bd-hero-title">Book Your Free Demo</h1>
+          <h1 className="bd-hero-title">Book Your {' '}
+         <span className="ctc-arch-wrap">
+            <img src={elipse} alt="elipse" className="book-arch"  />
+              Free
+          </span>
+         {' '} Demo</h1>
           <p className="bd-hero-subtitle">
             Tell us about your project and we'll show you exactly how we can build it — with a live
             prototype concept, timeline, and cost estimate.
@@ -405,6 +411,10 @@ const BookDemo = ({ scrollContainerRef }) => {
 
       {/* ── Main Card ── */}
       <section className="bd-card-section">
+
+       <img src={DemoBg} alt="" className="bd-demo-bg" aria-hidden="true" />
+
+       
         <div className="bd-card">
           {/* Top Info Bar */}
           <div className="bd-top-bar">
@@ -422,6 +432,8 @@ const BookDemo = ({ scrollContainerRef }) => {
               </div>
             </div>
 
+            <div style={{ width: '1px', height: '22px', background: '#0000001A' }} />
+
             <div className="bd-contact-chip">
               <span className="bd-contact-icon">
                 <Phone size={12} color="#de3996" />
@@ -431,6 +443,8 @@ const BookDemo = ({ scrollContainerRef }) => {
                 <span className="bd-contact-value">+44 753586 2444</span>
               </div>
             </div>
+
+            <div style={{ width: '1px', height: '22px', background: '#0000001A' }} />
 
             <div className="bd-top-social">
               <span className="bd-social-label">Follow us</span>
@@ -496,8 +510,6 @@ const BookDemo = ({ scrollContainerRef }) => {
                 ))}
               </div>
 
-              {/* Decorative bottom glow */}
-              <div className="bd-left-deco" aria-hidden="true" />
             </div>
 
             {/* ── RIGHT — FORM ── */}

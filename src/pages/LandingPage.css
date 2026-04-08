@@ -3120,7 +3120,12 @@ li {
 }
 
 .aithreed .footer {
-  background-color: rgba(26, 26, 64, 1);
+  /* background-color: #ffedf7 !important; */
+  background:
+    radial-gradient(ellipse 70% 60% at 15% 30%, rgba(255, 182, 220, 0.55) 0%, transparent 65%),
+    radial-gradient(ellipse 55% 50% at 85% 20%, #E1E1FF82 0%, transparent 60%),
+    radial-gradient(ellipse 60% 55% at 50% 80%, rgba(255, 210, 235, 0.4) 0%, transparent 65%),
+    linear-gradient(135deg, #fdf0f8 0%, #f8f0ff 40%, #fff5fb 70%, #ffedf7 100%);
   color: #fff;
   margin-top: 6.5625rem;
   padding-top: 1.25rem;
@@ -3179,7 +3184,7 @@ li {
   font-size: 0.78125rem;
   line-height: 100%;
   letter-spacing: 0%;
-  color: rgba(255, 255, 255, 0.8);
+  color: #1a1a40b2 !important;
   font-weight: 600;
   text-decoration: none !important;
 }
@@ -3256,7 +3261,7 @@ li {
 }
 
 .aithreed .footer .desc {
-  color: rgba(255, 255, 255, 0.8);
+  color: #1a1a40b2 !important;
   margin-bottom: 1.25rem;
   font-family: 'DM Sans';
   font-weight: 540;
@@ -3314,7 +3319,7 @@ li {
   font-size: 1.3125rem;
   font-weight: 600;
   margin-bottom: 0;
-  color: #fff;
+  color: #1a1a1a !important;
 }
 
 .aithreed .footer ul {
@@ -3384,7 +3389,7 @@ li {
   text-align: center;
   margin-top: 0.9375rem;
   font-size: 0.8125rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: #1a1a40b2;
 }
 
 .aithreed .footer .colorc {

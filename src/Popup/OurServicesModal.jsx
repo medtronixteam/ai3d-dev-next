@@ -1,16 +1,8 @@
 import React, { useState } from 'react';
 import './ourServices.css';
-import { SERVICES, ArrowBack, Project, ProcessBg, ourProcess, ArrowDown, ArrowUp } from './servicesData';
+import { SERVICES, ArrowBack, Project, ProcessBg, ourProcess, ArrowDown, ArrowUp, MEMBER_DATA } from './servicesData';
 import elipse from '../pages/images/heading_ellipse.png';
 import Mv from '../assets/service/Mv.svg'
-
-/* ── avatar */
-const MEMBER_DATA = [
-  { src: null, letter: 'A' },
-  { src: 'https://randomuser.me/api/portraits/men/32.jpg', letter: 'B' },
-  { src: 'https://randomuser.me/api/portraits/women/44.jpg', letter: 'C' },
-  { src: null, letter: 'D' },
-];
 
 const Avatar = ({ src, letter, color }) => (
   src
@@ -123,16 +115,19 @@ const OurServicesModal = ({ isOpen, onClose, defaultModel = 'Project to Project'
 
                 <div className="osm-members-wrap">
                     <div className="osm-avatars">
-                    {Array.from({ length: Math.min(active.members, 4) }).map((_, i) => (
-                      <Avatar
-                        key={i}
-                        src={MEMBER_DATA[i]?.src}
-                        letter={MEMBER_DATA[i]?.letter || String.fromCharCode(65 + i)}
-                        color={AVATAR_COLORS[i % AVATAR_COLORS.length]}
-                      />
-                    ))}
+                    {(() => {
+                      const members = MEMBER_DATA[active.id] || [];
+                      return members.map((member, i) => (
+                        <Avatar
+                          key={i}
+                          src={member.src}
+                          letter={member.letter}
+                          color={AVATAR_COLORS[i % AVATAR_COLORS.length]}
+                        />
+                      ));
+                    })()}
                     </div>
-                    <span className="osm-members-count">{active.members} members</span>
+                    <span className="osm-members-count">{(MEMBER_DATA[active.id] || []).length} members</span>
                 </div>
                 
             </div>

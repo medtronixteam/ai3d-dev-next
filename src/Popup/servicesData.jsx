@@ -196,4 +196,37 @@ export const ourProcess = [
   },
 ]
 
+export const MEMBER_DATA = {
+  ai: [
+    { src: 'https://randomuser.me/api/portraits/men/32.jpg',   letter: 'A' },
+    { src: 'https://randomuser.me/api/portraits/women/44.jpg', letter: 'B' },
+    { src: 'https://randomuser.me/api/portraits/men/15.jpg',   letter: 'C' },
+  ],
+  flutter: [
+    { src: 'https://randomuser.me/api/portraits/women/68.jpg', letter: 'A' },
+    { src: 'https://randomuser.me/api/portraits/men/76.jpg',   letter: 'B' },
+  ],
+  web: [
+    { src: 'https://randomuser.me/api/portraits/men/22.jpg',   letter: 'A' },
+    { src: 'https://randomuser.me/api/portraits/women/33.jpg', letter: 'B' },
+  ],
+  desktop: [
+    { src: 'https://randomuser.me/api/portraits/women/55.jpg', letter: 'A' },
+    { src: 'https://randomuser.me/api/portraits/men/11.jpg',   letter: 'B' },
+    { src: 'https://randomuser.me/api/portraits/women/90.jpg', letter: 'C' },
+  ],
+  business: [
+    { src: 'https://randomuser.me/api/portraits/men/99.jpg',   letter: 'A' },
+    { src: 'https://randomuser.me/api/portraits/women/25.jpg', letter: 'B' },
+  ],
+  creative: [
+    { src: 'https://randomuser.me/api/portraits/women/41.jpg', letter: 'A' },
+    { src: 'https://randomuser.me/api/portraits/men/63.jpg',   letter: 'B' },
+    { src: 'https://randomuser.me/api/portraits/women/53.jpg', letter: 'C' },
+  ],
+  fullstack: [
+    { src: 'https://randomuser.me/api/portraits/men/17.jpg',   letter: 'A' }
+  ],
+};
+
 export { ArrowBack, Project, Curve1, Curve2, ProcessBg, ArrowDown, ArrowUp };

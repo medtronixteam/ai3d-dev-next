@@ -90,7 +90,6 @@
   width: 100%;
   object-fit: cover;
   pointer-events: none;
-  opacity: 0.9;
   z-index: 0;
 }
 
@@ -504,7 +503,43 @@
     flex-shrink: 0;
   }
 
+  .dem-process-trackk {
+    flex-direction: column !important;
+  }
+
+  .em-proc-card--top {
+    transform: none;
+    margin-top: 1rem;
+  }
+
+  .em-proc-card--bottom {
+    transform: none;
+    margin-top: 1rem;
+  }
+
+  .dem-process-section {
+    margin-top: 0;
+  }
+
+  .dem-proc-card--top {
+    transform: none;
+    margin-top: 1rem;
+  }
+
+  .dem-proc-card:first-child {
+    margin-top: 0;
+  }
+
+  .dem-proc-card--bottom {
+    transform: none;
+    margin-top: 1rem;
+  }
+
   .dem-process-bg {
-    opacity: 0.35;
+    height: 100%;
+  }
+
+  .dem-process-title {
+    margin-bottom: 1rem;
   }
 }

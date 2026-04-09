@@ -96,7 +96,7 @@ const Projects = () => {
       </div>
 
       <div className="pti-footer">
-        <Link to="https://portfolio.ai3dscanning.com/projects" target='_blank' className="pti-view-all">
+        <Link to="https://portfolio.ai3dscanning.com/projects" className="pti-view-all">
           View All Projects
           <span className="pti-arrow">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">

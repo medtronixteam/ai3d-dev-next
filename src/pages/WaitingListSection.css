@@ -237,7 +237,7 @@
     background: #DE3996;
     color: #ffffff;
     border: none;
-    padding: 12px 35px;
+    padding: 0.8rem 1.8rem !important;
     border-radius: 10px;
     font-size: 16px;
     font-weight: 700;

@@ -256,6 +256,7 @@ body {
   font-weight: 600;
   font-style: SemiBold;
   letter-spacing: 0%;
+  width: fit-content;
 }
 
 .ai_3d_landing .a3d-join-btn:hover {

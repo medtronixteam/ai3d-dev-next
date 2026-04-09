@@ -366,24 +366,57 @@ const LandingPage = () => {
   const trustedLogosRef = useRef(null);
 
   useEffect(() => {
-    if (!isMobile || !trustedLogosRef.current) return;
-    let scrollAmount = 0;
-    const logoWidth = 140;
-    const interval = setInterval(() => {
-      scrollAmount += logoWidth;
-      if (
-        scrollAmount >=
-        trustedLogosRef.current.scrollWidth - trustedLogosRef.current.clientWidth
-      ) {
-        scrollAmount = 0;
+    const track = trustedLogosRef.current;
+    if (!track) return;
+
+    let animationId;
+    let isPaused = false;
+    const speed = 0.8;
+
+    const animate = () => {
+      if (!isPaused) {
+        track.scrollLeft += speed;
+        if (track.scrollLeft >= track.scrollWidth / 2) {
+          track.scrollLeft = 0;
+        }
       }
-      trustedLogosRef.current.scrollTo({
-        left: scrollAmount,
-        behavior: 'smooth',
-      });
-    }, 1800);
-    return () => clearInterval(interval);
-  }, [isMobile]);
+      animationId = requestAnimationFrame(animate);
+    };
+
+    animationId = requestAnimationFrame(animate);
+
+    const pause = () => { isPaused = true; };
+    const resume = () => { isPaused = false; };
+
+    track.addEventListener('mouseenter', pause);
+    track.addEventListener('mouseleave', resume);
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      track.removeEventListener('mouseenter', pause);
+      track.removeEventListener('mouseleave', resume);
+    };
+  }, []);
+
+  // useEffect(() => {
+  //   if (!isMobile || !trustedLogosRef.current) return;
+  //   let scrollAmount = 0;
+  //   const logoWidth = 140;
+  //   const interval = setInterval(() => {
+  //     scrollAmount += logoWidth;
+  //     if (
+  //       scrollAmount >=
+  //       trustedLogosRef.current.scrollWidth - trustedLogosRef.current.clientWidth
+  //     ) {
+  //       scrollAmount = 0;
+  //     }
+  //     trustedLogosRef.current.scrollTo({
+  //       left: scrollAmount,
+  //       behavior: 'smooth',
+  //     });
+  //   }, 1800);
+  //   return () => clearInterval(interval);
+  // }, [isMobile]);
 
   useEffect(() => {
     if (hash === '') {
@@ -1217,9 +1250,9 @@ const LandingPage = () => {
               <div className="col-12 col-md-8">
                 <div
                   className="a3d-trusted d-flex align-items-center gap-1 a3d-slide-up"
-                  style={{ animationDelay: '0.2s', marginTop: window.innerWidth < 768 ? 0 : 40 }}
+                  style={{ animationDelay: '0.2s', marginTop: window.innerWidth < 768 ? 0 : 40, flexWrap: 'nowrap' }}
                 >
-                  <span className="trusted-label" style={{ fontSize: 14, marginRight: 10 }}>
+                  <span className="trusted-label" style={{ fontSize: 14, marginRight: 10, whiteSpace: 'nowrap', flexShrink: 0 }}>
                     Trusted by:
                   </span>
                   <div
@@ -1228,16 +1261,21 @@ const LandingPage = () => {
                     style={{
                       display: 'flex',
                       gap: 10,
-                      overflowX: isMobile ? 'auto' : 'visible',
-                      scrollBehavior: 'smooth',
+                      flex: 1,              // baqi saari width le lo
+                      overflow: 'hidden',   // scroll hidden, JS handle karega
                       scrollbarWidth: 'none',
                       msOverflowStyle: 'none',
                       alignItems: 'center',
                       minHeight: 40,
                     }}
                   >
-                    {trustedLogos.map((logo, idx) => (
-                      <img key={idx} src={logo.src} alt={logo.alt} style={logo.style} />
+                    {[...trustedLogos, ...trustedLogos].map((logo, idx) => (
+                      <img
+                        key={idx}
+                        src={logo.src}
+                        alt={logo.alt}
+                        style={{ ...logo.style, flexShrink: 0 }}
+                      />
                     ))}
                   </div>
                 </div>

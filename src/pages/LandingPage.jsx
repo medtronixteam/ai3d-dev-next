@@ -376,11 +376,15 @@ const LandingPage = () => {
     const animate = () => {
       if (!isPaused) {
         track.scrollLeft += speed;
-        if (track.scrollLeft >= track.scrollWidth / 2) {
-          track.scrollLeft = 0;
+
+        const halfWidth = track.scrollWidth / 2;
+
+        if (track.scrollLeft >= halfWidth) {
+          track.scrollLeft -= halfWidth;
         }
       }
       animationId = requestAnimationFrame(animate);
+      return animationId;
     };
 
     animationId = requestAnimationFrame(animate);
@@ -1256,27 +1260,29 @@ const LandingPage = () => {
                     Trusted by:
                   </span>
                   <div
-                    className="a3d-trusted-scroll"
+                    className="a3d-trusted-scroll-wrapper"
                     ref={trustedLogosRef}
-                    style={{
-                      display: 'flex',
-                      gap: 10,
-                      flex: 1,              // baqi saari width le lo
-                      overflow: 'hidden',   // scroll hidden, JS handle karega
-                      scrollbarWidth: 'none',
-                      msOverflowStyle: 'none',
-                      alignItems: 'center',
-                      minHeight: 40,
+                    onMouseEnter={() => {
+                      if (trustedLogosRef.current) {
+                        trustedLogosRef.current.style.animationPlayState = 'paused';
+                      }
+                    }}
+                    onMouseLeave={() => {
+                      if (trustedLogosRef.current) {
+                        trustedLogosRef.current.style.animationPlayState = 'running';
+                      }
                     }}
                   >
-                    {[...trustedLogos, ...trustedLogos].map((logo, idx) => (
-                      <img
-                        key={idx}
-                        src={logo.src}
-                        alt={logo.alt}
-                        style={{ ...logo.style, flexShrink: 0 }}
-                      />
-                    ))}
+                    <div className="a3d-trusted-scroll-track">
+                      {[...trustedLogos, ...trustedLogos].map((logo, idx) => (
+                        <img
+                          key={idx}
+                          src={logo.src}
+                          alt={logo.alt}
+                          style={{ ...logo.style, flexShrink: 0 }}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>

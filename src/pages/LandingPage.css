@@ -259,6 +259,27 @@ body {
   width: fit-content;
 }
 
+.a3d-trusted-scroll-wrapper {
+  flex: 1;
+  overflow: hidden;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.a3d-trusted-scroll-track {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: trustedScroll 18s linear infinite;
+  width: max-content;
+}
+
+@keyframes trustedScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
 .ai_3d_landing .a3d-join-btn:hover {
   background: white;
   transition: all 0.3s ease;

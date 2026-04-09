@@ -7,6 +7,7 @@ import HotelManagement from '../../assets/icon/HotelManagement.svg';
 import Blablab         from '../../assets/icon/Blablab.svg';
 import ProjectsDetail from '../../Popup/ProjectsDetail';
 import elipse from '../../pages/images/heading_ellipse.png';
+import { Link } from 'react-router-dom';
 
 const PROJECTS = [
   {
@@ -73,14 +74,9 @@ const Projects = () => {
           <div
             className="pti-card"
             key={i}
-            onClick={() => {
-                if (p.title === 'Fitness products E commerce') {
-                  window.open('https://portfolio.ai3dscanning.com/projects', '_blank');
-                } else {
-                  openModal(i);
-                }
-              }}            
-              style={{ cursor: 'pointer' }}>
+            onClick={() => openModal(i)}
+            style={{ cursor: 'pointer' }}
+          >
             <span className="pti-deco pti-deco-1">✦</span>
             <span className="pti-deco pti-deco-2" />
             <span className="pti-deco pti-deco-3">✦</span>
@@ -100,7 +96,7 @@ const Projects = () => {
       </div>
 
       <div className="pti-footer">
-        <a href="#" className="pti-view-all">
+        <Link to="https://portfolio.ai3dscanning.com/projects" target='_blank' className="pti-view-all">
           View All Projects
           <span className="pti-arrow">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -108,7 +104,7 @@ const Projects = () => {
               <path d="M8 10h5M11 8l2 2-2 2" stroke="#de3996" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </span>
-        </a>
+        </Link>
       </div>
 
       {selectedIndex !== null && (

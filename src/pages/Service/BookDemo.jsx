@@ -427,7 +427,7 @@ const BookDemo = ({ scrollContainerRef }) => {
                   <span className="bd-contact-label">Email</span>
                   <Link 
                   to="https://mail.google.com/mail/?view=cm&fs=1&to=contact@ai3dscanning.com"
-                  target="_blank" className="bd-contact-value">ai3dscanningsolu@gmail.com</Link>
+                  target="_blank" className="bd-contact-value">contact@ai3dscanning.com</Link>
                 </div>
               </div>
             </div>

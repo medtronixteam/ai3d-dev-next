@@ -57,7 +57,7 @@ const Contact = () => {
                 <Link 
                 to="https://mail.google.com/mail/?view=cm&fs=1&to=contact@ai3dscanning.com"
                 target="_blank"
-                className="ctc-info-value">ai3dscanningsolu@gmail.com</Link>
+                className="ctc-info-value">contact@ai3dscanning.com</Link>
               </div>
             </div>
 

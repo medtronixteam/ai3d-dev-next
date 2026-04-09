@@ -1,3 +1,13 @@
+:root {
+  --primary: #DE399680;
+  --primary-light: #f8bbd0;
+  --bg-color: #fff0f5;
+  --card-bg: #ffffff;
+  --text-dark: #333;
+  --text-light: #666;
+  --line-color: #f48fb1;
+}
+
 .ded-page {
   position: fixed;
   inset: 0;
@@ -10,7 +20,9 @@
   padding: 1.5rem 0rem 4rem;
 }
 
-.ded-page::-webkit-scrollbar { display: none; }
+.ded-page::-webkit-scrollbar {
+  display: none;
+}
 
 .dem-topbar {
   display: flex;
@@ -50,11 +62,10 @@
 
 .dem-subtitle {
   font-size: 0.85rem;
-  color: #1A1A40B2;
+  color: #1a1a40b2;
   font-weight: 500;
   margin: 0;
 }
-
 
 /* ══════════════════════════════════════════
    Our Process Section
@@ -197,7 +208,7 @@
   font-family: 'Manrope', sans-serif;
   font-weight: 800;
   font-size: 2rem;
-  color: #DE3996;
+  color: #de3996;
   line-height: 1;
 }
 
@@ -220,7 +231,7 @@
 }
 
 .browse-service-btn {
-  background: #DE3996;
+  background: #de3996;
   padding: 0.6rem 1rem;
   width: fit-content;
   border-radius: 8px;
@@ -233,7 +244,7 @@
 }
 
 .browse-free-call {
-  background: #FF9C3E;
+  background: #ff9c3e;
   padding: 0.6rem 1rem;
   width: fit-content;
   border-radius: 8px;
@@ -245,10 +256,207 @@
   outline: none;
 }
 
+/* body {
+        font-family: 'Poppins', sans-serif;
+        background-color: var(--bg-color);
+        margin: 0;
+        padding: 40px 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    } */
+
+.dem-section-chart-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  width: 1000px;
+  height: 900px;
+  background: linear-gradient(180deg, #FFF4FA, #FFFFFF);
+  box-shadow: 0 0 8px #00000014;
+  border-radius: 22px;
+  overflow: hidden;
+}
+
+/* SVG Lines */
+.dem-section-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.dem-section-lines path {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 2;
+  stroke-dasharray: 6 6;
+  margin-top: 2rem !important;
+}
+
+/* Headers */
+.dem-section-header {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dem-section-header-top {
+  top: 40px;
+}
+.dem-section-header-bottom {
+  top: 380px;
+}
+
+.dem-section-header-icon {
+  width: 45px;
+  height: 45px;
+  background: var(--card-bg);
+  border: 2px solid var(--primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--primary);
+  box-shadow: 0 4px 10px rgba(233, 30, 99, 0.2);
+  margin-bottom: 10px;
+}
+
+.dem-section-header h2 {
+  margin-top: -1rem;
+  font-size: 16px;
+  color: var(--text-dark);
+  font-weight: 700;
+}
+
+/* Cards */
+.dem-section-card {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  z-index: 2;
+  transition: transform 0.3s;
+}
+
+.dem-section-card:hover {
+  transform: scale(1.02);
+}
+
+.dem-section-badge {
+  width: 40px;
+  height: 40px;
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.1;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(233, 30, 99, 0.4);
+}
+
+.dem-section-badge span {
+  font-size: 14px;
+}
+
+.dem-section-info {
+  margin-left: 15px;
+  background: linear-gradient(90deg, #FFFFFF, #F8F8F8);
+  border-radius: 46px;
+  box-shadow: 0 8px 32px #0000001A;
+  padding: 0.45rem 1.5rem;
+  width: 150px;
+}
+
+.dem-section-info h3 {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-dark);
+  font-weight: 700;
+}
+
+.dem-section-info p {
+  margin: 2px 0 0 5px;
+  font-size: 8px;
+  color: var(--text-light);
+  white-space: nowrap;
+}
+
+/* Reverse Card Style */
+.dem-section-card.dem-section-rev {
+  padding: 5px 15px 5px 5px;
+  flex-direction: row-reverse;
+}
+
+.dem-section-card.rev .dem-section-info {
+  margin-left: 0;
+  margin-right: 15px;
+  text-align: right;
+}
+
+.dem-section-c1 {
+  top: 235px;
+  left: 80px;
+}
+.dem-section-c2 {
+  top: 295px;
+  left: 290px;
+}
+.dem-section-c3 {
+  top: 235px;
+  left: 500px;
+}
+.dem-section-c4 {
+  top: 295px;
+  left: 710px;
+}
+
+.dem-section-e1 {
+  top: 500px;
+  left: 80px;
+}
+.dem-section-e2 {
+  top: 580px;
+  left: 290px;
+}
+.dem-section-e3 {
+  top: 500px;
+  left: 500px;
+}
+.dem-section-e4 {
+  top: 580px;
+  left: 710px;
+}
+
+.dem-section-eng-icon {
+  font-size: 16px;
+}
+
+
 /* ── Responsive ── */
 @media (max-width: 900px) {
-  .dem-proc-arrow { width: 36px; }
-  .dem-proc-arrow-wrap { width: 40px; }
+  .dem-proc-arrow {
+    width: 36px;
+  }
+  .dem-proc-arrow-wrap {
+    width: 40px;
+  }
 }
 
 @media (max-width: 700px) {
@@ -258,7 +466,9 @@
     gap: 1rem;
   }
 
-  .dem-proc-arrow-wrap { display: none; }
+  .dem-proc-arrow-wrap {
+    display: none;
+  }
 
   .dem-title {
     font-size: 1.5rem !important;
@@ -274,7 +484,7 @@
   }
 
   .dem-process-title {
-   padding: 0 1rem !important;
+    padding: 0 1rem !important;
   }
 
   .dem-proc-card {
@@ -289,7 +499,12 @@
     right: -1.5rem;
   }
 
-  .dem-proc-icon-row { margin-bottom: 0; flex-shrink: 0; }
+  .dem-proc-icon-row {
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
 
-  .dem-process-bg { opacity: 0.35; }
+  .dem-process-bg {
+    opacity: 0.35;
+  }
 }

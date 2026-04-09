@@ -308,6 +308,9 @@ const BookDemo = ({ scrollContainerRef }) => {
                   >
                     Home
                   </Link>
+                  <Link to="https://calendly.com/arslan-medtronix/30min" className="a3d-nav-link">
+                    Schedule Meeting
+                  </Link>
                   <Link
                     to="/services"
                     className={`a3d-nav-link ${location.pathname === '/services' ? 'active' : ''}`}
@@ -354,6 +357,9 @@ const BookDemo = ({ scrollContainerRef }) => {
             <nav className="d-flex flex-column gap-2 px-3 pb-3">
               <Link to="/" className={`a3d-nav-link ${location.pathname === '/' ? 'active' : ''}`}>
                 Home
+              </Link>
+              <Link to="https://calendly.com/arslan-medtronix/30min" className="a3d-nav-link">
+                 Schedule Meeting
               </Link>
               <Link
                 to="/services"

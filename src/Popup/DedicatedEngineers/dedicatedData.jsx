@@ -2,7 +2,7 @@ import ALML from '../../assets/service/ALML.svg'
 import ArrowUp from '../../assets/service/ArrowUp.svg'
 import ArrowDown from '../../assets/service/ArrowDown.svg'
 import Backend from '../../assets/service/Backend.svg'
-import ContractLength from '../../assets/service/ContractLength.svg'
+import ContractLength from '../../assets/service/Cl.svg'
 import Dedicated from '../../assets/service/dedicated.svg'
 import DevOps from '../../assets/service/DevOps.svg'
 import Flutter from '../../assets/service/Fluttter.svg'
@@ -15,6 +15,8 @@ import UIUX from '../../assets/service/UIUX.svg'
 import ArrowBack from '../../assets/service/ArrowBack.svg'
 import elipse from '../../pages/images/heading_ellipse.png';
 import ProcessBg from '../../assets/images/WorkTogether.svg'
+import Circle from '../../assets/service/Circle.svg'
+import rec from '../../assets/service/rec.svg'
 
 export const contractLengthOptions = [
   {
@@ -127,5 +129,8 @@ export const arrowAssets = {
   Dedicated,
   ArrowBack,
   elipse,
-  ProcessBg
+  ProcessBg,
+  ContractLength,
+  rec,
+  Circle
 }

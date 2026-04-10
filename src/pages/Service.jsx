@@ -246,6 +246,16 @@ const Service = () => {
                     >
                       Referral
                     </Link>
+                    <a
+                      href="#"
+                      className="a3d-nav-link"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setIsWaitlistOpen(true);
+                      }}
+                    >
+                      Wish List
+                    </a>
                   </nav>
 
                   <div className="d-none d-lg-flex gap-3 align-items-center">
@@ -300,6 +310,18 @@ const Service = () => {
                   >
                     Referral
                   </Link>
+
+                  <a
+                    href="#"
+                    className="a3d-nav-link"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsWaitlistOpen(true);
+                      setIsOpen(false);
+                    }}
+                  >
+                    Wish List
+                  </a>
 
                   {/* <Link to="/signin" className="a3d-nav-link">
                   Sign-In

@@ -3,6 +3,7 @@ import './ourServices.css';
 import { SERVICES, ArrowBack, Project, ProcessBg, ourProcess, ArrowDown, ArrowUp, MEMBER_DATA } from './servicesData';
 import elipse from '../pages/images/heading_ellipse.png';
 import Mv from '../assets/service/Mv.svg'
+import { Link } from 'react-router-dom';
 
 const Avatar = ({ src, letter, color }) => (
   src
@@ -192,8 +193,8 @@ const OurServicesModal = ({ isOpen, onClose, defaultModel = 'Project to Project'
               </div>
         
               <div className="d-flex align-items-center justify-content-center mx-auto mt-4 gap-3">
-                <button className='browse-service-btn'>Start a Project</button>
-                <button className='browse-free-call'>Book a Free Call</button>
+                <Link to="https://portfolio.ai3dscanning.com/projects" className='browse-service-btn'>View Projects</Link>
+                <Link to="/book-demo" className='browse-free-call'>Book a Demo</Link>
               </div>
         </section>
 

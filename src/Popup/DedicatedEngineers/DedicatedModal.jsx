@@ -1,6 +1,7 @@
 import React from 'react'
 import { arrowAssets, ourProcess } from './dedicatedData'
 import './dedicated.css'
+import { Link } from 'react-router-dom'
 
 const DedicatedModal = ({ isOpen, onClose }) => {
   const { ArrowBack, Dedicated, elipse, ProcessBg, ArrowUp, ArrowDown, ContractLength, Cbg, AE
@@ -46,7 +47,7 @@ const DedicatedModal = ({ isOpen, onClose }) => {
       </div>
 
       {/* yaha place karna h section */}
-      <div className="dem-section-chart-wrapper d-none d-lg-flex">
+      <div className="dem-section-chart-wrapper d-none d-xl-flex">
 
             <span className="pti-deco pti-deco-5">✦</span>
             <span className="pti-deco pti-deco-6" />
@@ -293,8 +294,8 @@ const DedicatedModal = ({ isOpen, onClose }) => {
       </div>
 
       <div className="d-flex align-items-center justify-content-center mx-auto mt-4 gap-3">
-        <button className='browse-service-btn'>Browse Services</button>
-        <button className='browse-free-call'>Book a Free Call</button>
+        <Link to="https://calendly.com/arslan-medtronix/30min" className='browse-service-btn'>Schedule Meeting</Link>
+        <Link to="/book-demo" className='browse-free-call'>Book a Demo</Link>
       </div>
 
     </div>

@@ -23,13 +23,13 @@ const PROJECT_DETAILS = [
     subtitle: 'AI Development & Solutions',
     tagLabel: 'Ihsan AI',
     image: IhsanAI,
-    challenge: 'RetailCore was losing 22% of potential revenue due to generic product pages with no personalization. Their in-house team had no ML expertise.',
-    solution: 'Built a custom ML recommendation engine using collaborative filtering + NLP. Integrated with their existing e-commerce stack via REST API in under 3 weeks.',
-    result: '38% increase in average order value, 2.1x click-through rate on recommended products, and $1.2M additional ARR in Q1 alone.',
+    challenge: 'Businesses struggled to manage customer communication across multiple platforms like WhatsApp, SMS, and social media separately. This caused slow responses, inconsistent support, and missed sales opportunities.',
+    solution: 'Developed Ihsan CRM as a unified AI-powered platform integrating WhatsApp, SMS, Facebook, Instagram, and Web AI. Enabled personalized bots and automation for sales and customer support across all channels.',
+    result: 'Improved customer engagement through fast and consistent multi-channel communication. Increased sales efficiency and enhanced overall customer experience with automated support.',
     stats: [
-      { sign: "+", value: '38%', label: 'Average Order Value' },
-      { sign: "$", value: '1.2M', label: 'Additional ARR' },
-      { sign: "3", value: ' wks', label: 'Integration Time' },
+      { sign: "+", value: '60%', label: 'Average Order Value' },
+      { sign: "$", value: '40k', label: 'Additional ARR' },
+      { sign: "2", value: ' wks', label: 'Integration Time' },
     ],
   },
   {
@@ -38,13 +38,13 @@ const PROJECT_DETAILS = [
     subtitle: 'Productivity & Social Media',
     tagLabel: 'Chesteei',
     image: Chesteel,
-    challenge: 'Teams were juggling 4–5 separate tools for task management, scheduling, and social media, leading to missed deadlines and fragmented workflows.',
-    solution: 'Designed and built an all-in-one platform that unifies task boards, calendar scheduling, and social media post planning with a clean, intuitive UI.',
-    result: '60% reduction in tool-switching overhead, 3x faster post scheduling, and a 45% improvement in on-time task delivery across pilot teams.',
+    challenge: 'Managing organizational tasks, HR operations, and social media scheduling separately often caused delays and inefficiencies. Teams faced difficulty in coordination, tracking performance, and maintaining consistent social media activity.',
+    solution: 'Developed Cheestie as an all-in-one web application to manage tasks, HR operations, and social media scheduling. Provided a centralized system with an intuitive interface for better planning and coordination.',
+    result: 'Improved team productivity and streamlined daily operations across departments. Enhanced efficiency in task management and increased consistency in social media engagement.',
     stats: [
-      { value: '60%', label: 'Less Tool Switching' },
-      { value: '3x', label: 'Faster Scheduling' },
-      { value: '45%', label: 'On-Time Delivery Boost' },
+      { sign: "+", value: '45%', label: 'Average Order Value' },
+      { sign: "$", value: '50k', label: 'Additional ARR' },
+      { sign: "3", value: ' wks', label: 'Integration Time' },
     ],
   },
   {
@@ -53,13 +53,13 @@ const PROJECT_DETAILS = [
     subtitle: 'AI-Powered Education',
     tagLabel: 'GenTool AI',
     image: GenerationTool,
-    challenge: 'Educators spent 6–8 hours per week manually writing quiz questions, often with inconsistent difficulty levels and poor curriculum alignment.',
-    solution: 'Built an NLP-powered question generation engine that analyzes any text input and produces MCQs, short-answer, and true/false questions with difficulty tagging.',
-    result: 'Reduced question creation time by 80%, with 92% instructor satisfaction rate and adoption across 500+ educational institutions in the first quarter.',
+    challenge: 'Creating high-quality, context-specific questions manually was time-consuming and inconsistent. Educators and trainers faced difficulty generating adaptive questions for different learning needs.',
+    solution: 'Developed an AI-powered tool that automatically generates context-aware and precise questions. Enabled users to input content and get tailored questions for education, training, and research.',
+    result: 'Reduced time and effort required for question creation significantly. Improved quality, relevance, and consistency of generated questions across different use cases.',
     stats: [
-      { value: '80%', label: 'Time Saved' },
-      { value: '92%', label: 'Satisfaction Rate' },
-      { value: '500+', label: 'Institutions Onboarded' },
+      { sign: "+", value: '78%', label: 'Average Order Value' },
+      { sign: "$", value: '70k', label: 'Additional ARR' },
+      { sign: "3", value: ' wks', label: 'Integration Time' },
     ],
   },
   {
@@ -68,13 +68,13 @@ const PROJECT_DETAILS = [
     subtitle: 'Hospitality Tech',
     tagLabel: 'HotelMS',
     image: HotelManagement,
-    challenge: 'A mid-sized hotel chain was managing reservations across 3 disconnected systems, causing double bookings, billing errors, and slow check-ins.',
-    solution: 'Developed a unified hotel management platform covering reservations, check-ins, billing, housekeeping status, and staff coordination in a single dashboard.',
-    result: 'Zero double-bookings post-launch, 35% faster check-in process, and a 28% reduction in billing disputes within the first two months.',
+    challenge: 'Manual handling of reservations, check-ins, and billing led to errors and delays. Lack of proper staff coordination created communication gaps and inefficiencies.',
+    solution: 'Developed a system to automate reservations, check-ins, and billing processes. Integrated tools to improve staff communication and task management.',
+    result: 'Improved operational efficiency and reduced manual errors. Enhanced guest experience with faster and smoother services.',
     stats: [
-      { value: '0', label: 'Double Bookings' },
-      { value: '35%', label: 'Faster Check-in' },
-      { value: '28%', label: 'Fewer Billing Disputes' },
+      { sign: "+", value: '60%', label: 'Average Order Value' },
+      { sign: "$", value: '60k', label: 'Additional ARR' },
+      { sign: "2", value: ' wks', label: 'Integration Time' },
     ],
   },
   {
@@ -83,13 +83,13 @@ const PROJECT_DETAILS = [
     subtitle: 'Health & Retail',
     tagLabel: 'FitShop',
     image: Fitness,
-    challenge: 'A fitness brand had a poor mobile shopping experience — slow load times, high cart abandonment (72%), and no personalized product recommendations.',
-    solution: 'Built a performant React Native e-commerce app with optimized image loading, smart filters, a personalized recommendation engine, and a streamlined checkout.',
-    result: 'Cart abandonment dropped to 31%, average session time increased by 2.4x, and monthly revenue grew 55% within the first 60 days of launch.',
+    challenge: 'Customers faced difficulty in finding and purchasing fitness products from scattered and unreliable platforms. Manual order tracking and insecure payment systems reduced trust and convenience.',
+    solution: 'Developed a fitness ecommerce web app with a centralized product catalog and smooth checkout system. Integrated secure payment methods and real-time order tracking for better user experience.',
+    result: 'Improved shopping convenience with a fast and user-friendly platform. Increased customer trust and satisfaction through secure payments and transparent order management.',
     stats: [
-      { value: '31%', label: 'Cart Abandonment' },
-      { value: '2.4x', label: 'Avg Session Time' },
-      { value: '+55%', label: 'Revenue Growth' },
+      { sign: "+", value: '38%', label: 'Average Order Value' },
+      { sign: "$", value: '40k', label: 'Additional ARR' },
+      { sign: "3", value: ' wks', label: 'Integration Time' },
     ],
   },
   {
@@ -98,13 +98,13 @@ const PROJECT_DETAILS = [
     subtitle: 'Social Engagement Platform',
     tagLabel: 'Blablab',
     image: Blablab,
-    challenge: 'Content creators struggled to keep audiences engaged between posts. Existing tools lacked real-time interaction features and had high latency in data calls.',
-    solution: 'Built a mobile-first engagement app with live polls, reaction streams, interactive Q&As, and an optimized WebSocket architecture for real-time data delivery.',
-    result: 'Average audience engagement per session rose 3x, data call latency dropped by 70%, and the app reached 50K active users within 45 days of launch.',
+    challenge: 'Traditional platforms lacked real-time interaction and meaningful user engagement. It was difficult to understand audience behavior without proper data insights.',
+    solution: 'Developed BlabLab to provide interactive content and data-driven communication tools. Added analytics and engagement features to improve audience interaction.',
+    result: 'Improved user engagement through interactive and personalized experiences. Helped businesses build stronger and more meaningful connections with their audience.',
     stats: [
-      { value: '3x', label: 'Engagement Per Session' },
-      { value: '70%', label: 'Lower Latency' },
-      { value: '50K', label: 'Users in 45 Days' },
+      { sign: "+", value: '48%', label: 'Average Order Value' },
+      { sign: "$", value: '50k', label: 'Additional ARR' },
+      { sign: "3", value: ' wks', label: 'Integration Time' },
     ],
   },
 ];
@@ -133,14 +133,14 @@ const ProjectsDetail = ({ projectIndex, onClose }) => {
             <div className="pdm-img-wrap">
                 <img src={project.image} alt={project.title} className="pdm-img" />
 
-                <img src={Screen} alt="screen" className="pdm-screen-icon" />
+                {/* <img src={Screen} alt="screen" className="pdm-screen-icon" /> */}
             </div>
 
-            <div className="pdm-thumbnails">
+            {/* <div className="pdm-thumbnails">
                 <img src={project.image} alt="" />
                 <img src={project.image} alt="" />
                 <img src={project.image} alt="" />
-            </div>
+            </div> */}
         </div>
 
         {/* right */}
@@ -202,6 +202,7 @@ const ProjectsDetail = ({ projectIndex, onClose }) => {
           </div>
 
         </div>
+
       </div>
     </div>
   );

@@ -98,7 +98,7 @@
   font-weight: 600;
   font-size: 1.1rem;
   color: #020817;
-  margin: 2rem 0 0;
+  margin: 4rem 0 0;
   position: relative;
   z-index: 1;
   padding: 0 2rem !important;
@@ -255,25 +255,15 @@
   outline: none;
 }
 
-/* body {
-        font-family: 'Poppins', sans-serif;
-        background-color: var(--bg-color);
-        margin: 0;
-        padding: 40px 20px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-    } */
-
 .dem-section-chart-wrapper {
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 0 auto;
-  width: 1000px;
-  height: 900px;
+  width: 100%;
+  max-width: 1200px;
+  height: 1000px;
   background: linear-gradient(180deg, #FFF4FA, #FFFFFF);
   box-shadow: 0 0 8px #00000014;
   border-radius: 22px;
@@ -315,7 +305,7 @@
   top: 40px;
 }
 .dem-section-header-bottom {
-  top: 380px;
+  top: 480px;
 }
 
 .dem-section-header-icon {
@@ -353,34 +343,50 @@
   transform: scale(1.02);
 }
 
-.dem-section-badge {
-  width: 40px;
-  height: 40px;
-  background: var(--primary);
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  flex-direction: column;
+.dem-circle-container {
+  position: relative;
+  margin-left: 3rem;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
-  font-weight: 700;
-  line-height: 1.1;
-  flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(233, 30, 99, 0.4);
+}
+
+.dem-section-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-80%, -80%);
+  text-align: center;
+  pointer-events: none;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  gap: 0.2rem;
 }
 
 .dem-section-badge span {
-  font-size: 14px;
+  font-size: 1.1rem;
+  color: #000000;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 800;
+}
+
+.dem-section-badge-span {
+  font-size: 7px !important;
+  color: #de3996 !important;
+  font-family: 'Manrope', sans-serif !important;
+  font-weight: 600  !important;
+  margin-bottom: 4px;
 }
 
 .dem-section-info {
-  margin-left: 15px;
+  margin-left: -20px;
   background: linear-gradient(90deg, #FFFFFF, #F8F8F8);
   border-radius: 46px;
-  box-shadow: 0 8px 32px #0000001A;
-  padding: 0.45rem 1.5rem;
-  width: 150px;
+  box-shadow: 0 12px 32px #0000001A;
+  padding: 0.4rem 1.5rem;
+  width: 140px;
+  margin-bottom: 10px;
 }
 
 .dem-section-info h3 {
@@ -391,7 +397,7 @@
 }
 
 .dem-section-info p {
-  margin: 2px 0 0 5px;
+  margin: 0 0 0 6px;
   font-size: 8px;
   color: var(--text-light);
   white-space: nowrap;
@@ -411,37 +417,27 @@
 
 .dem-section-c1 {
   top: 235px;
-  left: 80px;
+  left: 0px;
 }
 .dem-section-c2 {
   top: 295px;
-  left: 290px;
+  left: 250px;
 }
 .dem-section-c3 {
   top: 235px;
-  left: 500px;
+  left: 600px;
 }
 .dem-section-c4 {
   top: 295px;
-  left: 710px;
+  left: 75%;
 }
 
-.dem-section-e1 {
-  top: 500px;
-  left: 80px;
-}
-.dem-section-e2 {
-  top: 580px;
-  left: 290px;
-}
-.dem-section-e3 {
-  top: 500px;
-  left: 500px;
-}
-.dem-section-e4 {
-  top: 580px;
-  left: 710px;
-}
+.dem-section-e1 { top: 75%; left: -20px; }
+.dem-section-e2 { top: 85%; left: 11%; }
+.dem-section-e3 { top: 75%; left: 22%; }
+.dem-section-e4 { top: 70%; left: 45%; }
+.dem-section-e5 { top: 85%; left: 65%; }
+.dem-section-e6 { top: 75%; left: 76%; }
 
 .dem-section-eng-icon {
   font-size: 16px;

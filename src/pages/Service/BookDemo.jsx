@@ -301,7 +301,7 @@ const BookDemo = ({ scrollContainerRef }) => {
                 >
                   <i className="fas fa-bars" />
                 </button>
-                <nav className="d-none d-lg-flex gap-4">
+                <nav className="d-none d-lg-flex gap-lg-3 gap-xl-4">
                   <Link
                     to="/"
                     className={`a3d-nav-link ${location.pathname === '/' ? 'active' : ''}`}

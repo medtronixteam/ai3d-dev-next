@@ -3,7 +3,9 @@ import { arrowAssets, ourProcess } from './dedicatedData'
 import './dedicated.css'
 
 const DedicatedModal = ({ isOpen, onClose }) => {
-  const { ArrowBack, Dedicated, elipse, ProcessBg, ArrowUp, ArrowDown, ContractLength, rec, Circle } = arrowAssets
+  const { ArrowBack, Dedicated, elipse, ProcessBg, ArrowUp, ArrowDown, ContractLength, Cbg, AE
+    , Backend, UIUX, Flutter, DevOps, Stack
+   } = arrowAssets
 
   if (!isOpen) return null
 
@@ -44,27 +46,67 @@ const DedicatedModal = ({ isOpen, onClose }) => {
       </div>
 
       {/* yaha place karna h section */}
-      {/* <div className="dem-section-chart-wrapper">
+      <div className="dem-section-chart-wrapper d-none d-lg-flex">
+
+            <span className="pti-deco pti-deco-5">✦</span>
+            <span className="pti-deco pti-deco-6" />
+            <span className="pti-deco pti-deco-7">✦</span>
+            <span className="pti-deco pti-deco-8" />
+            <span className="pti-deco pti-deco-9">✦</span>
+            <span className="pti-deco pti-deco-10">✦</span>
+            <span className="pti-deco pti-deco-11" />
+            <span className="pti-deco pti-deco-12" />
 
           <svg className="dem-section-lines">
-            <path d="M 500 150 L 500 185" />
-            <path d="M 185 185 L 815 185" />
-            <path d="M 185 185 L 185 215" />
-            <path d="M 395 185 L 395 275" />
-            <path d="M 605 185 L 605 215" />
-            <path d="M 815 185 L 815 280" />
+          <defs>
+            <marker 
+              id="arrow-down" 
+              markerWidth="5" 
+              markerHeight="5" 
+              refX="0" 
+              refY="2.5" 
+              orient="auto-start-reverse"
+            >
+              <polygon points="0 0, 5 2.5, 0 5" fill="#DE399680" />
+            </marker>
+            <marker 
+              id="arrowhead" 
+              markerWidth="5" 
+              markerHeight="5" 
+              refX="0" 
+              refY="2.5" 
+              orient="auto"
+            >
+              <polygon points="0 0, 5 2.5, 0 5" fill="#DE399680" />
+            </marker>
+          </defs>
 
-            <path d="M 185 345 L 185 425 L 815 425 L 815 392" />
-            <path d="M 395 390 L 395 425" />
-            <path d="M 605 345 L 605 425" />
-            <path d="M 500 425 L 500 465" />
+            <path d="M 602 130 L 602 185" />
+            <path d="M 150 185 L 1055 185" />
+            <path d="M 150 185 L 150 215"  markerEnd="url(#arrowhead)" />
+            <path d="M 400 185 L 400 275" markerEnd="url(#arrowhead)" />
+            <path d="M 735 185 L 735 215" markerEnd="url(#arrowhead)" />
+            <path d="M 1055 185 L 1055 280" markerEnd="url(#arrowhead)" />
 
-            <path d="M 500 515 L 500 555" />
-            <path d="M 185 555 L 815 555" />
-            <path d="M 185 555 L 185 585" />
-            <path d="M 395 555 L 395 665" />
-            <path d="M 605 555 L 605 585" />
-            <path d="M 815 555 L 815 665" />
+            <path d="M 150 345 L 150 425" markerStart="url(#arrow-down)" />
+            <path d="M 150 425 L 1055 425" />
+            <path d="M 1055 425 L 1055 392" markerEnd="url(#arrowhead)" />
+            <path d="M 400 390 L 400 425" markerStart="url(#arrow-down)" />
+            <path d="M 735 345 L 735 425" markerStart="url(#arrow-down)"  />
+            <path d="M 602 425 L 602 475"  />
+
+            <path d="M 602 570 L 602 630" />
+            <path d="M 420 635 L 700 635" />
+            <path d="M 420 635 L 420 745" markerEnd="url(#arrowhead)" />
+            <path d="M 700 635 L 700 700" markerEnd="url(#arrowhead)" />
+            <path d="M 280 505 L 925 505" />
+            <path d="M 280 505 L 280 840" markerEnd="url(#arrowhead)" />
+            <path d="M 100 635 L 280 635" />
+            <path d="M 100 635 L 100 745" markerEnd="url(#arrowhead)" />
+            <path d="M 925 505 L 925 840" markerEnd="url(#arrowhead)" />
+            <path d="M 925 635 L 1100 635" />
+            <path d="M 1100 635 L 1100 745" markerEnd="url(#arrowhead)" />
+
           </svg>
           
           <div className="dem-section-header dem-section-header-top">
@@ -73,79 +115,145 @@ const DedicatedModal = ({ isOpen, onClose }) => {
           </div>
 
           <div className="dem-section-card dem-section-c1">
-            <div className="circle-container">
-              <img src={Circle} alt="circle-bg" />
-              <span>1 <b>Month</b></span>
+            <div className="dem-circle-container">
+              <img src={Cbg} alt="" width={90} height={90} />
+              <div className='dem-section-badge'>
+                <span>1</span>
+                <span className='dem-section-badge-span'>Month</span>
+              </div>
             </div>
-            <img src={rec} alt="" />
             <div className="dem-section-info">
-                <h3>Trial</h3>
-                <p>Test the fit before <br /> committing</p>
+              <h3>Trial</h3>
+              <p>Test the fit before <br /> committing</p>
             </div>
           </div>
 
           <div className="dem-section-card dem-section-c2">
-              <div className="dem-section-badge"><span>3</span>Months</div>
-              <div className="dem-section-info">
-                  <h3>Sprint</h3>
-                  <p>Ship a major feature <br /> or MVP</p>
+            <div className="dem-circle-container">
+              <img src={Cbg} alt="" width={90} height={90} />
+              <div className='dem-section-badge'>
+                <span>3</span>
+                <span className='dem-section-badge-span'>Months</span>
               </div>
+            </div>
+            <div className="dem-section-info">
+              <h3>Sprint</h3>
+              <p>Ship a major feature <br /> or MVP.</p>
+            </div>
           </div>
 
           <div className="dem-section-card dem-section-c3">
-              <div className="dem-section-badge"><span>6</span>Months</div>
-              <div className="dem-section-info">
-                  <h3>Build</h3>
-                  <p>Full-product <br /> development cycle</p>
+            <div className="dem-circle-container">
+              <img src={Cbg} alt="" width={90} height={90} />
+              <div className='dem-section-badge'>
+                <span>6</span>
+                <span className='dem-section-badge-span'>Months</span>
               </div>
+            </div>
+            <div className="dem-section-info">
+              <h3>Build</h3>
+              <p>Full product <br /> development cycle.</p>
+            </div>
           </div>
 
           <div className="dem-section-card dem-section-c4">
-              <div className="dem-section-badge"><span>12</span>Months</div>
-              <div className="dem-section-info">
-                  <h3>Scale</h3>
-                  <p>Long-term embedded <br /> partnership</p>
+            <div className="dem-circle-container">
+              <img src={Cbg} alt="" width={90} height={90} />
+              <div className='dem-section-badge'>
+                <span>12</span>
+                <span className='dem-section-badge-span'>Months</span>
               </div>
+            </div>
+            <div className="dem-section-info">
+              <h3>Scale</h3>
+              <p>Long-term embedded <br /> partnership</p>
+            </div>
           </div>
 
           <div className="dem-section-header dem-section-header-bottom">
-              <div className="dem-section-header-icon"><i className="fa-solid fa-users-gear"></i></div>
+              <img src={AE} alt="" width={80} height={80} />
               <h2>Available Engineers</h2>
           </div>
 
-          <div className="dem-section-card dem-section-rev dem-section-e1">
-              <div className="dem-section-badge"><i className="fa-solid fa-brain eng-icon"></i></div>
-              <div className="dem-section-info">
-                  <h3>AI / ML Eng.</h3>
-                  <p>PyTorch, LLMs, NLP, Data</p>
+          <div className="dem-section-card dem-section-e1">
+            <div className="dem-circle-container">
+              <img src={Cbg} alt="" width={90} height={90} />
+              <div className='dem-section-badge'>
+                <img src={Backend} alt="" width={30} height={30} />
               </div>
+            </div>
+            <div className="dem-section-info">
+              <h3>AI / ML Eng.</h3>
+              <p>PyTorch, LLMs, MLOps, <br /> Python</p>
+            </div>
           </div>
 
           <div className="dem-section-card dem-section-e2">
-              <div className="dem-section-badge"><i className="fa-solid fa-mobile-screen-button eng-icon"></i></div>
-              <div className="dem-section-info">
-                  <h3>Flutter Dev.</h3>
-                  <p>Flutter, Dart, Firebase, iOS/Android</p>
+            <div className="dem-circle-container">
+              <img src={Cbg} alt="" width={90} height={90} />
+              <div className='dem-section-badge'>
+                <img src={Stack} alt="" width={30} height={30} />
               </div>
+            </div>
+            <div className="dem-section-info">
+              <h3>Full Stack Eng.</h3>
+              <p>React, Node.js, <br /> PostgreSQL, AWS</p>
+            </div>
           </div>
 
-          <div className="dem-section-card dem-section-rev dem-section-e3">
-              <div className="dem-section-badge"><i className="fa-solid fa-server eng-icon"></i></div>
-              <div className="dem-section-info">
-                  <h3>Backend Eng.</h3>
-                  <p>Python, Go, Microservices, Docker</p>
+          <div className="dem-section-card dem-section-e3">
+            <div className="dem-circle-container">
+              <img src={Cbg} alt="" width={90} height={90} />
+              <div className='dem-section-badge'>
+                <img src={Flutter} alt="" width={30} height={30} />
               </div>
+            </div>
+            <div className="dem-section-info">
+              <h3>Flutter Dev.</h3>
+              <p>Flutter, Dart, Firebase, <br /> Riverpod</p>
+            </div>
           </div>
 
           <div className="dem-section-card dem-section-e4">
-              <div className="dem-section-badge"><i className="fa-solid fa-cloud-arrow-up eng-icon"></i></div>
-              <div className="dem-section-info">
-                  <h3>DevOps Eng.</h3>
-                  <p>AWS, Kubernetes, CI/CD, Terraform</p>
+            <div className="dem-circle-container">
+              <img src={Cbg} alt="" width={90} height={90} />
+              <div className='dem-section-badge'>
+                <img src={Backend} alt="" width={30} height={30} />
               </div>
+            </div>
+            <div className="dem-section-info">
+              <h3>Backend Eng.</h3>
+              <p>Python, Go, <br /> Microservices, Docker</p>
+            </div>
           </div>
 
-      </div> */}
+          <div className="dem-section-card dem-section-e5">
+            <div className="dem-circle-container">
+              <img src={Cbg} alt="" width={90} height={90} />
+              <div className='dem-section-badge'>
+                <img src={UIUX} alt="" width={30} height={30} />
+              </div>
+            </div>
+            <div className="dem-section-info">
+              <h3>Frontend Eng.</h3>
+              <p>React, TypeScript, <br /> Next.js, TailwindCSS</p>
+            </div>
+          </div>
+
+          <div className="dem-section-card dem-section-e6">
+            <div className="dem-circle-container">
+              <img src={Cbg} alt="" width={90} height={90} />
+              <div className='dem-section-badge'>
+                <img src={DevOps} alt="" width={30} height={30} />
+              </div>
+            </div>
+            <div className="dem-section-info">
+              <h3>DevOps Eng.</h3>
+              <p>AWS, Kubernetes, <br /> CI/CD, Terraform</p>
+            </div>
+          </div>
+
+      </div>
 
       {/* ── Our Process ── */}
       <h3 className="dem-process-title">Our Process</h3>

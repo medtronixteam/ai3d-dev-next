@@ -797,7 +797,7 @@
   position: absolute;
   pointer-events: none;
   z-index: 1;
-  color: #de3996;
+  color: #DE3996E5;
 }
 
 .pti-deco-1 {
@@ -832,6 +832,74 @@
   border-radius: 50%;
   background: #de3996;
   opacity: 0.25;
+}
+
+.pti-deco-5 {
+  top: 10px;
+  left: 38%;
+  font-size: 1.2rem;
+  opacity: 0.8;
+}
+
+.pti-deco-6 {
+  top: 16px;
+  left: 55%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #de3996;
+  opacity: 0.3;
+}
+
+.pti-deco-7 {
+  top: 30px;
+  right: 30%;
+  font-size: 1.1rem;
+  opacity: 0.8;
+}
+
+.pti-deco-8 {
+  top: 22px;
+  right: 6%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #de3996;
+  opacity: 0.25;
+}
+
+.pti-deco-9 {
+  top: 10px;
+  left: 14%;
+  font-size: 1.1rem;
+  opacity: 0.8;
+}
+
+.pti-deco-10 {
+  top: 20px;
+  right: 14%;
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+.pti-deco-11 {
+  top: 22px;
+  right: 10%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #de3996;
+  opacity: 0.25;
+}
+
+.pti-deco-12 {
+  top: 22px;
+  left: 6%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #de3996;
+  opacity: 0.4;
 }
 
 /* ── Tag ─────────────────────────────────────────────────── */
@@ -1284,7 +1352,7 @@
   }
 }
 
-@media (max-width : 600px) {
+@media (max-width : 650px) {
   .wms-title {
     font-size: 1.5rem !important;
   }

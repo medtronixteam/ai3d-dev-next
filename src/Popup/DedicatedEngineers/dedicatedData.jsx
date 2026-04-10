@@ -16,7 +16,8 @@ import ArrowBack from '../../assets/service/ArrowBack.svg'
 import elipse from '../../pages/images/heading_ellipse.png';
 import ProcessBg from '../../assets/images/WorkTogether.svg'
 import Circle from '../../assets/service/Circle.svg'
-import rec from '../../assets/service/rec.svg'
+import AE from '../../assets/service/AE.svg'
+import Cbg from '../../assets/service/CBg.svg'
 
 export const contractLengthOptions = [
   {
@@ -131,6 +132,12 @@ export const arrowAssets = {
   elipse,
   ProcessBg,
   ContractLength,
-  rec,
-  Circle
+  AE,
+  Circle,
+  Cbg,
+  Backend,
+  Flutter,
+  UIUX,
+  DevOps,
+  Stack
 }

@@ -79,6 +79,11 @@
   padding: 1rem;
 }
 
+.pdm-img {
+  width: 100%;
+  height: 200px;
+}
+
 .pdm-screen-icon {
   position: absolute;
   bottom: 8px;

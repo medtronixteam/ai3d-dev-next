@@ -193,7 +193,7 @@ const OurServicesModal = ({ isOpen, onClose, defaultModel = 'Project to Project'
               </div>
         
               <div className="d-flex align-items-center justify-content-center mx-auto mt-4 gap-3">
-                <Link to="https://portfolio.ai3dscanning.com/projects" className='browse-service-btn'>View Projects</Link>
+                <Link to="https://calendly.com/arslan-medtronix/30min" className='browse-service-btn'>Schedule Meeting</Link>
                 <Link to="/book-demo" className='browse-free-call'>Book a Demo</Link>
               </div>
         </section>

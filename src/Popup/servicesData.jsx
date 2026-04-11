@@ -28,15 +28,15 @@ import Int from '../assets/service/Int.svg'
 import ArrowUp from '../assets/service/ArrowUp.svg'
 import ArrowDown from '../assets/service/ArrowDown.svg'
 import SehrozSir from '../assets/images/ShehrozSir.jpeg';
-import Zeeshan from '../assets/service/Zeeshan.jpeg'
+import Zeeshan from '../assets/service/Zeeshan.png'
+import Ali from '../assets/service/Ali.png'
 import haseeb from '../assets/service/haseeb.jpeg'
-import Danish from '../assets/service/Danish.jpeg'
-import laiba from '../assets/service/laiba.jpg'
-
+import Shahwar from '../assets/service/shahwar.jpeg'
 import Hira from '../assets/images/HiraMam.svg';
 import Samia from '../assets/images/SamiaMam.svg';
 import UsamaSir from '../assets/images/UsamaSir.jpeg';
 import MudassarSir from '../assets/images/mudassar.jpeg';
+import SajeelSir from '../assets/images/SajeelSir.jpeg';
 
 export const PROCESS_STEPS = [
   { icon: discovery,    label: 'Discovery',    desc: 'Requirements gathering, data audit, feasibility analysis.', num: One   },
@@ -208,27 +208,21 @@ export const ourProcess = [
 
 export const MEMBER_DATA = {
   ai: [
-    { src: 'https://randomuser.me/api/portraits/men/32.jpg',   letter: 'A' },
-    { src: 'https://randomuser.me/api/portraits/women/44.jpg', letter: 'B' },
-    { src: 'https://randomuser.me/api/portraits/men/15.jpg',   letter: 'C' },
+    { src: Ali,   letter: 'A' },
+    { src: SajeelSir,   letter: 'S' }
   ],
   flutter: [
-    { src: 'https://randomuser.me/api/portraits/women/68.jpg', letter: 'A' },
-    { src: 'https://randomuser.me/api/portraits/men/76.jpg',   letter: 'B' },
+    { src: Hira, letter: 'H' },
   ],
   web: [
       { src: SehrozSir, letter: 'S' },
       { src: Zeeshan,   letter: 'Z' },
       { src: haseeb,    letter: 'H' },
-      { src: Danish,    letter: 'D' },
-      { src: laiba,     letter: 'L' },
   ],
   desktop: [
     { src: SehrozSir, letter: 'S' },
-      { src: Zeeshan,   letter: 'Z' },
-      { src: haseeb,    letter: 'H' },
-      { src: Danish,    letter: 'D' },
-      { src: laiba,     letter: 'L' },
+    { src: Zeeshan,   letter: 'Z' },
+    { src: haseeb,    letter: 'H' },
   ],
   business: [
     { src: MudassarSir,   letter: 'M' },
@@ -236,9 +230,12 @@ export const MEMBER_DATA = {
   ],
   creative: [
     { src: Hira, letter: 'H' },
+    { src: Shahwar, letter: 'S' },
   ],
   fullstack: [
-    { src: SehrozSir,   letter: 'S' }
+    { src: SehrozSir,   letter: 'S' },
+    { src: Ali,   letter: 'A' },
+    { src: SajeelSir,   letter: 'S' }
   ],
 };
 

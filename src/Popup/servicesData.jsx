@@ -27,6 +27,16 @@ import DPrep from '../assets/service/DPrep.svg'
 import Int from '../assets/service/Int.svg'
 import ArrowUp from '../assets/service/ArrowUp.svg'
 import ArrowDown from '../assets/service/ArrowDown.svg'
+import SehrozSir from '../assets/images/ShehrozSir.jpeg';
+import Zeeshan from '../assets/service/Zeeshan.jpeg'
+import haseeb from '../assets/service/haseeb.jpeg'
+import Danish from '../assets/service/Danish.jpeg'
+import laiba from '../assets/service/laiba.jpg'
+
+import Hira from '../assets/images/HiraMam.svg';
+import Samia from '../assets/images/SamiaMam.svg';
+import UsamaSir from '../assets/images/UsamaSir.jpeg';
+import MudassarSir from '../assets/images/mudassar.jpeg';
 
 export const PROCESS_STEPS = [
   { icon: discovery,    label: 'Discovery',    desc: 'Requirements gathering, data audit, feasibility analysis.', num: One   },
@@ -207,25 +217,28 @@ export const MEMBER_DATA = {
     { src: 'https://randomuser.me/api/portraits/men/76.jpg',   letter: 'B' },
   ],
   web: [
-    { src: 'https://randomuser.me/api/portraits/men/22.jpg',   letter: 'A' },
-    { src: 'https://randomuser.me/api/portraits/women/33.jpg', letter: 'B' },
+      { src: SehrozSir, letter: 'S' },
+      { src: Zeeshan,   letter: 'Z' },
+      { src: haseeb,    letter: 'H' },
+      { src: Danish,    letter: 'D' },
+      { src: laiba,     letter: 'L' },
   ],
   desktop: [
-    { src: 'https://randomuser.me/api/portraits/women/55.jpg', letter: 'A' },
-    { src: 'https://randomuser.me/api/portraits/men/11.jpg',   letter: 'B' },
-    { src: 'https://randomuser.me/api/portraits/women/90.jpg', letter: 'C' },
+    { src: SehrozSir, letter: 'S' },
+      { src: Zeeshan,   letter: 'Z' },
+      { src: haseeb,    letter: 'H' },
+      { src: Danish,    letter: 'D' },
+      { src: laiba,     letter: 'L' },
   ],
   business: [
-    { src: 'https://randomuser.me/api/portraits/men/99.jpg',   letter: 'A' },
-    { src: 'https://randomuser.me/api/portraits/women/25.jpg', letter: 'B' },
+    { src: MudassarSir,   letter: 'M' },
+    { src: Samia,   letter: 'S' },
   ],
   creative: [
-    { src: 'https://randomuser.me/api/portraits/women/41.jpg', letter: 'A' },
-    { src: 'https://randomuser.me/api/portraits/men/63.jpg',   letter: 'B' },
-    { src: 'https://randomuser.me/api/portraits/women/53.jpg', letter: 'C' },
+    { src: Hira, letter: 'H' },
   ],
   fullstack: [
-    { src: 'https://randomuser.me/api/portraits/men/17.jpg',   letter: 'A' }
+    { src: SehrozSir,   letter: 'S' }
   ],
 };
 

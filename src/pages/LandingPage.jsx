@@ -1004,7 +1004,7 @@ const LandingPage = () => {
                   >
                     Referral
                   </a>
-                  <a
+                  {/* <a
                     href="#"
                     className="a3d-nav-link"
                     onClick={(e) => {
@@ -1013,7 +1013,7 @@ const LandingPage = () => {
                     }}
                   >
                     Wish List
-                  </a>
+                  </a> */}
                 </nav>
 
                 {/* <div className="d-none d-lg-flex gap-3 align-items-center">
@@ -1081,7 +1081,7 @@ const LandingPage = () => {
                   Referral
                 </Link>
 
-                <a
+                {/* <a
                   href="#"
                   className="a3d-nav-link"
                   onClick={(e) => {
@@ -1091,7 +1091,7 @@ const LandingPage = () => {
                   }}
                 >
                   Wish List
-                </a>
+                </a> */}
 
                 {/* <Link to="/signin" className="a3d-nav-link">
                   Sign-In

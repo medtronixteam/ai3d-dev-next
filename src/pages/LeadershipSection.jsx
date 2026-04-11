@@ -12,15 +12,15 @@ import CustomInfoModal from '../components/popup/CustomInfoModal';
 const LeadershipSection = () => {
   const [modalData, setModalData] = useState(null);
 
-  const team = [
+  const topRow = [
     {
       name: 'Arslan',
       lastName: 'Ahmad',
-      img: $ceo, 
+      img: $ceo,
       role: 'CEO & Product Lead',
       desc: [
         'Arslan drives the vision and product innovation at AI 3D Scanning Solutions, leading end-to-end product development from concept to deployment. With a focus on cutting-edge AI and LLM integration, he spearheads strategic partnerships oversees market positioning and ensures the platform delivers transformative value to global industries.',
-        'His leadership blends deep technical understanding with a sharp business acumen to scale AI3D’s solutions across multiple sectors.',
+        'His leadership blends deep technical understanding with a sharp business acumen to scale AI3D solutions across multiple sectors.',
       ],
       expertise: [
         'AI-driven product innovation',
@@ -30,22 +30,8 @@ const LeadershipSection = () => {
         'Product management',
       ],
       linkedin: 'https://www.linkedin.com/in/arslan-ahmad-4b123a1b5/',
-      philosophy:
-        'Build tech that’s not just advanced but accessible, impactful, and scalable for the world',
+      philosophy: 'Build tech that is not just advanced but accessible, impactful, and scalable for the world',
     },
-    // {
-    //   name: 'Dr. Joel',
-    //   lastName: 'Hillier',
-    //   img: $joel,
-    //   role: 'Business Strategy Advisor & Board Member',
-    //   desc: [
-    //     'Dr. Hillier provides strategic guidance on business growth, market positioning, and AI development direction. With expertise spanning artificial intelligence, data-driven innovation, and commercial strategy.',
-    //     'His role bridges technical capabilities with high-impact business outcomes, supporting scalable adoption across diverse industries',
-    //   ],
-    //   expertise: ['AI strategy & market alignment', 'Global business growth', 'Scaling strategies'],
-    //   linkedin: 'https://www.linkedin.com/in/joelhillier/',
-    //   philosophy: 'Innovation is about bridging the gap between today and tomorrow.',
-    // },
     {
       name: 'Hira',
       lastName: 'Aziz',
@@ -57,15 +43,18 @@ const LeadershipSection = () => {
       ],
       expertise: ['Creative Direction', 'Video Editing', 'Motion Graphics', 'Content Strategy'],
       linkedin: 'https://www.linkedin.com/in/hira-chaudhary-287186287/',
-      philosophy: '"Great design doesn’t just capture attention it inspires connection."',
+      philosophy: 'Great design does not just capture attention it inspires connection.',
     },
+  ];
+
+  const bottomTeam = [
     {
       name: 'Usama',
       lastName: 'Ahmad',
       img: $osama,
       role: 'HR & Finance Manager',
       desc: [
-        'Usama plays a pivotal role in ensuring the company’s financial health and long-term stability.',
+        'Usama plays a pivotal role in ensuring the company financial health and long-term stability.',
         'His meticulous approach to HR & financial management empowers AI3D to maintain operational efficiency.',
       ],
       expertise: [
@@ -75,26 +64,7 @@ const LeadershipSection = () => {
         'Process Optimization',
       ],
       linkedin: 'https://www.linkedin.com/in/usama-khan-793960337/',
-      philosophy: '"A strong financial foundation is the backbone of innovation."',
-    },
-    {
-      name: 'Shehroz',
-      lastName: 'Shabbir',
-      img: $shehroz,
-      role: 'Web Development Manager',
-      desc: [
-        'Shehroz is the technical backbone behind the company’s innovative platforms. Skilled in both front-end and back-end development.',
-        'His work powers the AI-driven and 3D scanning technologies that define the company’s cutting-edge services.',
-      ],
-      expertise: [
-        'Full Stack Web Development',
-        'System Architecture',
-        'Database Management',
-        'UI/UX Implementation',
-      ],
-      linkedin: 'https://www.linkedin.com/in/m-shehroz-shabbir/',
-      philosophy:
-        '"Great technology isn’t just built — it’s crafted with precision, creativity, and purpose."',
+      philosophy: 'A strong financial foundation is the backbone of innovation.',
     },
     {
       name: 'Mudassar',
@@ -112,8 +82,7 @@ const LeadershipSection = () => {
         'Strategic Planning',
       ],
       linkedin: 'https://www.linkedin.com/in/m-mudassar-farooq/',
-      philosophy:
-        '"Success is built on strong relationships — both with clients and within the team."',
+      philosophy: 'Success is built on strong relationships both with clients and within the team.',
     },
     {
       name: 'Sajeel',
@@ -126,8 +95,25 @@ const LeadershipSection = () => {
       ],
       expertise: ['Artificial Intelligence', 'Computer Vision', 'Neural Networks', 'Data Modeling'],
       linkedin: 'https://www.linkedin.com/in/msajeel/',
-      philosophy:
-        '"The future belongs to intelligent systems — building AI that makes technology more human."',
+      philosophy: 'The future belongs to intelligent systems building AI that makes technology more human.',
+    },
+    {
+      name: 'Shehroz',
+      lastName: 'Shabbir',
+      img: $shehroz,
+      role: 'Web Development Manager',
+      desc: [
+        'Shehroz is the technical backbone behind the company innovative platforms. Skilled in both front-end and back-end development.',
+        'His work powers the AI-driven and 3D scanning technologies that define the company cutting-edge services.',
+      ],
+      expertise: [
+        'Full Stack Web Development',
+        'System Architecture',
+        'Database Management',
+        'UI/UX Implementation',
+      ],
+      linkedin: 'https://www.linkedin.com/in/m-shehroz-shabbir/',
+      philosophy: 'Great technology is not just built it is crafted with precision, creativity, and purpose.',
     },
     {
       name: 'Samia',
@@ -135,7 +121,7 @@ const LeadershipSection = () => {
       img: $samia,
       role: 'Social Media Manager & Associate HR',
       desc: [
-        'Samia crafts engaging digital content and manages the company’s online presence.',
+        'Samia crafts engaging digital content and manages the company online presence.',
         'Her marketing insight helps bridge the gap between brand identity and internal culture.',
       ],
       expertise: [
@@ -145,7 +131,7 @@ const LeadershipSection = () => {
         'Content Creation',
       ],
       linkedin: 'https://www.linkedin.com/in/samiarasheed/',
-      philosophy: '"A strong brand starts with inspired people."',
+      philosophy: 'A strong brand starts with inspired people.',
     },
   ];
 
@@ -190,9 +176,34 @@ const LeadershipSection = () => {
   return (
     <section className="ai3d_ld_v3_main_wrapper">
       <div className="ai3d_ld_v3__inner">
+
+        {/* Top Row — Arslan & Hira (static, centered) */}
+        <div className="ai3d_ld_v3__top_row">
+          {topRow.map((member, index) => (
+            <div className="ai3d_ld_v3__top_card" key={index}>
+              <div className="ai3d_ld_v3__img_wrap">
+                <img src={member.img} alt={member.name} className="ai3d_ld_v3__img" />
+              </div>
+              <div className="ai3d_ld_v3__content">
+                <div className="ai3d_ld_v3__text_top">
+                  <h3 className="ai3d_ld_v3__name">
+                    {member.name} <span className="ai3d_ld_v3__highlight">{member.lastName}</span>
+                  </h3>
+                  <p className="ai3d_ld_v3__role">{member.role}</p>
+                  <p className="ai3d_ld_v3__desc">{member.desc[0]}</p>
+                </div>
+                <button onClick={() => setModalData(member)} className="ai3d_ld_v3__more_btn">
+                  Learn More <i className="fa fa-long-arrow-right ms-2"></i>
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom — original Swiper for remaining 5 */}
         <div className="swiper ai3d_ld_v3__swiper_container">
           <div className="swiper-wrapper">
-            {team.map((member, index) => (
+            {bottomTeam.map((member, index) => (
               <div className="swiper-slide ai3d_ld_v3__slide" key={index}>
                 <div className="ai3d_ld_v3__card">
                   <div className="ai3d_ld_v3__img_wrap">
@@ -218,22 +229,15 @@ const LeadershipSection = () => {
 
         <div className="cc mt-4">
           <div className="icon-toggle-wrapper d-flex justify-content-center ">
-            <button
-              type="button"
-              id="prevBtn"
-              className="icon-toggle-label btn btn-outline-primary"
-            >
+            <button type="button" id="prevBtn" className="icon-toggle-label btn btn-outline-primary">
               <i className="fa fa-long-arrow-left" aria-hidden="true"></i>
             </button>
-            <button
-              type="button"
-              id="nextBtn"
-              className="icon-toggle-label btn btn-outline-primary right"
-            >
+            <button type="button" id="nextBtn" className="icon-toggle-label btn btn-outline-primary right">
               <i className="fa fa-long-arrow-right" aria-hidden="true"></i>
             </button>
           </div>
         </div>
+
       </div>
 
       {modalData && <CustomInfoModal modalData={modalData} onClose={() => setModalData(null)} />}
@@ -251,12 +255,43 @@ const LeadershipSection = () => {
     padding: 0 20px;
   }
 
+  /* Top Row — FIX: gap add kiya, align-items sahi kiya */
+  .ai3d_ld_v3__top_row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+    margin-bottom: 40px;
+  }
+
+  .ai3d_ld_v3__top_card {
+    width: 280px;
+    flex-shrink: 0;
+    text-align: center;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    background: transparent;
+    transition: transform 0.35s ease, opacity 0.35s ease;
+    animation: fadeUp 0.6s ease forwards;
+    opacity: 0;
+  }
+
+  .ai3d_ld_v3__top_card:hover {
+    transform: translateY(-4px);
+  }
+
+  .ai3d_ld_v3__top_card:hover .ai3d_ld_v3__img {
+    transform: scale(1.05);
+  }
+
   .ai3d_ld_v3__slide {
     height: auto !important;
     display: flex;
   }
 
-  /* Card (clean – no bg, no border, no shadow) */
+  /* Card (clean - no bg, no border, no shadow) */
   .ai3d_ld_v3__card {
     width: 100%;
     text-align: center;
@@ -270,7 +305,6 @@ const LeadershipSection = () => {
     opacity: 0;
   }
 
-  /* Subtle hover animation only */
   .ai3d_ld_v3__card:hover {
     transform: translateY(-4px);
   }
@@ -291,7 +325,6 @@ const LeadershipSection = () => {
     transition: transform 0.4s ease;
   }
 
-  /* Image zoom on hover */
   .ai3d_ld_v3__card:hover .ai3d_ld_v3__img {
     transform: scale(1.05);
   }
@@ -355,7 +388,6 @@ const LeadershipSection = () => {
     padding-bottom: 10px;
   }
 
-  /* Fade-up animation */
   @keyframes fadeUp {
     from {
       opacity: 0;
@@ -367,8 +399,6 @@ const LeadershipSection = () => {
     }
   }
 
-  /* ---------- Responsive ---------- */
-
   @media (max-width: 1024px) {
     .ai3d_ld_v3__img_wrap {
       height: 220px;
@@ -376,6 +406,15 @@ const LeadershipSection = () => {
   }
 
   @media (max-width: 768px) {
+    .ai3d_ld_v3__top_row {
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+    }
+    .ai3d_ld_v3__top_card {
+      width: 100%;
+      max-width: 300px;
+    }
     .ai3d_ld_v3__img_wrap {
       height: 200px;
     }

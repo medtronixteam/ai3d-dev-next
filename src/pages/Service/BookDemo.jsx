@@ -133,6 +133,16 @@ const BookDemo = ({ scrollContainerRef }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    if (!form.name) {
+      toast.warning("name field is required.");
+      return;
+    }
+
+    if (!form.email) {
+      toast.warning("email field is required.");
+      return;
+    }
+
     if (!agreed) {
       toast.warning("Please agree to the terms to proceed.");
       return;
@@ -427,7 +437,7 @@ const BookDemo = ({ scrollContainerRef }) => {
             <div className="bd-top-contacts">
               <div className="bd-contact-chip">
                 <span className="bd-contact-icon">
-                  <Mail size={12} color="#de3996" />
+                  <Mail size={14} color="#de3996" />
                 </span>
                 <div className="d-flex flex-column">
                   <span className="bd-contact-label">Email</span>
@@ -442,7 +452,7 @@ const BookDemo = ({ scrollContainerRef }) => {
 
             <div className="bd-contact-chip">
               <span className="bd-contact-icon">
-                <Phone size={12} color="#de3996" />
+                <Phone size={14} color="#de3996" />
               </span>
               <div className="d-flex flex-column">
                 <span className="bd-contact-label">Phone</span>
@@ -455,15 +465,15 @@ const BookDemo = ({ scrollContainerRef }) => {
             <div className="bd-top-social">
               <span className="bd-social-label">Follow us</span>
               <a href="https://www.facebook.com/share/1Bbvpcm4EU/?mibextid=wwXIfr" target="_blank" className="bd-social-btn" aria-label="Facebook">
-                <img src={Fb} alt="fb" width="15" height="15" />
+                <img src={Fb} alt="fb" width="18" height="18" />
               </a>
               {/* <a href="https://www.linkedin.com/company/ai3d-scanning-solutions-inc/?" target="_blank" className="bd-social-btn" aria-label="Linkedin">
                 <img src={Tk} alt="tk" width="15" height="15" />
               </a> */}
               <a href="https://www.instagram.com/ai3d_scanning_solutions?igshid=MWd1bzRmaDBpcXcycg%3D%3D&utm_source=qr" target="_blank" className="bd-social-btn" aria-label="Instagram">
                 <svg
-                  width="15"
-                  height="15"
+                  width="18"
+                  height="18"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="#de3996"
@@ -477,7 +487,7 @@ const BookDemo = ({ scrollContainerRef }) => {
                 </svg>
               </a>
               <a href="https://www.linkedin.com/company/ai3d-scanning-solutions-inc/?" target="_blank" className="bd-social-btn" aria-label="Instagram">
-                <img src={Ln} alt="tk" width="15" height="15" />
+                <img src={Ln} alt="tk" width="18" height="18" />
               </a>
             </div>
           </div>

@@ -148,8 +148,8 @@
 }
 
 .bd-contact-icon {
-  width: 26px;
-  height: 26px;
+  width: 32px;
+  height: 32px;
   background: transparent;
   border: 1px solid #DCDCDC;
   border-radius: 50%;
@@ -161,14 +161,14 @@
 
 .bd-contact-label {
   font-family: 'Urbanist', sans-serif;
-  font-size: 0.72rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: #000;
 }
 
 .bd-contact-value {
   font-family: 'Urbanist', sans-serif;
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   font-weight: 400;
   color: #0000006d;
   text-decoration: none;
@@ -183,7 +183,7 @@
 
 .bd-social-label {
   font-family: 'Urbanist', sans-serif;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: #000;
   margin-right: 0.25rem;
@@ -191,8 +191,8 @@
 }
 
 .bd-social-btn {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   border: 1px solid #DCDCDC;
   display: flex;
@@ -254,7 +254,7 @@
 
 .bd-left-subtitle {
   font-family: 'DM Sans', sans-serif;
-  font-size: 0.82rem;
+  font-size: 0.9rem;
   font-weight: 500;
   color: #1A1A40B2;
   line-height: 1.6;
@@ -263,7 +263,7 @@
 
 .bd-steps-heading {
   font-family: 'Manrope', sans-serif;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 800;
   color: #000000;
   margin-bottom: 0.85rem;
@@ -314,7 +314,7 @@
 
 .bd-step-desc {
   font-family: 'DM Sans', sans-serif;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 400;
   color: #00000073;
   margin: 0;
@@ -588,4 +588,15 @@
   .bd-hero-wrap {
     padding: 0 1rem 3rem;
   }
+}
+
+
+.bd-input:-webkit-autofill,
+.bd-input:-webkit-autofill:hover,
+.bd-input:-webkit-autofill:focus,
+.bd-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
+  box-shadow: 0 0 0 1000px #fff inset !important;
+  -webkit-text-fill-color: #000 !important;
+  transition: background-color 9999s ease-in-out 0s;
 }

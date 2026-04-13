@@ -1297,7 +1297,7 @@
 }
 
 .ctc-input::placeholder {
-  color: #1a1a40 !important;
+  color: rgba(0, 0, 0, 0.4) !important;
 }
 
 .ctc-input:focus {
@@ -1312,6 +1312,7 @@
   padding: 0 0.85rem;
   font-size: 0.85rem;
   font-family: 'DM Sans', sans-serif;
+  /* color: rgba(0, 0, 0, 0.4); */
   color: #1a1a40;
   outline: none;
   background: #fff;
@@ -1326,6 +1327,7 @@
 
 .ctc-select:focus {
   border-color: #de3996;
+  color: #1a1a40;
 }
 
 /* textarea */
@@ -1344,7 +1346,7 @@
 }
 
 .ctc-textarea::placeholder {
-  color: #1a1a40;
+  color: rgba(0, 0, 0, 0.4);
 }
 
 .ctc-textarea:focus {

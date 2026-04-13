@@ -409,7 +409,7 @@ const BookDemo = ({ scrollContainerRef }) => {
           </span>
          {' '} Demo</h1>
           <p className="bd-hero-subtitle">
-            Tell us about your project and we'll show you exactly how we can build it — with a live
+            Tell us about your project and we'll show you exactly how we can build it with a live
             prototype concept, timeline, and cost estimate.
           </p>
           <div className="bd-stats-row">
@@ -770,13 +770,13 @@ const BookDemo = ({ scrollContainerRef }) => {
                   <img src={dot} alt="Dot" className="posotion" />
                 </div>
                 <ul className="mt-1">
-                  {['Home', 'About us', 'Pricing'].map((item) => (
+                  {['Home', 'Services', 'Pricing'].map((item) => (
                     <li key={item}>
                       <a
                         href={
                           item === 'Pricing'
                             ? '/platform/subscription'
-                            : item === 'About us'
+                            : item === 'Services'
                               ? '/services'
                               : '/'
                         }

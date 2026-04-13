@@ -221,13 +221,13 @@ const ServicePage = () => {
                   <img src={dot} alt="Dot" className="posotion" />
                 </div>
                 <ul className="mt-1">
-                  {['Home', 'About us', 'Pricing'].map((item) => (
+                  {['Home', 'Services', 'Pricing'].map((item) => (
                     <li key={item}>
                       <a
                         href={
                           item === 'Pricing'
                             ? '/platform/subscription'
-                            : item === 'About us'
+                            : item === 'Services'
                               ? '/services'
                               : '/'
                         }

@@ -47,30 +47,96 @@ const ContributorLandingPage = () => {
   const isMobile = useMediaQuery({ maxWidth: 768 });
 
   useEffect(() => {
-    if (!pillsRef.current) return;
-
-    // Only run auto-scroll on mobile views
-    if (!isMobile) return;
-
-    let animationFrameId;
-    // Speed: pixels per frame. Adjust for desired speed.
-    const speed = 0.5;
-
-    const animateScroll = () => {
-      if (pillsRef.current) {
-        pillsRef.current.scrollLeft += speed;
-        // If we've scrolled past half the content (the original set), reset to 0
-        if (pillsRef.current.scrollLeft >= pillsRef.current.scrollWidth / 2) {
-          pillsRef.current.scrollLeft = 0;
-        }
-      }
-      animationFrameId = requestAnimationFrame(animateScroll);
-    };
-
-    animationFrameId = requestAnimationFrame(animateScroll);
-
-    return () => cancelAnimationFrame(animationFrameId);
-  }, [isMobile]);
+     if (!pillsRef.current) return;
+     if (!isMobile) return;
+ 
+     const el = pillsRef.current;
+     const speed = 0.5;
+     let animationFrameId;
+     let isPaused = false;
+ 
+     // --- Auto scroll ---
+     const animateScroll = () => {
+       if (!isPaused) {
+         el.scrollLeft += speed;
+         if (el.scrollLeft >= el.scrollWidth / 2) {
+           el.scrollLeft = 0;
+         }
+       }
+       animationFrameId = requestAnimationFrame(animateScroll);
+     };
+     animationFrameId = requestAnimationFrame(animateScroll);
+ 
+     // --- Mouse drag ---
+     let isMouseDown = false;
+     let startX = 0;
+     let scrollLeftStart = 0;
+ 
+     const onMouseDown = (e) => {
+       isMouseDown = true;
+       isPaused = true;
+       startX = e.pageX - el.offsetLeft;
+       scrollLeftStart = el.scrollLeft;
+       el.style.cursor = 'grabbing';
+     };
+ 
+     const onMouseMove = (e) => {
+       if (!isMouseDown) return;
+       e.preventDefault();
+       const x = e.pageX - el.offsetLeft;
+       const walk = (x - startX) * 1.5;
+       el.scrollLeft = scrollLeftStart - walk;
+     };
+ 
+     const onMouseUp = () => {
+       isMouseDown = false;
+       el.style.cursor = 'grab';
+       // Resume auto-scroll after a short delay
+       setTimeout(() => { isPaused = false; }, 1500);
+     };
+ 
+     // --- Touch drag ---
+     let touchStartX = 0;
+     let touchScrollStart = 0;
+ 
+     const onTouchStart = (e) => {
+       isPaused = true;
+       touchStartX = e.touches[0].pageX;
+       touchScrollStart = el.scrollLeft;
+     };
+ 
+     const onTouchMove = (e) => {
+       const x = e.touches[0].pageX;
+       const walk = (touchStartX - x) * 1.2;
+       el.scrollLeft = touchScrollStart + walk;
+     };
+ 
+     const onTouchEnd = () => {
+       setTimeout(() => { isPaused = false; }, 1500);
+     };
+ 
+     el.style.cursor = 'grab';
+     el.style.overflowX = 'hidden';
+ 
+     el.addEventListener('mousedown', onMouseDown);
+     el.addEventListener('mousemove', onMouseMove);
+     el.addEventListener('mouseup', onMouseUp);
+     el.addEventListener('mouseleave', onMouseUp);
+     el.addEventListener('touchstart', onTouchStart, { passive: true });
+     el.addEventListener('touchmove', onTouchMove, { passive: true });
+     el.addEventListener('touchend', onTouchEnd);
+ 
+     return () => {
+       cancelAnimationFrame(animationFrameId);
+       el.removeEventListener('mousedown', onMouseDown);
+       el.removeEventListener('mousemove', onMouseMove);
+       el.removeEventListener('mouseup', onMouseUp);
+       el.removeEventListener('mouseleave', onMouseUp);
+       el.removeEventListener('touchstart', onTouchStart);
+       el.removeEventListener('touchmove', onTouchMove);
+       el.removeEventListener('touchend', onTouchEnd);
+     };
+   }, [isMobile]);
 
   const faqs = [
     {
@@ -289,9 +355,9 @@ const ContributorLandingPage = () => {
                 Referral
               </Link> */}
 
-              <Link to="/signin" className="a3d-nav-link">
+              {/* <Link to="/signin" className="a3d-nav-link">
                 Sign-In
-              </Link>
+              </Link> */}
 
               <div className="d-flex flex-column gap-2">
                 <Link to="/book-demo">
@@ -757,13 +823,13 @@ const ContributorLandingPage = () => {
                       <FaChevronDown size={12} className="ms-2" />
                     </button>
 
-                    <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
+                    {/* <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
                       <li>
                         <a className="dropdown-item black" href="#">
                           English
                         </a>
                       </li>
-                    </ul>
+                    </ul> */}
                   </div>
 
                   {/* Mobile Currency Dropdown */}
@@ -779,13 +845,13 @@ const ContributorLandingPage = () => {
                       <FaChevronDown size={12} className="ms-2" />
                     </button>
 
-                    <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
+                    {/* <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
                       <li>
                         <a className="dropdown-item black" href="#">
                           $USD
                         </a>
                       </li>
-                    </ul>
+                    </ul> */}
                   </div>
 
                   {/* Desktop Language + Currency */}
@@ -803,13 +869,13 @@ const ContributorLandingPage = () => {
                         <FaChevronDown size={12} className="ms-2" />
                       </button>
 
-                      <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
+                      {/* <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
                         <li>
                           <a className="dropdown-item black" href="#">
                             English
                           </a>
                         </li>
-                      </ul>
+                      </ul> */}
                     </div>
 
                     <div className="dropdown btn-wrapper none">
@@ -823,13 +889,13 @@ const ContributorLandingPage = () => {
                         <FaChevronDown size={12} className="ms-2" />
                       </button>
 
-                      <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
+                      {/* <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
                         <li>
                           <a className="black" href="#">
                             $USD
                           </a>
                         </li>
-                      </ul>
+                      </ul> */}
                     </div>
                   </div>
                 </div>
@@ -846,14 +912,14 @@ const ContributorLandingPage = () => {
                   <img src={dot} alt="Dot" className="posotion" />
                 </div>
                 <ul className="mt-1">
-                  {['Home', 'About us', 'Pricing'].map((item) => (
+                  {['Home', 'Services', 'Pricing'].map((item) => (
                     <li key={item}>
                       <a
                         href={
                           item === 'Pricing'
                             ? '/platform/subscription'
-                            : item === 'About us'
-                              ? '/#aboutus'
+                            : item === 'Services'
+                              ? '/services'
                               : '/'
                         }
                       >

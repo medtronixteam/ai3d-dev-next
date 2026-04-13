@@ -411,7 +411,7 @@ const LandingPage = () => {
 
     let animationId;
     let isPaused = false;
-    const speed = 0.8;
+    const speed = 0.12;
 
     const animate = () => {
       if (!isPaused) {
@@ -2708,13 +2708,13 @@ const LandingPage = () => {
                     <img src={dot} alt="Dot" className="posotion" />
                   </div>
                   <ul className="mt-1">
-                    {['Home', 'About us', 'Pricing'].map((item) => (
+                    {['Home', 'Services', 'Pricing'].map((item) => (
                       <li key={item}>
                         <a
                           href={
                             item === 'Pricing'
                               ? '/platform/subscription'
-                              : item === 'About us'
+                              : item === 'Services'
                                 ? '/services'
                                 : '/'
                           }

@@ -37,6 +37,17 @@ import Samia from '../assets/images/SamiaMam.svg';
 import UsamaSir from '../assets/images/UsamaSir.jpeg';
 import MudassarSir from '../assets/images/mudassar.jpeg';
 import SajeelSir from '../assets/images/SajeelSir.jpeg';
+import TeamAI from '../assets/service/TeamAI.jpeg'
+import TeamAI2 from '../assets/service/TeanAI2.png'
+import AI4 from '../assets/service/AI4.png'
+import AI3 from '../assets/service/AI3.jpeg'
+import AI5 from '../assets/service/AI5.png'
+
+import Laiba from '../assets/service/laiba.jpg'
+import Danish from '../assets/service/Danish.jpeg'
+
+import Fatima from '../assets/service/Fatima.jpeg'
+import graphics from '../assets/service/graphics.jpeg'
 
 export const PROCESS_STEPS = [
   { icon: discovery,    label: 'Discovery',    desc: 'Requirements gathering, data audit, feasibility analysis.', num: One   },
@@ -136,8 +147,8 @@ export const SERVICES = [
     id: 'creative',
     icon: CreativeMedia,
     bgIcon: BgAIDev,
-    label: 'Creative Media',
-    heading: 'Creative Media',
+    label: 'UI/UX Designer',
+    heading: 'UI/UX Designer',
     intro:
       'Brand identity, motion graphics, video production, and social media content that makes your brand stand out.',
     bullets: [
@@ -209,7 +220,11 @@ export const ourProcess = [
 export const MEMBER_DATA = {
   ai: [
     { src: Ali,   letter: 'A' },
-    { src: SajeelSir,   letter: 'S' }
+    { src: AI5,   letter: 'S' },
+    { src: TeamAI,   letter: 'S' },
+    { src: TeamAI2,   letter: 'S' },
+    { src: AI3,   letter: 'S' },
+    { src: AI4,   letter: 'S' }
   ],
   flutter: [
     { src: Hira, letter: 'H' },
@@ -218,24 +233,36 @@ export const MEMBER_DATA = {
       { src: SehrozSir, letter: 'S' },
       { src: Zeeshan,   letter: 'Z' },
       { src: haseeb,    letter: 'H' },
+      { src: Danish,    letter: 'D' },
+      { src: Laiba,    letter: 'L' },
   ],
   desktop: [
     { src: SehrozSir, letter: 'S' },
-    { src: Zeeshan,   letter: 'Z' },
+    // { src: Zeeshan,   letter: 'Z' },
     { src: haseeb,    letter: 'H' },
   ],
   business: [
+    { src: UsamaSir,   letter: 'O' },
     { src: MudassarSir,   letter: 'M' },
     { src: Samia,   letter: 'S' },
   ],
   creative: [
     { src: Hira, letter: 'H' },
     { src: Shahwar, letter: 'S' },
+    { src: Fatima, letter: 'F' },
+    { src: graphics, letter: 'S' },
   ],
   fullstack: [
     { src: SehrozSir,   letter: 'S' },
     { src: Ali,   letter: 'A' },
-    { src: SajeelSir,   letter: 'S' }
+    { src: SajeelSir,   letter: 'S' },
+    { src: AI5,   letter: 'S' },
+    { src: TeamAI,   letter: 'S' },
+    { src: TeamAI2,   letter: 'S' },
+    { src: AI4,   letter: 'S' },
+    { src: Zeeshan,   letter: 'Z' },
+      { src: haseeb,    letter: 'H' },
+      { src: Danish,    letter: 'D' },
   ],
 };
 

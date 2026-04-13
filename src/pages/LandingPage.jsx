@@ -968,12 +968,12 @@ const LandingPage = () => {
                   <a href="/#Leadership" className="a3d-nav-link">
                     Leadership
                   </a>
-                  <a
+                  {/* <a
                     href="/referral"
                     className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`}
                   >
                     Referral
-                  </a>
+                  </a> */}
                   {/* <a
                     href="#"
                     className="a3d-nav-link"
@@ -1044,12 +1044,12 @@ const LandingPage = () => {
                 <a href="#Leadership" className="a3d-nav-link">
                   Leadership
                 </a>
-                <Link
+                {/* <Link
                   to="/referral"
                   className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`}
                 >
                   Referral
-                </Link>
+                </Link> */}
 
                 {/* <a
                   href="#"

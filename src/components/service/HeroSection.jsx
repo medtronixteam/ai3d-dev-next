@@ -157,9 +157,9 @@ const HeroSection = ({ scrollContainerRef }) => {
                   </Link>
                   <a href="/#3d-Sample"  className="a3d-nav-link">3D Samples</a>
                   <a href="/#Leadership" className="a3d-nav-link">Leadership</a>
-                  <a href="/referral"    className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`}>
+                  {/* <a href="/referral"    className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`}>
                     Referral
-                  </a>
+                  </a> */}
                 </nav>
 
                 <div className="d-none d-lg-flex gap-2 align-items-center">
@@ -197,7 +197,7 @@ const HeroSection = ({ scrollContainerRef }) => {
               <Link to="/services" className={`a3d-nav-link ${location.pathname === '/services' ? 'active' : ''}`}>Services</Link>
               <a href="#3d-Sample"  className="a3d-nav-link">3D Samples</a>
               <a href="#Leadership" className="a3d-nav-link">Leadership</a>
-              <a href="/referral"   className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`}>Referral</a>
+              {/* <a href="/referral"   className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`}>Referral</a> */}
               <div className="d-flex flex-column gap-2">
                   <Link to="/book-demo">
                     <button className="a3d-book-demo-btn">Book a Demo</button>

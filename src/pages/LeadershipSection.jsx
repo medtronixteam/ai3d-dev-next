@@ -8,6 +8,8 @@ import $mudassar from '../assets/images/leardership/mudassar.png';
 import $samia from '../assets/images/leardership/samia.png';
 import $sajeel from '../assets/images/leardership/sajeel.png';
 import CustomInfoModal from '../components/popup/CustomInfoModal';
+import HS from '../assets/service/HS.svg'
+import La from '../assets/service/La.svg'
 
 const LeadershipSection = () => {
   const [modalData, setModalData] = useState(null);
@@ -17,6 +19,7 @@ const LeadershipSection = () => {
       name: 'Arslan',
       lastName: 'Ahmad',
       img: $ceo,
+      img2:HS,
       role: 'CEO & Product Lead',
       desc: [
         'Arslan drives the vision and product innovation at AI 3D Scanning Solutions, leading end-to-end product development from concept to deployment. With a focus on cutting-edge AI and LLM integration, he spearheads strategic partnerships oversees market positioning and ensures the platform delivers transformative value to global industries.',
@@ -36,6 +39,7 @@ const LeadershipSection = () => {
       name: 'Hira',
       lastName: 'Aziz',
       img: $hira,
+      img2:La,
       role: 'Creative & 3dio Strategy Lead',
       desc: [
         'Hira is the creative force behind the visual identity. She transforms complex ideas into visually compelling stories.',
@@ -183,6 +187,7 @@ const LeadershipSection = () => {
             <div className="ai3d_ld_v3__top_card" key={index}>
               <div className="ai3d_ld_v3__img_wrap">
                 <img src={member.img} alt={member.name} className="ai3d_ld_v3__img" />
+                <img src={member.img2} alt={member.name} />
               </div>
               <div className="ai3d_ld_v3__content">
                 <div className="ai3d_ld_v3__text_top">

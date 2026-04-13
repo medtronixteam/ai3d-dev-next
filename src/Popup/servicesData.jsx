@@ -49,6 +49,7 @@ import Danish from '../assets/service/Danish.jpeg'
 import Fatima from '../assets/service/Fatima.jpeg'
 import graphics from '../assets/service/graphics.jpeg'
 import FT from '../assets/service/FT.png'
+import Amir from '../assets/service/Amir.png'
 
 export const PROCESS_STEPS = [
   { icon: discovery,    label: 'Discovery',    desc: 'Requirements gathering, data audit, feasibility analysis.', num: One   },
@@ -267,6 +268,7 @@ export const MEMBER_DATA = {
     { src: Danish,    letter: 'D' },
     { src: AI3,   letter: 'S' },
     { src: FT,   letter: 'S' },
+    { src: Amir,   letter: 'A' },
   ],
 };
 

@@ -1503,7 +1503,7 @@ const LandingPage = () => {
                       </p>
                       <div className="footer-wrapper">
                         <div className="service-footer">
-                          <Link className="circle-btn" aria-label="arrow">
+                          <Link className="circle-btn" aria-label="arrow"  onClick={() => setIsWaitlistOpen(true)}>
                             <svg
                               viewBox="0 0 24 24"
                               width={18}

@@ -17,8 +17,8 @@ const CustomLoader = () => (
         line-height: 86px;
         position: relative;
         padding: 0 48px;
-        font-size: 48px;
-        font-family: "Orbitron", sans-serif;
+        font-size: 3rem;
+        font-family: "Lateef", monospace;
         color: #DE3996;
         overflow: visible;
       }

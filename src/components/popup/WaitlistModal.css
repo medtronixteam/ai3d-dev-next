@@ -174,7 +174,7 @@
 .WM_benefits_list {
     list-style: none;
     padding: 0;
-    margin-bottom: 60px;
+    margin-bottom: 2rem;
 }
 
 .WM_benefit_item {
@@ -209,9 +209,11 @@
 
 .WM_footer_note {
     font-size: 14px;
-    color: #888;
+    color: #1A1A40CC;
     line-height: 1.5;
     max-width: 340px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
 }
 
 /* Right Side Form */

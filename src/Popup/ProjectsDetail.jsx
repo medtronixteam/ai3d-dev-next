@@ -4,7 +4,7 @@ import Ihsan from '../assets/service/Ihsan.svg'
 import IhsanAI        from '../assets/icon/ihsanAI.svg';
 import Chesteel        from '../assets/icon/chesteel.svg';
 import GenerationTool  from '../assets/icon/GenerationTool.svg';
-import Fitness         from '../assets/icon/fitness.svg';
+import Fitness         from '../assets/icon/Fitness.png';
 import HotelManagement from '../assets/icon/HotelManagement.svg';
 import Blablab         from '../assets/icon/Blablab.svg';
 import Challenges from '../assets/service/challenges.svg'
@@ -30,7 +30,7 @@ const PROJECT_DETAILS = [
     stats: [
       { sign: "+", value: '60%', label: 'Average Order Value' },
       { sign: "$", value: '40k', label: 'Additional ARR' },
-      { sign: "2", value: ' wks', label: 'Integration Time' },
+      { sign: "2", value: ' weeks', label: 'Integration Time' },
     ],
   },
   {
@@ -46,7 +46,7 @@ const PROJECT_DETAILS = [
     stats: [
       { sign: "+", value: '45%', label: 'Average Order Value' },
       { sign: "$", value: '50k', label: 'Additional ARR' },
-      { sign: "3", value: ' wks', label: 'Integration Time' },
+      { sign: "3", value: ' weeks', label: 'Integration Time' },
     ],
   },
   {
@@ -62,7 +62,7 @@ const PROJECT_DETAILS = [
     stats: [
       { sign: "+", value: '78%', label: 'Average Order Value' },
       { sign: "$", value: '70k', label: 'Additional ARR' },
-      { sign: "3", value: ' wks', label: 'Integration Time' },
+      { sign: "3", value: ' weeks', label: 'Integration Time' },
     ],
   },
   {
@@ -78,7 +78,7 @@ const PROJECT_DETAILS = [
     stats: [
       { sign: "+", value: '60%', label: 'Average Order Value' },
       { sign: "$", value: '60k', label: 'Additional ARR' },
-      { sign: "2", value: ' wks', label: 'Integration Time' },
+      { sign: "2", value: ' weeks', label: 'Integration Time' },
     ],
   },
   {
@@ -89,12 +89,12 @@ const PROJECT_DETAILS = [
     image: Fitness,
     url: 'https://fitshop.com',
     challenge: 'Customers faced difficulty in finding and purchasing fitness products from scattered and unreliable platforms. Manual order tracking and insecure payment systems reduced trust and convenience.',
-    solution: 'Developed a fitness ecommerce web app with a centralized product catalog and smooth checkout system. Integrated secure payment methods and real-time order tracking for better user experience.',
+    solution: 'Developed a fitness e-commerce Mobile app with a centralized product catalog and smooth checkout system. Integrated secure payment methods and real-time order tracking for better user experience.',
     result: 'Improved shopping convenience with a fast and user-friendly platform. Increased customer trust and satisfaction through secure payments and transparent order management.',
     stats: [
       { sign: "+", value: '38%', label: 'Average Order Value' },
       { sign: "$", value: '40k', label: 'Additional ARR' },
-      { sign: "3", value: ' wks', label: 'Integration Time' },
+      { sign: "3", value: ' weeks', label: 'Integration Time' },
     ],
   },
   {
@@ -110,7 +110,7 @@ const PROJECT_DETAILS = [
     stats: [
       { sign: "+", value: '48%', label: 'Average Order Value' },
       { sign: "$", value: '50k', label: 'Additional ARR' },
-      { sign: "3", value: ' wks', label: 'Integration Time' },
+      { sign: "3", value: ' weeks', label: 'Integration Time' },
     ],
   },
 ];

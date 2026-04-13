@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../../pages/images/logo.png';
 import elipse from '../../pages/images/heading_ellipse.png';
+import WaitlistModal from '../../components/popup/WaitlistModal';
 
 const TICKER_ITEMS = [
   'AI Development',
@@ -59,6 +60,7 @@ const HeroSection = ({ scrollContainerRef }) => {
   const location   = useLocation();
   const [isOpen, setIsOpen]         = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
 
   useEffect(() => {
     const container = scrollContainerRef?.current;
@@ -100,7 +102,7 @@ const HeroSection = ({ scrollContainerRef }) => {
         }
       `}</style>
 
-      <section className="service-section-page-hero">
+      <section className="service-section-page-hero container-fluid">
 
         <div className="service-section-page-bg">
           <div className="service-section-page-bg-gradient" />
@@ -166,8 +168,8 @@ const HeroSection = ({ scrollContainerRef }) => {
                   <Link to="/book-demo">
                     <button className="a3d-book-demo-btn">Book a Demo</button>
                   </Link>
-                  <Link to="/platform/">
-                    <button className="a3d-join-btn">Join Waitlist</button>
+                  <Link>
+                    <button className="a3d-join-btn" onClick={() => setIsWaitlistOpen(true)}>Join Waitlist</button>
                   </Link>
                 </div>
 
@@ -202,8 +204,8 @@ const HeroSection = ({ scrollContainerRef }) => {
                   <Link to="/book-demo">
                     <button className="a3d-book-demo-btn">Book a Demo</button>
                   </Link>
-                  <Link to="/platform/">
-                    <button className="a3d-join-btn">Join Waitlist</button>
+                  <Link>
+                    <button className="a3d-join-btn" onClick={() => setIsWaitlistOpen(true)}>Join Waitlist</button>
                   </Link>
               </div>
             </nav>
@@ -255,6 +257,8 @@ const HeroSection = ({ scrollContainerRef }) => {
         </div>
 
       </section>
+
+      <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
     </>
   );
 };

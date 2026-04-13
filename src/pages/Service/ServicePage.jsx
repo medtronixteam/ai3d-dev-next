@@ -228,7 +228,7 @@ const ServicePage = () => {
                           item === 'Pricing'
                             ? '/platform/subscription'
                             : item === 'About us'
-                              ? '/#aboutus'
+                              ? '/services'
                               : '/'
                         }
                       >

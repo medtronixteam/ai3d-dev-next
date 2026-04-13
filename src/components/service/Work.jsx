@@ -47,7 +47,7 @@ const Work = () => {
   const [showDedicatedModal, setShowDedicatedModal] = useState(false);
 
   return (
-    <section className="wms-section">
+    <section className="wms-section containers">
 
     <div className="wms-heading-wrap">
       <h2 className="wms-title">

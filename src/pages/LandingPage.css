@@ -224,7 +224,7 @@ body {
 
 @media (max-width: 1921px) {
   .ai_3d_landing .a3d-header {
-    padding: 0.8rem 3rem !important;
+    padding: 0.8rem 2rem !important;
   }
 }
 
@@ -3165,6 +3165,10 @@ li {
   align-items: center;
 }
 
+.aithreed .footer .usd:focus {
+color: rgba(222, 57, 150, 1) !important; 
+}
+
 .aithreed .footer .menu {
   background-color: #1a1a40 !important;
   border: 1px solid #fff !important;
@@ -3182,6 +3186,10 @@ li {
   border-radius: 0.1875rem;
   display: flex;
   align-items: center;
+}
+
+.aithreed .footer .english:focus {
+  color: rgba(222, 57, 150, 1) !important;
 }
 
 .aithreed .footer .menuo {
@@ -5111,7 +5119,7 @@ li {
 
 @media (max-width: 576px) {
   .ai_3d_landing .a3d-header.a3d-header-scrolled {
-    max-width: 30rem;
+    max-width: 25rem;
     margin: 10px;
     margin-left: 0px !important;
   }

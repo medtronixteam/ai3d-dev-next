@@ -8,7 +8,6 @@ import CardPayment from '../pages/subscription/CardPayment';
 import ApiSdkComingSoon from '../pages/api-sdk';
 import Support from '../pages/support';
 import Service from '../pages/Service';
-import ServicePage from '../pages/Service/ServicePage';
 import Referral from '../pages/referral';
 import ReferralPage from '../pages/settings/ReferralPage';
 import { Navigate } from 'react-router-dom';
@@ -21,6 +20,7 @@ import NewModelErrorPage from '../pages/preview/NewModelErrorPage';
 import TrashProjects from '../pages/dashboard/TrashProjects';
 import OpenModelButton from '../pages/preview/OpenModelButton';
 import BookDemo from '../pages/Service/BookDemo';
+import TermsConditions from '../components/service/TermsConditions';
 
 // LAZY IMPORTS
 const App = lazy(() => import('../App'));
@@ -56,6 +56,7 @@ const InviteAccept = lazy(() => import('pages/team/InviteAccept'));
 const Notification = lazy(() => import('pages/notification'));
 const PurchaseHistory = lazy(() => import('pages/settings/PurchaseHistory'));
 const SessionHistory = lazy(() => import('pages/settings/SessionHistory'));
+const ServicePage = lazy(() => import('pages/Service/ServicePage'))
 
 const routes = [
   {
@@ -91,16 +92,20 @@ const routes = [
         element: <BookDemo />,
       },
       {
-        path: '/services',
-        element: <ServicePage />,
-      },
-      {
         path: '/render/model/:id',
         element: <NewModel />,
       },
       {
         path: '/render/btn',
         element: <OpenModelButton />,
+      },
+      {
+        path: '/terms-conditions',
+        element: <TermsConditions />,
+      },
+      {
+        path: '/services',
+        element: <ServicePage />,
       },
       {
         path: '/model/error/page',

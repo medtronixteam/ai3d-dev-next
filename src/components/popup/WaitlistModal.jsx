@@ -9,6 +9,7 @@ import logo from '../../pages/images/logo.png';
 import headingEllipse from '../../pages/images/heading_ellipse.png';
 import astronautImg from '../../pages/images/astronaut.png';
 import listIcon from '../../assets/images/listIcon.png';
+import { Link } from 'react-router-dom';
 
 
 const WaitlistModal = ({ isOpen, onClose }) => {
@@ -119,7 +120,7 @@ const WaitlistModal = ({ isOpen, onClose }) => {
                                 </div>
                                 <div className="WM_benefit_item">
                                     <img src={listIcon} alt="check" className="WM_list_icon_img" />
-                                    Api Beta Access
+                                    API Beta Access
                                 </div>
                             </div>
 
@@ -196,10 +197,11 @@ const WaitlistModal = ({ isOpen, onClose }) => {
                                             ></textarea>
                                         </div>
 
-                                        <label className="WM_checkbox_row">
+                                        {/* <label className="WM_checkbox_row">
                                             <input type="checkbox" required />
-                                            <span>I agree to the Terms and Condition</span>
-                                        </label>
+                                            <span>I agree to the
+                                            <Link to='/terms-conditions'>Terms and Condition</Link></span>
+                                        </label> */}
 
                                         <button type="submit" className="WM_submit_btn" disabled={loading}>
                                             {loading ? "Joining..." : "Join Waitlist"} <i className="fa-solid fa-arrow-right"></i>

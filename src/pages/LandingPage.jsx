@@ -2643,7 +2643,7 @@ const LandingPage = () => {
                             item === 'Pricing'
                               ? '/platform/subscription'
                               : item === 'About us'
-                                ? '#aboutus'
+                                ? '/services'
                                 : '/'
                           }
                         >

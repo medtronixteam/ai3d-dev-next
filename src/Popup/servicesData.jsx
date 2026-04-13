@@ -102,7 +102,7 @@ export const SERVICES = [
       'Full-stack web development from landing pages to complex web applications. We build fast, scalable, and SEO-friendly websites.',
     bullets: [
       'React / Next.js frontends',
-      'Node.js / Django backends',
+      'Node.js / Laravel backends',
       'CMS integrations (WordPress, Strapi)',
       'Performance & SEO optimization',
     ],

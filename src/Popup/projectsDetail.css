@@ -284,7 +284,7 @@
   }
 
   .pdm-img {
-    max-width: 160px;
+    max-width: 240px;
   }
 
   .pdm-right {
@@ -293,5 +293,12 @@
 
   .pdm-title {
     font-size: 18px;
+  } 
+  .pdm-stat-card {
+    min-width: 120px;
+  }
+  
+  .view-project-section {
+    font-size: 0.7rem !important;
   }
 }

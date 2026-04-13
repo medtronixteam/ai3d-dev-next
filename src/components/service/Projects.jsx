@@ -36,8 +36,8 @@ const PROJECTS = [
   },
   {
     tag: 'Mobile App',
-    title: 'Fitness products E commerce',
-    desc: 'The Fitness Product Ecommerce Web App allows users to browse, purchase, and manage fitness products online for a seamless shopping experience.',
+    title: 'Fitness products E-commerce',
+    desc: 'The Fitness Product Ecommerce Mobile App allows users to browse, purchase, and manage fitness products online for a seamless shopping experience.',
     image: Fitness,
   },
   {
@@ -55,7 +55,7 @@ const Projects = () => {
   const closeModal = ()      => setSelectedIndex(null);
 
   return (
-    <section className="pti-section">
+    <section className="pti-section containers">
 
       {/* heading */}
       <div className="pti-heading-wrap">

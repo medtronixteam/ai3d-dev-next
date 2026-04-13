@@ -21,7 +21,7 @@ const STEPS = [
   {
     icon: servicePlane,
     title: 'Onboarding',
-    desc: 'Your team is set up in your tools within 48 hours — ready to start sprinting.',
+    desc: 'Your team is set up in your tools within 48 hours ready to start sprinting.',
   },
   {
     icon: serviceCheck,

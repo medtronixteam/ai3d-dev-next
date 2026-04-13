@@ -554,12 +554,20 @@
     font-size: 0.88rem;
   }
 
+  .bd-stat-label {
+    margin: 0;
+  }
+
+  .bd-stat-item {
+    flex: none;
+  }
+
   .bd-stats-row {
     min-width: unset;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 0.4rem;
+    column-gap: 1.5rem;
   }
 
   .bd-form-row {
@@ -582,11 +590,16 @@
   }
 
   .bd-card-section {
-    margin: 1rem auto 0;
+    margin: -4rem auto 0;
   }
 
   .bd-hero-wrap {
     padding: 0 1rem 3rem;
+  }
+
+  .book-arch{
+    width: 35px;
+    top: -12px;
   }
 }
 

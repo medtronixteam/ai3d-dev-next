@@ -37,7 +37,7 @@ const Contact = () => {
 
           <p className="ctc-subtitle">
             Fill out the form and our team will get back to you within 24
-            hours. Whether it's a quick question or a major project — we're
+            hours. Whether it's a quick question or a major project we're
             here to help.
           </p>
 

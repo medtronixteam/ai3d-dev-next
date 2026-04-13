@@ -271,7 +271,7 @@ const DedicatedModal = ({ isOpen, onClose }) => {
                   <div className="">
                     <img src={step.icon} alt={step.title} className="dem-proc-icon" />
                   </div>
-                  <span className="dem-proc-num">{step.step}</span>
+                  <span className="dem-proc-num d-none d-lg-flex">{step.step}</span>
                 </div>
                 <h4 className="dem-proc-label">{step.title}</h4>
                 <p className="dem-proc-desc">{step.description}</p>

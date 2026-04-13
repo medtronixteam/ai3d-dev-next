@@ -94,7 +94,7 @@ const WaitingListSection = () => {
                                 <img src="https://i.pravatar.cc/150?u=1" alt="User 1" className="WL_user_img" />
                                 <img src="https://i.pravatar.cc/150?u=2" alt="User 2" className="WL_user_img" />
                                 <img src="https://i.pravatar.cc/150?u=4" alt="User 3" className="WL_user_img" />
-                                <div className="WL_avatar_more">+2k</div>
+                                <div className="WL_avatar_more">500+</div>
                             </div>
 
                             <p className="WL_counter_text">

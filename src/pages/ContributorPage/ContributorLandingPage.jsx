@@ -205,6 +205,10 @@ const ContributorLandingPage = () => {
                   Home
                 </Link>
 
+                <Link to="https://calendly.com/arslan-medtronix/30min" className="a3d-nav-link">
+                  Schedule Meeting
+                </Link>
+
                 <Link
                   to="/services"
                   className={`a3d-nav-link ${location.pathname === '/services' ? 'active' : ''}`}
@@ -227,8 +231,13 @@ const ContributorLandingPage = () => {
                 </a> */}
               </nav>
 
-              <div className="d-none d-lg-flex gap-3 align-items-center">
-                <button className="a3d-join-btn" onClick={() => setIsWaitlistOpen(true)}>Join Waitlist</button>
+              <div className="d-none d-lg-flex gap-2 align-items-center">
+                <Link to="/book-demo">
+                  <button className="a3d-book-demo-btn">Book a Demo</button>
+                </Link>
+                <Link>
+                  <button className="a3d-join-btn" onClick={() => setIsWaitlistOpen(true)}>Join Waitlist</button>
+                </Link>
               </div>
             </div>
           </header>
@@ -253,6 +262,10 @@ const ContributorLandingPage = () => {
             <nav className="d-flex flex-column gap-2 px-3 pb-3">
               <Link to="/" className={`a3d-nav-link ${location.pathname === '/' ? 'active' : ''}`}>
                 Home
+              </Link>
+
+              <Link to="https://calendly.com/arslan-medtronix/30min" className="a3d-nav-link">
+                Schedule Meeting
               </Link>
 
               <Link
@@ -280,7 +293,14 @@ const ContributorLandingPage = () => {
                 Sign-In
               </Link>
 
-              <button className="a3d-join-btn" onClick={() => { setIsWaitlistOpen(true); setIsOpen(false); }}>Join Waitlist</button>
+              <div className="d-flex flex-column gap-2">
+                <Link to="/book-demo">
+                  <button className="a3d-book-demo-btn">Book a Demo</button>
+                </Link>
+                <Link>
+                  <button className="a3d-join-btn" onClick={() => setIsWaitlistOpen(true)}>Join Waitlist</button>
+                </Link>
+              </div>
             </nav>
           </div>
 
@@ -298,12 +318,15 @@ const ContributorLandingPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
               >
-                Your Work. Our Platform.
+                Your Work.
+                <span className="ctc-arch-wrap">
+                  <img src={elipse} alt="elipse" className="contri-arch"  />
+                    Our Platform.
+                </span> 
                 <br />
                 Limitless Possibilities,
                 <br />
                 Endless Impact.
-                <img src={elipse} alt="Ellipse" className="ellipse-img-our" />
               </motion.h1>
 
               <motion.p

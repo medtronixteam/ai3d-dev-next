@@ -220,11 +220,12 @@ const HeroSection = ({ scrollContainerRef }) => {
             Expert <span className="ctc-arch-wrap">
             <img src={elipse} alt="elipse" className="hero-arch"  />
               3D
-            </span> Scanning &amp;{' '}<br />AI Solutions
+            </span> 
+            Scanning &amp;{' '}<br />AI Solutions
           </h1>
           <p className="service-section-page-subtitle">
             Whether you need a one-off project or a full-time dedicated engineering
-            team — we've got the perfect model for your business.
+            team we've got the perfect model for your business.
           </p>
           <div className="service-section-page-cta-wrap">
             <a href="#contact" className="service-section-page-btn-primary">Get In Touch</a>

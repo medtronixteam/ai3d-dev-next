@@ -540,4 +540,10 @@
   .dem-process-title {
     margin-bottom: 1rem;
   }
+
+  .dem-arch {
+    top: -18px;
+    left: 40%;
+    width: 40px;
+  }
 }

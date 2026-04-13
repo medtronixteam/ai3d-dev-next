@@ -4,19 +4,60 @@ import Tk from '../../assets/icon/Tk.svg'
 import Ln from '../../assets/service/LN.svg';
 import elipse from '../../pages/images/heading_ellipse.png';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import axios from 'axios';
+import { baseURL } from '../../config';
 
 const Contact = () => {
-  const [agreed, setAgreed] = useState(false);
-  const [form, setForm]     = useState({
+  const [loading, setLoading] = useState(false)
+  const [form, setForm]  = useState({
     name: '', email: '', service: '', message: '',
   });
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // handle form submission
+ 
+    if (!form.name) {
+      toast.warning("name field is required.");
+      return;
+    }
+ 
+    if (!form.email) {
+      toast.warning("email field is required.");
+      return;
+    }
+ 
+    setLoading(true);
+    try {
+      const payload = {
+        name: form.name,
+        email: form.email,
+        services: form.service,
+        description: form.message,
+      };
+ 
+      const response = await axios.post(`${baseURL}/contact/us`, payload);
+ 
+      toast.success(
+        response.data.message || "Message sent! We'll get back to you within 24 hours."
+      );
+ 
+      setForm({ name: '', email: '', service: '', message: '' });
+ 
+    } catch (error) {
+      console.error("Contact form error:", error);
+      const rawMsg = error.response?.data?.message;
+      const friendlyMsg =
+        rawMsg && !rawMsg.toLowerCase().includes("server error")
+          ? rawMsg
+          : "We're experiencing a minor technical hiccup. Please try again in a moment!";
+      toast.error(friendlyMsg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -208,8 +249,15 @@ const Contact = () => {
             </div> */}
 
             {/* submit */}
-            <button type="submit" className="ctc-submit">
-              Send Message
+            <button type="submit" className="ctc-submit" disabled={loading}>
+              {loading && (
+                <span
+                  className="spinner-border spinner-border-sm me-2"
+                  role="status"
+                  aria-hidden="true"
+                />
+              )}
+              {loading ? 'Sending...' : 'Send Message'}
             </button>
 
           </form>

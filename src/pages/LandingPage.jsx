@@ -303,28 +303,94 @@ const LandingPage = () => {
 
   useEffect(() => {
     if (!pillsRef.current) return;
-
-    // Only run auto-scroll on mobile views
     if (!isMobile) return;
 
-    let animationFrameId;
-    // Speed: pixels per frame. Adjust for desired speed.
+    const el = pillsRef.current;
     const speed = 0.5;
+    let animationFrameId;
+    let isPaused = false;
 
+    // --- Auto scroll ---
     const animateScroll = () => {
-      if (pillsRef.current) {
-        pillsRef.current.scrollLeft += speed;
-        // If we've scrolled past half the content (the original set), reset to 0
-        if (pillsRef.current.scrollLeft >= pillsRef.current.scrollWidth / 2) {
-          pillsRef.current.scrollLeft = 0;
+      if (!isPaused) {
+        el.scrollLeft += speed;
+        if (el.scrollLeft >= el.scrollWidth / 2) {
+          el.scrollLeft = 0;
         }
       }
       animationFrameId = requestAnimationFrame(animateScroll);
     };
-
     animationFrameId = requestAnimationFrame(animateScroll);
 
-    return () => cancelAnimationFrame(animationFrameId);
+    // --- Mouse drag ---
+    let isMouseDown = false;
+    let startX = 0;
+    let scrollLeftStart = 0;
+
+    const onMouseDown = (e) => {
+      isMouseDown = true;
+      isPaused = true;
+      startX = e.pageX - el.offsetLeft;
+      scrollLeftStart = el.scrollLeft;
+      el.style.cursor = 'grabbing';
+    };
+
+    const onMouseMove = (e) => {
+      if (!isMouseDown) return;
+      e.preventDefault();
+      const x = e.pageX - el.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      el.scrollLeft = scrollLeftStart - walk;
+    };
+
+    const onMouseUp = () => {
+      isMouseDown = false;
+      el.style.cursor = 'grab';
+      // Resume auto-scroll after a short delay
+      setTimeout(() => { isPaused = false; }, 1500);
+    };
+
+    // --- Touch drag ---
+    let touchStartX = 0;
+    let touchScrollStart = 0;
+
+    const onTouchStart = (e) => {
+      isPaused = true;
+      touchStartX = e.touches[0].pageX;
+      touchScrollStart = el.scrollLeft;
+    };
+
+    const onTouchMove = (e) => {
+      const x = e.touches[0].pageX;
+      const walk = (touchStartX - x) * 1.2;
+      el.scrollLeft = touchScrollStart + walk;
+    };
+
+    const onTouchEnd = () => {
+      setTimeout(() => { isPaused = false; }, 1500);
+    };
+
+    el.style.cursor = 'grab';
+    el.style.overflowX = 'hidden';
+
+    el.addEventListener('mousedown', onMouseDown);
+    el.addEventListener('mousemove', onMouseMove);
+    el.addEventListener('mouseup', onMouseUp);
+    el.addEventListener('mouseleave', onMouseUp);
+    el.addEventListener('touchstart', onTouchStart, { passive: true });
+    el.addEventListener('touchmove', onTouchMove, { passive: true });
+    el.addEventListener('touchend', onTouchEnd);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      el.removeEventListener('mousedown', onMouseDown);
+      el.removeEventListener('mousemove', onMouseMove);
+      el.removeEventListener('mouseup', onMouseUp);
+      el.removeEventListener('mouseleave', onMouseUp);
+      el.removeEventListener('touchstart', onTouchStart);
+      el.removeEventListener('touchmove', onTouchMove);
+      el.removeEventListener('touchend', onTouchEnd);
+    };
   }, [isMobile]);
 
   const trustedLogos = [

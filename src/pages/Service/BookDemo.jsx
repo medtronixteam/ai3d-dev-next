@@ -681,13 +681,13 @@ const BookDemo = ({ scrollContainerRef }) => {
                       <FaChevronDown size={12} className="ms-2" />
                     </button>
 
-                    {/* <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
-                                                      <li>
-                                                        <a className="dropdown-item black" href="#">
-                                                          English
-                                                        </a>
-                                                      </li>
-                                                    </ul> */}
+                    <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
+                      <li>
+                        <a className="dropdown-item black" href="#">
+                          English
+                        </a>
+                      </li>
+                    </ul>
                   </div>
 
                   {/* Mobile Currency Dropdown */}
@@ -703,13 +703,13 @@ const BookDemo = ({ scrollContainerRef }) => {
                       <FaChevronDown size={12} className="ms-2" />
                     </button>
 
-                    {/* <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
-                                                      <li>
-                                                        <a className="dropdown-item black" href="#">
-                                                          $USD
-                                                        </a>
-                                                      </li>
-                                                    </ul> */}
+                    <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
+                      <li>
+                        <a className="dropdown-item black" href="#">
+                          $USD
+                        </a>
+                      </li>
+                    </ul>
                   </div>
 
                   {/* Desktop Language + Currency */}
@@ -727,13 +727,13 @@ const BookDemo = ({ scrollContainerRef }) => {
                         <FaChevronDown size={12} className="ms-2" />
                       </button>
 
-                      {/* <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
-                                                        <li>
-                                                          <a className="dropdown-item black" href="#">
-                                                            English
-                                                          </a>
-                                                        </li>
-                                                      </ul> */}
+                      <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
+                        <li>
+                          <a className="dropdown-item black" href="#">
+                            English
+                          </a>
+                        </li>
+                      </ul>
                     </div>
 
                     <div className="dropdown btn-wrapper none">
@@ -747,13 +747,13 @@ const BookDemo = ({ scrollContainerRef }) => {
                         <FaChevronDown size={12} className="ms-2" />
                       </button>
 
-                      {/* <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
-                                                        <li>
-                                                          <a className="black" href="#">
-                                                            $USD
-                                                          </a>
-                                                        </li>
-                                                      </ul> */}
+                      <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
+                        <li>
+                          <a className="black" href="#">
+                            $USD
+                          </a>
+                        </li>
+                      </ul>
                     </div>
                   </div>
                 </div>

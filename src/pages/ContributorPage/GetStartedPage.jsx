@@ -232,13 +232,13 @@ const GetStartedPage = () => {
                         <FaChevronDown size={12} className="ms-2" />
                       </button>
 
-                      {/* <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
+                      <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
                         <li>
                           <a className="dropdown-item black" href="#">
                             English
                           </a>
                         </li>
-                      </ul> */}
+                      </ul>
                     </div>
 
                     <div className="dropdown btn-wrapper d-lg-none d-md-none d-sm-none d-block">
@@ -252,13 +252,13 @@ const GetStartedPage = () => {
                         <FaChevronDown size={12} className="ms-2" />
                       </button>
 
-                      {/* <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
+                      <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
                         <li>
                           <a className="dropdown-item black" href="#">
                             $USD
                           </a>
                         </li>
-                      </ul> */}
+                      </ul>
                     </div>
 
                     <div className="d-flex gap-2 none">
@@ -274,13 +274,13 @@ const GetStartedPage = () => {
                           <FaChevronDown size={12} className="ms-2" />
                         </button>
 
-                        {/* <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
+                        <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
                           <li>
                             <a className="dropdown-item black" href="#">
                               English
                             </a>
                           </li>
-                        </ul> */}
+                        </ul>
                       </div>
 
                       <div className="dropdown btn-wrapper none">
@@ -294,13 +294,13 @@ const GetStartedPage = () => {
                           <FaChevronDown size={12} className="ms-2" />
                         </button>
 
-                        {/* <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
+                        <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
                           <li>
                             <a className="black" href="#">
                               $USD
                             </a>
                           </li>
-                        </ul> */}
+                        </ul>
                       </div>
                     </div>
                   </div>

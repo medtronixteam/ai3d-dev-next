@@ -1503,7 +1503,7 @@ const LandingPage = () => {
                       </p>
                       <div className="footer-wrapper">
                         <div className="service-footer">
-                          <Link to="/platform/" className="circle-btn" aria-label="arrow">
+                          <Link className="circle-btn" aria-label="arrow">
                             <svg
                               viewBox="0 0 24 24"
                               width={18}
@@ -2619,13 +2619,13 @@ const LandingPage = () => {
                         <FaChevronDown size={12} className="ms-2" />
                       </button>
 
-                      {/* <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
+                      <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
                         <li>
                           <a className="dropdown-item black" href="#">
                             English
                           </a>
                         </li>
-                      </ul> */}
+                      </ul>
                     </div>
 
                     {/* Mobile Currency Dropdown */}
@@ -2641,13 +2641,13 @@ const LandingPage = () => {
                         <FaChevronDown size={12} className="ms-2" />
                       </button>
 
-                      {/* <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
+                      <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
                         <li>
                           <a className="dropdown-item black" href="#">
                             $USD
                           </a>
                         </li>
-                      </ul> */}
+                      </ul>
                     </div>
 
                     {/* Desktop Language + Currency */}
@@ -2665,13 +2665,13 @@ const LandingPage = () => {
                           <FaChevronDown size={12} className="ms-2" />
                         </button>
 
-                        {/* <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
+                        <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
                           <li>
                             <a className="dropdown-item black" href="#">
                               English
                             </a>
                           </li>
-                        </ul> */}
+                        </ul>
                       </div>
 
                       <div className="dropdown btn-wrapper none">
@@ -2685,13 +2685,13 @@ const LandingPage = () => {
                           <FaChevronDown size={12} className="ms-2" />
                         </button>
 
-                        {/* <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
+                        <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
                           <li>
                             <a className="black" href="#">
                               $USD
                             </a>
                           </li>
-                        </ul> */}
+                        </ul>
                       </div>
                     </div>
                   </div>

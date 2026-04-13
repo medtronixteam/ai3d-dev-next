@@ -5233,6 +5233,10 @@ color: rgba(222, 57, 150, 1) !important;
   transition: opacity 0.3s ease;
 }
 
+.fram {
+  height: 35px !important;
+}
+
 .logo_track img:hover {
   opacity: 1;
 }

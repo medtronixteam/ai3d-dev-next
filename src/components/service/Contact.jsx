@@ -53,7 +53,7 @@ const Contact = () => {
                 </svg>
               </span>
               <div>
-                <p className="ctc-info-label">Email US</p>
+                <p className="ctc-info-label">Email Us</p>
                 <Link 
                 to="https://mail.google.com/mail/?view=cm&fs=1&to=contact@ai3dscanning.com"
                 target="_blank"
@@ -186,7 +186,7 @@ const Contact = () => {
             </div>
 
             {/* checkbox */}
-            <div className="ctc-checkbox-wrap">
+            {/* <div className="ctc-checkbox-wrap">
               <label className="ctc-checkbox-label">
                 <input
                   type="checkbox"
@@ -205,7 +205,7 @@ const Contact = () => {
                 </span>
                 I agree to the Terms and Condition
               </label>
-            </div>
+            </div> */}
 
             {/* submit */}
             <button type="submit" className="ctc-submit">

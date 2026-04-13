@@ -10,7 +10,7 @@ const TICKER_ITEMS = [
   'Web Development',
   'Desktop App Development',
   'Bus. Dev. & Consulting',
-  'Creative Media',
+  'UI/UX Designer',
   '3D Scanning',
   'AR / VR Solutions',
 ];

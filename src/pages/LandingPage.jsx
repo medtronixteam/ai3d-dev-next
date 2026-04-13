@@ -95,6 +95,9 @@ import TestimonialSection from './TestimonialSection';
 import LeadershipSection from './LeadershipSection';
 import WaitingListSection from './WaitingListSection';
 
+import FW from '../assets/service/FW.png'
+import RR from '../assets/service/rr.png'
+
 
 const LandingPage = () => {
   const { pathname, hash, key } = useLocation();
@@ -330,7 +333,8 @@ const LandingPage = () => {
     { src: PITB, alt: 'PITB', style: { width: 37, marginRight: 10 } },
     { src: reginalPlan, alt: 'regional-plan', style: { width: 66, marginRight: 10 } },
     { src: consulting, alt: 'consulting', style: { width: 76, marginRight: 10 } },
-    { src: vera, alt: 'vera-ai', style: { width: 30 } },
+    { src: RR, alt: 'vera-ai', style: { width: 30 } },
+    { src: FW, alt: 'vera-ai', style: { width: 70, marginRight: 10  } },
   ];
 
   const trustedLogosRef = useRef(null);
@@ -2080,9 +2084,11 @@ const LandingPage = () => {
 
                 <img src={consulting} alt="Consulting" />
 
-                <img src={veraAi} alt="Vera AI" />
+                <img src={RR} alt="Vera AI" />
 
                 <img src={nvidia} alt="NVIDIA" />
+
+                <img src={FW} alt="Frame wise" className='fram' />
               </React.Fragment>
             ))}
           </div>

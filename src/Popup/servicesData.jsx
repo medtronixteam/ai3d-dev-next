@@ -48,6 +48,7 @@ import Danish from '../assets/service/Danish.jpeg'
 
 import Fatima from '../assets/service/Fatima.jpeg'
 import graphics from '../assets/service/graphics.jpeg'
+import FT from '../assets/service/FT.png'
 
 export const PROCESS_STEPS = [
   { icon: discovery,    label: 'Discovery',    desc: 'Requirements gathering, data audit, feasibility analysis.', num: One   },
@@ -228,6 +229,7 @@ export const MEMBER_DATA = {
   ],
   flutter: [
     { src: Hira, letter: 'H' },
+    { src: FT, letter: 'F' },
   ],
   web: [
       { src: SehrozSir, letter: 'S' },
@@ -261,8 +263,10 @@ export const MEMBER_DATA = {
     { src: TeamAI2,   letter: 'S' },
     { src: AI4,   letter: 'S' },
     { src: Zeeshan,   letter: 'Z' },
-      { src: haseeb,    letter: 'H' },
-      { src: Danish,    letter: 'D' },
+    { src: haseeb,    letter: 'H' },
+    { src: Danish,    letter: 'D' },
+    { src: AI3,   letter: 'S' },
+    { src: FT,   letter: 'S' },
   ],
 };
 

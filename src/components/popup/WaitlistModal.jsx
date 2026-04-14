@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './WaitlistModal.css';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
@@ -16,6 +16,7 @@ const WaitlistModal = ({ isOpen, onClose }) => {
     const { token } = useAuth();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [message, setMessage] = useState({ type : '', text: ''})
 
     // Form State
     const [formData, setFormData] = useState({
@@ -25,6 +26,14 @@ const WaitlistModal = ({ isOpen, onClose }) => {
         use_for: ''
     });
 
+     useEffect(() => {
+        if (isOpen) {
+            setMessage({ type: '', text: '' });
+            setSuccess(false);
+            setFormData({ name: '', email: '', hear_about: '', use_for: '' });
+        }
+    }, [isOpen]);
+    
     if (!isOpen) return null;
 
     const handleChange = (e) => {
@@ -50,14 +59,14 @@ const WaitlistModal = ({ isOpen, onClose }) => {
 
             if (response.status === 200 || response.status === 201) {
                 setSuccess(true);
-                toast.success(response.data.message || "Successfully joined the waiting list!");
+                setMessage({ type: 'success', text: response.data.message || "Successfully joined the waiting list!" });
                 // Clear form
                 setFormData({ name: '', email: '', hear_about: '', use_for: '' });
                 // Automatically close after 3 seconds
-                // setTimeout(() => {
-                //     onClose();
-                //     setSuccess(false);
-                // }, 3000);
+                setTimeout(() => {
+                    onClose();
+                    setSuccess(false);
+                }, 3000);
             }
         } catch (error) {
             console.error("Waitlist error:", error);
@@ -65,7 +74,7 @@ const WaitlistModal = ({ isOpen, onClose }) => {
             const friendlyMsg = (rawMsg && !rawMsg.toLowerCase().includes("server error"))
                 ? rawMsg
                 : "We're experiencing a minor technical hiccup. Please try again in a moment!";
-            toast.error(friendlyMsg);
+            setMessage({ type: 'error', text: friendlyMsg });
         } finally {
             setLoading(false);
         }
@@ -136,6 +145,21 @@ const WaitlistModal = ({ isOpen, onClose }) => {
                                     <h2 className="WM_form_title">Reserve Your Spot</h2>
                                     <p className="WM_form_subtitle">Fill in the form to join the waitlist.</p>
                                 </div>
+
+                                {message.text && (
+                                    <div style={{
+                                        padding: '10px 14px',
+                                        borderRadius: 8,
+                                        marginBottom: 12,
+                                        fontSize: '0.875rem',
+                                        fontWeight: 500,
+                                        backgroundColor: message.type === 'success' ? '#f0fdf4' : '#fff0f0',
+                                        color: message.type === 'success' ? '#16a34a' : '#dc2626',
+                                        border: `1px solid ${message.type === 'success' ? '#bbf7d0' : '#fecaca'}`,
+                                    }}>
+                                        {message.text}
+                                    </div>
+                                )}
 
 
                                 {/* {success ? (

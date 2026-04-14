@@ -226,7 +226,8 @@ const ServicePage = () => {
                       <a
                         href={
                           item === 'Pricing'
-                            ? '/platform/subscription'
+                            // ? '/platform/subscription'
+                            ? '#'
                             : item === 'Services'
                               ? '/services'
                               : '/'

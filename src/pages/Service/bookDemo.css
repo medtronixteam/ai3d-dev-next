@@ -608,8 +608,8 @@
 .bd-input:-webkit-autofill:hover,
 .bd-input:-webkit-autofill:focus,
 .bd-input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
-  box-shadow: 0 0 0 1000px #fff inset !important;
+  -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+  box-shadow: 0 0 0px 1000px white inset !important;
   -webkit-text-fill-color: #000 !important;
-  transition: background-color 9999s ease-in-out 0s;
+  transition: background-color 5000s ease-in-out 0s;
 }

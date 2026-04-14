@@ -33,7 +33,7 @@ const DedicatedModal = ({ isOpen, onClose }) => {
       {/* ── Heading ── */}
       <div className="dem-heading-wrap">
         <h2 className="dem-title">
-          AI &amp;
+          AI &amp; {' '}
           <span className="dem-arch-wrap">
             <img src={elipse} alt="elipse" className="dem-arch" />
             Full-Stack{' '}

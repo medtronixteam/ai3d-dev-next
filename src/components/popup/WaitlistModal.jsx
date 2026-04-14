@@ -50,14 +50,14 @@ const WaitlistModal = ({ isOpen, onClose }) => {
 
             if (response.status === 200 || response.status === 201) {
                 setSuccess(true);
-                toast.success("Successfully joined the waiting list!");
+                toast.success(response.data.message || "Successfully joined the waiting list!");
                 // Clear form
                 setFormData({ name: '', email: '', hear_about: '', use_for: '' });
                 // Automatically close after 3 seconds
-                setTimeout(() => {
-                    onClose();
-                    setSuccess(false);
-                }, 3000);
+                // setTimeout(() => {
+                //     onClose();
+                //     setSuccess(false);
+                // }, 3000);
             }
         } catch (error) {
             console.error("Waitlist error:", error);
@@ -138,14 +138,14 @@ const WaitlistModal = ({ isOpen, onClose }) => {
                                 </div>
 
 
-                                {success ? (
+                                {/* {success ? (
                                     <div className="WM_success_state">
                                         <div className="WM_check_icon_large"><i className="fa-solid fa-circle-check"></i></div>
                                         <h3>You're on the list!</h3>
                                         <p>We'll notify you as soon as you have access.</p>
                                         <button className="WM_submit_btn" onClick={onClose} style={{ marginTop: 20 }}>Close</button>
                                     </div>
-                                ) : (
+                                ) : ( */}
                                     <form onSubmit={handleSubmit}>
                                         <div className="WM_input_row">
                                             <div className="WM_input_group">
@@ -207,7 +207,7 @@ const WaitlistModal = ({ isOpen, onClose }) => {
                                             {loading ? "Joining..." : "Join Waitlist"} <i className="fa-solid fa-arrow-right"></i>
                                         </button>
                                     </form>
-                                )}
+                                {/* )} */}
 
                             </div>
                         </div>

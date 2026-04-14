@@ -97,6 +97,7 @@ import WaitingListSection from './WaitingListSection';
 
 import FW from '../assets/service/FW.png'
 import RR from '../assets/service/rr.png'
+import { toast } from 'react-toastify';
 
 
 const LandingPage = () => {
@@ -107,6 +108,9 @@ const LandingPage = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const landingRef = useRef(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [email, setEmail] = useState('');
+  const [subscribeLoading, setSubscribeLoading] = useState(false);
+  const [subscribeMsg, setSubscribeMsg] = useState('');
 
   useEffect(() => {
     const section = landingRef.current;
@@ -982,6 +986,31 @@ const LandingPage = () => {
   //   return () => window.removeEventListener('scroll', handleScroll);
   // }, []);
   // Create a ref for the scrollable div
+
+
+ const handleSubscribe = async (e) => {
+    e.preventDefault();
+    if (!email) return;
+    setSubscribeLoading(true);
+    try {
+      const res = await fetch(`${baseURL}/subscriber`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (res.ok && data.status !== 'error') {
+        toast.success(data.message || 'Subscribed successfully!');
+        setEmail('');
+      } else {
+        toast.error(data.message || 'Something went wrong.');
+      }
+    } catch {
+      toast.error('Network error. Please try again.');
+    } finally {
+      setSubscribeLoading(false);
+    }
+  };
 
   return (
     <>
@@ -2552,7 +2581,7 @@ const LandingPage = () => {
                     Join our newsletter to stay informed about new{' '}
                     <br className="d-md-flex d-none" /> features and product updates.
                   </p>
-                  <form>
+                  <form onSubmit={handleSubscribe}>
                     <div className="form-row">
                       <div className="form-input">
                         <input
@@ -2561,12 +2590,19 @@ const LandingPage = () => {
                           id="email"
                           placeholder="Enter email address*"
                           required=""
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
                         />
                       </div>
-                      <button type="submit" className="btn btn-subscribe">
-                        Subscribe
-                      </button>
-                    </div>
+                       <button type="submit" className="btn btn-subscribe" disabled={subscribeLoading}>
+                          {subscribeLoading ? 'Subscribing...' : 'Subscribe'}
+                        </button>
+                      </div>
+                      {/* {subscribeMsg && (
+                        <p style={{ marginTop: 8, fontSize: '0.875rem', color: subscribeMsg.includes('success') ? 'green' : 'red' }}>
+                          {subscribeMsg}
+                        </p>
+                      )} */}
                   </form>
                 </div>
                 <div className="col-md-5 d-flex justify-content-end align-items-end position-static">
@@ -2713,7 +2749,8 @@ const LandingPage = () => {
                         <a
                           href={
                             item === 'Pricing'
-                              ? '/platform/subscription'
+                              // ? '/platform/subscription'
+                              ? '#'
                               : item === 'Services'
                                 ? '/services'
                                 : '/'

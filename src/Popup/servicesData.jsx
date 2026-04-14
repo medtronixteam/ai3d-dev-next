@@ -49,7 +49,11 @@ import Danish from '../assets/service/Danish.jpeg'
 import Fatima from '../assets/service/Fatima.jpeg'
 import graphics from '../assets/service/graphics.jpeg'
 import FT from '../assets/service/FT.png'
+import FT2 from '../assets/service/FT2.jpeg'
+import FT3 from '../assets/service/FT3.jpeg'
 import Amir from '../assets/service/Amir.png'
+
+import UI from '../assets/service/UI.jpeg'
 
 export const PROCESS_STEPS = [
   { icon: discovery,    label: 'Discovery',    desc: 'Requirements gathering, data audit, feasibility analysis.', num: One   },
@@ -231,6 +235,8 @@ export const MEMBER_DATA = {
   flutter: [
     { src: Hira, letter: 'H' },
     { src: FT, letter: 'F' },
+    { src: FT2, letter: 'F' },
+    { src: FT3, letter: 'F' },
   ],
   web: [
       { src: SehrozSir, letter: 'S' },
@@ -254,6 +260,7 @@ export const MEMBER_DATA = {
     { src: Shahwar, letter: 'S' },
     { src: Fatima, letter: 'F' },
     { src: graphics, letter: 'S' },
+    { src: UI, letter: 'S' },
   ],
   fullstack: [
     { src: SehrozSir,   letter: 'S' },

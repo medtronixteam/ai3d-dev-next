@@ -3207,6 +3207,10 @@ color: rgba(222, 57, 150, 1) !important;
   color: #de3996 !important;
 }
 
+.aithreed .footer .black:hover {
+  color: #ca2a85 !important;
+}
+
 .aithreed .footer a {
   font-family: DM Sans;
   font-weight: 600;
@@ -5335,6 +5339,7 @@ color: rgba(222, 57, 150, 1) !important;
   font-family: DM Sans;
   font-weight: 500;
   font-style: Medium;
+  width: 100% !important;
 }
 
 .subscribe-section .form-controls:focus {

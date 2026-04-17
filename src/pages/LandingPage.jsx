@@ -98,6 +98,7 @@ import WaitingListSection from './WaitingListSection';
 import FW from '../assets/service/FW.png'
 import RR from '../assets/service/rr.png'
 import { toast } from 'react-toastify';
+import SampleModels from '../Popup/SampleModels';
 
 
 const LandingPage = () => {
@@ -111,6 +112,7 @@ const LandingPage = () => {
   const [email, setEmail] = useState('');
   const [subscribeLoading, setSubscribeLoading] = useState(false);
   const [subscribeMsg, setSubscribeMsg] = useState('');
+  const [selectedModel, setSelectedModel] = useState(null);
 
   useEffect(() => {
     const section = landingRef.current;
@@ -2100,6 +2102,8 @@ const LandingPage = () => {
                           delay: idx * 0.2,
                         }}
                         className="model_card"
+                        onClick={() => setSelectedModel(card)}
+                        style={{ cursor: 'pointer' }} 
                       >
                         <img
                           src={imgUrl}
@@ -2114,9 +2118,9 @@ const LandingPage = () => {
                             {/* <span className="model_price">23K</span> */}
                           </div>
 
-                          <a href="#" className="model_card_button">
+                          <button className="model_card_button" onClick={(e) => { e.stopPropagation(); setSelectedModel(card); }}>
                             <img src={modelButtonIcon} alt="Go" />
-                          </a>
+                          </button>
                         </div>
                       </motion.div>
                     </div>
@@ -3011,6 +3015,13 @@ const LandingPage = () => {
         />
       )}
       <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
+
+      {selectedModel && (
+        <SampleModels
+          model={selectedModel}
+          onClose={() => setSelectedModel(null)}
+        />
+      )}
     </>
   );
 };

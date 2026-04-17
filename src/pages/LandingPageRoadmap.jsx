@@ -92,7 +92,7 @@ const RoadmapSection = ({ elipse }) => {
                                 if (node) {
                                     setTimeout(() => {
                                         node.classList.add('animate-in');
-                                    }, index * 200);
+                                    }, index * 100);
                                 }
                             });
                         }
@@ -144,9 +144,9 @@ const RoadmapSection = ({ elipse }) => {
                 // Add breakpoints for the 4 steps
                 // The first step should show up as soon as it begins to pin (or is pinned)
                 if (currentProgress >= 0) newIndex = 0;
-                if (currentProgress > 0.25) newIndex = 1;
-                if (currentProgress > 0.5) newIndex = 2;
-                if (currentProgress > 0.75) newIndex = 3;
+                if (currentProgress > 0.15) newIndex = 1;
+                if (currentProgress > 0.35) newIndex = 2;
+                if (currentProgress > 0.55) newIndex = 3;
 
                 setActiveIndex(newIndex);
             };

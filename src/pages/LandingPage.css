@@ -1243,7 +1243,7 @@ body {
 }
 
 .ai_3d_landing .model_card {
-  background-color: #1a1a1a;
+  background-color: #FF51B6;
   border-radius: 0.3125rem;
   padding: 3.25rem;
   text-align: center;
@@ -1293,7 +1293,7 @@ body {
 }
 
 .ai_3d_landing .model_card_button {
-  background: linear-gradient(90deg, #c73081, #ff85ca);
+  background: linear-gradient(90deg, #fff, #ff85ca);
   border: none;
   border-radius: 50%;
   width: 2.25rem;
@@ -2204,7 +2204,7 @@ li {
   }
 
   .ai_3d_landing .model_card {
-    background-color: #1a1a1a;
+    background-color: #FF51B6;
     border-radius: 0.3125rem;
     padding: 2.25rem;
     text-align: center;

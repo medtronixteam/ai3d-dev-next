@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 const DedicatedModal = ({ isOpen, onClose }) => {
   const { ArrowBack, Dedicated, elipse, ProcessBg, ArrowUp, ArrowDown, ContractLength, Cbg, AE
-    , Backend, UIUX, Flutter, DevOps, Stack
+    , Backend, UIUX, Flutter, DevOps, Stack, group
    } = arrowAssets
 
   if (!isOpen) return null
@@ -46,7 +46,9 @@ const DedicatedModal = ({ isOpen, onClose }) => {
         </p>
       </div>
 
-      {/* yaha place karna h section */}
+      {/* ══════════════════════════════════════
+          DESKTOP Chart (xl and above)
+      ══════════════════════════════════════ */}
       <div className="dem-section-chart-wrapper d-none d-xl-flex">
 
             <span className="pti-deco pti-deco-5">✦</span>
@@ -60,24 +62,10 @@ const DedicatedModal = ({ isOpen, onClose }) => {
 
           <svg className="dem-section-lines">
           <defs>
-            <marker 
-              id="arrow-down" 
-              markerWidth="5" 
-              markerHeight="5" 
-              refX="0" 
-              refY="2.5" 
-              orient="auto-start-reverse"
-            >
+            <marker id="arrow-down" markerWidth="5" markerHeight="5" refX="0" refY="2.5" orient="auto-start-reverse">
               <polygon points="0 0, 5 2.5, 0 5" fill="#DE399680" />
             </marker>
-            <marker 
-              id="arrowhead" 
-              markerWidth="5" 
-              markerHeight="5" 
-              refX="0" 
-              refY="2.5" 
-              orient="auto"
-            >
+            <marker id="arrowhead" markerWidth="5" markerHeight="5" refX="0" refY="2.5" orient="auto">
               <polygon points="0 0, 5 2.5, 0 5" fill="#DE399680" />
             </marker>
           </defs>
@@ -256,6 +244,260 @@ const DedicatedModal = ({ isOpen, onClose }) => {
 
       </div>
 
+      {/* ══════════════════════════════════════
+          MOBILE / TABLET Chart (below xl)
+      ══════════════════════════════════════ */}
+      <div className="dem-mobile-chart d-flex d-xl-none">
+
+        {/* ── CONTRACT LENGTH ── */}
+        <div className="dmc-section">
+
+          {/* SVG tree for Contract Length */}
+          <svg
+            className="dmc-svg"
+            viewBox="0 0 360 420"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="xMidYMid meet"
+          >
+            <defs>
+              <marker id="m-arr" markerWidth="5" markerHeight="5" refX="0" refY="2.5" orient="auto">
+                <polygon points="0 0, 5 2.5, 0 5" fill="#DE399680" />
+              </marker>
+              <marker id="m-arr-up" markerWidth="5" markerHeight="5" refX="5" refY="2.5" orient="auto-start-reverse">
+                <polygon points="0 0, 5 2.5, 0 5" fill="#DE399680" />
+              </marker>
+            </defs>
+
+            {/* vertical stem down from header circle */}
+            <line x1="180" y1="88" x2="180" y2="118" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" />
+
+            {/* horizontal bar */}
+            <line x1="40" y1="118" x2="320" y2="118" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" />
+
+            {/* left branch down → Trial */}
+            <line x1="40" y1="118" x2="40" y2="168" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerEnd="url(#m-arr)" />
+
+            <line x1="125" y1="118" x2="125" y2="240" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerEnd="url(#m-arr)" />
+
+            {/* right branch down → Build */}
+            <line x1="320" y1="118" x2="320" y2="240" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerEnd="url(#m-arr)" />
+
+            <line x1="220" y1="118" x2="220" y2="170" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerEnd="url(#m-arr)" />
+
+            <line x1="40" y1="300" x2="40" y2="400" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerStart="url(#m-arr-up)" />
+
+            <line x1="125" y1="350" x2="125" y2="400" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerStart="url(#m-arr-up)" />
+
+            <line x1="40" y1="400" x2="320" y2="400" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" />
+
+            <line x1="320" y1="350" x2="320" y2="400" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerStart="url(#m-arr-up)" />
+
+            <line x1="220" y1="280" x2="220" y2="400" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerStart="url(#m-arr-up)" />
+
+          </svg>
+
+          {/* Overlay: Header */}
+          <div className="dmc-overlay-header">
+            <img src={ContractLength} alt="Contract Length" width={56} height={56} />
+            <p className="dmc-center-label">Contract Length</p>
+          </div>
+
+          {/* Overlay: 4 cards */}
+          <div className="dmc-cards-grid dmc-cards-grid--4">
+
+            <div className="dmc-card dmc-card--tl">
+              <div className="dmc-circle-wrap">
+                <img src={Cbg} alt="" width={65} height={65} />
+                <div className="dmc-badge">
+                  <span className="dmc-badge-num">1</span>
+                  <span className="dmc-badge-unit">Mon</span>
+                </div>
+              </div>
+              <div className="dmc-info">
+                <h3>Trial</h3>
+                <p>Test the fit before<br />committing</p>
+              </div>
+            </div>
+
+            <div className="dmc-card dmc-card--tr">
+              <div className="dmc-circle-wrap">
+                <img src={Cbg} alt="" width={65} height={65} />
+                <div className="dmc-badge">
+                  <span className="dmc-badge-num">6</span>
+                  <span className="dmc-badge-unit">Mon</span>
+                </div>
+              </div>
+              <div className="dmc-info">
+                <h3>Build</h3>
+                <p>Full product<br />development cycle.</p>
+              </div>
+            </div>
+
+            <div className="dmc-card dmc-card--bl">
+              <div className="dmc-circle-wrap">
+                <img src={Cbg} alt="" width={65} height={65} />
+                <div className="dmc-badge">
+                  <span className="dmc-badge-num">3</span>
+                  <span className="dmc-badge-unit">Mon</span>
+                </div>
+              </div>
+              <div className="dmc-info">
+                <h3>Sprint</h3>
+                <p>Ship a major feature<br />or MVP.</p>
+              </div>
+            </div>
+
+            <div className="dmc-card dmc-card--br">
+              <div className="dmc-circle-wrap">
+                <img src={Cbg} alt="" width={65} height={65} />
+                <div className="dmc-badge">
+                  <span className="dmc-badge-num">12</span>
+                  <span className="dmc-badge-unit">Mon</span>
+                </div>
+              </div>
+              <div className="dmc-info">
+                <h3>Scale</h3>
+                <p>Long-term embedded partnership</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        {/* ── AVAILABLE ENGINEERS ── */}
+        <div className="dmc-section" style={{ marginTop: '2rem' }}>
+
+          <svg
+            className="dmc-svg dmc-svg--eng"
+            viewBox="0 0 360 580"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="xMidYMid meet"
+          >
+            <defs>
+              <marker id="e-arr" markerWidth="5" markerHeight="5" refX="0" refY="2.5" orient="auto">
+                <polygon points="0 0, 5 2.5, 0 5" fill="#DE399680" />
+              </marker>
+              <marker id="e-arr-up" markerWidth="5" markerHeight="5" refX="5" refY="2.5" orient="auto-start-reverse">
+                <polygon points="0 0, 5 2.5, 0 5" fill="#DE399680" />
+              </marker>
+            </defs>
+
+            {/* stem from header */}
+            <line x1="180" y1="88" x2="180" y2="118" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" />
+
+            {/* horizontal bar 1 */}
+            <line x1="75" y1="118" x2="285" y2="118" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" />
+            <line x1="75" y1="118" x2="75" y2="168" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerEnd="url(#e-arr)" />
+            <line x1="285" y1="118" x2="285" y2="168" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerEnd="url(#e-arr)" />
+
+            {/* bar 2 */}
+            <line x1="75" y1="258" x2="75" y2="298" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerStart="url(#e-arr-up)" />
+            <line x1="75" y1="298" x2="285" y2="298" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" />
+            <line x1="285" y1="258" x2="285" y2="298" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerStart="url(#e-arr-up)" />
+            <line x1="75" y1="298" x2="75" y2="338" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerEnd="url(#e-arr)" />
+            <line x1="285" y1="298" x2="285" y2="338" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerEnd="url(#e-arr)" />
+
+            {/* bar 3 */}
+            <line x1="75" y1="428" x2="75" y2="458" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerStart="url(#e-arr-up)" />
+            <line x1="75" y1="458" x2="285" y2="458" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" />
+            <line x1="285" y1="428" x2="285" y2="458" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerStart="url(#e-arr-up)" />
+            <line x1="75" y1="458" x2="75" y2="498" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerEnd="url(#e-arr)" />
+            <line x1="285" y1="458" x2="285" y2="498" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerEnd="url(#e-arr)" />
+
+          </svg>
+
+          {/* Header */}
+          <div className="dmc-overlay-header">
+            <img src={AE} alt="Available Engineers" width={56} height={56} />
+            <p className="dmc-center-label">Available Engineers</p>
+          </div>
+
+          {/* 6 engineer cards */}
+          <div className="dmc-cards-grid dmc-cards-grid--6">
+
+            <div className="dmc-card dmc-card--r1l">
+              <div className="dmc-circle-wrap">
+                 <img src={Cbg} alt="" width={65} height={65} />
+                <div className="dmc-badge dmc-badge--icon">
+                  <img src={Backend} alt="" width={26} height={26} />
+                </div>
+              </div>
+              <div className="dmc-info">
+                <h3>Backend Eng.</h3>
+                <p>Python, Go,<br />Microservices, Docker</p>
+              </div>
+            </div>
+
+            <div className="dmc-card dmc-card--r1r">
+              <div className="dmc-circle-wrap">
+                 <img src={Cbg} alt="" width={65} height={65} />
+                <div className="dmc-badge dmc-badge--icon">
+                  <img src={Backend} alt="" width={26} height={26} />
+                </div>
+              </div>
+              <div className="dmc-info">
+                <h3>AI / ML Eng.</h3>
+                <p>PyTorch, LLMs,<br />MLOps, Python</p>
+              </div>
+            </div>
+
+            <div className="dmc-card dmc-card--r2l">
+              <div className="dmc-circle-wrap">
+                 <img src={Cbg} alt="" width={65} height={65} />
+                <div className="dmc-badge dmc-badge--icon">
+                  <img src={Stack} alt="" width={26} height={26} />
+                </div>
+              </div>
+              <div className="dmc-info">
+                <h3>Full Stack Eng.</h3>
+                <p>React, Node.js,<br />PostgreSQL, AWS</p>
+              </div>
+            </div>
+
+            <div className="dmc-card dmc-card--r2r">
+              <div className="dmc-circle-wrap">
+                 <img src={Cbg} alt="" width={65} height={65} />
+                <div className="dmc-badge dmc-badge--icon">
+                  <img src={Flutter} alt="" width={26} height={26} />
+                </div>
+              </div>
+              <div className="dmc-info">
+                <h3>Flutter Dev.</h3>
+                <p>Flutter, Dart,<br />Firebase, Riverpod</p>
+              </div>
+            </div>
+
+            <div className="dmc-card dmc-card--r3l">
+              <div className="dmc-circle-wrap">
+                <img src={Cbg} alt="" width={65} height={65} />
+                <div className="dmc-badge dmc-badge--icon">
+                  <img src={UIUX} alt="" width={26} height={26} />
+                </div>
+              </div>
+              <div className="dmc-info">
+                <h3>Frontend Eng.</h3>
+                <p>React, TypeScript,<br />Next.js, Tailwind</p>
+              </div>
+            </div>
+
+            <div className="dmc-card dmc-card--r3r">
+              <div className="dmc-circle-wrap">
+                <img src={Cbg} alt="" width={65} height={65} />
+                <div className="dmc-badge dmc-badge--icon">
+                  <img src={DevOps} alt="" width={26} height={26} />
+                </div>
+              </div>
+              <div className="dmc-info">
+                <h3>DevOps Eng.</h3>
+                <p>AWS, Kubernetes,<br />CI/CD, Terraform</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
       {/* ── Our Process ── */}
       <h3 className="dem-process-title">Our Process</h3>
       <div className="dem-process-section">
@@ -264,9 +506,7 @@ const DedicatedModal = ({ isOpen, onClose }) => {
         <div className="dem-process-trackk">
           {ourProcess.map((step, index) => (
             <React.Fragment key={step.step}>
-
               <div className={`dem-proc-card ${index % 2 === 0 ? 'em-proc-card--top' : 'em-proc-card--bottom'}`}>
-                {/* Icon + number badge */}
                 <div className="dem-proc-icon-row">
                   <div className="">
                     <img src={step.icon} alt={step.title} className="dem-proc-icon" />
@@ -287,7 +527,6 @@ const DedicatedModal = ({ isOpen, onClose }) => {
                   />
                 </div>
               )}
-
             </React.Fragment>
           ))}
         </div>

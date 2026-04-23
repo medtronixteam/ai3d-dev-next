@@ -547,3 +547,161 @@
     width: 40px;
   }
 }
+
+
+/* ══════════════════════════════════════════
+   MOBILE CHART  (add at bottom of dedicated.css)
+══════════════════════════════════════════ */
+
+.dem-mobile-chart {
+  flex-direction: column;
+  align-items: center;
+  width: calc(100% - 2rem);
+  margin: 0 1rem;
+  padding: 1.5rem 0 2rem;
+  background: linear-gradient(180deg, #FFF4FA 0%, #ffffff 100%);
+  border-radius: 22px;
+  box-shadow: 0 0 8px #00000014;
+}
+
+.dmc-section {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dmc-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.dmc-overlay-header {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+  pointer-events: none;
+  padding-top: 8px;
+}
+
+.dmc-center-label {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 700;
+  font-size: 0.78rem;
+  color: #333;
+  margin: -0.5rem 0 0;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.dmc-cards-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.dmc-card {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+}
+
+/* Contract Length card positions (viewBox 360x420) */
+.dmc-card--tl { left: 13%; top: 53%; }
+.dmc-card--tr { left: 63%; top: 53%; }
+.dmc-card--bl { left: 37%; top: 70%; }
+.dmc-card--br { left: 90%; top: 70%; }
+
+/* Engineers card positions (viewBox 360x580) */
+.dmc-card--r1l { left: 20.8%; top: 36.7%; }
+.dmc-card--r1r { left: 79.2%; top: 36.7%; }
+.dmc-card--r2l { left: 20.8%; top: 64.7%; }
+.dmc-card--r2r { left: 79.2%; top: 64.7%; }
+.dmc-card--r3l { left: 20.8%; top: 92.2%; }
+.dmc-card--r3r { left: 79.2%; top: 92.2%; }
+
+.dmc-circle-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* margin-top: 1.5rem; */
+}
+
+.dmc-badge {
+  position: absolute;
+  top: 36%;
+  left: 35%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  pointer-events: none;
+}
+
+.dmc-badge--icon {
+  transform: translate(-50%, -50%);
+}
+
+.dmc-badge-num {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: #000;
+  line-height: 1;
+}
+
+.dmc-badge-unit {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 600;
+  font-size: 0.4rem;
+  color: #de3996;
+  margin-bottom: 2px;
+  line-height: 1;
+}
+
+.dmc-info {
+  background: #DE3996;
+  border-radius: none;
+  padding: 0.28rem 0.6rem;
+  min-width: 100px;
+  color: #fff;
+  text-align: left;
+  margin-top: -1.25rem;
+}
+
+.dmc-info h3 {
+  margin: 0 0 1px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.dmc-info p {
+  margin: 0 0 0 0.5rem;
+  font-size: 0.43rem;
+  color: #fff;
+  line-height: 1.4;
+}
+
+@media (max-width: 380px) {
+  .dmc-info { max-width: 90px; padding: 0.22rem 0.45rem; }
+  .dmc-info h3 { font-size: 0.55rem; }
+  .dmc-info p  { font-size: 0.44rem; }
+  .dmc-badge-num { font-size: 0.9rem; }
+}

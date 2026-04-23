@@ -92,7 +92,7 @@ const LeadershipSection = () => {
       name: 'Sajeel',
       lastName: 'Nisar',
       img: $sajeel,
-      role: 'AI Engineering Manager',
+      role: 'Ai Team Manager',
       desc: [
         'Specializes in designing and implementing intelligent systems that power 3D scanning.',
         'Transforms complex datasets into actionable insights and automated solutions.',
@@ -105,7 +105,7 @@ const LeadershipSection = () => {
       name: 'Shehroz',
       lastName: 'Shabbir',
       img: $shehroz,
-      role: 'Web Development Manager',
+      role: 'Web Team Manager',
       desc: [
         'Shehroz is the technical backbone behind the company innovative platforms. Skilled in both front-end and back-end development.',
         'His work powers the AI-driven and 3D scanning technologies that define the company cutting-edge services.',

@@ -43,6 +43,9 @@ import AI4 from '../assets/service/AI4.png'
 import AI3 from '../assets/service/AI3.jpeg'
 import AI5 from '../assets/service/AI5.png'
 
+import DevOps from '../assets/service/DevOps.svg'
+import Usman from '../assets/service/Usman.jpeg'
+
 import Laiba from '../assets/service/laiba.jpg'
 import Danish from '../assets/service/Danish.jpeg'
 
@@ -167,6 +170,23 @@ export const SERVICES = [
     members: 3,
   },
   {
+    id: 'devops',
+    icon: DevOps,
+    bgIcon: BgAIDev,
+    label: 'DevOps & Cloud Engineering',
+    heading: 'DevOps & Cloud Engineering',
+    intro:
+      'We streamline development and deployment processes using modern DevOps practices. From CI/CD pipelines to cloud infrastructure, we ensure fast, secure, and scalable delivery of applications.',
+    bullets: [
+      'CI/CD pipeline setup (GitHub Actions, GitLab CI)',
+      'Cloud infrastructure management (AWS, Azure, GCP)',
+      'Docker & Kubernetes containerization',
+      'Monitoring, logging & performance optimization',
+    ],
+    techStack: ['AWS', 'Azure', 'GCP', 'Docker', 'Kubernetes', 'GitHub Actions', 'Terraform', 'Jenkins'],
+    members: 3,
+  },
+  {
     id: 'fullstack',
     icon: FullStack,
     bgIcon: BgAIDev,
@@ -261,6 +281,11 @@ export const MEMBER_DATA = {
     { src: Fatima, letter: 'F' },
     { src: graphics, letter: 'S' },
     { src: UI, letter: 'S' },
+  ],
+  devops: [
+    { src: SehrozSir, letter: 'S' },
+    { src: Usman,   letter: 'Z' },
+    { src: Ali,    letter: 'H' },
   ],
   fullstack: [
     { src: SehrozSir,   letter: 'S' },

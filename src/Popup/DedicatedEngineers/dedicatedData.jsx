@@ -18,6 +18,7 @@ import ProcessBg from '../../assets/images/WorkTogether.svg'
 import Circle from '../../assets/service/Circle.svg'
 import AE from '../../assets/service/AE.svg'
 import Cbg from '../../assets/service/CBg.svg'
+import group from '../../assets/service/gorup.svg'
 
 export const contractLengthOptions = [
   {
@@ -139,5 +140,6 @@ export const arrowAssets = {
   Flutter,
   UIUX,
   DevOps,
-  Stack
+  Stack,
+  group
 }

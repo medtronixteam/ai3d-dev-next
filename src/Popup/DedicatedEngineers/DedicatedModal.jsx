@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 const DedicatedModal = ({ isOpen, onClose }) => {
   const { ArrowBack, Dedicated, elipse, ProcessBg, ArrowUp, ArrowDown, ContractLength, Cbg, AE
-    , Backend, UIUX, Flutter, DevOps, Stack, group
+    , Backend, UIUX, Flutter, DevOps, Stack, group, pink, Group, pink2
    } = arrowAssets
 
   if (!isOpen) return null
@@ -284,15 +284,15 @@ const DedicatedModal = ({ isOpen, onClose }) => {
 
             <line x1="220" y1="118" x2="220" y2="170" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerEnd="url(#m-arr)" />
 
-            <line x1="40" y1="300" x2="40" y2="400" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerStart="url(#m-arr-up)" />
+            <line x1="40" y1="275" x2="40" y2="400" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerStart="url(#m-arr-up)" />
 
-            <line x1="125" y1="350" x2="125" y2="400" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerStart="url(#m-arr-up)" />
+            <line x1="125" y1="340" x2="125" y2="400" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerStart="url(#m-arr-up)" />
 
             <line x1="40" y1="400" x2="320" y2="400" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" />
 
-            <line x1="320" y1="350" x2="320" y2="400" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerStart="url(#m-arr-up)" />
+            <line x1="320" y1="340" x2="320" y2="400" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerStart="url(#m-arr-up)" />
 
-            <line x1="220" y1="280" x2="220" y2="400" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerStart="url(#m-arr-up)" />
+            <line x1="220" y1="275" x2="220" y2="400" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerStart="url(#m-arr-up)" />
 
           </svg>
 
@@ -307,57 +307,77 @@ const DedicatedModal = ({ isOpen, onClose }) => {
 
             <div className="dmc-card dmc-card--tl">
               <div className="dmc-circle-wrap">
-                <img src={Cbg} alt="" width={65} height={65} />
+                <img src={Group} alt="" width={40} height={40} />
                 <div className="dmc-badge">
                   <span className="dmc-badge-num">1</span>
                   <span className="dmc-badge-unit">Mon</span>
                 </div>
               </div>
               <div className="dmc-info">
-                <h3>Trial</h3>
-                <p>Test the fit before<br />committing</p>
+                <div className="pink-box">
+                  <img src={pink} alt="" />
+                  <div className="pink-text">
+                    <h3>Trial</h3>
+                    <p>Test the fit before<br />committing</p>
+                  </div>
+                 </div>
               </div>
             </div>
 
             <div className="dmc-card dmc-card--tr">
               <div className="dmc-circle-wrap">
-                <img src={Cbg} alt="" width={65} height={65} />
+                <img src={Group} alt="" width={40} height={40} />
                 <div className="dmc-badge">
                   <span className="dmc-badge-num">6</span>
                   <span className="dmc-badge-unit">Mon</span>
                 </div>
               </div>
               <div className="dmc-info">
-                <h3>Build</h3>
-                <p>Full product<br />development cycle.</p>
+                <div className="pink-box">
+                  <img src={pink} alt="" />
+                  <div className="pink-text">
+                    <h3>Build</h3>
+                    <p>Full product<br />development cycle.</p>
+                  </div>
+                 </div>
               </div>
             </div>
 
             <div className="dmc-card dmc-card--bl">
               <div className="dmc-circle-wrap">
-                <img src={Cbg} alt="" width={65} height={65} />
+                <img src={Group} alt="" width={40} height={40} />
                 <div className="dmc-badge">
                   <span className="dmc-badge-num">3</span>
                   <span className="dmc-badge-unit">Mon</span>
                 </div>
               </div>
               <div className="dmc-info">
-                <h3>Sprint</h3>
-                <p>Ship a major feature<br />or MVP.</p>
+                <div className="pink2-box">
+                  <img src={pink2} alt="" />
+                  <div className="pink-text">
+                    <h3>Sprint</h3>
+                    <p>Ship a major feature or MVP.</p>
+                  </div>
+                 </div>
               </div>
             </div>
 
             <div className="dmc-card dmc-card--br">
               <div className="dmc-circle-wrap">
-                <img src={Cbg} alt="" width={65} height={65} />
+                <img src={Group} alt="" width={40} height={40} />
                 <div className="dmc-badge">
                   <span className="dmc-badge-num">12</span>
                   <span className="dmc-badge-unit">Mon</span>
                 </div>
               </div>
               <div className="dmc-info">
-                <h3>Scale</h3>
-                <p>Long-term embedded partnership</p>
+                <div className="pink2-box">
+                  <img src={pink2} alt="" />
+                  <div className="pink-text">
+                    <h3>Scale</h3>
+                    <p>Long-term close partnership</p>
+                  </div>
+                 </div>
               </div>
             </div>
 
@@ -383,26 +403,30 @@ const DedicatedModal = ({ isOpen, onClose }) => {
             </defs>
 
             {/* stem from header */}
-            <line x1="180" y1="88" x2="180" y2="118" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" />
+            <line x1="180" y1="88" x2="180" y2="150" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" />
 
-            {/* horizontal bar 1 */}
-            <line x1="75" y1="118" x2="285" y2="118" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" />
-            <line x1="75" y1="118" x2="75" y2="168" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerEnd="url(#e-arr)" />
-            <line x1="285" y1="118" x2="285" y2="168" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerEnd="url(#e-arr)" />
+            {/* top horizontal bar 1 */}
+            <line x1="40" y1="118" x2="320" y2="118" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" />
 
-            {/* bar 2 */}
-            <line x1="75" y1="258" x2="75" y2="298" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerStart="url(#e-arr-up)" />
-            <line x1="75" y1="298" x2="285" y2="298" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" />
-            <line x1="285" y1="258" x2="285" y2="298" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerStart="url(#e-arr-up)" />
-            <line x1="75" y1="298" x2="75" y2="338" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerEnd="url(#e-arr)" />
-            <line x1="285" y1="298" x2="285" y2="338" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerEnd="url(#e-arr)" />
+            {/* top horizontal bar 2 */}
+            <line x1="100" y1="150" x2="260" y2="150" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" />
 
-            {/* bar 3 */}
-            <line x1="75" y1="428" x2="75" y2="458" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerStart="url(#e-arr-up)" />
-            <line x1="75" y1="458" x2="285" y2="458" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" />
-            <line x1="285" y1="428" x2="285" y2="458" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerStart="url(#e-arr-up)" />
-            <line x1="75" y1="458" x2="75" y2="498" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerEnd="url(#e-arr)" />
-            <line x1="285" y1="458" x2="285" y2="498" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerEnd="url(#e-arr)" />
+            {/* top vertical bar 2 */}
+            <line x1="100" y1="150" x2="100" y2="190" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerEnd="url(#e-arr)" />
+            <line x1="260" y1="150" x2="260" y2="190" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerEnd="url(#e-arr)" />
+
+            {/* top vertical bar */}
+            <line x1="40" y1="118" x2="40" y2="360" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerEnd="url(#e-arr)" />
+            <line x1="320" y1="118" x2="320" y2="360" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerEnd="url(#e-arr)" />
+
+            {/* side horizontal bar  */}
+            <line x1="40" y1="330" x2="150" y2="330" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" />
+            <line x1="150" y1="330" x2="150" y2="480" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerEnd="url(#e-arr)" />
+
+             {/* side horizontal bar 2  */}
+            <line x1="220" y1="330" x2="320" y2="330" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" />
+            <line x1="220" y1="330" x2="220" y2="480" stroke="#DE399680" strokeWidth="1.5" strokeDasharray="5 5" markerEnd="url(#e-arr)" />
+
 
           </svg>
 
@@ -417,79 +441,109 @@ const DedicatedModal = ({ isOpen, onClose }) => {
 
             <div className="dmc-card dmc-card--r1l">
               <div className="dmc-circle-wrap">
-                 <img src={Cbg} alt="" width={65} height={65} />
+                 <img src={Group} alt="" width={40} height={40} />
                 <div className="dmc-badge dmc-badge--icon">
-                  <img src={Backend} alt="" width={26} height={26} />
+                  <img src={Backend} alt="" width={20} height={20} />
                 </div>
               </div>
               <div className="dmc-info">
-                <h3>Backend Eng.</h3>
-                <p>Python, Go,<br />Microservices, Docker</p>
+                <div className="pink3-box">
+                  <img src={pink} alt="" />
+                  <div className="pink-text">
+                    <h3>Backend Eng.</h3>
+                    <p>Python, Go, Microservices, Docker</p>
+                  </div>
+                 </div>
               </div>
             </div>
 
             <div className="dmc-card dmc-card--r1r">
               <div className="dmc-circle-wrap">
-                 <img src={Cbg} alt="" width={65} height={65} />
+                 <img src={Group} alt="" width={40} height={40} />
                 <div className="dmc-badge dmc-badge--icon">
-                  <img src={Backend} alt="" width={26} height={26} />
+                  <img src={Backend} alt="" width={20} height={20} />
                 </div>
               </div>
               <div className="dmc-info">
-                <h3>AI / ML Eng.</h3>
-                <p>PyTorch, LLMs,<br />MLOps, Python</p>
+                <div className="pink4-box">
+                  <img src={pink2} alt="" />
+                  <div className="pink-text">
+                    <h3>AI / ML Eng.</h3>
+                    <p>PyTorch, LLMs, MLOps, Python</p>
+                  </div>
+                 </div>
               </div>
             </div>
 
             <div className="dmc-card dmc-card--r2l">
               <div className="dmc-circle-wrap">
-                 <img src={Cbg} alt="" width={65} height={65} />
+                 <img src={Group} alt="" width={40} height={40} />
                 <div className="dmc-badge dmc-badge--icon">
-                  <img src={Stack} alt="" width={26} height={26} />
+                  <img src={Stack} alt="" width={20} height={20} />
                 </div>
               </div>
               <div className="dmc-info">
-                <h3>Full Stack Eng.</h3>
-                <p>React, Node.js,<br />PostgreSQL, AWS</p>
+                <div className="pink3-box">
+                  <img src={pink} alt="" />
+                  <div className="pink-text">
+                    <h3>Full Stack Eng.</h3>
+                    <p>React, Node.js, PostgreSQL, AWS</p>
+                  </div>
+                 </div>
               </div>
             </div>
 
             <div className="dmc-card dmc-card--r2r">
               <div className="dmc-circle-wrap">
-                 <img src={Cbg} alt="" width={65} height={65} />
+                 <img src={Group} alt="" width={40} height={40} />
                 <div className="dmc-badge dmc-badge--icon">
-                  <img src={Flutter} alt="" width={26} height={26} />
+                  <img src={Flutter} alt="" width={20} height={20} />
                 </div>
               </div>
               <div className="dmc-info">
-                <h3>Flutter Dev.</h3>
-                <p>Flutter, Dart,<br />Firebase, Riverpod</p>
+                <div className="pink4-box">
+                  <img src={pink2} alt="" />
+                  <div className="pink-text">
+                    <h3>Flutter Dev.</h3>
+                    <p>Flutter, Dart,<br />Firebase, Riverpod</p>
+                  </div>
+                 </div>
               </div>
             </div>
 
             <div className="dmc-card dmc-card--r3l">
               <div className="dmc-circle-wrap">
-                <img src={Cbg} alt="" width={65} height={65} />
+                <img src={Group} alt="" width={40} height={40} />
                 <div className="dmc-badge dmc-badge--icon">
-                  <img src={UIUX} alt="" width={26} height={26} />
+                  <img src={UIUX} alt="" width={20} height={20} />
                 </div>
               </div>
               <div className="dmc-info">
-                <h3>Frontend Eng.</h3>
-                <p>React, TypeScript,<br />Next.js, Tailwind</p>
+                <div className="pink4-box">
+                  <img src={pink2} alt="" />
+                  <div className="pink-text">
+                    <h3>Frontend Eng.</h3>
+                    <p>React, TypeScript,<br />Next.js, Tailwind</p>
+                  </div>
+                 </div>
               </div>
             </div>
 
             <div className="dmc-card dmc-card--r3r">
               <div className="dmc-circle-wrap">
-                <img src={Cbg} alt="" width={65} height={65} />
+                <img src={Group} alt="" width={40} height={40} />
                 <div className="dmc-badge dmc-badge--icon">
-                  <img src={DevOps} alt="" width={26} height={26} />
+                  <img src={DevOps} alt="" width={20} height={20} />
                 </div>
               </div>
               <div className="dmc-info">
-                <h3>DevOps Eng.</h3>
-                <p>AWS, Kubernetes,<br />CI/CD, Terraform</p>
+                <div className="pink3-box">
+                  <img src={pink} alt="" />
+                  <div className="pink-text">
+                    <h3>DevOps Eng.</h3>
+                    <p>AWS, Kubernetes, CI/CD, Terraform</p>
+                  </div>
+                 </div>
               </div>
             </div>
 

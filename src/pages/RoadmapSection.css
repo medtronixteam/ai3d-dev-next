@@ -1,5 +1,4 @@
 .roadmap-section {
-    /* padding: 0px 0px 0px 0; */
     background: #fff;
     overflow: visible;
     opacity: 0;
@@ -30,60 +29,13 @@
     leading-trim: NONE;
     line-height: 100%;
     letter-spacing: 0%;
-    text-align: center;
     font-size: 12px;
     line-height: 15px;
 }
 
-
-/* .container {
-    max-width: 1200px;
-    margin: 0 auto;
-} */
-
-/* 
-.header-wrapper { 
-    text-align: center; 
-    margin-bottom: 60px; 
-    position: relative; 
-}
-
-.title { 
-    font-size: 2.4rem; 
-    font-weight: 800; 
-    position: relative; 
-    z-index: 2;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s;
-}
-
-.roadmap-section.animate-in .title {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.elipse-bg { 
-    position: absolute; 
-    top: 50%; 
-    left: 50%; 
-    transform: translate(-50%, -50%); 
-    width: 420px; 
-    z-index: 1; 
-    opacity: 0.18; 
-    animation: float 6s ease-in-out infinite;
-} */
-
 @keyframes float {
-
-    0%,
-    100% {
-        transform: translate(-50%, -50%) translateY(0px);
-    }
-
-    50% {
-        transform: translate(-50%, -50%) translateY(-10px);
-    }
+    0%, 100% { transform: translate(-50%, -50%) translateY(0px); }
+    50%       { transform: translate(-50%, -50%) translateY(-10px); }
 }
 
 .roadmap-main {
@@ -92,7 +44,95 @@
     height: 460px;
 }
 
-/* --- DESKTOP STYLES (Min 901px) --- */
+/* ═══════════════════════════════════════════════════════════════
+   SCROLL HINT
+═══════════════════════════════════════════════════════════════ */
+.scroll-hint-wrapper {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(16px);
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.scroll-hint-wrapper.hint-visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.scroll-hint-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 118, 184, 0.3);
+    border-radius: 100px;
+    padding: 6px 14px;
+    box-shadow: 0 2px 12px rgba(255, 118, 184, 0.12);
+    animation: pill-float 3s ease-in-out infinite;
+}
+
+@keyframes pill-float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-4px); }
+}
+
+.scroll-hint-pill::before {
+    content: '';
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ff76b8;
+    flex-shrink: 0;
+}
+
+.hint-label {
+    font-family: DM Sans, sans-serif;
+    font-size: 12px;
+    color: #888;
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+}
+
+.hint-label strong {
+    color: #ff76b8;
+    font-weight: 600;
+}
+
+.hint-arrows {
+    display: flex;
+    align-items: center;
+    margin-left: 2px;
+}
+
+.hint-arrow {
+    display: block;
+    font-size: 11px;
+    line-height: 1;
+    color: #ff76b8;
+    opacity: 0;
+    animation: cascade-arrow 1.4s ease-in-out infinite;
+}
+
+.hint-arrow.a1 { animation-delay: 0s; }
+.hint-arrow.a2 { display: none; }
+.hint-arrow.a3 { display: none; }
+
+@keyframes cascade-arrow {
+    0%   { opacity: 0; transform: translateY(-2px); }
+    40%  { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(2px); }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DESKTOP STYLES (Min 901px)
+═══════════════════════════════════════════════════════════════ */
 @media (min-width: 901px) {
     .snake-img {
         position: absolute;
@@ -147,17 +187,9 @@
     }
 
     @keyframes pulse {
-        0% {
-            transform: translateY(-50%) scale(1);
-        }
-
-        50% {
-            transform: translateY(-50%) scale(1.05);
-        }
-
-        100% {
-            transform: translateY(-50%) scale(1);
-        }
+        0%   { transform: translateY(-50%) scale(1); }
+        50%  { transform: translateY(-50%) scale(1.05); }
+        100% { transform: translateY(-50%) scale(1); }
     }
 
     .end-target-wrap {
@@ -187,17 +219,9 @@
     }
 
     @keyframes pulse-slow {
-        0% {
-            transform: scale(1);
-        }
-
-        50% {
-            transform: scale(1.1);
-        }
-
-        100% {
-            transform: scale(1);
-        }
+        0%   { transform: scale(1); }
+        50%  { transform: scale(1.1); }
+        100% { transform: scale(1); }
     }
 
     .end-target-arrow {
@@ -208,18 +232,6 @@
         border-left: 18px solid #ff76b8;
         margin-left: -65px;
         animation: pulse-slow 3s infinite;
-    }
-
-    @keyframes arrow-glowing {
-
-        0%,
-        100% {
-            border-left-color: #ff76b8;
-        }
-
-        50% {
-            border-left-color: #ff4da6;
-        }
     }
 
     .roadmap-node {
@@ -238,7 +250,6 @@
         transform: translateX(-50%) scale(1);
     }
 
-    /* Icon hover effect */
     .icon-box {
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
@@ -248,14 +259,12 @@
         box-shadow: 0 15px 25px rgba(255, 118, 184, 0.25);
     }
 
-    /* Text hover effect */
     .roadmap-node:hover .text-content h6 {
         color: #ff76b8;
         transform: translateY(-2px);
         transition: color 0.3s ease, transform 0.3s ease;
     }
 
-    /* Desktop Up/Down logic */
     .roadmap-node.up .node-wrapper-inner {
         display: flex;
         flex-direction: column;
@@ -299,15 +308,9 @@
         transform: translateX(-50%) scale(1);
     }
 
-    .node-anchor.top {
-        top: -6px;
-    }
+    .node-anchor.top    { top: -6px; }
+    .node-anchor.bottom { bottom: -6px; }
 
-    .node-anchor.bottom {
-        bottom: -6px;
-    }
-
-    /* Arrow tips for desktop */
     .node-anchor.top::after {
         content: '';
         position: absolute;
@@ -330,9 +333,7 @@
         border-bottom: 10px solid #111;
     }
 
-    .mobile-step {
-        display: none;
-    }
+    .mobile-step { display: none; }
 
     .icon-box {
         width: 100px;
@@ -352,15 +353,13 @@
         transform: scale(1);
     }
 
-    .icon-box img {
-        width: 50px;
-    }
+    .icon-box img { width: 50px; }
 
-    /* Text content animation */    
     .text-content {
         opacity: 0;
         transform: translateY(10px);
-        transition: opacity 0.4s ease calc(var(--delay) + 0.4s),
+        transition:
+            opacity   0.4s ease calc(var(--delay) + 0.4s),
             transform 0.4s ease calc(var(--delay) + 0.4s);
     }
 
@@ -370,11 +369,12 @@
     }
 }
 
-/* --- MOBILE STYLES (Max 900px) --- */
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE STYLES (Max 900px)
+═══════════════════════════════════════════════════════════════ */
 @media (max-width: 900px) {
-    .desktop-only-assets {
-        display: none;
-    }
+    .desktop-only-assets { display: none; }
+    .scroll-hint-wrapper  { display: none; }
 
     .text-content h6,
     .text-content p {
@@ -412,7 +412,8 @@
         width: 100%;
         opacity: 0;
         transform: translateX(-20px);
-        transition: opacity 0.4s ease var(--delay),
+        transition:
+            opacity   0.4s ease var(--delay),
             transform 0.4s ease var(--delay);
     }
 
@@ -428,10 +429,7 @@
         text-align: left;
     }
 
-    .icon-wrap {
-        flex-shrink: 0;
-        position: relative;
-    }
+    .icon-wrap { flex-shrink: 0; position: relative; }
 
     .icon-box {
         width: 60px;
@@ -445,16 +443,9 @@
         transition: transform 0.3s ease;
     }
 
-    /* Touch feedback on mobile */
-    .icon-box:active {
-        transform: scale(0.95);
-    }
+    .icon-box:active { transform: scale(0.95); }
+    .icon-box img    { width: 30px; }
 
-    .icon-box img {
-        width: 30px;
-    }
-
-    /* Dot on the vertical line - animated */
     .icon-wrap::after {
         content: '';
         position: absolute;
@@ -469,13 +460,9 @@
         transition: transform 0.3s ease var(--delay);
     }
 
-    .roadmap-node.animate-in .icon-wrap::after {
-        transform: scale(1);
-    }
+    .roadmap-node.animate-in .icon-wrap::after { transform: scale(1); }
 
-    .connector-line {
-        display: none;
-    }
+    .connector-line { display: none; }
 
     .mobile-step {
         display: block;
@@ -486,7 +473,8 @@
         margin-bottom: 4px;
         opacity: 0;
         transform: translateY(-5px);
-        transition: opacity 0.3s ease calc(var(--delay) + 0.1s),
+        transition:
+            opacity   0.3s ease calc(var(--delay) + 0.1s),
             transform 0.3s ease calc(var(--delay) + 0.1s);
     }
 
@@ -500,7 +488,8 @@
         margin-bottom: 5px;
         opacity: 0;
         transform: translateY(5px);
-        transition: opacity 0.3s ease calc(var(--delay) + 0.2s),
+        transition:
+            opacity   0.3s ease calc(var(--delay) + 0.2s),
             transform 0.3s ease calc(var(--delay) + 0.2s);
     }
 
@@ -516,57 +505,28 @@
         transition: opacity 0.3s ease calc(var(--delay) + 0.3s);
     }
 
-    .roadmap-node.animate-in .text-content p {
-        opacity: 1;
-    }
+    .roadmap-node.animate-in .text-content p { opacity: 1; }
 }
 
-/* Reduced motion preference */
+/* ─── Reduced motion ─────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-
-    *,
-    *::before,
-    *::after {
+    *, *::before, *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
 
-    .roadmap-section {
-        opacity: 1;
-        transform: none;
-    }
-
-    .roadmap-node {
-        opacity: 1;
-        transform: none !important;
-    }
-
-    .icon-box {
-        transform: none !important;
-    }
+    .roadmap-section   { opacity: 1; transform: none; }
+    .roadmap-node      { opacity: 1; transform: none !important; }
+    .icon-box          { transform: none !important; }
+    .scroll-hint-pill  { animation: none; }
+    .hint-arrow        { opacity: 1; animation: none; }
 }
 
+/* ─── Small phones ───────────────────────────────────────────── */
 @media (max-width: 480px) {
-    .title {
-        font-size: 1.8rem;
-        opacity: 1;
-        transform: none;
-    }
-
-    .nodes-container {
-        margin-left: 5px;
-        padding-left: 25px;
-        opacity: 1;
-        transform: none;
-    }
-
-    .roadmap-node {
-        opacity: 1;
-        transform: none !important;
-    }
-
-    .icon-wrap::after {
-        left: -32px;
-    }
+    .title           { font-size: 1.8rem; opacity: 1; transform: none; }
+    .nodes-container { margin-left: 5px; padding-left: 25px; opacity: 1; transform: none; }
+    .roadmap-node    { opacity: 1; transform: none !important; }
+    .icon-wrap::after { left: -32px; }
 }

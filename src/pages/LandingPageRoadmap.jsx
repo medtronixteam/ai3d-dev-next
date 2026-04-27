@@ -47,10 +47,11 @@ const RoadmapSection = ({ elipse }) => {
     const sectionRef        = useRef(null);
     const containerRef      = useRef(null);
     const nodesRef          = useRef([]);
-    const autoAdvanceTimer  = useRef(null); // ← auto-advance timer
+    const autoAdvanceTimer  = useRef(null);
 
-    const [activeIndex, setActiveIndex] = useState(-1);
-    const [isMobile, setIsMobile] = useState(
+    const [activeIndex, setActiveIndex]         = useState(-1);
+    const [showScrollHint, setShowScrollHint]   = useState(false);
+    const [isMobile, setIsMobile]               = useState(
         typeof window !== 'undefined' ? window.innerWidth <= 900 : false
     );
 
@@ -60,7 +61,7 @@ const RoadmapSection = ({ elipse }) => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // ─── INTERSECTION OBSERVER (section + mobile nodes) ───────────────────────
+    // ─── INTERSECTION OBSERVER ────────────────────────────────────────────────
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
@@ -82,6 +83,13 @@ const RoadmapSection = ({ elipse }) => {
                                 if (node) setTimeout(() => node.classList.add('animate-in'), i * 100);
                             });
                         }
+
+                        // Show scroll hint after a short delay on desktop
+                        if (!isMobile) {
+                            setTimeout(() => setShowScrollHint(true), 800);
+                        }
+                    } else {
+                        if (!isMobile) setShowScrollHint(false);
                     }
                 });
             },
@@ -118,6 +126,7 @@ const RoadmapSection = ({ elipse }) => {
 
                 if (rect.top > startOffset + 50) {
                     setActiveIndex(-1);
+                    setShowScrollHint(false);
                     return;
                 }
 
@@ -142,12 +151,20 @@ const RoadmapSection = ({ elipse }) => {
         }
     }, [isMobile]);
 
-    // ─── AUTO-ADVANCE: activeIndex change hone par 2 sec baad next step ──────
+    // ─── HIDE HINT WHEN ALL STEPS DONE ───────────────────────────────────────
+    useEffect(() => {
+        if (activeIndex >= roadmapData.length - 1) {
+            setShowScrollHint(false);
+        } else if (activeIndex >= 0 && !isMobile) {
+            setShowScrollHint(true);
+        }
+    }, [activeIndex, isMobile]);
+
+    // ─── AUTO-ADVANCE ─────────────────────────────────────────────────────────
     useEffect(() => {
         if (!isMobile) {
             if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
 
-            // Sirf tab timer lagao jab section visible ho aur last step nahi aaya
             if (activeIndex >= 0 && activeIndex < roadmapData.length - 1) {
                 autoAdvanceTimer.current = setTimeout(() => {
                     setActiveIndex((prev) => {
@@ -174,6 +191,10 @@ const RoadmapSection = ({ elipse }) => {
             });
         }
     }, [activeIndex, isMobile]);
+
+    // Next step label (1-indexed, capped at last)
+    const nextStepNumber = Math.min(activeIndex + 2, roadmapData.length);
+    const nextStepTitle  = roadmapData[activeIndex + 1]?.title || '';
 
     return (
         <div
@@ -247,9 +268,26 @@ const RoadmapSection = ({ elipse }) => {
                                     </div>
                                 ))}
                             </div>
+
                         </div>
                     </div>
                 </section>
+
+                {/* ── SCROLL HINT ─────────────────────────────────────────── */}
+                {!isMobile && (
+                    <div className={`scroll-hint-wrapper ${showScrollHint ? 'hint-visible' : ''}`}>
+                        <div className="scroll-hint-pill">
+                            <span className="hint-label">
+                                Scroll for <strong>Step 0{nextStepNumber}</strong>
+                            </span>
+                            <div className="hint-arrows">
+                                <span className="hint-arrow a1">&#8964;</span>
+                                <span className="hint-arrow a2">&#8964;</span>
+                                <span className="hint-arrow a3">&#8964;</span>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

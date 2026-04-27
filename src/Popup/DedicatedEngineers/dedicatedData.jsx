@@ -19,6 +19,9 @@ import Circle from '../../assets/service/Circle.svg'
 import AE from '../../assets/service/AE.svg'
 import Cbg from '../../assets/service/CBg.svg'
 import group from '../../assets/service/gorup.svg'
+import pink from '../../assets/service/pink.svg'
+import Group from '../../assets/service/Group.svg'
+import pink2 from '../../assets/service/pink2.svg'
 
 export const contractLengthOptions = [
   {
@@ -141,5 +144,7 @@ export const arrowAssets = {
   UIUX,
   DevOps,
   Stack,
-  group
+  group,
+  pink,
+  Group, pink2
 }

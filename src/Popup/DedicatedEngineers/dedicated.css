@@ -616,23 +616,23 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, 0%);
   pointer-events: auto;
 }
 
 /* Contract Length card positions (viewBox 360x420) */
-.dmc-card--tl { left: 13%; top: 53%; }
-.dmc-card--tr { left: 63%; top: 53%; }
-.dmc-card--bl { left: 37%; top: 70%; }
-.dmc-card--br { left: 90%; top: 70%; }
+.dmc-card--tl { left: 12%; top: 44%; }
+.dmc-card--tr { left: 61%; top: 44%; }
+.dmc-card--bl { left: 35%; top: 61%; }
+.dmc-card--br { left: 88%; top: 61%; }
 
 /* Engineers card positions (viewBox 360x580) */
-.dmc-card--r1l { left: 20.8%; top: 36.7%; }
-.dmc-card--r1r { left: 79.2%; top: 36.7%; }
-.dmc-card--r2l { left: 20.8%; top: 64.7%; }
-.dmc-card--r2r { left: 79.2%; top: 64.7%; }
-.dmc-card--r3l { left: 20.8%; top: 92.2%; }
-.dmc-card--r3r { left: 79.2%; top: 92.2%; }
+.dmc-card--r1l { left: 28%; top: 36%; }
+.dmc-card--r1r { left: 73%; top: 36%; }
+.dmc-card--r2l { left: 12%; top: 64.7%; }
+.dmc-card--r2r { left: 89%; top: 64.7%; }
+.dmc-card--r3l { left: 42%; top: 86%; }
+.dmc-card--r3r { left: 63%; top: 86%; }
 
 .dmc-circle-wrap {
   position: relative;
@@ -644,9 +644,7 @@
 
 .dmc-badge {
   position: absolute;
-  top: 36%;
-  left: 35%;
-  transform: translate(-50%, -50%);
+  transform: translate(0%, -20%) !important;
   display: flex;
   align-items: flex-end;
   gap: 2px;
@@ -660,7 +658,7 @@
 .dmc-badge-num {
   font-family: 'Manrope', sans-serif;
   font-weight: 800;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: #000;
   line-height: 1;
 }
@@ -674,34 +672,83 @@
   line-height: 1;
 }
 
-.dmc-info {
-  background: #DE3996;
-  border-radius: none;
-  padding: 0.28rem 0.6rem;
-  min-width: 100px;
+.pink-box {
+  position: relative;
+  width: 80px;
+  left: 15%;
+}
+
+.pink-box img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.pink2-box {
+  position: relative;
+  width: 80px;
+  right: 25%;
+}
+
+.pink2-box img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.pink3-box {
+  position: relative;
+  width: 100px;
+  left: 25%;
+}
+
+.pink3-box img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.pink4-box {
+  position: relative;
+  width: 100px;
+  right: 25%;
+}
+
+.pink4-box img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.pink-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-85%, -50%);
   color: #fff;
-  text-align: left;
-  margin-top: -1.25rem;
 }
 
 .dmc-info h3 {
-  margin: 0 0 1px;
-  font-size: 0.62rem;
+  margin: 6px 0 1px !important;
+  font-size: 0.4rem;
   font-weight: 700;
   color: #fff;
   white-space: nowrap;
+  text-align: left;
 }
 
 .dmc-info p {
-  margin: 0 0 0 0.5rem;
-  font-size: 0.43rem;
+  margin: 0 0 0 1rem;
+  font-size: 0.3rem;
   color: #fff;
   line-height: 1.4;
+  width: 100%;
+  text-align: left;
 }
 
-@media (max-width: 380px) {
+/* @media (max-width: 380px) {
   .dmc-info { max-width: 90px; padding: 0.22rem 0.45rem; }
   .dmc-info h3 { font-size: 0.55rem; }
   .dmc-info p  { font-size: 0.44rem; }
   .dmc-badge-num { font-size: 0.9rem; }
-}
+} */

@@ -8,7 +8,7 @@ import Desktop from '../assets/images/desktop.png';
 import BetaRelease from '../assets/images/beta-release.png';
 import Public from '../assets/images/Public.png';
 
-const AUTO_ANIMATE_DELAY = 3000; // section visible hone ke 3 sec baad
+const AUTO_ANIMATE_DELAY = 3000;
 
 const RoadmapSection = ({ elipse }) => {
     const roadmapData = [
@@ -50,7 +50,8 @@ const RoadmapSection = ({ elipse }) => {
     const containerRef     = useRef(null);
     const nodesRef         = useRef([]);
     const autoAnimateTimer = useRef(null);
-    const scrollTookOver   = useRef(false); // scroll ne control liya ya nahi
+    const scrollTookOver   = useRef(false);
+    const autoAnimated     = useRef(false); // ← NEW: track karo ke auto-animate hua ya nahi
 
     const [activeIndex, setActiveIndex] = useState(-1);
     const [isMobile, setIsMobile] = useState(
@@ -65,7 +66,9 @@ const RoadmapSection = ({ elipse }) => {
 
     // ─── Sab nodes animate karne ka kaam ──────────────────────────────────────
     const animateAllNodes = useCallback(() => {
-        if (scrollTookOver.current) return; // scroll chal raha hai, mat chalao
+        if (scrollTookOver.current) return;
+
+        autoAnimated.current = true; // ← NEW: flag set karo
 
         if (sectionRef.current) {
             sectionRef.current.classList.add('animate-in');
@@ -84,7 +87,6 @@ const RoadmapSection = ({ elipse }) => {
             }
         }
 
-        // Nodes ek ek kar ke 300ms stagger se show karo
         nodesRef.current.forEach((node, index) => {
             if (node) {
                 setTimeout(() => {
@@ -95,7 +97,6 @@ const RoadmapSection = ({ elipse }) => {
     }, []);
 
     // ─── INTERSECTION OBSERVER ────────────────────────────────────────────────
-    // Section screen mein aaye TAB timer shuru karo (page load pe nahi)
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
@@ -117,7 +118,6 @@ const RoadmapSection = ({ elipse }) => {
                         }
 
                         if (isMobile) {
-                            // Mobile: seedha animate karo, koi sticky scroll nahi hota
                             nodesRef.current.forEach((node, index) => {
                                 if (node) {
                                     setTimeout(() => {
@@ -127,16 +127,16 @@ const RoadmapSection = ({ elipse }) => {
                             });
                             scrollTookOver.current = true;
                         } else {
-                            // Desktop: section screen mein aaya, ab 3 sec ka timer shuru karo
                             clearTimeout(autoAnimateTimer.current);
                             autoAnimateTimer.current = setTimeout(() => {
                                 animateAllNodes();
                             }, AUTO_ANIMATE_DELAY);
                         }
                     } else {
-                        // Section screen se bahar gayi — timer cancel karo
+                        // Section bahar gayi — timer cancel, flags reset karo
                         clearTimeout(autoAnimateTimer.current);
                         scrollTookOver.current = false;
+                        autoAnimated.current = false; // ← NEW: section bahar gayi to reset
                     }
                 });
             },
@@ -151,7 +151,6 @@ const RoadmapSection = ({ elipse }) => {
     }, [isMobile, animateAllNodes]);
 
     // ─── DESKTOP SCROLL ───────────────────────────────────────────────────────
-    // Jab user sticky zone mein ghuse → timer cancel, scroll apna kaam kare
     useEffect(() => {
         if (!isMobile) {
             const getScrollParent = (node) => {
@@ -173,9 +172,11 @@ const RoadmapSection = ({ elipse }) => {
                 const startOffset = windowHeight * 0.15;
                 const scrollableDistance = rect.height - windowHeight;
 
-                // Section sticky zone se bahar — sirf activeIndex reset karo
+                // Section sticky zone se bahar — sirf reset karo agar auto-animate nahi hua
                 if (rect.top > startOffset + 50) {
-                    setActiveIndex(-1);
+                    if (!autoAnimated.current) { // ← NEW: sirf tab reset karo
+                        setActiveIndex(-1);
+                    }
                     return;
                 }
 
@@ -203,15 +204,21 @@ const RoadmapSection = ({ elipse }) => {
         }
     }, [isMobile]);
 
-    // ─── SYNC activeIndex → node classes (original scroll animation logic) ────
+    // ─── SYNC activeIndex → node classes ─────────────────────────────────────
     useEffect(() => {
         if (!isMobile) {
             nodesRef.current.forEach((node, index) => {
                 if (node) {
-                    if (index <= activeIndex) {
+                    if (autoAnimated.current) {
+                        // ← NEW: auto ho chuka — sirf add karo, kabhi remove mat karo
                         node.classList.add('animate-in');
                     } else {
-                        node.classList.remove('animate-in');
+                        // Scroll chal raha hai — normal scroll animation
+                        if (index <= activeIndex) {
+                            node.classList.add('animate-in');
+                        } else {
+                            node.classList.remove('animate-in');
+                        }
                     }
                 }
             });

@@ -56,6 +56,8 @@ import FT2 from '../assets/service/FT2.jpeg'
 import FT3 from '../assets/service/FT3.jpeg'
 import Amir from '../assets/service/Amir.png'
 
+import dev from '../assets/service/dev.png'
+
 import UI from '../assets/service/UI.jpeg'
 
 export const PROCESS_STEPS = [
@@ -171,7 +173,7 @@ export const SERVICES = [
   },
   {
     id: 'devops',
-    icon: DevOps,
+    icon: dev,
     bgIcon: BgAIDev,
     label: 'DevOps & Cloud Engineering',
     heading: 'DevOps & Cloud Engineering',

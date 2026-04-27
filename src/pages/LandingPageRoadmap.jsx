@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './RoadmapSection.css';
 import snakeImg from '../assets/images/snakeImg.png';
 import arrowStart from '../assets/images/arrowStart.png';
@@ -7,8 +7,6 @@ import manIcon from '../assets/images/manIcon.png';
 import Desktop from '../assets/images/desktop.png';
 import BetaRelease from '../assets/images/beta-release.png';
 import Public from '../assets/images/Public.png';
-
-const AUTO_ANIMATE_DELAY = 3000;
 
 const RoadmapSection = ({ elipse }) => {
     const roadmapData = [
@@ -46,12 +44,10 @@ const RoadmapSection = ({ elipse }) => {
         },
     ];
 
-    const sectionRef       = useRef(null);
-    const containerRef     = useRef(null);
-    const nodesRef         = useRef([]);
-    const autoAnimateTimer = useRef(null);
-    const scrollTookOver   = useRef(false);
-    const autoAnimated     = useRef(false); // ← NEW: track karo ke auto-animate hua ya nahi
+    const sectionRef        = useRef(null);
+    const containerRef      = useRef(null);
+    const nodesRef          = useRef([]);
+    const autoAdvanceTimer  = useRef(null); // ← auto-advance timer
 
     const [activeIndex, setActiveIndex] = useState(-1);
     const [isMobile, setIsMobile] = useState(
@@ -64,39 +60,7 @@ const RoadmapSection = ({ elipse }) => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // ─── Sab nodes animate karne ka kaam ──────────────────────────────────────
-    const animateAllNodes = useCallback(() => {
-        if (scrollTookOver.current) return;
-
-        autoAnimated.current = true; // ← NEW: flag set karo
-
-        if (sectionRef.current) {
-            sectionRef.current.classList.add('animate-in');
-
-            const snakePath = sectionRef.current.querySelector('.snake-svg path');
-            if (snakePath) {
-                setTimeout(() => { snakePath.style.strokeDashoffset = '0'; }, 300);
-            }
-            const startArrow = sectionRef.current.querySelector('.start-arrow');
-            if (startArrow) {
-                setTimeout(() => startArrow.classList.add('pulse'), 400);
-            }
-            const endTarget = sectionRef.current.querySelector('.end-target');
-            if (endTarget) {
-                setTimeout(() => endTarget.classList.add('pulse-slow'), 500);
-            }
-        }
-
-        nodesRef.current.forEach((node, index) => {
-            if (node) {
-                setTimeout(() => {
-                    node.classList.add('animate-in');
-                }, 300 + index * 300);
-            }
-        });
-    }, []);
-
-    // ─── INTERSECTION OBSERVER ────────────────────────────────────────────────
+    // ─── INTERSECTION OBSERVER (section + mobile nodes) ───────────────────────
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
@@ -105,38 +69,19 @@ const RoadmapSection = ({ elipse }) => {
                         entry.target.classList.add('animate-in');
 
                         const snakePath = entry.target.querySelector('.snake-svg path');
-                        if (snakePath) {
-                            setTimeout(() => { snakePath.style.strokeDashoffset = '0'; }, 300);
-                        }
+                        if (snakePath) setTimeout(() => { snakePath.style.strokeDashoffset = '0'; }, 300);
+
                         const startArrow = entry.target.querySelector('.start-arrow');
-                        if (startArrow) {
-                            setTimeout(() => startArrow.classList.add('pulse'), 400);
-                        }
+                        if (startArrow) setTimeout(() => startArrow.classList.add('pulse'), 400);
+
                         const endTarget = entry.target.querySelector('.end-target');
-                        if (endTarget) {
-                            setTimeout(() => endTarget.classList.add('pulse-slow'), 500);
-                        }
+                        if (endTarget) setTimeout(() => endTarget.classList.add('pulse-slow'), 500);
 
                         if (isMobile) {
-                            nodesRef.current.forEach((node, index) => {
-                                if (node) {
-                                    setTimeout(() => {
-                                        node.classList.add('animate-in');
-                                    }, index * 100);
-                                }
+                            nodesRef.current.forEach((node, i) => {
+                                if (node) setTimeout(() => node.classList.add('animate-in'), i * 100);
                             });
-                            scrollTookOver.current = true;
-                        } else {
-                            clearTimeout(autoAnimateTimer.current);
-                            autoAnimateTimer.current = setTimeout(() => {
-                                animateAllNodes();
-                            }, AUTO_ANIMATE_DELAY);
                         }
-                    } else {
-                        // Section bahar gayi — timer cancel, flags reset karo
-                        clearTimeout(autoAnimateTimer.current);
-                        scrollTookOver.current = false;
-                        autoAnimated.current = false; // ← NEW: section bahar gayi to reset
                     }
                 });
             },
@@ -145,10 +90,9 @@ const RoadmapSection = ({ elipse }) => {
 
         if (sectionRef.current) observer.observe(sectionRef.current);
         return () => {
-            clearTimeout(autoAnimateTimer.current);
             if (sectionRef.current) observer.unobserve(sectionRef.current);
         };
-    }, [isMobile, animateAllNodes]);
+    }, [isMobile]);
 
     // ─── DESKTOP SCROLL ───────────────────────────────────────────────────────
     useEffect(() => {
@@ -172,18 +116,9 @@ const RoadmapSection = ({ elipse }) => {
                 const startOffset = windowHeight * 0.15;
                 const scrollableDistance = rect.height - windowHeight;
 
-                // Section sticky zone se bahar — sirf reset karo agar auto-animate nahi hua
                 if (rect.top > startOffset + 50) {
-                    if (!autoAnimated.current) { // ← NEW: sirf tab reset karo
-                        setActiveIndex(-1);
-                    }
+                    setActiveIndex(-1);
                     return;
-                }
-
-                // User sticky zone mein aa gaya — timer cancel, scroll control le lo
-                if (!scrollTookOver.current) {
-                    clearTimeout(autoAnimateTimer.current);
-                    scrollTookOver.current = true;
                 }
 
                 let currentProgress = (startOffset - rect.top) / scrollableDistance;
@@ -200,26 +135,41 @@ const RoadmapSection = ({ elipse }) => {
 
             scrollContainer.addEventListener('scroll', handleScroll);
             handleScroll();
-            return () => scrollContainer.removeEventListener('scroll', handleScroll);
+
+            return () => {
+                scrollContainer.removeEventListener('scroll', handleScroll);
+            };
         }
     }, [isMobile]);
 
-    // ─── SYNC activeIndex → node classes ─────────────────────────────────────
+    // ─── AUTO-ADVANCE: activeIndex change hone par 2 sec baad next step ──────
+    useEffect(() => {
+        if (!isMobile) {
+            if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
+
+            // Sirf tab timer lagao jab section visible ho aur last step nahi aaya
+            if (activeIndex >= 0 && activeIndex < roadmapData.length - 1) {
+                autoAdvanceTimer.current = setTimeout(() => {
+                    setActiveIndex((prev) => {
+                        if (prev < roadmapData.length - 1) return prev + 1;
+                        return prev;
+                    });
+                }, 2000);
+            }
+
+            return () => {
+                if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
+            };
+        }
+    }, [activeIndex, isMobile]);
+
+    // ─── activeIndex → node classes ───────────────────────────────────────────
     useEffect(() => {
         if (!isMobile) {
             nodesRef.current.forEach((node, index) => {
                 if (node) {
-                    if (autoAnimated.current) {
-                        // ← NEW: auto ho chuka — sirf add karo, kabhi remove mat karo
-                        node.classList.add('animate-in');
-                    } else {
-                        // Scroll chal raha hai — normal scroll animation
-                        if (index <= activeIndex) {
-                            node.classList.add('animate-in');
-                        } else {
-                            node.classList.remove('animate-in');
-                        }
-                    }
+                    if (index <= activeIndex) node.classList.add('animate-in');
+                    else node.classList.remove('animate-in');
                 }
             });
         }
@@ -285,13 +235,9 @@ const RoadmapSection = ({ elipse }) => {
                                                     <img src={item.icon} alt="" />
                                                 </div>
                                             </div>
-
                                             <div className="connector-line">
-                                                <div
-                                                    className={`node-anchor ${item.pos === 'up' ? 'top' : 'bottom'}`}
-                                                ></div>
+                                                <div className={`node-anchor ${item.pos === 'up' ? 'top' : 'bottom'}`}></div>
                                             </div>
-
                                             <div className="text-content">
                                                 <span className="mobile-step">Step 0{index + 1}</span>
                                                 <h6>{item.title}</h6>

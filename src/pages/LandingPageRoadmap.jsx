@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import './RoadmapSection.css';
 import snakeImg from '../assets/images/snakeImg.png';
 import arrowStart from '../assets/images/arrowStart.png';
@@ -7,6 +7,8 @@ import manIcon from '../assets/images/manIcon.png';
 import Desktop from '../assets/images/desktop.png';
 import BetaRelease from '../assets/images/beta-release.png';
 import Public from '../assets/images/Public.png';
+
+const AUTO_ANIMATE_DELAY = 3000; // section visible hone ke 3 sec baad
 
 const RoadmapSection = ({ elipse }) => {
     const roadmapData = [
@@ -44,12 +46,13 @@ const RoadmapSection = ({ elipse }) => {
         },
     ];
 
-    const sectionRef = useRef(null);
-    const containerRef = useRef(null);
-    const nodesRef = useRef([]);
+    const sectionRef       = useRef(null);
+    const containerRef     = useRef(null);
+    const nodesRef         = useRef([]);
+    const autoAnimateTimer = useRef(null);
+    const scrollTookOver   = useRef(false); // scroll ne control liya ya nahi
+
     const [activeIndex, setActiveIndex] = useState(-1);
-    
-    // Check initial window width to set isMobile accurately.
     const [isMobile, setIsMobile] = useState(
         typeof window !== 'undefined' ? window.innerWidth <= 900 : false
     );
@@ -60,34 +63,61 @@ const RoadmapSection = ({ elipse }) => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // Intersection observer triggers the base animations (arrows, line) for ALL devices
-    // For mobile, it also triggers the nodes.
+    // ─── Sab nodes animate karne ka kaam ──────────────────────────────────────
+    const animateAllNodes = useCallback(() => {
+        if (scrollTookOver.current) return; // scroll chal raha hai, mat chalao
+
+        if (sectionRef.current) {
+            sectionRef.current.classList.add('animate-in');
+
+            const snakePath = sectionRef.current.querySelector('.snake-svg path');
+            if (snakePath) {
+                setTimeout(() => { snakePath.style.strokeDashoffset = '0'; }, 300);
+            }
+            const startArrow = sectionRef.current.querySelector('.start-arrow');
+            if (startArrow) {
+                setTimeout(() => startArrow.classList.add('pulse'), 400);
+            }
+            const endTarget = sectionRef.current.querySelector('.end-target');
+            if (endTarget) {
+                setTimeout(() => endTarget.classList.add('pulse-slow'), 500);
+            }
+        }
+
+        // Nodes ek ek kar ke 300ms stagger se show karo
+        nodesRef.current.forEach((node, index) => {
+            if (node) {
+                setTimeout(() => {
+                    node.classList.add('animate-in');
+                }, 300 + index * 300);
+            }
+        });
+    }, []);
+
+    // ─── INTERSECTION OBSERVER ────────────────────────────────────────────────
+    // Section screen mein aaye TAB timer shuru karo (page load pe nahi)
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('animate-in');
-                        
+
                         const snakePath = entry.target.querySelector('.snake-svg path');
                         if (snakePath) {
-                            setTimeout(() => {
-                                snakePath.style.strokeDashoffset = '0';
-                            }, 300);
+                            setTimeout(() => { snakePath.style.strokeDashoffset = '0'; }, 300);
                         }
-                        
                         const startArrow = entry.target.querySelector('.start-arrow');
                         if (startArrow) {
                             setTimeout(() => startArrow.classList.add('pulse'), 400);
                         }
-                        
                         const endTarget = entry.target.querySelector('.end-target');
                         if (endTarget) {
                             setTimeout(() => endTarget.classList.add('pulse-slow'), 500);
                         }
 
-                        // On mobile, just animate all nodes right away
                         if (isMobile) {
+                            // Mobile: seedha animate karo, koi sticky scroll nahi hota
                             nodesRef.current.forEach((node, index) => {
                                 if (node) {
                                     setTimeout(() => {
@@ -95,7 +125,18 @@ const RoadmapSection = ({ elipse }) => {
                                     }, index * 100);
                                 }
                             });
+                            scrollTookOver.current = true;
+                        } else {
+                            // Desktop: section screen mein aaya, ab 3 sec ka timer shuru karo
+                            clearTimeout(autoAnimateTimer.current);
+                            autoAnimateTimer.current = setTimeout(() => {
+                                animateAllNodes();
+                            }, AUTO_ANIMATE_DELAY);
                         }
+                    } else {
+                        // Section screen se bahar gayi — timer cancel karo
+                        clearTimeout(autoAnimateTimer.current);
+                        scrollTookOver.current = false;
                     }
                 });
             },
@@ -104,11 +145,13 @@ const RoadmapSection = ({ elipse }) => {
 
         if (sectionRef.current) observer.observe(sectionRef.current);
         return () => {
+            clearTimeout(autoAnimateTimer.current);
             if (sectionRef.current) observer.unobserve(sectionRef.current);
         };
-    }, [isMobile]);
+    }, [isMobile, animateAllNodes]);
 
-    // Handle scroll purely for updating the active index on Desktop
+    // ─── DESKTOP SCROLL ───────────────────────────────────────────────────────
+    // Jab user sticky zone mein ghuse → timer cancel, scroll apna kaam kare
     useEffect(() => {
         if (!isMobile) {
             const getScrollParent = (node) => {
@@ -124,26 +167,29 @@ const RoadmapSection = ({ elipse }) => {
 
             const handleScroll = () => {
                 if (!containerRef.current || !sectionRef.current) return;
-                
+
                 const rect = containerRef.current.getBoundingClientRect();
                 const windowHeight = window.innerHeight;
-                
-                const startOffset = windowHeight * 0.15; 
+                const startOffset = windowHeight * 0.15;
                 const scrollableDistance = rect.height - windowHeight;
-                
-                // Haven't reached the pinning point yet
+
+                // Section sticky zone se bahar — sirf activeIndex reset karo
                 if (rect.top > startOffset + 50) {
                     setActiveIndex(-1);
                     return;
                 }
-                
+
+                // User sticky zone mein aa gaya — timer cancel, scroll control le lo
+                if (!scrollTookOver.current) {
+                    clearTimeout(autoAnimateTimer.current);
+                    scrollTookOver.current = true;
+                }
+
                 let currentProgress = (startOffset - rect.top) / scrollableDistance;
                 currentProgress = Math.max(0, Math.min(1, currentProgress));
-                
+
                 let newIndex = -1;
-                // Add breakpoints for the 4 steps
-                // The first step should show up as soon as it begins to pin (or is pinned)
-                if (currentProgress >= 0) newIndex = 0;
+                if (currentProgress >= 0)   newIndex = 0;
                 if (currentProgress > 0.15) newIndex = 1;
                 if (currentProgress > 0.35) newIndex = 2;
                 if (currentProgress > 0.55) newIndex = 3;
@@ -152,12 +198,12 @@ const RoadmapSection = ({ elipse }) => {
             };
 
             scrollContainer.addEventListener('scroll', handleScroll);
-            handleScroll(); // initial check
+            handleScroll();
             return () => scrollContainer.removeEventListener('scroll', handleScroll);
         }
     }, [isMobile]);
 
-    // Sync activeIndex visually
+    // ─── SYNC activeIndex → node classes (original scroll animation logic) ────
     useEffect(() => {
         if (!isMobile) {
             nodesRef.current.forEach((node, index) => {
@@ -173,25 +219,31 @@ const RoadmapSection = ({ elipse }) => {
     }, [activeIndex, isMobile]);
 
     return (
-        <div ref={containerRef} className="roadmap-sticky-wrapper" style={{ height: isMobile ? 'auto' : '400vh', position: 'relative' }}>
-            <div className="roadmap-sticky-content" style={{ position: isMobile ? 'static' : 'sticky', top: isMobile ? 'auto' : '15vh', height: isMobile ? 'auto' : '70vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div
+            ref={containerRef}
+            className="roadmap-sticky-wrapper"
+            style={{ height: isMobile ? 'auto' : '400vh', position: 'relative' }}
+        >
+            <div
+                className="roadmap-sticky-content"
+                style={{
+                    position: isMobile ? 'static' : 'sticky',
+                    top: isMobile ? 'auto' : '15vh',
+                    height: isMobile ? 'auto' : '70vh',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                }}
+            >
                 <section className="roadmap-section" ref={sectionRef}>
                     <div className="container">
                         <div className="roadmap-main">
-                            {/* Desktop Graphics: Path, Start Arrow, End Target */}
+
                             <div className="desktop-only-assets">
                                 {snakeImg ? (
-                                    <img
-                                        src={snakeImg}
-                                        className="snake-img"
-                                        alt="road path"
-                                    />
+                                    <img src={snakeImg} className="snake-img" alt="road path" />
                                 ) : (
-                                    <svg
-                                        className="snake-svg"
-                                        viewBox="0 0 1200 400"
-                                        preserveAspectRatio="none"
-                                    >
+                                    <svg className="snake-svg" viewBox="0 0 1200 400" preserveAspectRatio="none">
                                         <path
                                             d="M0,200 L100,200 C130,200 130,60 250,60 C370,60 370,340 500,340 C630,340 630,60 750,60 C870,60 870,340 1000,340 C1130,340 1130,200 1200,200"
                                             fill="none"
@@ -203,11 +255,7 @@ const RoadmapSection = ({ elipse }) => {
                                 )}
                                 <img src={arrowStart} className="start-arrow" alt="" />
                                 <div className="end-target-wrap">
-                                    <img
-                                        src={targetEnd}
-                                        className="end-target"
-                                        alt=""
-                                    />
+                                    <img src={targetEnd} className="end-target" alt="" />
                                     <div className="end-target-arrow"></div>
                                 </div>
                             </div>
@@ -220,7 +268,7 @@ const RoadmapSection = ({ elipse }) => {
                                         style={{
                                             '--left': item.left,
                                             '--top': item.top,
-                                            '--delay': isMobile ? `${index * 0.1}s` : '0s'
+                                            '--delay': isMobile ? `${index * 0.1}s` : '0s',
                                         }}
                                         ref={(el) => (nodesRef.current[index] = el)}
                                     >
@@ -238,9 +286,7 @@ const RoadmapSection = ({ elipse }) => {
                                             </div>
 
                                             <div className="text-content">
-                                                <span className="mobile-step">
-                                                    Step 0{index + 1}
-                                                </span>
+                                                <span className="mobile-step">Step 0{index + 1}</span>
                                                 <h6>{item.title}</h6>
                                                 <p>{item.desc}</p>
                                             </div>

@@ -14,13 +14,12 @@ import hassnain from "../../../assets/images/ali hassnain.png";
 import zeeshan from "../../../assets/images/zeeshan.png";
 import Ibrahim from "../../../assets/images/Ibrahim.png";
 import usman from "../../../assets/images/usman.png";
-import ryan from "../../../assets/images/ryan.png";
+import ryan from "../../../assets/images/leardership/ryan.png";
 import shewar from "../../../assets/images/shewar.png";
 import hira from "../../../assets/images/Hira.png";
 import junaid from "../../../assets/images/junaid.png";
 import Ikram from "../../../assets/images/Ikram.png";
 import ilyas from "../../../assets/images/Ilyas.png"
-import mudasir from "../../../assets/images/mudasir.png"
 import samia from "../../../assets/images/samia.png"
 const CardSlider = () => {
   const sliderSettings = {
@@ -65,8 +64,8 @@ const CardSlider = () => {
       image: hassnain,
     },
     {
-      title: "Reyan Babur",
-      description: "AI Engineer",
+      title: "Ryan Babur",
+      description: "Ai Research lead",
       image: ryan,
     },
     
@@ -118,10 +117,6 @@ const CardSlider = () => {
       image: junaid,
     },
     {
-      title: "Mudassar Farooq",
-      description: "COO",
-      image: mudasir,
-    }, {
       title: "Samia Rasheed",
       description: "Social Media Manager",
       image: samia,

@@ -248,7 +248,7 @@ const ContributorLandingPage = () => {
           >
             <div className="d-flex justify-content-between align-items-center">
               <Link to="/">
-                <img src={logo} alt="Logo" style={{ width: '70%' }} />
+                <img src={logo} alt="AI 3D Scanning Logo" style={{ width: '70%' }} />
               </Link>
 
               {/* Menu Button for Mobile */}
@@ -314,7 +314,7 @@ const ContributorLandingPage = () => {
           <div className={`mobile-sidebar ${isOpen ? 'open' : ''}`}>
             <div className="sidebar-header d-flex justify-content-between align-items-center px-3 py-2">
               <Link to="/">
-                <img src={logo} alt="Logo" style={{ width: '70%' }} />
+                <img src={logo} alt="AI 3D Scanning Logo" style={{ width: '70%' }} />
               </Link>
 
               <button
@@ -677,10 +677,10 @@ const ContributorLandingPage = () => {
           <div className="row">
             <div className="col-md-6 col-12 d-flex align-items-center">
               <div className="explore-tools-section d-flex flex-column">
-                <h1 className="explore-tools-section-text">
+                <h2 className="explore-tools-section-text">
                   Easy to Use Tools
-                  <img src={elipse} alt="Ellipse" className="ellipse-img-tools" />
-                </h1>
+                  <img src={elipse} alt="Heading Decoration" className="ellipse-img-tools" />
+                </h2>
                 <p>
                   Contributing to the future of 3D has never been easier. Submit your creations,
                   personalize your creator space, and follow your impact — all powered by smart AI
@@ -714,10 +714,10 @@ const ContributorLandingPage = () => {
 
             <div className="col-md-6 col-12 ps-lg-5 pb-5 pb-lg-0  mt-4 mt-lg-0 d-flex align-items-center">
               <div className="explore-app-section d-flex flex-column">
-                <h1 className="explore-tools-section-text">
+                <h2 className="explore-tools-section-text">
                   Get the AI3D Contributor App
-                  <img src={elipse} alt="Ellipse" className="ellipse-img-app" />
-                </h1>
+                  <img src={elipse} alt="Heading Decoration" className="ellipse-img-app" />
+                </h2>
                 <p>
                   Create, upload, and manage your 3D models directly from your mobile device with
                   ease. The AI3D Contributor App keeps you updated on approvals, sales, and earnings
@@ -791,7 +791,7 @@ const ContributorLandingPage = () => {
 
               <div className="col-lg-4 col-md-6 col-12">
                 <div className="logo">
-                  <img width="120px" src={logo} alt="Logo" />
+                  <img width="120px" src={logo} alt="AI 3D Scanning Logo" />
                 </div>
 
                 <p className="desc">

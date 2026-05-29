@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './WaitingListSection.css';
 import { motion } from 'framer-motion';
+import axios from 'axios';
 
 // Import images from assets
 import headingEllipse from './images/heading_ellipse.png';
@@ -8,15 +9,11 @@ import buttonIcon from '../assets/images/buttonIcon.png';
 import WishListBg from '../assets/images/WishListBg.png';
 import WaitlistModal from '../components/popup/WaitlistModal';
 
-
-
-
 const WaitingListSection = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [waitingCount, setWaitingCount] = useState('500');
 
-    // Countdown logic: Set target to May 15, 2026
-    const targetDate = new Date('2026-05-15T00:00:00');
-
+    const targetDate = new Date('2026-05-31T23:59:59');
 
     const calculateTimeLeft = () => {
         const now = new Date();
@@ -49,6 +46,37 @@ const WaitingListSection = () => {
         return () => clearInterval(timer);
     }, [timeLeft]);
 
+    useEffect(() => {
+        const getCookie = (name) => {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        };
+
+        const cachedCount = getCookie('waiting_count');
+        if (cachedCount) {
+            setWaitingCount(cachedCount);
+        } else {
+            axios.get('https://app.ai3dscanning.com/api/waiting/stats')
+                .then(res => {
+                    if (res.data.status === 'success') {
+                        const count = res.data.data.waitings;
+                        setWaitingCount(count);
+                        // Store in cookie for 24 hours
+                        const date = new Date();
+                        date.setTime(date.getTime() + (24 * 60 * 60 * 1000));
+                        document.cookie = `waiting_count=${count}; expires=${date.toUTCString()}; path=/`;
+                    }
+                })
+                .catch(err => {
+                    console.error("Error fetching stats:", err);
+                    // Fallback to default if API fails
+                    setWaitingCount('500');
+                });
+        }
+    }, []);
+
     const formatNumber = (num) => (num < 10 ? `0${num}` : num);
 
     return (
@@ -73,8 +101,6 @@ const WaitingListSection = () => {
                             Join the <span className="WL_accent_span">Waiting<img src={headingEllipse} alt="" className="WL_title_arc" /></span> List Get Early Access
                         </motion.h2>
 
-
-
                         <motion.p
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
@@ -94,11 +120,11 @@ const WaitingListSection = () => {
                                 <img src="https://i.pravatar.cc/150?u=1" alt="User 1" className="WL_user_img" />
                                 <img src="https://i.pravatar.cc/150?u=2" alt="User 2" className="WL_user_img" />
                                 <img src="https://i.pravatar.cc/150?u=4" alt="User 3" className="WL_user_img" />
-                                <div className="WL_avatar_more">500+</div>
+                                <div className="WL_avatar_more">{waitingCount}+</div>
                             </div>
 
                             <p className="WL_counter_text">
-                                <span className="WL_count_num">500+</span> people already on the waiting list
+                                <span className="WL_count_num">{waitingCount}+</span> people already on the waiting list
                             </p>
                         </motion.div>
 
@@ -146,3 +172,4 @@ const WaitingListSection = () => {
 };
 
 export default WaitingListSection;
+

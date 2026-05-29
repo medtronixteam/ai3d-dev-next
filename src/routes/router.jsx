@@ -57,6 +57,7 @@ const Notification = lazy(() => import('pages/notification'));
 const PurchaseHistory = lazy(() => import('pages/settings/PurchaseHistory'));
 const SessionHistory = lazy(() => import('pages/settings/SessionHistory'));
 const ServicePage = lazy(() => import('pages/Service/ServicePage'))
+const CookiePolicy = lazy(() => import('../pages/CookiePolicy'));
 
 const routes = [
   {
@@ -102,6 +103,10 @@ const routes = [
       {
         path: '/terms-conditions',
         element: <TermsConditions />,
+      },
+      {
+        path: '/cookie-policy',
+        element: <CookiePolicy />,
       },
       {
         path: '/services',

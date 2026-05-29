@@ -123,7 +123,7 @@ const RoadMap = () => {
         <div className="row align-items-center">
           <div className="col-md-12 ">
             <div className="tl-header">
-              <h1 style={{ textAlign: "center" }}>Our Roadmap</h1>
+              <h2 style={{ textAlign: "center" }}>Our Roadmap</h2>
             </div>
             <div className="tl-item">
               <div className="tl-circle"></div>

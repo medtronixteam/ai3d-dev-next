@@ -8,6 +8,7 @@ import $mudassar from '../assets/images/leardership/mudassar.png';
 import $samia from '../assets/images/leardership/samia.png';
 import $sajeel from '../assets/images/leardership/sajeel.png';
 import $ryan from '../assets/images/leardership/ryan.png';
+import $assam from '../assets/images/leardership/Assam.png';
 import CustomInfoModal from '../components/popup/CustomInfoModal';
 import HS from '../assets/service/HS.svg'
 import La from '../assets/service/La.svg'
@@ -107,12 +108,12 @@ const LeadershipSection = () => {
       philosophy: 'A strong brand starts with inspired people.',
     },
     {
-      name: 'Ryan',
+      name: 'Rayan',
       lastName: 'Babur',
       img: $ryan,
       role: 'Ai Research lead',
       desc: [
-        'Ryan leads the research initiatives at AI 3D Scanning, focusing on the latest advancements in computer vision and neural rendering. He explores new algorithms to enhance 3D reconstruction accuracy and processing speed.',
+        'Rayan leads the research initiatives at AI 3D Scanning, focusing on the latest advancements in computer vision and neural rendering. He explores new algorithms to enhance 3D reconstruction accuracy and processing speed.',
         'His work ensures the platform stays at the forefront of AI technology by integrating state-of-the-art research into production.',
       ],
       expertise: [
@@ -122,7 +123,7 @@ const LeadershipSection = () => {
         'Algorithm Optimization',
         'Research Strategy',
       ],
-      linkedin: 'https://www.linkedin.com/in/ryan-babur/',
+      linkedin: 'https://www.linkedin.com/in/rayan-babur/',
       philosophy: 'Innovation is the result of persistent curiosity and rigorous experimentation.',
     },
     {
@@ -137,6 +138,24 @@ const LeadershipSection = () => {
       expertise: ['Artificial Intelligence', 'Computer Vision', 'Neural Networks', 'Data Modeling'],
       linkedin: 'https://www.linkedin.com/in/msajeel/',
       philosophy: 'The future belongs to intelligent systems building AI that makes technology more human.',
+    },
+    {
+      name: 'Assam',
+      lastName: 'Memon',
+      img: $assam,
+      role: 'Growth Advisor',
+      desc: [
+        'Assam Memon serves as a Growth Advisor at AI 3D Scanning Solutions, where he focuses on driving strategic expansion and identifying new market opportunities.',
+        'He brings a wealth of knowledge in business development and strategic planning to help scale AI3D’s solutions globally.',
+      ],
+      expertise: [
+        'Strategic Growth',
+        'Business Development',
+        'Market Expansion',
+        'Strategic Partnerships',
+      ],
+      linkedin: 'https://www.linkedin.com/in/assam-memon/',
+      philosophy: 'Growth is not just about numbers; it is about creating sustainable value through strategic innovation.',
     },
   ];
 

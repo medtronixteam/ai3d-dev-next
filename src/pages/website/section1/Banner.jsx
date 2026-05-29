@@ -12,10 +12,10 @@ const Banner = () => {
           <div className="row d-flex align-items-center">
             <div className="col-12 col-md-7">
               <div className="left-banner-box">
-                <h1>
+                <h2>
                   3D Scanning Powered by
                   <span className="pink-clr"> AI </span>
-                </h1>
+                </h2>
                 <button>
                   <IoLogoGooglePlaystore
                     style={{ marginRight: 10, fontSize: 25 }}
@@ -33,7 +33,7 @@ const Banner = () => {
                 src={BannerIMG}
                 className="img-fluid"
                 id="banner-img"
-                alt=""
+                alt="AI 3D Scanning Technology Illustration"
               />
             </div>
           </div>

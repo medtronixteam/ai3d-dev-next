@@ -64,7 +64,7 @@ const CardSlider = () => {
       image: hassnain,
     },
     {
-      title: "Ryan Babur",
+      title: "Rayan Babur",
       description: "Ai Research lead",
       image: ryan,
     },

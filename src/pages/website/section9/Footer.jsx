@@ -10,9 +10,9 @@ const Footer = () => {
         <div className="row">
           <div className="col-md-6 col-lg-6 ">
             <div className="footer-text-box mb-3">
-              <h1 className="pink-clr">
+              <h2 className="pink-clr">
                 <b>Subscribe to updates</b>{" "}
-              </h1>
+              </h2>
               <p>
                 Join our newsletter to stay informed about new features and
                 product updates.

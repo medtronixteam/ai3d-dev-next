@@ -13,7 +13,7 @@ const WaitingListSection = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [waitingCount, setWaitingCount] = useState('500');
 
-    const targetDate = new Date('2026-05-31T23:59:59');
+    const targetDate = new Date('2026-06-25T23:59:59');
 
     const calculateTimeLeft = () => {
         const now = new Date();

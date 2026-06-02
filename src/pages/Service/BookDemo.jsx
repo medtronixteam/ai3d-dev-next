@@ -775,8 +775,7 @@ const BookDemo = ({ scrollContainerRef }) => {
                       <a
                         href={
                           item === 'Pricing'
-                            // ? '/platform/subscription'
-                            ? '#'
+                            ? '/platform/subscription'
                             : item === 'Services'
                               ? '/services'
                               : '/'

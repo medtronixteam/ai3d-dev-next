@@ -320,8 +320,7 @@ const GetStartedPage = () => {
                         <a
                           href={
                             item === 'Pricing'
-                              // ? '/platform/subscription'
-                              ? '#'
+                              ? '/platform/subscription'
                               : item === 'Services'
                                 ? '/services'
                                 : '#'

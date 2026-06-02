@@ -2753,8 +2753,7 @@ const LandingPage = () => {
                         <a
                           href={
                             item === 'Pricing'
-                              // ? '/platform/subscription'
-                              ? '#'
+                              ? '/platform/subscription'
                               : item === 'Services'
                                 ? '/services'
                                 : '/'

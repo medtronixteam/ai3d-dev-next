@@ -8,6 +8,8 @@ import Desktop from '../assets/images/desktop.png';
 import BetaRelease from '../assets/images/beta-release.png';
 import Public from '../assets/images/Public.png';
 
+let hasAnimatedGlobal = false;
+
 const RoadmapSection = ({ elipse }) => {
     const roadmapData = [
         {
@@ -49,8 +51,7 @@ const RoadmapSection = ({ elipse }) => {
     const nodesRef          = useRef([]);
     const autoAdvanceTimer  = useRef(null);
 
-    const [activeIndex, setActiveIndex]         = useState(-1);
-    const [showScrollHint, setShowScrollHint]   = useState(false);
+    const [activeIndex, setActiveIndex]         = useState(hasAnimatedGlobal ? 3 : -1);
     const [isMobile, setIsMobile]               = useState(
         typeof window !== 'undefined' ? window.innerWidth <= 900 : false
     );
@@ -82,14 +83,18 @@ const RoadmapSection = ({ elipse }) => {
                             nodesRef.current.forEach((node, i) => {
                                 if (node) setTimeout(() => node.classList.add('animate-in'), i * 100);
                             });
-                        }
-
-                        // Show scroll hint after a short delay on desktop
-                        if (!isMobile) {
-                            setTimeout(() => setShowScrollHint(true), 800);
+                        } else {
+                            if (!hasAnimatedGlobal) {
+                                entry.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                setTimeout(() => {
+                                    setActiveIndex(0);
+                                }, 300);
+                            }
                         }
                     } else {
-                        if (!isMobile) setShowScrollHint(false);
+                        if (!isMobile && !hasAnimatedGlobal) {
+                            setActiveIndex(-1);
+                        }
                     }
                 });
             },
@@ -102,9 +107,24 @@ const RoadmapSection = ({ elipse }) => {
         };
     }, [isMobile]);
 
+    // ─── SCROLL LOCK EFFECT ──────────────────────────────────────────────────
+    useEffect(() => {
+        if (!isMobile && !hasAnimatedGlobal) {
+            if (activeIndex >= 0 && activeIndex < roadmapData.length - 1) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [activeIndex, isMobile]);
+
+
     // ─── DESKTOP SCROLL ───────────────────────────────────────────────────────
     useEffect(() => {
-        if (!isMobile) {
+        if (!isMobile && !hasAnimatedGlobal) {
             const getScrollParent = (node) => {
                 if (node == null) return null;
                 if (node.scrollHeight > node.clientHeight) {
@@ -117,6 +137,7 @@ const RoadmapSection = ({ elipse }) => {
             const scrollContainer = getScrollParent(containerRef.current) || window;
 
             const handleScroll = () => {
+                if (hasAnimatedGlobal) return;
                 if (!containerRef.current || !sectionRef.current) return;
 
                 const rect = containerRef.current.getBoundingClientRect();
@@ -125,21 +146,25 @@ const RoadmapSection = ({ elipse }) => {
                 const scrollableDistance = rect.height - windowHeight;
 
                 if (rect.top > startOffset + 50) {
-                    setActiveIndex(-1);
-                    setShowScrollHint(false);
                     return;
                 }
 
                 let currentProgress = (startOffset - rect.top) / scrollableDistance;
                 currentProgress = Math.max(0, Math.min(1, currentProgress));
 
-                let newIndex = -1;
-                if (currentProgress >= 0)   newIndex = 0;
-                if (currentProgress > 0.15) newIndex = 1;
-                if (currentProgress > 0.35) newIndex = 2;
-                if (currentProgress > 0.55) newIndex = 3;
+                let scrollIndex = -1;
+                if (currentProgress >= 0)   scrollIndex = 0;
+                if (currentProgress > 0.20) scrollIndex = 1;
+                if (currentProgress > 0.45) scrollIndex = 2;
+                if (currentProgress > 0.70) scrollIndex = 3;
 
-                setActiveIndex(newIndex);
+                setActiveIndex((prev) => {
+                    const next = Math.max(prev, scrollIndex);
+                    if (next === 3) {
+                        hasAnimatedGlobal = true;
+                    }
+                    return next;
+                });
             };
 
             scrollContainer.addEventListener('scroll', handleScroll);
@@ -151,27 +176,21 @@ const RoadmapSection = ({ elipse }) => {
         }
     }, [isMobile]);
 
-    // ─── HIDE HINT WHEN ALL STEPS DONE ───────────────────────────────────────
-    useEffect(() => {
-        if (activeIndex >= roadmapData.length - 1) {
-            setShowScrollHint(false);
-        } else if (activeIndex >= 0 && !isMobile) {
-            setShowScrollHint(true);
-        }
-    }, [activeIndex, isMobile]);
-
     // ─── AUTO-ADVANCE ─────────────────────────────────────────────────────────
     useEffect(() => {
-        if (!isMobile) {
+        if (!isMobile && !hasAnimatedGlobal) {
             if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
 
             if (activeIndex >= 0 && activeIndex < roadmapData.length - 1) {
                 autoAdvanceTimer.current = setTimeout(() => {
                     setActiveIndex((prev) => {
-                        if (prev < roadmapData.length - 1) return prev + 1;
-                        return prev;
+                        const next = prev < roadmapData.length - 1 ? prev + 1 : prev;
+                        if (next === roadmapData.length - 1) {
+                            hasAnimatedGlobal = true;
+                        }
+                        return next;
                     });
-                }, 2000);
+                }, 1200);
             }
 
             return () => {
@@ -192,22 +211,19 @@ const RoadmapSection = ({ elipse }) => {
         }
     }, [activeIndex, isMobile]);
 
-    // Next step label (1-indexed, capped at last)
-    const nextStepNumber = Math.min(activeIndex + 2, roadmapData.length);
-    const nextStepTitle  = roadmapData[activeIndex + 1]?.title || '';
-
     return (
         <div
             ref={containerRef}
             className="roadmap-sticky-wrapper"
-            style={{ height: isMobile ? 'auto' : '400vh', position: 'relative' }}
+            style={{ height: isMobile || hasAnimatedGlobal ? 'auto' : '280vh', position: 'relative' }}
         >
             <div
                 className="roadmap-sticky-content"
                 style={{
-                    position: isMobile ? 'static' : 'sticky',
-                    top: isMobile ? 'auto' : '15vh',
-                    height: isMobile ? 'auto' : '70vh',
+                    position: isMobile || hasAnimatedGlobal ? 'relative' : 'sticky',
+                    top: isMobile || hasAnimatedGlobal ? 'auto' : '15vh',
+                    height: isMobile || hasAnimatedGlobal ? 'auto' : '70vh',
+                    padding: isMobile || hasAnimatedGlobal ? '80px 0' : '0',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'center',
@@ -273,21 +289,6 @@ const RoadmapSection = ({ elipse }) => {
                     </div>
                 </section>
 
-                {/* ── SCROLL HINT ─────────────────────────────────────────── */}
-                {!isMobile && (
-                    <div className={`scroll-hint-wrapper ${showScrollHint ? 'hint-visible' : ''}`}>
-                        <div className="scroll-hint-pill">
-                            <span className="hint-label">
-                                Scroll for <strong>Step 0{nextStepNumber}</strong>
-                            </span>
-                            <div className="hint-arrows">
-                                <span className="hint-arrow a1">&#8964;</span>
-                                <span className="hint-arrow a2">&#8964;</span>
-                                <span className="hint-arrow a3">&#8964;</span>
-                            </div>
-                        </div>
-                    </div>
-                )}
             </div>
         </div>
     );

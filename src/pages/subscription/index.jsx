@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import './plan.css';
 import './new.css';
@@ -157,7 +158,7 @@ const Subscription = () => {
               Yearly
             </div>
             <div className="discount-label">
-              Save from 20% <span style={{ color: '#000000' }}>with yearly</span>
+              Save from 20% <span>with yearly</span>
             </div>
           </div>
 
@@ -185,24 +186,39 @@ const Subscription = () => {
                         <div className="sub-divider"></div>
                         <h4 className="sub-section-title">Features you'll get:</h4>
                         <div className="sub-feature-list">
-                          <li><img src={vectoImage} alt="" /> 50 AI scans (2D → 3D or prompt → 3D)</li>
-                          <li><img src={vectoImage} alt="" /> Real-time preview and export</li>
-                          <li><img src={vectoImage} alt="" /> Access to all base design tools and APIs</li>
-                          <li><img src={vectoImage} alt="" /> Community access and learning hub</li>
-                          <li><img src={vectoImage} alt="" /> Cloud storage (2GB limit), Email support</li>
-                          <li><img src={vectoImage} alt="" /> Access to public 3D model library</li>
+                          <li>
+                            <img src={vectoImage} alt="" /> 50 AI scans (2D → 3D or prompt → 3D)
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Real-time preview and export
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Access to all base design tools and APIs
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Community access and learning hub
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Cloud storage (2GB limit), Email support
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Access to public 3D model library
+                          </li>
                         </div>
                       </div>
                       <div>
                         <p className="sub-bestfor">
-                          <b>Best for:</b> Individual creators, freelancers, and small-scale designers who want to explore AI powered 3D creation.
+                          <b>Best for:</b> Individual creators, freelancers, and small-scale
+                          designers who want to explore AI powered 3D creation.
                         </p>
                         <button
                           className="sub-btn"
                           onClick={(e) => handlePlanClick('Freemium', e)}
                           disabled={subscribingPlan === `Freemium-monthly`}
                         >
-                          {subscribingPlan === `Freemium-monthly` ? 'Processing…' : 'Choose Freemium'}
+                          {subscribingPlan === `Freemium-monthly`
+                            ? 'Processing…'
+                            : 'Choose Freemium'}
                         </button>
                       </div>
                     </div>
@@ -226,17 +242,30 @@ const Subscription = () => {
                         <div className="sub-divider"></div>
                         <h4 className="sub-section-title">Features you'll get:</h4>
                         <div className="sub-feature-list">
-                          <li><img src={vectoImage} alt="" /> 50 AI scans (2D → 3D or prompt → 3D)</li>
-                          <li><img src={vectoImage} alt="" /> Real-time preview and export</li>
-                          <li><img src={vectoImage} alt="" /> Access to all base design tools and APIs</li>
-                          <li><img src={vectoImage} alt="" /> Community access and learning hub</li>
-                          <li><img src={vectoImage} alt="" /> Cloud storage (2GB limit), Email support</li>
-                          <li><img src={vectoImage} alt="" /> Access to public 3D model library</li>
+                          <li>
+                            <img src={vectoImage} alt="" /> 50 AI scans (2D → 3D or prompt → 3D)
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Real-time preview and export
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Access to all base design tools and APIs
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Community access and learning hub
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Cloud storage (2GB limit), Email support
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Access to public 3D model library
+                          </li>
                         </div>
                       </div>
                       <div>
                         <p className="sub-bestfor">
-                          <b>Best for:</b> Individual creators, freelancers, and small-scale designers who want to explore AI powered 3D creation.
+                          <b>Best for:</b> Individual creators, freelancers, and small-scale
+                          designers who want to explore AI powered 3D creation.
                         </p>
                         <button
                           className="sub-btn"
@@ -263,24 +292,43 @@ const Subscription = () => {
                         </h3>
                         <p className="sub-year">${yearlyProPrice}/Year</p>
                         <p className="sub-description">
-                          Built for creators who need speed, team collaboration, and higher production volume.
+                          Built for creators who need speed, team collaboration, and higher
+                          production volume.
                         </p>
                         <div className="sub-divider"></div>
                         <h4 className="sub-section-title">Features you'll get:</h4>
                         <div className="sub-feature-list">
-                          <li><img src={vectoImage} alt="" /> Multi-user team access (up to 4 members)</li>
-                          <li><img src={vectoImage} alt="" /> 500 AI scans/month</li>
-                          <li><img src={vectoImage} alt="" /> Priority processing & rendering queue</li>
-                          <li><img src={vectoImage} alt="" /> Access to advanced editing tools</li>
-                          <li><img src={vectoImage} alt="" /> Private 3D asset storage (up to 50GB)</li>
-                          <li><img src={vectoImage} alt="" /> Access to Beta AI features & research updates</li>
-                          <li><img src={vectoImage} alt="" /> Dedicated workspace for teams</li>
-                          <li><img src={vectoImage} alt="" /> Priority chat + email support</li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Multi-user team access (up to 4 members)
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> 500 AI scans/month
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Priority processing & rendering queue
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Access to advanced editing tools
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Private 3D asset storage (up to 50GB)
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Access to Beta AI features & research
+                            updates
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Dedicated workspace for teams
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Priority chat + email support
+                          </li>
                         </div>
                       </div>
                       <div>
                         <p className="sub-bestfor">
-                          <b>Best for:</b> Small teams, studios or early-stage startups collaborating on 3D projects.
+                          <b>Best for:</b> Small teams, studios or early-stage startups
+                          collaborating on 3D projects.
                         </p>
                         <button
                           className="sub-btn"
@@ -322,24 +370,39 @@ const Subscription = () => {
                         <div className="sub-divider"></div>
                         <h4 className="sub-section-title">Features you'll get:</h4>
                         <div className="sub-feature-list">
-                          <li><img src={vectoImage} alt="" /> 50 AI scans (2D → 3D or prompt → 3D)</li>
-                          <li><img src={vectoImage} alt="" /> Real-time preview and export</li>
-                          <li><img src={vectoImage} alt="" /> Access to all base design tools and APIs</li>
-                          <li><img src={vectoImage} alt="" /> Community access and learning hub</li>
-                          <li><img src={vectoImage} alt="" /> Cloud storage (2GB limit), Email support</li>
-                          <li><img src={vectoImage} alt="" /> Access to public 3D model library</li>
+                          <li>
+                            <img src={vectoImage} alt="" /> 50 AI scans (2D → 3D or prompt → 3D)
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Real-time preview and export
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Access to all base design tools and APIs
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Community access and learning hub
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Cloud storage (2GB limit), Email support
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Access to public 3D model library
+                          </li>
                         </div>
                       </div>
                       <div>
                         <p className="sub-bestfor">
-                          <b>Best for:</b> Individual creators, freelancers, and small-scale designers who want to explore AI powered 3D creation.
+                          <b>Best for:</b> Individual creators, freelancers, and small-scale
+                          designers who want to explore AI powered 3D creation.
                         </p>
                         <button
                           className="sub-btn"
                           disabled={!!activeTeam || subscribingPlan === `Starter-annually`}
                           onClick={(e) => handlePlanClick('Starter', e)}
                         >
-                          {subscribingPlan === `Starter-annually` ? 'Processing…' : 'Choose Starter'}
+                          {subscribingPlan === `Starter-annually`
+                            ? 'Processing…'
+                            : 'Choose Starter'}
                         </button>
                       </div>
                     </div>
@@ -359,31 +422,52 @@ const Subscription = () => {
                         </h3>
                         <p className="sub-year">${monthlyProPrice}/Month</p>
                         <p className="sub-description">
-                          Built for creators who need speed, team collaboration, and higher production volume.
+                          Built for creators who need speed, team collaboration, and higher
+                          production volume.
                         </p>
                         <div className="sub-divider"></div>
                         <h4 className="sub-section-title">Features you'll get:</h4>
                         <div className="sub-feature-list">
-                          <li><img src={vectoImage} alt="" /> Multi-user team access (up to 4 members)</li>
-                          <li><img src={vectoImage} alt="" /> 500 AI scans/month</li>
-                          <li><img src={vectoImage} alt="" /> Priority processing & rendering queue</li>
-                          <li><img src={vectoImage} alt="" /> Access to advanced editing tools</li>
-                          <li><img src={vectoImage} alt="" /> Private 3D asset storage (up to 50GB)</li>
-                          <li><img src={vectoImage} alt="" /> Access to Beta AI features & research updates</li>
-                          <li><img src={vectoImage} alt="" /> Dedicated workspace for teams</li>
-                          <li><img src={vectoImage} alt="" /> Priority chat + email support</li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Multi-user team access (up to 4 members)
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> 500 AI scans/month
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Priority processing & rendering queue
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Access to advanced editing tools
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Private 3D asset storage (up to 50GB)
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Access to Beta AI features & research
+                            updates
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Dedicated workspace for teams
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Priority chat + email support
+                          </li>
                         </div>
                       </div>
                       <div>
                         <p className="sub-bestfor">
-                          <b>Best for:</b> Small teams, studios or early-stage startups collaborating on 3D projects.
+                          <b>Best for:</b> Small teams, studios or early-stage startups
+                          collaborating on 3D projects.
                         </p>
                         <button
                           className="sub-btn"
                           disabled={!!activeTeam || subscribingPlan === `Premium-annually`}
                           onClick={(e) => handlePlanClick('Premium', e)}
                         >
-                          {subscribingPlan === `Premium-annually` ? 'Processing…' : 'Choose Premium'}
+                          {subscribingPlan === `Premium-annually`
+                            ? 'Processing…'
+                            : 'Choose Premium'}
                         </button>
                       </div>
                     </div>
@@ -401,26 +485,48 @@ const Subscription = () => {
                           Custom <span>Billing</span>
                         </h3>
                         <p className="sub-description mt-3">
-                          Ideal for enterprises and platforms scaling 3D asset production, integrating AI3D tech within their systems.
+                          Ideal for enterprises and platforms scaling 3D asset production,
+                          integrating AI3D tech within their systems.
                         </p>
                         <div className="sub-divider"></div>
                         <h4 className="sub-section-title">Features you'll get:</h4>
                         <div className="sub-feature-list">
-                          <li><img src={vectoImage} alt="" /> Unlimited AI scans and conversions</li>
-                          <li><img src={vectoImage} alt="" /> Full API + SDK integration</li>
-                          <li><img src={vectoImage} alt="" /> White-label platform deployment</li>
-                          <li><img src={vectoImage} alt="" /> Advanced analytics dashboard</li>
-                          <li><img src={vectoImage} alt="" /> On-premise or private cloud hosting</li>
-                          <li><img src={vectoImage} alt="" /> Team & department-level user management</li>
-                          <li><img src={vectoImage} alt="" /> Priority GPU access</li>
-                          <li><img src={vectoImage} alt="" /> Legal & data compliance</li>
-                          <li><img src={vectoImage} alt="" /> Custom AI model training</li>
-                          <li><img src={vectoImage} alt="" /> 24/7 premium support</li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Unlimited AI scans and conversions
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Full API + SDK integration
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> White-label platform deployment
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Advanced analytics dashboard
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> On-premise or private cloud hosting
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Team & department-level user management
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Priority GPU access
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Legal & data compliance
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> Custom AI model training
+                          </li>
+                          <li>
+                            <img src={vectoImage} alt="" /> 24/7 premium support
+                          </li>
                         </div>
                       </div>
                       <div>
                         <p className="sub-bestfor">
-                          <b>Best for:</b> Large enterprises, agencies, or marketplaces needing high volume API integrations.
+                          <b>Best for:</b> Large enterprises, agencies, or marketplaces needing high
+                          volume API integrations.
                         </p>
                         <button
                           className="sub-btn"

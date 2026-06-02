@@ -243,7 +243,6 @@
   }
 }
 
-/* 
 [data-theme="dark"] .sub-card {
   background: #110E20;
   border: 1px solid #64043a;
@@ -255,7 +254,6 @@
 [data-theme="dark"] .sub-card-premium {
   background: linear-gradient(180deg, #0D0B1E 10%, #5d044ab8 90%);
   border: none;
-
 }
 
 [data-theme="dark"] .sub-badge {
@@ -279,6 +277,10 @@
   color: #E0E0E0;
 }
 
+[data-theme="dark"] .sub-price span {
+  color: #B0B0B0 !important;
+}
+
 [data-theme="dark"] .sub-divider {
   background: #86044e;
   margin-left: -20px;
@@ -291,4 +293,4 @@
 
 [data-theme="dark"] .sub-btn:hover {
   background: #e33374;
-} */
+}

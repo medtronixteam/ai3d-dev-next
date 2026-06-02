@@ -60,6 +60,11 @@
 
 .pricing-container .discount-label span {
     font-weight: bold;
+    color: #000000;
+}
+
+[data-theme='dark'] .pricing-container .discount-label span {
+    color: #ffffff !important;
 }
 
 .pricing-container .toggle-option {

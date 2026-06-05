@@ -39,6 +39,7 @@ import Paid from '../../assets/icon/Paid.svg';
 import Fav from '../../assets/icon/Fav.svg';
 import FavModels from '../../assets/icon/FavModels.svg';
 import axios from 'axios';
+import { FastAverageColor } from 'fast-average-color';
 import LoginPopup from '../../components/popup/LoginPopup';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { toast } from 'react-toastify';
@@ -61,7 +62,69 @@ const getModelImageUrl = (image) => {
 const getFullVideoUrl = (url) => {
   if (!url) return '';
   if (url.startsWith('http')) return url;
-  return `https://app.ai3dscanning.com/storage/${url.replace(/^\/+/, '')}`;
+  const cleanUrl = url.replace(/^\/+/, '');
+  if (cleanUrl.startsWith('storage/')) {
+    return `https://app.ai3dscanning.com/${cleanUrl}`;
+  }
+  return `https://app.ai3dscanning.com/storage/${cleanUrl}`;
+};
+
+const makeColorLighter = (hexColor, percent = 40) => {
+  let hex = hexColor.replace(/^\s*#|\s*$/g, '');
+  if (hex.length === 3) {
+    hex = hex.replace(/(.)/g, '$1$1');
+  }
+  let r = parseInt(hex.substr(0, 2), 16),
+      g = parseInt(hex.substr(2, 2), 16),
+      b = parseInt(hex.substr(4, 2), 16);
+
+  r = Math.min(255, Math.floor(r + (255 - r) * (percent / 100)));
+  g = Math.min(255, Math.floor(g + (255 - g) * (percent / 100)));
+  b = Math.min(255, Math.floor(b + (255 - b) * (percent / 100)));
+
+  return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+};
+
+const getLightAverageColor = async (imageUrl) => {
+  try {
+    const fac = new FastAverageColor();
+    const color = await fac.getColorAsync(imageUrl, { algorithm: 'simple' });
+    return makeColorLighter(color.hex, 50);
+  } catch (e) {
+    console.error('Error getting light average color:', e);
+    return '#f5f5f5';
+  }
+};
+
+const updateBgColor = async (modelId, bgColor) => {
+  const token = localStorage.getItem('token');
+  if (!token) return false;
+  try {
+    const res = await axios.post(`${baseURL}/model/update-bg-color`, {
+      model_id: modelId,
+      bg_color: bgColor,
+    }, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return res.data;
+  } catch (err) {
+    console.error('Failed to update bg_color via API:', err);
+    return false;
+  }
+};
+
+const addCacheBuster = (url) => {
+  if (!url) return url;
+  const isSigned = url.includes('Signature=') || 
+                   url.includes('x-goog-signature=') || 
+                   url.includes('X-Goog-Signature=') || 
+                   url.includes('X-Amz-Signature=') || 
+                   url.includes('sig=');
+  if (isSigned) {
+    return url;
+  }
+  const separator = url.includes('?') ? '&' : '?';
+  return `${url}${separator}_t=${Date.now()}`;
 };
 
 function VideoModalWithLoader({ videoUrl, onClose }) {
@@ -338,7 +401,6 @@ const VideoModal = ({ open, videoUrl, onClose }) => {
   );
 };
 
-// Model Card Video Modal (for Explore → button)
 function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelTitle, modelData }) {
   const [loading, setLoading] = React.useState(true);
   const [modalVisible, setModalVisible] = React.useState(false);
@@ -351,8 +413,10 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
   const [recording, setRecording] = React.useState(false);
   const [mediaRecorder, setMediaRecorder] = React.useState(null);
   const [modalBgColor, setModalBgColor] = React.useState(null);
+  const [triedFallback, setTriedFallback] = React.useState(false);
 
   const modelViewerRef = useRef(null);
+  const mediaTimeoutRef = useRef(null);
 
   // --- Theme & Resize ---
   React.useEffect(() => {
@@ -374,12 +438,58 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
     return () => observer.disconnect();
   }, []);
 
+  const modelViewerRefCallback = useCallback((node) => {
+    if (node) {
+      if (node._cleanup) node._cleanup();
+
+      const onLoad = () => {
+        console.log('Model-viewer loaded successfully');
+        setLoading(false);
+        setMediaError(false);
+        if (mediaTimeoutRef.current) {
+          clearTimeout(mediaTimeoutRef.current);
+          mediaTimeoutRef.current = null;
+        }
+      };
+
+      const onError = (err) => {
+        console.error('Model-viewer failed to load:', err);
+        const fallbackUrl = addCacheBuster(fileUrl);
+        if (fileUrl && modelUrl !== fallbackUrl && !triedFallback) {
+          console.log('Trying fallback fileUrl:', fallbackUrl);
+          setTriedFallback(true);
+          setModelUrl(fallbackUrl);
+          return;
+        }
+        setLoading(false);
+        setMediaError(true);
+        if (mediaTimeoutRef.current) {
+          clearTimeout(mediaTimeoutRef.current);
+          mediaTimeoutRef.current = null;
+        }
+      };
+
+      node.addEventListener('load', onLoad);
+      node.addEventListener('error', onError);
+
+      node._cleanup = () => {
+        node.removeEventListener('load', onLoad);
+        node.removeEventListener('error', onError);
+      };
+    }
+  }, [modelUrl, fileUrl, triedFallback]);
+
   // --- File Type Detection ---
   const getFileType = (url) => {
     if (!url) return null;
-    const extension = url.split('.').pop().toLowerCase();
-    if (['mp4', 'mov', 'avi', 'webm', 'mkv'].includes(extension)) return 'video';
-    if (['glb', 'gltf'].includes(extension)) return '3d';
+    try {
+      const cleanUrl = url.split('?')[0].split('#')[0];
+      const extension = cleanUrl.split('.').pop().toLowerCase();
+      if (['mp4', 'mov', 'avi', 'webm', 'mkv'].includes(extension)) return 'video';
+      if (['glb', 'gltf'].includes(extension)) return '3d';
+    } catch (e) {
+      console.error('Error parsing file type extension:', e);
+    }
     return 'image';
   };
 
@@ -388,17 +498,21 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
     try {
       const token = localStorage.getItem('token');
       const apiUrl = `${baseURL}/model/temp/url/${id}`;
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+      if (token && token !== 'null' && token !== 'undefined') {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
       const response = await fetch(apiUrl, {
         method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
+        headers,
       });
       if (!response.ok) throw new Error(`Failed to fetch model URL: ${response.status}`);
       const data = await response.json();
-      const url = data.url || data.temp_url || data.model_url || data.data?.url || data.data?.temp_url;
+      let url = data.url || data.temp_url || data.model_url || data.data?.url || data.data?.temp_url;
       if (!url) return null;
+      url = url.replace(/\\\//g, '/').trim();
       return url;
     } catch (error) {
       console.error('Error fetching 3D model URL:', error);
@@ -406,65 +520,64 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
     }
   };
 
-
   // --- Handle bg_color when modal opens ---
-  // React.useEffect(() => {
-  //   if (open && modelId && imageUrl) {
-  //     // Check if bg_color exists in modelData
-  //     if (modelData?.bg_color) {
-  //       // Use existing bg_color from backend
-  //       setModalBgColor(modelData.bg_color);
-  //     } else {
-  //       // bg_color is null - extract light color from image using FastAverageColor
-  //       console.log('Extracting color for model:', modelId, 'Image URL:', imageUrl);
-  //       getLightAverageColor(imageUrl)
-  //         .then(([r, g, b]) => {
-  //           const hexColor = rgbToHex(r, g, b);
-  //           console.log('Extracted color for model:', modelId, 'Color:', hexColor);
-  //           setModalBgColor(hexColor);
+  React.useEffect(() => {
+    if (open && modelId && imageUrl) {
+      // Check if bg_color exists in modelData
+      if (modelData?.bg_color) {
+        // Use existing bg_color from backend
+        setModalBgColor(modelData.bg_color);
+      } else {
+        // bg_color is null - extract light color from image using FastAverageColor
+        console.log('Extracting color for model:', modelId, 'Image URL:', imageUrl);
+        getLightAverageColor(imageUrl)
+          .then((hexColor) => {
+            console.log('Extracted color for model:', modelId, 'Color:', hexColor);
+            setModalBgColor(hexColor);
 
-  //           // Always call API when color is extracted
-  //           console.log('Calling API with model_id:', modelId, 'bg_color:', hexColor);
-  //           updateBgColor(modelId, hexColor)
-  //             .then((result) => {
-  //               if (result) {
-  //                 console.log('✅ bg_color updated successfully in backend for model:', modelId);
-  //               } else {
-  //                 console.warn('⚠️ API call completed but no result returned for model:', modelId);
-  //               }
-  //             })
-  //             .catch((error) => {
-  //               console.error('❌ Error updating bg_color via API:', error);
-  //             });
-  //         })
-  //         .catch((error) => {
-  //           console.error('❌ Error extracting color:', error);
-  //           // Fallback color
-  //           const fallbackColor = '#f5f5f5';
-  //           setModalBgColor(fallbackColor);
-  //           // Still try to update API with fallback color
-  //           console.log('Calling API with fallback color for model:', modelId);
-  //           updateBgColor(modelId, fallbackColor)
-  //             .then((result) => {
-  //               if (result) {
-  //                 console.log('Fallback color updated in backend for model:', modelId);
-  //               } else {
-  //                 console.warn('⚠️ Fallback color API call completed but no result returned');
-  //               }
-  //             })
-  //             .catch((error) => {
-  //               console.error('❌ Error updating fallback bg_color via API:', error);
-  //             });
-  //         });
-  //     }
-  //   } else {
-  //     setModalBgColor(null);
-  //   }
-  // }, [open, modelId, imageUrl, modelData?.bg_color]);
+            // Always call API when color is extracted
+            console.log('Calling API with model_id:', modelId, 'bg_color:', hexColor);
+            updateBgColor(modelId, hexColor)
+              .then((result) => {
+                if (result) {
+                  console.log('✅ bg_color updated successfully in backend for model:', modelId);
+                } else {
+                  console.warn('⚠️ API call completed but no result returned for model:', modelId);
+                }
+              })
+              .catch((error) => {
+                console.error('❌ Error updating bg_color via API:', error);
+              });
+          })
+          .catch((error) => {
+            console.error('❌ Error extracting color:', error);
+            // Fallback color
+            const fallbackColor = '#f5f5f5';
+            setModalBgColor(fallbackColor);
+            // Still try to update API with fallback color
+            console.log('Calling API with fallback color for model:', modelId);
+            updateBgColor(modelId, fallbackColor)
+              .then((result) => {
+                if (result) {
+                  console.log('Fallback color updated in backend for model:', modelId);
+                } else {
+                  console.warn('⚠️ Fallback color API call completed but no result returned');
+                }
+              })
+              .catch((error) => {
+                console.error('❌ Error updating fallback bg_color via API:', error);
+              });
+          });
+      }
+    } else {
+      setModalBgColor(null);
+    }
+  }, [open, modelId, imageUrl, modelData?.bg_color]);
 
   // --- Load Media on Open ---
   React.useEffect(() => {
     if (open) {
+      setTriedFallback(false);
       setLoading(true);
       setModalVisible(true);
       setMediaError(false);
@@ -477,29 +590,45 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
       if (is3D && modelId) {
         fetch3DModelUrl(modelId).then((url) => {
           if (url) {
-            const urlWithTimestamp = url.includes('?') ? `${url}&_t=${Date.now()}` : `${url}?_t=${Date.now()}`;
-            setModelUrl(urlWithTimestamp);
+            setModelUrl(addCacheBuster(url));
+          } else if (fileUrl) {
+            // Fallback to the direct fileUrl if temp URL fetch fails
+            console.log('Temp URL fetch failed, falling back to direct fileUrl:', fileUrl);
+            setModelUrl(addCacheBuster(fileUrl));
           } else {
             setMediaError(true);
             setLoading(false);
           }
         });
+      } else if (is3D && fileUrl) {
+        setModelUrl(addCacheBuster(fileUrl));
       } else {
         setIs3DModel(false);
       }
 
-      const timeout = setTimeout(() => {
+      if (mediaTimeoutRef.current) clearTimeout(mediaTimeoutRef.current);
+      mediaTimeoutRef.current = setTimeout(() => {
         setLoading(false);
         setMediaError(true);
+        console.warn('Media load timeout exceeded 20 seconds, falling back to preview image');
       }, 20000);
 
-      return () => clearTimeout(timeout);
+      return () => {
+        if (mediaTimeoutRef.current) {
+          clearTimeout(mediaTimeoutRef.current);
+          mediaTimeoutRef.current = null;
+        }
+      };
     } else {
       setModalVisible(false);
       setLoading(true);
       setMediaError(false);
       setIs3DModel(false);
       setModelUrl(null);
+      if (mediaTimeoutRef.current) {
+        clearTimeout(mediaTimeoutRef.current);
+        mediaTimeoutRef.current = null;
+      }
       if (recording) stopRecording();
     }
   }, [open, fileUrl, modelId]);
@@ -832,8 +961,11 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
               <img
                 src={imageUrl}
                 alt="Fallback Preview"
-                onLoad={handleLoad}
-                onError={handleError}
+                onLoad={() => setLoading(false)}
+                onError={() => {
+                  setLoading(false);
+                  console.error('Fallback image failed to load');
+                }}
                 style={{
                   maxWidth: '100%',
                   maxHeight: '60vh',
@@ -918,7 +1050,10 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
                   }}
                 >
                   <model-viewer
-                    ref={modelViewerRef}
+                    ref={(el) => {
+                      modelViewerRef.current = el;
+                      modelViewerRefCallback(el);
+                    }}
                     key={modelUrl}
                     src={modelUrl}
                     alt="3D Model"
@@ -934,8 +1069,6 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
                       opacity: loading ? 0 : 1,
                       transition: 'opacity 0.3s ease',
                     }}
-                    onLoad={handleLoad}
-                    onError={handleError}
                   />
                   {/* Background color display below 3D model */}
                   {modalBgColor && (
@@ -1146,6 +1279,7 @@ const Dashboard = () => {
   const [showModelPopup, setShowModelPopup] = useState(false);
   const [selectedModelData, setSelectedModelData] = useState(null);
   const [modalBgColors, setModalBgColors] = useState({}); // Store bg_color for each model
+  const [cardBgColors, setCardBgColors] = useState({});
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [arSupported, setArSupported] = useState(false);
   React.useEffect(() => {
@@ -1153,6 +1287,8 @@ const Dashboard = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+
 
   useEffect(() => {
     // Add class to body
@@ -1345,6 +1481,57 @@ const Dashboard = () => {
     }
     return models;
   }, [isFavoriteModeActive, favoriteModels, models, selectedType]);
+
+  useEffect(() => {
+    const fetchColors = async () => {
+      const newColors = {};
+
+      for (const model of currentModels) {
+        if (model.bg_color) {
+          newColors[model.id] = model.bg_color;
+          continue;
+        }
+
+        const imgUrl = model.image
+          ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
+          : null;
+
+        if (imgUrl) {
+          try {
+            const lightColor = await getLightAverageColor(imgUrl);
+            newColors[model.id] = lightColor;
+            
+            // Save to backend
+            updateBgColor(model.id, lightColor).then((success) => {
+              if (success) {
+                console.log(`Saved color ${lightColor} for model ${model.id}`);
+              }
+            });
+          } catch (e) {
+            console.error('Error extracting color for model', model.id, e);
+            newColors[model.id] = '#f5f5f5';
+          }
+        } else {
+          newColors[model.id] = '#f5f5f5';
+        }
+      }
+
+      setCardBgColors(prev => {
+        let hasChanges = false;
+        for (const id in newColors) {
+          if (prev[id] !== newColors[id]) {
+            hasChanges = true;
+            break;
+          }
+        }
+        return hasChanges ? { ...prev, ...newColors } : prev;
+      });
+    };
+
+    if (currentModels.length > 0) {
+      fetchColors();
+    }
+  }, [currentModels]);
 
   const searchModels = async () => {
     if (!searchText.trim()) return;
@@ -1814,6 +2001,7 @@ const Dashboard = () => {
                     className="model-card"
                     onClick={() => {
                       const rawUrl =
+                        model.file_temp_url ||
                         model.file_url ||
                         model.video_url ||
                         model.url ||
@@ -1845,7 +2033,7 @@ const Dashboard = () => {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        background: model.bg_color || '#f5f5f5',
+                        background: model.bg_color || cardBgColors[model.id] || '#f5f5f5',
                         borderRadius: 12,
                       }}
                     >
@@ -2059,14 +2247,14 @@ const Dashboard = () => {
           // Handle bg_color when modal opens - use bg_color from API data directly
           React.useEffect(() => {
             if (modalModel) {
-              // Use bg_color from API data or fallback to default
-              const bgColor = modalModel.bg_color || '#f5f5f5';
+              // Use bg_color from API data, cardBgColors state, or fallback to default
+              const bgColor = modalModel.bg_color || cardBgColors[modalModel.id] || '#f5f5f5';
               setModalBgColor(bgColor);
               setModalBgColors(prev => ({ ...prev, [modalModel.id]: bgColor }));
             } else {
               setModalBgColor(null);
             }
-          }, [modalModel?.id, modalModel?.bg_color]);
+          }, [modalModel?.id, modalModel?.bg_color, cardBgColors]);
           return (
             <ModernModal open={!!modalModel} onClose={() => setModalModel(null)} width={500}>
               <div
@@ -2257,9 +2445,11 @@ const Dashboard = () => {
         open={modelVideoModalOpen}
         fileUrl={modelFileUrl}
         imageUrl={
-          selectedModelData?.image
-            ? `https://app.ai3dscanning.com/storage/${selectedModelData.image.replace(/^\/+/, '')}`
-            : null
+          selectedModelData?.thumbnail
+            ? `https://app.ai3dscanning.com/storage/${selectedModelData.thumbnail.replace(/^\/+/, '')}`
+            : selectedModelData?.image
+              ? `https://app.ai3dscanning.com/storage/${selectedModelData.image.replace(/^\/+/, '')}`
+              : model1
         }
         modelId={selectedModelData?.id}
         modelTitle={selectedModelData?.title || selectedModelData?.name || 'Model Preview'}

@@ -20,6 +20,20 @@ const NewModel = () => {
   const [screenshotTaken, setScreenshotTaken] = useState(false);
   const [screenshotData, setScreenshotData] = useState(null);
 
+  const addCacheBuster = (url) => {
+    if (!url) return url;
+    const isSigned = url.includes('Signature=') || 
+                     url.includes('x-goog-signature=') || 
+                     url.includes('X-Goog-Signature=') || 
+                     url.includes('X-Amz-Signature=') || 
+                     url.includes('sig=');
+    if (isSigned) {
+      return url;
+    }
+    const separator = url.includes('?') ? '&' : '?';
+    return `${url}${separator}_t=${Date.now()}`;
+  };
+
   const fetchTempModelUrl = async () => {
     try {
       setLoading(true);
@@ -52,7 +66,7 @@ const NewModel = () => {
       }
 
       url = url.replace(/\\\//g, '/').trim();
-      const finalUrl = `${url}${url.includes('?') ? '&' : '?'}_t=${Date.now()}`;
+      const finalUrl = addCacheBuster(url);
       setIsModelRendering(true);
       setModelUrl(finalUrl);
     } catch (err) {

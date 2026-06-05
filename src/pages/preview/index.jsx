@@ -241,6 +241,20 @@ const ImagePreview = () => {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [status]);
 
+  const addCacheBuster = (url) => {
+    if (!url) return url;
+    const isSigned = url.includes('Signature=') || 
+                     url.includes('x-goog-signature=') || 
+                     url.includes('X-Goog-Signature=') || 
+                     url.includes('X-Amz-Signature=') || 
+                     url.includes('sig=');
+    if (isSigned) {
+      return url;
+    }
+    const separator = url.includes('?') ? '&' : '?';
+    return `${url}${separator}_t=${Date.now()}`;
+  };
+
   const fetchTempModelUrl = async () => {
     try {
       setModelLoading(true);
@@ -274,8 +288,7 @@ const ImagePreview = () => {
 
       urlFromApi = urlFromApi.trim();
 
-      const separator = urlFromApi.includes('?') ? '&' : '?';
-      const finalUrl = `${urlFromApi}${separator}_t=${Date.now()}`;
+      const finalUrl = addCacheBuster(urlFromApi);
 
       setModelUrl(finalUrl);
       console.log('✅ Model URL cleaned and loaded:', finalUrl);

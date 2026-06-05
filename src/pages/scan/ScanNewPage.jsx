@@ -469,6 +469,20 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     setProgress(0);
   };
 
+  const addCacheBuster = (url) => {
+    if (!url) return url;
+    const isSigned = url.includes('Signature=') || 
+                     url.includes('x-goog-signature=') || 
+                     url.includes('X-Goog-Signature=') || 
+                     url.includes('X-Amz-Signature=') || 
+                     url.includes('sig=');
+    if (isSigned) {
+      return url;
+    }
+    const separator = url.includes('?') ? '&' : '?';
+    return `${url}${separator}_t=${Date.now()}`;
+  };
+
   const fetchModelUrl = async (token_id) => {
     try {
       setModelLoading(true);
@@ -484,8 +498,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
 
       if (url) {
         url = url.replace(/\\\//g, '/').trim();
-        const separator = url.includes('?') ? '&' : '?';
-        const finalUrl = `${url}${separator}_t=${Date.now()}`;
+        const finalUrl = addCacheBuster(url);
 
         console.log('URL loaded:', finalUrl);
         setModelUrl(finalUrl);

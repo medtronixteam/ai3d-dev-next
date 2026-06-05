@@ -327,68 +327,80 @@ const RightScan = ({
                 ))}
               </div>
               <div className="history-list">
-                {filteredHistory.map((item) => (
-                  <div key={item.id} className="history-item border">
-                    <div className="d-flex align-items-start gap-3">
-                      <div
-                        className="history-thumb"
-                        style={{ backgroundImage: `url(${item.thumbnail})` }}
-                      ></div>
+                {filteredHistory.length > 0 ? (
+                  filteredHistory.map((item) => (
+                    <div key={item.id} className="history-item border">
+                      <div className="d-flex align-items-start gap-3">
+                        <div
+                          className="history-thumb"
+                          style={{ backgroundImage: `url(${item.thumbnail})` }}
+                        ></div>
 
-                      <div className="flex-grow-1">
-                        <div className="d-flex justify-content-between align-items-start">
-                          <div className="mb-0">
-                            <h6 className="mb-0 fw-bold" style={{ fontSize: '11px' }}>
-                              {item.name}
-                            </h6>
-                            <span className="text-muted xx-small mb-0 mt-0">{item.time}</span>
+                        <div className="flex-grow-1">
+                          <div className="d-flex justify-content-between align-items-start">
+                            <div className="mb-0">
+                              <h6 className="mb-0 fw-bold" style={{ fontSize: '11px' }}>
+                                {item.name}
+                              </h6>
+                              <span className="text-muted xx-small mb-0 mt-0">{item.time}</span>
+                            </div>
+                            <span className={`badge-type type-${item.type}`}>{item.type} to 3D</span>
                           </div>
-                          <span className={`badge-type type-${item.type}`}>{item.type} to 3D</span>
+
+                          {item.status === 'processing' ? (
+                            <div className="mt-0">
+                              <div className="d-flex justify-content-between xx-small mb-1">
+                                <span className="text-pink italic fw-bold">processing</span>
+                                <span className="text-muted">{item.progress}%</span>
+                              </div>
+                              <div className="progress custom-progress">
+                                <div
+                                  className="progress-bar"
+                                  style={{ width: `${item.progress}%` }}
+                                ></div>
+                              </div>
+                            </div>
+                          ) : item.status === 'failed' ? (
+                            <div className="mt-3">
+                              <div className="d-flex justify-content-between xx-small mb-1">
+                                <span className="text-danger fw-bold">Generation Failed</span>
+                                <span className="text-pink fw-bold cursor-pointer">Regenerate</span>
+                              </div>
+                              <div className="progress custom-progress">
+                                <div
+                                  className="progress-bar bg-danger"
+                                  style={{ width: '60%' }}
+                                ></div>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="d-flex mt-1 gap-1">
+                              <div className="bg-icon cursor-pointer" onClick={() => onHistoryExport(item)}>
+                                <Download size={12} className="text-muted" />
+                              </div>
+                              <div className="bg-icon cursor-pointer" onClick={() => onHistoryFavorite(item)}>
+                                <Heart size={12} className={item.favorite ? 'text-pink' : 'text-muted'} fill={item.favorite ? '#DE3996' : 'none'} />
+                              </div>
+                              <div className="bg-icon cursor-pointer" onClick={() => onHistoryShare(item)}>
+                                <Share2 size={12} className="text-muted" />
+                              </div>
+                            </div>
+                          )}
                         </div>
-
-                        {item.status === 'processing' ? (
-                          <div className="mt-0">
-                            <div className="d-flex justify-content-between xx-small mb-1">
-                              <span className="text-pink italic fw-bold">processing</span>
-                              <span className="text-muted">{item.progress}%</span>
-                            </div>
-                            <div className="progress custom-progress">
-                              <div
-                                className="progress-bar"
-                                style={{ width: `${item.progress}%` }}
-                              ></div>
-                            </div>
-                          </div>
-                        ) : item.status === 'failed' ? (
-                          <div className="mt-3">
-                            <div className="d-flex justify-content-between xx-small mb-1">
-                              <span className="text-danger fw-bold">Generation Failed</span>
-                              <span className="text-pink fw-bold cursor-pointer">Regenerate</span>
-                            </div>
-                            <div className="progress custom-progress">
-                              <div
-                                className="progress-bar bg-danger"
-                                style={{ width: '60%' }}
-                              ></div>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="d-flex mt-1 gap-1">
-                            <div className="bg-icon cursor-pointer" onClick={() => onHistoryExport(item)}>
-                              <Download size={12} className="text-muted" />
-                            </div>
-                            <div className="bg-icon cursor-pointer" onClick={() => onHistoryFavorite(item)}>
-                              <Heart size={12} className={item.favorite ? 'text-pink' : 'text-muted'} fill={item.favorite ? '#DE3996' : 'none'} />
-                            </div>
-                            <div className="bg-icon cursor-pointer" onClick={() => onHistoryShare(item)}>
-                              <Share2 size={12} className="text-muted" />
-                            </div>
-                          </div>
-                        )}
                       </div>
                     </div>
+                  ))
+                ) : (
+                  <div className="text-center py-5">
+                    <div className="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style={{ width: '48px', height: '48px', backgroundColor: 'rgba(222, 57, 150, 0.1)', color: '#DE3996' }}>
+                      <Clock size={20} />
+                    </div>
+                    <h6 className="fw-semibold mb-1" style={{ fontSize: '13px' }}>No History Found</h6>
+                    <p className="text-muted xx-small mb-0 px-3">
+                      You haven't generated any 3D models yet. Start scanning to see your history here!
+                    </p>
                   </div>
-                ))}
+                )}
               </div>
             </div>
           ) : activeTab === 'transform' ? (

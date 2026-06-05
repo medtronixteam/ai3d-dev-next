@@ -495,6 +495,17 @@ const LandingPage = () => {
 
   const [models, setModels] = useState([]);
 
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredModels = React.useMemo(() => {
+    if (!searchQuery.trim()) return models;
+    const query = searchQuery.toLowerCase().trim();
+    return models.filter((model) => 
+      (model.title || model.name || '').toLowerCase().includes(query) ||
+      (model.description || '').toLowerCase().includes(query)
+    );
+  }, [models, searchQuery]);
+
   const [showAllModels, setShowAllModels] = useState(false);
 
   const [error, setError] = useState('');
@@ -2053,17 +2064,23 @@ const LandingPage = () => {
 
             <p className="landing_subtitle">With top quality and high performance</p>
 
-            <div className="search_container mx-auto mt-2">
+            <form onSubmit={(e) => e.preventDefault()} className="search_container mx-auto mt-2">
               <div className="input_with_icon">
                 <img src={search} alt="Search" className="input_icon" />
 
-                <input type="text" className="search_input" placeholder="Search 3D Models" />
+                <input
+                  type="text"
+                  className="search_input"
+                  placeholder="Search 3D Models"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
               </div>
 
-              <button className="search_button">
+              <button type="submit" className="search_button">
                 <FiArrowRight size={18} />
               </button>
-            </div>
+            </form>
           </div>
         </section>
 
@@ -2085,8 +2102,16 @@ const LandingPage = () => {
                     </p>
                   </div>
                 </div>
+              ) : filteredModels.length === 0 ? (
+                <div className="col-12 text-center py-5">
+                  <div className="models-state-icon mb-3" style={{ fontSize: '3rem', color: '#de3996' }}>
+                    <i className="fa-solid fa-magnifying-glass"></i>
+                  </div>
+                  <h3 className="models-state-title" style={{ color: '#de3996', fontWeight: 600 }}>No models found</h3>
+                  <p className="text-muted">No models match your search query "{searchQuery}".</p>
+                </div>
               ) : (
-                (showAllModels ? models : models.slice(0, 6)).map((card, idx) => {
+                (showAllModels ? filteredModels : filteredModels.slice(0, 6)).map((card, idx) => {
                   const imgUrl = card.image
                     ? `https://app.ai3dscanning.com/storage/${card.image.replace(/^\/+/, '')}`
                     : modelFallback;

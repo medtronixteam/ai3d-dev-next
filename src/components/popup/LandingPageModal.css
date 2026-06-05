@@ -35,6 +35,26 @@
   --divider-color: #e0e0e0;
 }
 
+[data-theme='dark'] {
+  --modal-bg: #13111c;
+  --modal-text: #ffffff;
+  --modal-border: #333333;
+  --modal-shadow: rgba(0, 0, 0, 0.3);
+  --modal-hover-shadow: rgba(0, 0, 0, 0.5);
+  --modal-hover-border: #e6339a;
+  --card-bg: #2a2a2a;
+  --card-text: #ffffff;
+  --card-features-text: #cccccc;
+  --card-footer-text: #aaaaaa;
+  --toggle-bg: #2a2a2a;
+  --toggle-border: #333333;
+  --toggle-text: #cccccc;
+  --toggle-active-bg: #e6339a;
+  --toggle-active-text: #ffffff;
+  --toggle-hover-bg: #3a3a3a;
+  --divider-color: #444444;
+}
+
 .sublanding-modal-content {
   background: var(--modal-bg);
   border-radius: 20px;
@@ -523,10 +543,10 @@
 }
 
 .sub-card {
-  border: 1px solid #ececec;
+  border: 1px solid #c8c8d6;
   border-radius: 10px;
   padding: 20px;
-  background: white;
+  background: #ebedf5;
   font-size: 13px;
   min-height: 560px;
   position: relative;
@@ -534,7 +554,7 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 2px 6px rgb(0 0 0 / 10%);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
   cursor: pointer;
 }
 
@@ -543,12 +563,16 @@
 }
 
 .sub-card-center {
-  background: linear-gradient(to bottom, rgba(225, 225, 255, 0.8) 0%, rgba(255, 198, 213, 0.4) 90%);
+  background: linear-gradient(to bottom, #dbe0fa 0%, #ffd6e2 100%);
   height: 100%;
+  border: 1px solid #bbaada;
+  box-shadow: 0 8px 24px rgba(230, 51, 154, 0.12);
 }
 
 .sub-card-premium {
-  background: linear-gradient(to bottom, rgba(225, 225, 255, 0.8) 0%, rgba(255, 198, 213, 0.4) 90%);
+  background: linear-gradient(to bottom, #dbe0fa 0%, #ffd6e2 100%);
+  border: 1px solid #bbaada;
+  box-shadow: 0 8px 24px rgba(230, 51, 154, 0.12);
 }
 
 .sub-badge {
@@ -755,16 +779,17 @@
 }
 
 [data-theme="dark"] .sub-card {
-  background: #110E20;
-  border: 1px solid #64043a;
+  background: #090716;
+  border: 1px solid #8c0a52;
   color: #E0E0E0;
-  box-shadow: 0 2px 6px rgb(0 0 0 / 30%);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), inset 0 0 8px rgba(222, 57, 150, 0.15);
 }
 
 [data-theme="dark"] .sub-card-center,
 [data-theme="dark"] .sub-card-premium {
-  background: linear-gradient(180deg, #0D0B1E 10%, #5d044ab8 90%);
-  border: none;
+  background: linear-gradient(180deg, #060411 10%, #400230b8 90%);
+  border: 1px solid #a80762;
+  box-shadow: 0 8px 30px rgba(222, 57, 150, 0.25), inset 0 0 12px rgba(255, 255, 255, 0.05);
 }
 
 [data-theme="dark"] .sub-badge {

@@ -96,7 +96,7 @@ const getDeterministicHexColor = (id, text = '') => {
   // Use HSL to ensure beautiful, harmonious pastel colors
   const hue = Math.abs(hash) % 360;
   const s = 65; // 65% saturation
-  const l = 75; // 75% lightness for pleasant light background
+  const l = 60; // 60% lightness for a richer background color
   
   // HSL to RGB conversion
   const hDecimal = hue / 360;
@@ -150,15 +150,15 @@ const getCardBgColor = (baseColor, isDark) => {
   }
 
   if (isDark) {
-    // Make the color dark: scale R, G, B down but keep them distinct and blend with dark card base
-    r = Math.min(255, Math.floor(r * 0.32) + 15);
-    g = Math.min(255, Math.floor(g * 0.32) + 15);
-    b = Math.min(255, Math.floor(b * 0.32) + 20);
+    // Make the color dark but vibrant: scale R, G, B to 45% and add a baseline so it stands out from the dark base
+    r = Math.min(255, Math.floor(r * 0.45) + 20);
+    g = Math.min(255, Math.floor(g * 0.45) + 20);
+    b = Math.min(255, Math.floor(b * 0.45) + 25);
   } else {
-    // Make it light: blend with white
-    r = Math.min(255, Math.floor(r + (255 - r) * 0.65));
-    g = Math.min(255, Math.floor(g + (255 - g) * 0.65));
-    b = Math.min(255, Math.floor(b + (255 - b) * 0.65));
+    // Make it light: blend with white less (use 0.2 instead of 0.65 to keep it darker and richer)
+    r = Math.min(255, Math.floor(r + (255 - r) * 0.2));
+    g = Math.min(255, Math.floor(g + (255 - g) * 0.2));
+    b = Math.min(255, Math.floor(b + (255 - b) * 0.2));
   }
 
   return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
@@ -168,7 +168,7 @@ const getLightAverageColor = async (imageUrl, fallbackColor = '#f5f5f5') => {
   try {
     const fac = new FastAverageColor();
     const color = await fac.getColorAsync(imageUrl, { algorithm: 'simple' });
-    return makeColorLighter(color.hex, 50);
+    return makeColorLighter(color.hex, 30); // decreased from 50 to 30 to make it richer/darker
   } catch (e) {
     console.error('Error getting light average color:', e);
     return fallbackColor;

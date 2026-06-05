@@ -55,13 +55,16 @@ const WaitingListSection = () => {
         };
 
         const cachedCount = getCookie('waiting_count');
-        if (cachedCount) {
+        if (cachedCount && cachedCount !== 'undefined' && cachedCount !== 'NaN') {
             setWaitingCount(cachedCount);
         } else {
+            // Clear bad cached cookie
+            document.cookie = "waiting_count=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            
             axios.get('https://app.ai3dscanning.com/api/waiting/stats')
                 .then(res => {
                     if (res.data.status === 'success') {
-                        const count = res.data.data.waitings;
+                        const count = res.data.data.total_count ?? res.data.data.waitings ?? '500';
                         setWaitingCount(count);
                         // Store in cookie for 24 hours
                         const date = new Date();

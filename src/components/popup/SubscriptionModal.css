@@ -36,7 +36,7 @@
 }
 
 [data-theme='dark'] {
-  --modal-bg: #1a1a1a;
+  --modal-bg: #13111c;
   --modal-text: #ffffff;
   --modal-border: #333333;
   --modal-shadow: rgba(0, 0, 0, 0.3);

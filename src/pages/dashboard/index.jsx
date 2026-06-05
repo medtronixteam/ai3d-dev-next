@@ -85,14 +85,93 @@ const makeColorLighter = (hexColor, percent = 40) => {
   return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
 };
 
-const getLightAverageColor = async (imageUrl) => {
+const getDeterministicHexColor = (id, text = '') => {
+  if (!id) return '#f5f5f5';
+  let hash = 0;
+  const str = String(id) + (text ? String(text) : '');
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  
+  // Use HSL to ensure beautiful, harmonious pastel colors
+  const hue = Math.abs(hash) % 360;
+  const s = 65; // 65% saturation
+  const l = 75; // 75% lightness for pleasant light background
+  
+  // HSL to RGB conversion
+  const hDecimal = hue / 360;
+  const sDecimal = s / 100;
+  const lDecimal = l / 100;
+  
+  let r, g, b;
+  
+  if (sDecimal === 0) {
+    r = g = b = lDecimal;
+  } else {
+    const q = lDecimal < 0.5 ? lDecimal * (1 + sDecimal) : lDecimal + sDecimal - lDecimal * sDecimal;
+    const p = 2 * lDecimal - q;
+    
+    const hue2rgb = (p, q, t) => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1/6) return p + (q - p) * 6 * t;
+      if (t < 1/2) return q;
+      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      return p;
+    };
+    
+    r = hue2rgb(p, q, hDecimal + 1/3);
+    g = hue2rgb(p, q, hDecimal);
+    b = hue2rgb(p, q, hDecimal - 1/3);
+  }
+  
+  const toHex = (x) => {
+    const hex = Math.round(x * 255).toString(16);
+    return hex.length === 1 ? '0' : '' + hex;
+  };
+  
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+};
+
+const getCardBgColor = (baseColor, isDark) => {
+  if (!baseColor) {
+    return isDark ? '#1b1b22' : '#ffffff';
+  }
+  let hex = baseColor.replace(/^\s*#|\s*$/g, '');
+  if (hex.length === 3) {
+    hex = hex.replace(/(.)/g, '$1$1');
+  }
+  let r = parseInt(hex.substr(0, 2), 16),
+      g = parseInt(hex.substr(2, 2), 16),
+      b = parseInt(hex.substr(4, 2), 16);
+      
+  if (isNaN(r) || isNaN(g) || isNaN(b)) {
+    return isDark ? '#1b1b22' : '#ffffff';
+  }
+
+  if (isDark) {
+    // Make the color dark: scale R, G, B down but keep them distinct and blend with dark card base
+    r = Math.min(255, Math.floor(r * 0.32) + 15);
+    g = Math.min(255, Math.floor(g * 0.32) + 15);
+    b = Math.min(255, Math.floor(b * 0.32) + 20);
+  } else {
+    // Make it light: blend with white
+    r = Math.min(255, Math.floor(r + (255 - r) * 0.65));
+    g = Math.min(255, Math.floor(g + (255 - g) * 0.65));
+    b = Math.min(255, Math.floor(b + (255 - b) * 0.65));
+  }
+
+  return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+};
+
+const getLightAverageColor = async (imageUrl, fallbackColor = '#f5f5f5') => {
   try {
     const fac = new FastAverageColor();
     const color = await fac.getColorAsync(imageUrl, { algorithm: 'simple' });
     return makeColorLighter(color.hex, 50);
   } catch (e) {
     console.error('Error getting light average color:', e);
-    return '#f5f5f5';
+    return fallbackColor;
   }
 };
 
@@ -100,7 +179,7 @@ const updateBgColor = async (modelId, bgColor) => {
   const token = localStorage.getItem('token');
   if (!token) return false;
   try {
-    const res = await axios.post(`${baseURL}/model/update-bg-color`, {
+    const res = await axios.post(`${baseURL}/update/bg/color`, {
       model_id: modelId,
       bg_color: bgColor,
     }, {
@@ -523,56 +602,53 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
   // --- Handle bg_color when modal opens ---
   React.useEffect(() => {
     if (open && modelId && imageUrl) {
-      // Check if bg_color exists in modelData
-      if (modelData?.bg_color) {
+      // Check if bg_color exists in modelData and is not a generic fallback
+      const isFallback = !modelData?.bg_color || 
+                         modelData.bg_color.toLowerCase() === '#f5f5f5' || 
+                         modelData.bg_color.toLowerCase() === '#ffffff' || 
+                         modelData.bg_color.toLowerCase() === '#000000' ||
+                         modelData.bg_color.toLowerCase() === 'rgb(245, 245, 245)';
+
+      if (modelData?.bg_color && !isFallback) {
         // Use existing bg_color from backend
         setModalBgColor(modelData.bg_color);
       } else {
-        // bg_color is null - extract light color from image using FastAverageColor
+        // bg_color is null or fallback - generate deterministic fallback color instantly
+        const fallback = getDeterministicHexColor(modelId, modelTitle);
+        setModalBgColor(fallback);
+        
         console.log('Extracting color for model:', modelId, 'Image URL:', imageUrl);
-        getLightAverageColor(imageUrl)
+        getLightAverageColor(imageUrl, fallback)
           .then((hexColor) => {
             console.log('Extracted color for model:', modelId, 'Color:', hexColor);
             setModalBgColor(hexColor);
 
-            // Always call API when color is extracted
-            console.log('Calling API with model_id:', modelId, 'bg_color:', hexColor);
-            updateBgColor(modelId, hexColor)
-              .then((result) => {
-                if (result) {
-                  console.log('✅ bg_color updated successfully in backend for model:', modelId);
-                } else {
-                  console.warn('⚠️ API call completed but no result returned for model:', modelId);
-                }
-              })
-              .catch((error) => {
-                console.error('❌ Error updating bg_color via API:', error);
-              });
+            // Always call API when color is extracted and differs
+            if (hexColor !== modelData?.bg_color) {
+              console.log('Calling API with model_id:', modelId, 'bg_color:', hexColor);
+              updateBgColor(modelId, hexColor)
+                .then((result) => {
+                  if (result) {
+                    console.log('✅ bg_color updated successfully in backend for model:', modelId);
+                  }
+                })
+                .catch((error) => {
+                  console.error('❌ Error updating bg_color via API:', error);
+                });
+            }
           })
           .catch((error) => {
             console.error('❌ Error extracting color:', error);
-            // Fallback color
-            const fallbackColor = '#f5f5f5';
-            setModalBgColor(fallbackColor);
-            // Still try to update API with fallback color
-            console.log('Calling API with fallback color for model:', modelId);
-            updateBgColor(modelId, fallbackColor)
-              .then((result) => {
-                if (result) {
-                  console.log('Fallback color updated in backend for model:', modelId);
-                } else {
-                  console.warn('⚠️ Fallback color API call completed but no result returned');
-                }
-              })
-              .catch((error) => {
-                console.error('❌ Error updating fallback bg_color via API:', error);
-              });
+            setModalBgColor(fallback);
+            if (fallback !== modelData?.bg_color) {
+              updateBgColor(modelId, fallback);
+            }
           });
       }
     } else {
       setModalBgColor(null);
     }
-  }, [open, modelId, imageUrl, modelData?.bg_color]);
+  }, [open, modelId, imageUrl, modelData?.bg_color, modelTitle]);
 
   // --- Load Media on Open ---
   React.useEffect(() => {
@@ -744,17 +820,20 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
         <div
           style={{
             position: 'relative',
-            background: isDarkMode
-              ? 'linear-gradient(90deg, #3E112C, #190F21)'
-              : 'linear-gradient(90deg, #FFEDF7, #F2F0FE)',
+            background: modalBgColor
+              ? getCardBgColor(modalBgColor, isDarkMode)
+              : (isDarkMode
+                  ? 'linear-gradient(90deg, #3E112C, #190F21)'
+                  : 'linear-gradient(90deg, #FFEDF7, #F2F0FE)'),
             borderRadius: 28,
             maxWidth: '650px',
             width: '90vw',
             height: '70%',
             maxHeight: '65vh',
             display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
+            flexDirection: 'column',
+            justifyContent: 'flex-end',
+            alignItems: 'stretch',
             overflow: 'hidden',
             animation: 'modal-3d-pop-in 0.55s cubic-bezier(.25,1.7,.45,1.32)',
           }}
@@ -952,10 +1031,9 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
               style={{
                 position: 'relative',
                 width: '100%',
+                height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
               }}
             >
               <img
@@ -967,24 +1045,11 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
                   console.error('Fallback image failed to load');
                 }}
                 style={{
-                  maxWidth: '100%',
-                  maxHeight: '60vh',
-                  borderRadius: '18px 18px 0 0',
+                  width: '100%',
+                  height: '100%',
                   objectFit: 'contain',
                 }}
               />
-              {modalBgColor && (
-                <div
-                  style={{
-                    width: '100%',
-                    height: '40px',
-                    backgroundColor: modalBgColor,
-                    borderRadius: '0 0 18px 18px',
-                    position: 'relative',
-                    zIndex: 1,
-                  }}
-                />
-              )}
             </div>
           )}
 
@@ -996,10 +1061,9 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
                   style={{
                     position: 'relative',
                     width: '100%',
+                    height: '100%',
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
                   }}
                 >
                   <video
@@ -1015,26 +1079,13 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
                       handleError(err);
                     }}
                     style={{
-                      maxWidth: '100%',
-                      maxHeight: '70vh',
-                      borderRadius: '18px 18px 0 0',
+                      width: '100%',
+                      height: '100%',
                       opacity: loading ? 0 : 1,
                       transition: 'opacity 0.3s ease',
+                      objectFit: 'contain',
                     }}
                   />
-                  {/* Background color display below video */}
-                  {modalBgColor && (
-                    <div
-                      style={{
-                        width: '100%',
-                        height: '40px',
-                        backgroundColor: modalBgColor,
-                        borderRadius: '0 0 18px 18px',
-                        position: 'relative',
-                        zIndex: 1,
-                      }}
-                    />
-                  )}
                 </div>
               )}
 
@@ -1043,10 +1094,9 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
                   style={{
                     position: 'relative',
                     width: '100%',
+                    height: '100%',
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
                   }}
                 >
                   <model-viewer
@@ -1064,25 +1114,11 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
                     shadow-intensity="1"
                     style={{
                       width: '100%',
-                      height: '50vh',
-                      borderRadius: '18px 18px 0 0',
+                      height: '100%',
                       opacity: loading ? 0 : 1,
                       transition: 'opacity 0.3s ease',
                     }}
                   />
-                  {/* Background color display below 3D model */}
-                  {modalBgColor && (
-                    <div
-                      style={{
-                        width: '100%',
-                        height: '40px',
-                        backgroundColor: modalBgColor,
-                        borderRadius: '0 0 18px 18px',
-                        position: 'relative',
-                        zIndex: 1,
-                      }}
-                    />
-                  )}
                 </div>
               )}
 
@@ -1091,10 +1127,9 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
                   style={{
                     position: 'relative',
                     width: '100%',
+                    height: '100%',
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
                   }}
                 >
                   <img
@@ -1103,26 +1138,13 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
                     onLoad={handleLoad}
                     onError={handleError}
                     style={{
-                      maxWidth: '100%',
-                      maxHeight: '60vh',
-                      borderRadius: '18px 18px 0 0',
+                      width: '100%',
+                      height: '100%',
                       objectFit: 'contain',
                       opacity: loading ? 0 : 1,
                       transition: 'opacity 0.3s ease',
                     }}
                   />
-                  {modalBgColor && (
-                    <div
-                      style={{
-                        width: '100%',
-                        height: '40px',
-                        backgroundColor: modalBgColor,
-                        borderRadius: '0 0 18px 18px',
-                        position: 'relative',
-                        zIndex: 1,
-                      }}
-                    />
-                  )}
                 </div>
               )}
             </>
@@ -1484,47 +1506,61 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchColors = async () => {
-      const newColors = {};
+      const promises = currentModels.map(async (model) => {
+        const fallback = getDeterministicHexColor(model.id, model.title || model.name);
+        
+        const isFallback = !model.bg_color || 
+                           model.bg_color.toLowerCase() === '#f5f5f5' || 
+                           model.bg_color.toLowerCase() === '#ffffff' || 
+                           model.bg_color.toLowerCase() === '#000000' ||
+                           model.bg_color.toLowerCase() === 'rgb(245, 245, 245)';
 
-      for (const model of currentModels) {
-        if (model.bg_color) {
-          newColors[model.id] = model.bg_color;
-          continue;
+        if (model.bg_color && !isFallback) {
+          return { id: model.id, color: model.bg_color };
         }
 
-        const imgUrl = model.image
-          ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
-          : null;
+        const imgUrl = model.thumbnail
+          ? `https://app.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
+          : model.image
+            ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
+            : null;
 
         if (imgUrl) {
           try {
-            const lightColor = await getLightAverageColor(imgUrl);
-            newColors[model.id] = lightColor;
+            const lightColor = await getLightAverageColor(imgUrl, fallback);
             
-            // Save to backend
-            updateBgColor(model.id, lightColor).then((success) => {
-              if (success) {
-                console.log(`Saved color ${lightColor} for model ${model.id}`);
-              }
-            });
+            // Save to backend asynchronously if it changed
+            if (lightColor !== model.bg_color) {
+              updateBgColor(model.id, lightColor);
+            }
+            
+            return { id: model.id, color: lightColor };
           } catch (e) {
             console.error('Error extracting color for model', model.id, e);
-            newColors[model.id] = '#f5f5f5';
+            return { id: model.id, color: fallback };
           }
-        } else {
-          newColors[model.id] = '#f5f5f5';
         }
-      }
+        return { id: model.id, color: fallback };
+      });
+
+      const results = await Promise.all(promises);
+      const newColors = {};
+      results.forEach(res => {
+        if (res.color) {
+          newColors[res.id] = res.color;
+        }
+      });
 
       setCardBgColors(prev => {
         let hasChanges = false;
+        const updated = { ...prev };
         for (const id in newColors) {
           if (prev[id] !== newColors[id]) {
+            updated[id] = newColors[id];
             hasChanges = true;
-            break;
           }
         }
-        return hasChanges ? { ...prev, ...newColors } : prev;
+        return hasChanges ? updated : prev;
       });
     };
 
@@ -2033,7 +2069,7 @@ const Dashboard = () => {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        background: model.bg_color || cardBgColors[model.id] || '#f5f5f5',
+                        background: getCardBgColor(model.bg_color || cardBgColors[model.id], isDark),
                         borderRadius: 12,
                       }}
                     >

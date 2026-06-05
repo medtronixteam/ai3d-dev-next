@@ -10,9 +10,27 @@ const SampleModels = ({ model, onClose }) => {
   const [likeCount, setLikeCount] = useState(model?.likes_count || 0);
   const [viewCount] = useState(model?.views_count || 0);
 
-  const modelSrc = model?.file_temp_url
-    ? `https://app.ai3dscanning.com${model.file_temp_url}`
-    : null;
+  const getModelUrl = (model) => {
+    if (!model) return null;
+    const path = model.file_temp_url || model.file_url || model.file || model.url || model.model_url;
+    if (path) {
+      if (path.startsWith('http://') || path.startsWith('https://')) {
+        return path;
+      }
+      const cleanPath = path.startsWith('/') ? path : `/${path}`;
+      return `https://app.ai3dscanning.com${cleanPath}`;
+    }
+    if (model.image) {
+      const filename = model.image.split('/').pop();
+      const match = filename.match(/^(\d+)/);
+      if (match) {
+        return `https://app.ai3dscanning.com/storage/models/${match[1]}.glb`;
+      }
+    }
+    return null;
+  };
+
+  const modelSrc = getModelUrl(model);
 
   const imgUrl = model?.image
     ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`

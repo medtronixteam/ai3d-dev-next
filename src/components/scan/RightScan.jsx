@@ -13,6 +13,9 @@ import hugeiconsCrown from '../../pages/images/icons/hugeicons_crown-02.png';
 import Crown from '../../pages/images/icons/crown.png';
 import starSearch from '../../pages/images/icons/star-search.png';
 import fullScreen from '../../pages/images/icons/full-screen.png';
+import { useAuth } from '../../context/AuthContext';
+import { baseURL } from '../../config';
+import { toast } from 'react-toastify';
 
 const RightScan = ({
   activeTab,
@@ -29,7 +32,157 @@ const RightScan = ({
   onHistoryShare,
   historySearchQuery,
   setHistorySearchQuery,
+  onSelectModel,
 }) => {
+  const { token } = useAuth();
+  const [libraryModels, setLibraryModels] = React.useState([]);
+  const [libraryLoading, setLibraryLoading] = React.useState(false);
+  const [isModelLoading, setIsModelLoading] = React.useState(false);
+  const [page, setPage] = React.useState(1);
+  const [hasMore, setHasMore] = React.useState(true);
+  const [searchText, setSearchText] = React.useState('');
+
+  const fetchLibraryModels = React.useCallback(async (pageNum = 1, query = '', append = false) => {
+    setLibraryLoading(true);
+    try {
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      let data;
+      if (query.trim()) {
+        const res = await fetch(`${baseURL}/models/search?page=${pageNum}`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ title: query, category: 'all' }),
+        });
+        data = await res.json();
+      } else {
+        const res = await fetch(`${baseURL}/model/all?page=${pageNum}`, { headers });
+        data = await res.json();
+      }
+
+      const rawModels = data.models?.data || data.models || data.data || [];
+      const currentPage = data.models?.current_page || pageNum;
+      const lastPage = data.models?.last_page || 1;
+      
+      setHasMore(currentPage < lastPage);
+      
+      setLibraryModels((prev) => {
+        if (append) {
+          const existingIds = new Set(prev.map(m => m.id));
+          const filteredNew = rawModels.filter(m => !existingIds.has(m.id));
+          return [...prev, ...filteredNew];
+        } else {
+          return rawModels;
+        }
+      });
+    } catch (err) {
+      console.error('Failed to fetch library models:', err);
+    } finally {
+      setLibraryLoading(false);
+    }
+  }, [token]);
+
+  // Initial load
+  React.useEffect(() => {
+    if (activeTab === 'library') {
+      setPage(1);
+      setHasMore(true);
+      fetchLibraryModels(1, searchText, false);
+    }
+  }, [activeTab, fetchLibraryModels]);
+
+  // Paginated load
+  React.useEffect(() => {
+    if (activeTab === 'library' && page > 1) {
+      fetchLibraryModels(page, searchText, true);
+    }
+  }, [page, activeTab, fetchLibraryModels, searchText]);
+
+  // Debounced search typing
+  React.useEffect(() => {
+    if (activeTab !== 'library') return;
+    
+    if (searchText === '') {
+      setPage(1);
+      setHasMore(true);
+      fetchLibraryModels(1, '', false);
+      return;
+    }
+    
+    const delayDebounce = setTimeout(() => {
+      setPage(1);
+      setHasMore(true);
+      fetchLibraryModels(1, searchText, false);
+    }, 450);
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchText, activeTab, fetchLibraryModels]);
+
+  const handleScroll = (e) => {
+    if (activeTab !== 'library') return;
+    const { scrollTop, scrollHeight, clientHeight } = e.target;
+    if (scrollHeight - scrollTop - clientHeight < 50 && !libraryLoading && hasMore) {
+      setPage((prev) => prev + 1);
+    }
+  };
+
+  const onSearchSubmit = (e) => {
+    e?.preventDefault();
+    setPage(1);
+    setHasMore(true);
+    fetchLibraryModels(1, searchText, false);
+  };
+
+  const handleModelClick = async (model) => {
+    if (isModelLoading) return;
+    setIsModelLoading(true);
+    let url = model.file_temp_url || model.file_url || model.url;
+    
+    if (model.id) {
+      try {
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        const response = await fetch(`${baseURL}/model/temp/url/${model.id}`, { headers });
+        if (response.ok) {
+          const resData = await response.json();
+          let tempUrl = resData.url || resData.temp_url || resData.model_url || resData.data?.url || resData.data?.temp_url;
+          if (tempUrl) {
+            if (tempUrl.includes('/storage//')) {
+              tempUrl = tempUrl.replace('/storage//', '/storage/models/');
+            }
+            url = tempUrl;
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch temp URL for library model, using fallback:', err);
+      }
+    }
+
+    setIsModelLoading(false);
+
+    if (url) {
+      url = url.replace(/\\\//g, '/').trim();
+      if (url.includes('/storage//')) {
+        url = url.replace('/storage//', '/storage/models/');
+      }
+      if (!url.startsWith('http') && !url.startsWith('blob:')) {
+        const cleanName = url.replace(/^\/+/, '');
+        if (cleanName.startsWith('storage/')) {
+          url = `https://app.ai3dscanning.com/${cleanName}`;
+        } else {
+          url = `https://app.ai3dscanning.com/storage/models/${cleanName}`;
+        }
+      }
+      if (onSelectModel) {
+        onSelectModel(url);
+      }
+    } else {
+      toast.error('No 3D model file available for this item');
+    }
+  };
+
   const filteredHistory = historyData.filter((item) =>
     historyFilter === 'all' ? true : item.status === historyFilter,
   );
@@ -62,31 +215,83 @@ const RightScan = ({
           </div>
         )}
 
-        <div className="library-card-scroll">
+        <div className="library-card-scroll" onScroll={handleScroll}>
           {activeTab === 'library' ? (
             <div className="fade-in">
-              <div className="search-wrap mb-3 position-relative">
+              <form onSubmit={onSearchSubmit} className="search-wrap mb-3 position-relative">
                 <img src={starSearch} className="search-icon text-pink" alt="" />
                 <input
                   type="text"
                   className="form-control custom-search x-small"
                   placeholder="Search our 3D Models"
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
                 />
-                <div className="search-arrow">
+                <button type="submit" className="search-arrow border-0 p-0" style={{ cursor: 'pointer' }}>
                   <ArrowRight size={14} />
-                </div>
-              </div>
-              <div className="row g-2">
-                {[...Array(12)].map((_, i) => (
-                  <div key={i} className="col-6">
-                    <div
-                      className="gallery-card rounded-3 shadow-sm"
-                      style={{
-                        backgroundImage: `url(https://picsum.photos/200/200?random=${i})`,
-                      }}
-                    ></div>
+                </button>
+              </form>
+              <div className="row g-2 animate-grid-scroll" style={{ paddingBottom: '16px' }}>
+                {libraryModels.length > 0 ? (
+                  <>
+                    {libraryModels.map((model) => {
+                      const imgUrl = model.thumbnail
+                        ? `https://app.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
+                        : model.image
+                          ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
+                          : 'https://picsum.photos/200/200?random=' + model.id;
+
+                      return (
+                        <div key={model.id} className="col-6">
+                          <div
+                            className="gallery-card rounded-3 shadow-sm cursor-pointer position-relative overflow-hidden"
+                            style={{
+                              backgroundImage: `url(${imgUrl})`,
+                              backgroundSize: 'cover',
+                              backgroundPosition: 'center',
+                              height: '110px',
+                              border: '1px solid rgba(255,255,255,0.05)',
+                            }}
+                            onClick={() => handleModelClick(model)}
+                            title={model.title || model.name}
+                          >
+                            <div 
+                              style={{
+                                position: 'absolute',
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                background: 'rgba(0,0,0,0.6)',
+                                color: '#fff',
+                                fontSize: '10px',
+                                padding: '4px 6px',
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                textAlign: 'center',
+                              }}
+                            >
+                              {model.title || model.name || 'Untitled'}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                    {libraryLoading && (
+                      <div className="col-12 text-center py-2">
+                        <div className="spinner-border spinner-border-sm text-pink" role="status"></div>
+                      </div>
+                    )}
+                  </>
+                ) : libraryLoading ? (
+                  <div className="col-12 text-center py-4">
+                    <div className="spinner-border spinner-border-sm text-pink" role="status"></div>
                   </div>
-                ))}
+                ) : (
+                  <div className="col-12 text-center py-4 text-muted small">
+                    No models found in library.
+                  </div>
+                )}
               </div>
             </div>
           ) : activeTab === 'history' ? (

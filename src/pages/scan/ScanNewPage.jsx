@@ -992,7 +992,6 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             projectStatus={projectStatus}
             onModelRendered={takeScreenshot}
           />
-
           <RightScan
             activeTab={activeTab}
             setActiveTab={setActiveTab}
@@ -1008,6 +1007,16 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             onHistoryShare={handleHistoryShare}
             historySearchQuery={historySearchQuery}
             setHistorySearchQuery={setHistorySearchQuery}
+            onSelectModel={(url) => {
+              setModelUrl(url);
+              setModelReady(true);
+              setProjectStatus('completed');
+              setShowLoadingUI(false);
+              setShowBlackOverlay(false);
+              setShowQueueUI(false);
+              setActiveTab('transform');
+              setIsViewOnly(true);
+            }}
           />
         </div>
 

@@ -2060,11 +2060,26 @@ const Dashboard = () => {
                       }
                     }}
                     style={{
+                      position: 'relative',
                       cursor: 'pointer',
                       borderRadius: 12,
                       overflow: 'hidden',
                     }}
                   >
+                    {model.is_free !== 1 && (
+                      <img
+                        src={Paid}
+                        alt="paid"
+                        style={{
+                          position: 'absolute',
+                          top: '10px',
+                          right: '10px',
+                          width: '18px',
+                          height: '18px',
+                          zIndex: 10,
+                        }}
+                      />
+                    )}
                     <div
                       style={{
                         position: 'relative',
@@ -2126,21 +2141,8 @@ const Dashboard = () => {
                       </button>
                     </div>
 
-                    <div className="model-card-content" style={{ position: 'relative' }}>
-                      {model.is_free !== 1 && (
-                        <img
-                          src={Paid}
-                          alt="paid"
-                          style={{
-                            position: 'absolute',
-                            top: '-2px',
-                            right: '8px',
-                            width: '16px',
-                            height: '16px',
-                          }}
-                        />
-                      )}
-                      <div className="model-card-title">{model.title || model.name}</div>
+                    <div className="model-card-content">
+                      <div className="model-card-title" style={{ paddingRight: '22px' }}>{model.title || model.name}</div>
                       <div className="model-card-desc">
                         {model.description || 'No description.'}
                       </div>

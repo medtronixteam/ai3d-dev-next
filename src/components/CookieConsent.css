@@ -6,10 +6,10 @@
     width: 90%;
     max-width: 800px;
     z-index: 999999;
-    animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation: cookieFadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-@keyframes fadeInUp {
+@keyframes cookieFadeInUp {
     from {
         opacity: 0;
         transform: translate(-50%, 40px);

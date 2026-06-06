@@ -58,7 +58,7 @@ const LeftScan = ({
   const imageInputRef = useRef(null);
   const videoInputRef = useRef(null);
   const scrollRef = useRef(null);
-
+  // url update
   const handleSingleImageChange = (e) => {
     if (isProcessing || isViewOnly) return;
     const file = e.target.files[0];

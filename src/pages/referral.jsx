@@ -614,7 +614,7 @@ const Referral = () => {
                         <a
                           href={
                             item === 'Pricing'
-                              ? '/platform/subscription'
+                              ? '/3dio/subscription'
                               : item === 'Services'
                                 ? '/services'
                                 : '/'

@@ -1099,7 +1099,7 @@ const LandingPage = () => {
                 </nav>
 
                 {/* <div className="d-none d-lg-flex gap-3 align-items-center">
-                  <Link to="/platform/">
+                  <Link to="/3dio/">
                     <button className="a3d-join-btn">Join Us</button>
                   </Link>
                 </div> */}
@@ -1274,7 +1274,7 @@ const LandingPage = () => {
                   <Link to="/book-demo">
                     <button className="a3d-join-btn">Book a Demo</button>
                   </Link>
-                  {/* <Link to="/platform/subscription"> */}
+                  {/* <Link to="/3dio/subscription"> */}
                   <Link to="/services">
                     <button
                       className="btn btn-warning text-white"
@@ -2778,7 +2778,7 @@ const LandingPage = () => {
                         <a
                           href={
                             item === 'Pricing'
-                              ? '/platform/subscription'
+                              ? '/3dio/subscription'
                               : item === 'Services'
                                 ? '/services'
                                 : '/'

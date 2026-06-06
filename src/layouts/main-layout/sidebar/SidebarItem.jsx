@@ -20,11 +20,11 @@ const SidebarItem = ({ item, isCollapsed }) => {
   const isSubscription = item.title === 'Subscription';
   const isSubscriptionActive =
     isSubscription &&
-    (location.pathname === item.path || location.pathname.startsWith('/platform/subscription'));
+    (location.pathname === item.path || location.pathname.startsWith('/3dio/subscription'));
 
   // Check for Settings active state
   const isSettings = item.title === 'Settings';
-  const isSettingsActive = isSettings && location.pathname.startsWith('/platform/settings');
+  const isSettingsActive = isSettings && location.pathname.startsWith('/3dio/settings');
 
   // check dark mode
   const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
@@ -89,13 +89,13 @@ const SidebarItem = ({ item, isCollapsed }) => {
   const handleNavClick = (e) => {};
 
   const isPreview =
-    item.title === 'Preview' && item.path && item.path.startsWith('/platform/preview');
-  const isPreviewActive = isPreview && location.pathname.startsWith('/platform/preview');
+    item.title === 'Preview' && item.path && item.path.startsWith('/3dio/preview');
+  const isPreviewActive = isPreview && location.pathname.startsWith('/3dio/preview');
 
   const handleSubscriptionClick = (e) => {
     if (isSubscription && isMobile && !token) {
       e.preventDefault();
-      window.location.href = '/platform/subscription';
+      window.location.href = '/3dio/subscription';
     }
   };
 

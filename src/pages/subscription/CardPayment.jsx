@@ -50,7 +50,7 @@ const CardPayment = () => {
       window.close();
       return;
     }
-    window.location.href = '/platform/subscription';
+    window.location.href = '/3dio/subscription';
   };
 
   const handleTouchStart = (e) => {

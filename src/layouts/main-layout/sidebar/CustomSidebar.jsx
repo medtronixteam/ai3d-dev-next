@@ -19,7 +19,7 @@ const CustomSidebar = ({ onClose }) => {
       <div className="custom-sidebar custom-sidebar-desktop">
         <div className="custom-sidebar-sticky">
           <div className="mb-2 p-2">
-            <Link to="/platform/">
+            <Link to="/3dio/">
               <img
                 width="115px"
                 className="img-fluid logo"
@@ -33,25 +33,25 @@ const CustomSidebar = ({ onClose }) => {
             className="nav flex-column nav-pills"
             style={{ marginLeft: '0.6rem', marginTop: '1rem' }}
           >
-            <NavLink to="/platform/settings/profile" className="nav-link mb-2">
+            <NavLink to="/3dio/settings/profile" className="nav-link mb-2">
               <img src={ProfileIcon} alt="" style={{ width: '19px' }} /> Your Profile
             </NavLink>
-            <NavLink to="/platform/settings/login" className="nav-link mb-2">
+            <NavLink to="/3dio/settings/login" className="nav-link mb-2">
               <img src={LoginIcon} alt="" style={{ width: '19px' }} /> Login
             </NavLink>
-            <NavLink to="/platform/settings/subscription" className="nav-link mb-2">
+            <NavLink to="/3dio/settings/subscription" className="nav-link mb-2">
               <img src={SubscriptionIcon} alt="" style={{ width: '19px' }} /> Subscription
             </NavLink>
-            <NavLink to="/platform/settings/team" className="nav-link mb-2">
+            <NavLink to="/3dio/settings/team" className="nav-link mb-2">
               <img src={TeamIcon} alt="" style={{ width: '19px' }} /> Team
             </NavLink>
-            {/* <NavLink to="/platform/settings/project" className="nav-link mb-2">
+            {/* <NavLink to="/3dio/settings/project" className="nav-link mb-2">
               <img src={ProjectIcon} alt="" style={{ width: '19px' }} /> Project
             </NavLink>
-            <NavLink to="/platform/settings/aimodal" className="nav-link mb-2">
+            <NavLink to="/3dio/settings/aimodal" className="nav-link mb-2">
               <img src={AiModel} alt="" style={{ width: '19px' }} /> AI Model
             </NavLink> */}
-            <NavLink to="/platform/settings/referal" className="nav-link mb-2">
+            <NavLink to="/3dio/settings/referal" className="nav-link mb-2">
               <Gift size={19} /> Referral
             </NavLink>
           </nav>

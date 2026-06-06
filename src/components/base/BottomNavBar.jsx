@@ -8,24 +8,24 @@ import './BottomNavBar.css';
 const BottomNavBar = () => {
   return (
     <div className="bottom-nav-bar">
-      <a href="/platform/" className="bottom-nav-item">
+      <a href="/3dio/" className="bottom-nav-item">
         <FiHome className="bottom-nav-icon" />
         <span className="bottom-nav-label">Home</span>
       </a>
-      <NavLink to="/platform/api-sdk" className="bottom-nav-item">
+      <NavLink to="/3dio/api-sdk" className="bottom-nav-item">
         <LuCalendarRange className="bottom-nav-icon" />
         <span className="bottom-nav-label">API SDK</span>
       </NavLink>
-      <NavLink to="/platform/new/scan" className="bottom-nav-scan">
+      <NavLink to="/3dio/new/scan" className="bottom-nav-scan">
         <div className="scan-btn">
           <BiScan className="scan-icon" style={{ color: '#fff', fontSize: 32 }} />
         </div>
       </NavLink>
-      <NavLink to="/platform/recent-projects" className="bottom-nav-item">
+      <NavLink to="/3dio/recent-projects" className="bottom-nav-item">
         <FiClock className="bottom-nav-icon" />
         <span className="bottom-nav-label">Recent</span>
       </NavLink>
-      <NavLink to="/platform/settings/profile" className="bottom-nav-item">
+      <NavLink to="/3dio/settings/profile" className="bottom-nav-item">
         <FiSettings className="bottom-nav-icon" />
         <span className="bottom-nav-label">Settings</span>
       </NavLink>

@@ -756,7 +756,7 @@ const Service = () => {
                         <a
                           href={
                             item === 'Pricing'
-                              ? '/platform/subscription'
+                              ? '/3dio/subscription'
                               : item === 'About us'
                                 ? '/#aboutus'
                                 : '/'

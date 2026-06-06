@@ -15,6 +15,7 @@ import RightScan from '../../components/scan/RightScan';
 import { useRouteLeave } from '../../hooks/useRouteLeave';
 import * as THREE from 'three';
 import { FiX, FiCheck } from 'react-icons/fi';
+import { Hourglass } from 'lucide-react';
 
 const ModelGenerator = ({ isDarkMode = false }) => {
   const { token } = useAuth();
@@ -62,6 +63,8 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   const [removedFrames, setRemovedFrames] = useState([]);
   const [showCookingLoader, setShowCookingLoader] = useState(false);
   const [isActuallyRendered, setIsActuallyRendered] = useState(false);
+  const [comingSoonModalOpen, setComingSoonModalOpen] = useState(false);
+  const [comingSoonFeature, setComingSoonFeature] = useState('');
   const socketRef = useRef(null);
 
   const [historyData, setHistoryData] = useState([]);
@@ -971,6 +974,10 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             setVideoFileName={setVideoFileName}
             videoLoading={videoLoading}
             handleVideoSubmit={handleVideoSubmit}
+            onShowComingSoon={(feature) => {
+              setComingSoonFeature(feature);
+              setComingSoonModalOpen(true);
+            }}
           />
 
           <CenterScan
@@ -1170,6 +1177,165 @@ const ModelGenerator = ({ isDarkMode = false }) => {
                   {isGenerating ? 'Sharing...' : 'Share'}
                 </button>
               </div>
+            </div>
+          </div>
+        )}
+
+        {comingSoonModalOpen && (
+          <div className="coming-soon-backdrop" onClick={() => setComingSoonModalOpen(false)}>
+            <style>{`
+              .coming-soon-backdrop {
+                position: fixed;
+                inset: 0;
+                background: rgba(240, 240, 245, 0.45);
+                backdrop-filter: blur(8px);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+                animation: cs-fade-in 0.3s ease-out;
+              }
+
+              [data-theme='dark'] .coming-soon-backdrop {
+                background: rgba(15, 15, 20, 0.7);
+              }
+
+              @keyframes cs-fade-in {
+                from { opacity: 0; }
+                to { opacity: 1; }
+              }
+
+              .coming-soon-card {
+                background: linear-gradient(135deg, #ffffff 0%, #f7f5fa 100%);
+                border: 1px solid rgba(222, 57, 150, 0.2);
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+                border-radius: 24px;
+                width: 90%;
+                max-width: 460px;
+                padding: 35px 25px;
+                text-align: center;
+                position: relative;
+                overflow: hidden;
+                animation: cs-zoom-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+              }
+
+              [data-theme='dark'] .coming-soon-card {
+                background: linear-gradient(135deg, #1b1424 0%, #100b18 100%);
+                border: 1px solid rgba(222, 57, 150, 0.3);
+                box-shadow: 0 20px 50px rgba(222, 57, 150, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+              }
+
+              @keyframes cs-zoom-in {
+                from { transform: scale(0.9) translateY(20px); opacity: 0; }
+                to { transform: scale(1) translateY(0); opacity: 1; }
+              }
+
+              .coming-soon-glow {
+                position: absolute;
+                top: -50px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 150px;
+                height: 150px;
+                background: radial-gradient(circle, rgba(222, 57, 150, 0.2) 0%, transparent 70%);
+                filter: blur(20px);
+                pointer-events: none;
+              }
+
+              [data-theme='dark'] .coming-soon-glow {
+                background: radial-gradient(circle, rgba(222, 57, 150, 0.4) 0%, transparent 70%);
+              }
+
+              .coming-soon-icon-wrap {
+                width: 76px;
+                height: 76px;
+                background: rgba(222, 57, 150, 0.08);
+                border: 1px solid rgba(222, 57, 150, 0.2);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 20px;
+                color: #DE3996;
+                position: relative;
+              }
+
+              [data-theme='dark'] .coming-soon-icon-wrap {
+                background: rgba(222, 57, 150, 0.1);
+                border: 1px solid rgba(222, 57, 150, 0.3);
+              }
+
+              .coming-soon-icon-wrap svg {
+                animation: cs-float 3s ease-in-out infinite;
+              }
+
+              @keyframes cs-float {
+                0%, 100% { transform: translateY(0) rotate(0deg); }
+                50% { transform: translateY(-6px) rotate(8deg); }
+              }
+
+              .coming-soon-title {
+                font-family: 'Exo 2', 'Manrope', sans-serif;
+                font-size: 22px;
+                font-weight: 700;
+                color: #1a1625;
+                margin-bottom: 12px;
+              }
+
+              [data-theme='dark'] .coming-soon-title {
+                color: #ffffff;
+              }
+
+              .coming-soon-text {
+                font-family: 'DM Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+                color: rgba(26, 22, 37, 0.75);
+                margin-bottom: 26px;
+                padding: 0 10px;
+              }
+
+              [data-theme='dark'] .coming-soon-text {
+                color: rgba(255, 255, 255, 0.7);
+              }
+
+              .coming-soon-btn {
+                background: linear-gradient(90deg, #DE3996 0%, #BA35FF 100%);
+                color: #ffffff;
+                border: none;
+                border-radius: 30px;
+                padding: 12px 35px;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.25s ease;
+                box-shadow: 0 4px 15px rgba(222, 57, 150, 0.3);
+              }
+
+              .coming-soon-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(222, 57, 150, 0.45);
+              }
+
+              .coming-soon-btn:active {
+                transform: translateY(0);
+              }
+            `}</style>
+            <div className="coming-soon-card" onClick={(e) => e.stopPropagation()}>
+              <div className="coming-soon-glow"></div>
+              <div className="coming-soon-icon-wrap">
+                <Hourglass size={32} />
+              </div>
+              <h3 className="coming-soon-title">{comingSoonFeature} In Progress</h3>
+              <p className="coming-soon-text">
+                {comingSoonFeature === 'Video to 3D' 
+                  ? 'We are actively developing our advanced Video-to-3D pipeline. You will soon be able to upload short clips and generate high-fidelity, textured 3D models automatically.'
+                  : 'Multi-Image 3D reconstruction is currently in the engineering phase. This feature will let you upload multi-angle photos to generate extremely precise 3D assets.'
+                }
+              </p>
+              <button className="coming-soon-btn" onClick={() => setComingSoonModalOpen(false)}>
+                Got it
+              </button>
             </div>
           </div>
         )}

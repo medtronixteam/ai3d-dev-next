@@ -146,18 +146,18 @@ const IconSubscription = () => Icon(SubscriptionIcon, 'Subscription');
 const IconReferal = () => <Gift className="sidebar-svg-icon" />;
 
 const sidebarOptions = [
-  { title: 'Home', icon: IconHome, path: '/platform/' },
-  { title: 'Scan new', icon: IconScan, path: '/platform/new/scan' },
-  { title: 'API & SDK', icon: IconApi, path: '/platform/api-sdk' },
-  { title: 'Recent projects', icon: IconRecent, path: '/platform/recent-projects' },
-  { title: 'Settings', icon: IconSettings, path: '/platform/settings/profile' },
-  { title: 'Support', icon: IconSupport, path: '/platform/support' },
-  { title: 'Profile', icon: IconProfile, path: '/platform/settings/profile' },
-  { title: 'Team', icon: IconTeam, path: '/platform/settings/team' },
-  { title: 'Account', icon: IconAccount, path: '/platform/settings/account' },
-  { title: 'Login', icon: IconLogin, path: '/platform/settings/login' },
-  { title: 'Subscription', icon: IconSubscription, path: '/platform/settings/subscription' },
-  { title: 'Referral', icon: IconReferal, path: '/platform/settings/referal' },
+  { title: 'Home', icon: IconHome, path: '/3dio/' },
+  { title: 'Scan new', icon: IconScan, path: '/3dio/new/scan' },
+  { title: 'API & SDK', icon: IconApi, path: '/3dio/api-sdk' },
+  { title: 'Recent projects', icon: IconRecent, path: '/3dio/recent-projects' },
+  { title: 'Settings', icon: IconSettings, path: '/3dio/settings/profile' },
+  { title: 'Support', icon: IconSupport, path: '/3dio/support' },
+  { title: 'Profile', icon: IconProfile, path: '/3dio/settings/profile' },
+  { title: 'Team', icon: IconTeam, path: '/3dio/settings/team' },
+  { title: 'Account', icon: IconAccount, path: '/3dio/settings/account' },
+  { title: 'Login', icon: IconLogin, path: '/3dio/settings/login' },
+  { title: 'Subscription', icon: IconSubscription, path: '/3dio/settings/subscription' },
+  { title: 'Referral', icon: IconReferal, path: '/3dio/settings/referal' },
 ];
 
 const Sidebar = ({ open = false, onClose, disableExpand = false }) => {
@@ -202,8 +202,8 @@ const Sidebar = ({ open = false, onClose, disableExpand = false }) => {
   }, [token]);
 
   const location = useLocation();
-  const isSettingsPage = location.pathname.startsWith('/platform/settings');
-  const isScanNewPage = location.pathname === '/platform/new/scan';
+  const isSettingsPage = location.pathname.startsWith('/3dio/settings');
+  const isScanNewPage = location.pathname === '/3dio/new/scan';
 
   useEffect(() => {
     if ((isSettingsPage || isScanNewPage) && !isCollapsed) {
@@ -471,7 +471,7 @@ const Sidebar = ({ open = false, onClose, disableExpand = false }) => {
           <div className="sidebar-header">
             {!isCollapsed && (
               <div>
-                <Link to="/platform">
+                <Link to="/3dio">
                   <img src={Logo} className="sidebar-logo-icon" />
                 </Link>
               </div>

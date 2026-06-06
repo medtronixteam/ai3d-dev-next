@@ -87,7 +87,7 @@ const SubscriptionSuccess = () => {
           )}
         </div>
         <div className="d-flex gap-2 justify-content-center" style={{ padding: '22px 28px 34px' }}>
-          <Link to="/platform" className="btn cta-primary">
+          <Link to="/3dio" className="btn cta-primary">
             Go to dashboard
           </Link>
         </div>

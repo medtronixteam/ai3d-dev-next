@@ -59,7 +59,7 @@ const Subscription = () => {
     } catch (err) {
       // Fallback: keep previous behavior only if subscribe fails
       try {
-        window.open('/platform/subscription/card', '_blank');
+        window.open('/3dio/subscription/card', '_blank');
       } catch (_) {}
     } finally {
       setSubscribingPlan(null);

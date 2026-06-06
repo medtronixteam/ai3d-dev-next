@@ -338,7 +338,7 @@ if (showManagePopup) {
 
             <div className="popup-menu">
               {!activeTeam ? (
-                <Link to="/platform/settings/profile" className="menu-item" onClick={onClose}>
+                <Link to="/3dio/settings/profile" className="menu-item" onClick={onClose}>
                   <FiSettings size={18} />
                   <span>Settings</span>
                 </Link>
@@ -351,11 +351,11 @@ if (showManagePopup) {
                 <FiHelpCircle size={18} />
                 <span>Help & resources</span>
               </Link>
-              <Link to="/platform/subscription" className="menu-item" onClick={onClose}>
+              <Link to="/3dio/subscription" className="menu-item" onClick={onClose}>
                 <FiGift size={18} />
                 <span>Plan & pricing</span>
               </Link>
-              <Link to="/platform/trash/projects" className="menu-item" onClick={onClose}>
+              <Link to="/3dio/trash/projects" className="menu-item" onClick={onClose}>
                 <Trash2 size={18} />
                 <span>Trash</span>
               </Link>

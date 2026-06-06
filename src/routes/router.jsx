@@ -119,7 +119,7 @@ const routes = [
 
       // Dashboard Routes (relative children)
       {
-        path: '/platform',
+        path: '/3dio',
         element: (
           <MainLayout>
             <Suspense fallback={<PageLoader />}>
@@ -138,7 +138,7 @@ const routes = [
             ),
           },
           {
-            path: '/platform/trash/projects',
+            path: '/3dio/trash/projects',
             element: (
               <ProtectedRoute>
                 <TrashProjects />
@@ -235,12 +235,12 @@ const routes = [
       },
 
       // Other Routes
-      { path: '/platform/subscription/card', element: <CardPayment /> },
+      { path: '/3dio/subscription/card', element: <CardPayment /> },
       { path: '/login/success', element: <OAuthSuccess /> },
       { path: '/subscription/success', element: <SubscriptionSuccess /> },
       {
         path: '/subscription/cancelled',
-        element: <Navigate to="/platform/settings/subscription" replace />,
+        element: <Navigate to="/3dio/settings/subscription" replace />,
       },
 
       // Auth Routes

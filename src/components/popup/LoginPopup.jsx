@@ -85,9 +85,9 @@ const LoginPopup = ({ onClose, onLoginSuccess }) => {
         <button className="close-btn" onClick={handleClose}><FiX /></button>
         <div className="login-form-container">
           <h3 className="fw-bold mb-2">Sign in</h3>
-          <p className="mb-3">
+          {/* <p className="mb-3">
             New user? <Link to="/signup" onClick={handleClose} style={{ color: '#e6339a' }}>Create an account.</Link>
-          </p>
+          </p> */}
           <form onSubmit={handleSubmit} autoComplete='off'>
             <div className="mb-3">
               <label className="form-label">Email address</label>

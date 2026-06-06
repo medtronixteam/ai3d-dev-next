@@ -218,8 +218,8 @@ const Navbar = ({ onSidebarToggle, sidebarOpen }) => {
   };
 
   // Check if current route is a settings page or recent projects page
-  const isSettingsPage = location.pathname.startsWith('/platform/settings');
-  const isRecentProjectsPage = location.pathname === '/platform/recent-projects';
+  const isSettingsPage = location.pathname.startsWith('/3dio/settings');
+  const isRecentProjectsPage = location.pathname === '/3dio/recent-projects';
 
   // Close dropdown on outside click
   React.useEffect(() => {
@@ -279,7 +279,7 @@ const Navbar = ({ onSidebarToggle, sidebarOpen }) => {
               <img src={Diamond} alt="Upgrade Icon" style={{ width: 18, marginRight: 6 }} />
               Upgrade your plan
             </button>
-            {!token && (
+            {/* {!token && (
               <button
                 className="sign-in-btn"
                 onClick={() => navigate('/signup')}
@@ -287,7 +287,7 @@ const Navbar = ({ onSidebarToggle, sidebarOpen }) => {
               >
                 Sign up
               </button>
-            )}
+            )} */}
           </>
         )}
       </div>

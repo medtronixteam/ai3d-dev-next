@@ -23,7 +23,7 @@ export const sitemap = [
       dark: WhiteHomeIcon,
       active: HomeIcon,
     },
-    path: '/platform/',
+    path: '/3dio/',
   },
   {
     id: 2,
@@ -33,7 +33,7 @@ export const sitemap = [
       dark: WhiteScan,
       active: ScanIcon,
     },
-    path: '/platform/new/scan',
+    path: '/3dio/new/scan',
   },
   {
     id: 3,
@@ -43,7 +43,7 @@ export const sitemap = [
       dark: WhiteSubscription,
       active: SubscriptionIcon,
     },
-    path: '/platform/subscription',
+    path: '/3dio/subscription',
   },
   {
     id: 4,
@@ -53,7 +53,7 @@ export const sitemap = [
       dark: WhiteSdk,
       active: SdkIcon,
     },
-    path: '/platform/api-sdk',
+    path: '/3dio/api-sdk',
   },
   {
     id: 5,
@@ -63,7 +63,7 @@ export const sitemap = [
       dark: WhiteProject,
       active: ProjectIcon,
     },
-    path: '/platform/recent-projects',
+    path: '/3dio/recent-projects',
     authRequired: true,
   },
 ];
@@ -77,7 +77,7 @@ export const bottomLinks = [
       dark: WhiteSetting,
       active: SettingsIcon,
     },
-    path: '/platform/settings/profile',
+    path: '/3dio/settings/profile',
     authRequired: true,
   },
   {
@@ -88,6 +88,6 @@ export const bottomLinks = [
       dark: WhiteSupport,
       active: SupportIcon,
     },
-    path: '/platform/support',
+    path: '/3dio/support',
   },
 ];

@@ -260,7 +260,7 @@ export default function Support() {
         <div className="ticket-history-link">
           {user ? (
             <span>
-              or <a href="/platform/support-ticket-history">view your ticket history</a>
+              or <a href="/3dio/support-ticket-history">view your ticket history</a>
             </span>
           ) : (
             <span

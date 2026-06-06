@@ -34,9 +34,9 @@ const SignIn = () => {
         setTimeout(() => {
           const inviteToken = localStorage.getItem('invite_token');
           if (inviteToken) {
-            navigate(`/platform/team/invite/accept/${inviteToken}`);
+            navigate(`/3dio/team/invite/accept/${inviteToken}`);
           } else {
-            navigate('/platform/');
+            navigate('/3dio/');
           }
         }, 100);
 
@@ -80,9 +80,9 @@ const SignIn = () => {
       setTimeout(() => {
         const inviteToken = localStorage.getItem('invite_token');
         if (inviteToken) {
-          navigate(`/platform/team/invite/accept/${inviteToken}`);
+          navigate(`/3dio/team/invite/accept/${inviteToken}`);
         } else {
-          navigate('/platform/');
+          navigate('/3dio/');
         }
       }, 100);
 
@@ -98,7 +98,7 @@ const SignIn = () => {
     if (user && user.email) {
       const inviteToken = localStorage.getItem('invite_token');
       if (inviteToken) {
-        navigate(`/platform/team/invite/accept/${inviteToken}`);
+        navigate(`/3dio/team/invite/accept/${inviteToken}`);
       }
     }
   }, []);
@@ -121,9 +121,9 @@ const SignIn = () => {
           <div className="col-md-7 col-lg-5 d-flex align-items-center justify-content-center pb-5">
             <div className="card w-100 mx-lg-4">
               <h3 className="fw-bold mb-2">Sign in</h3>
-              <p className="mb-3">
+              {/* <p className="mb-3">
                 New user? <Link to="/signup">Create an account.</Link>
-              </p>
+              </p> */}
               <form onSubmit={handleSubmit} autoComplete="off">
                 <div className="mb-3">
                   <label className="form-label">Email address</label>

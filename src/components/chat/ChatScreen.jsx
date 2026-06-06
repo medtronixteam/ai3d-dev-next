@@ -136,7 +136,7 @@ const ChatScreen = ({ onClose }) => {
         </button>
       </div>
       <div className="help-text">
-        Need more help? Help our <Link to="/platform/support">visit center</Link>
+        Need more help? Help our <Link to="/3dio/support">visit center</Link>
       </div>
     </div>
   );

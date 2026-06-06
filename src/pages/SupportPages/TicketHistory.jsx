@@ -93,7 +93,7 @@ const TicketHistory = () => {
   };
 
   const handleClick = (id) => {
-    navigate(`/platform/support-ticket-detail/${id}`);
+    navigate(`/3dio/support-ticket-detail/${id}`);
   };
 
   return (

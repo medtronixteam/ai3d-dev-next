@@ -112,7 +112,7 @@ const Subscription = () => {
               At the end of 14 days,you can choose a plan that fits your
               needs.We'll notify you 2 days before your trial ends.
             </p>
-            <button className="subscription-plan-button" onClick={() => window.open('/platform/subscription/card', '_blank')}>Start Free Trial</button>
+            <button className="subscription-plan-button" onClick={() => window.open('/3dio/subscription/card', '_blank')}>Start Free Trial</button>
           </div>
         </div>
         <div className="col-md-6 col-lg-4 mt-lg-0 mt-3 subscription-popular">

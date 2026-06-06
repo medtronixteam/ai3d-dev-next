@@ -155,7 +155,7 @@ const TrashProjects = () => {
 
   const handleViewProject = (project) => {
     setDropdownOpen(null);
-    navigate(`/platform/preview/${project.id}`);
+    navigate(`/3dio/preview/${project.id}`);
   };
 
   const handleRestoreClick = (project) => {

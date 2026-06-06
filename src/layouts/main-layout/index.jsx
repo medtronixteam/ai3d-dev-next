@@ -42,8 +42,8 @@ const MainLayout = ({ children }) => {
   const handleCollapseToggle = () => setIsCollapsed(prev => !prev);
   const handleAutoCollapse = () => setIsCollapsed(true);
 
-  // Show custom sidebar for /platform/settings routes only (not /team) on mobile
-  const isCustomSidebarRoute = location.pathname.startsWith('/platform/settings');
+  // Show custom sidebar for /3dio/settings routes only (not /team) on mobile
+  const isCustomSidebarRoute = location.pathname.startsWith('/3dio/settings');
   let shouldShowCustomSidebar = false;
   let shouldShowMainSidebar = true;
   let shouldShowNavbar = true;
@@ -64,7 +64,7 @@ const MainLayout = ({ children }) => {
     }
   } else {
     // Desktop logic
-    if (isCustomSidebarRoute || location.pathname.startsWith('/platform/team')) {
+    if (isCustomSidebarRoute || location.pathname.startsWith('/3dio/team')) {
       shouldShowCustomSidebar = isCollapsed;
       shouldShowMainSidebar = true;
     }
@@ -73,7 +73,7 @@ const MainLayout = ({ children }) => {
   // Auto-collapse sidebar on desktop for settings/team pages, expand otherwise
   useEffect(() => {
     if (!isMobile992) {
-      if (isCustomSidebarRoute || location.pathname === '/platform/new/scan') {
+      if (isCustomSidebarRoute || location.pathname === '/3dio/new/scan') {
         setIsCollapsed(true);
       } else {
         setIsCollapsed(false);
@@ -132,7 +132,7 @@ const MainLayout = ({ children }) => {
           isCollapsed={isCollapsed}
           onToggleCollapse={handleCollapseToggle} 
           onAutoCollapse={handleAutoCollapse}
-          disableExpand={!isMobile992 && location.pathname === '/platform/new/scan'}
+          disableExpand={!isMobile992 && location.pathname === '/3dio/new/scan'}
         />
       )}
       {shouldShowCustomSidebar && <CustomSidebar onClose={handleSidebarClose} />}

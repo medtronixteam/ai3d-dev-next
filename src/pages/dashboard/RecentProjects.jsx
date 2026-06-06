@@ -377,7 +377,7 @@ useEffect(() => {
 
   // const handleViewProject = (project) => {
   //   setDropdownOpen(null);
-  //   navigate(`//platform/new/scan/${project.id}`);
+  //   navigate(`//3dio/new/scan/${project.id}`);
   // };
 
   const handleViewProject = (project) => {
@@ -385,7 +385,7 @@ useEffect(() => {
   console.log('[Recent Projects] 🚀 Navigating to view project:', project.id);
   console.log('[Recent Projects] 📦 Project data:', project);
   
-  navigate('/platform/new/scan', { 
+  navigate('/3dio/new/scan', { 
     state: { 
       projectId: project.id,
       viewMode: true 

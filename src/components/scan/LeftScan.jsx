@@ -52,6 +52,7 @@ const LeftScan = ({
   setVideoFileName,
   videoLoading,
   handleVideoSubmit,
+  onShowComingSoon,
 }) => {
   const singleImageInputRef = useRef(null);
   const imageInputRef = useRef(null);
@@ -236,7 +237,7 @@ const LeftScan = ({
                 <div className="d-flex gap-2 justify-content-between">
                   <div
                     className="upload-box d-flex flex-column align-items-center justify-content-center text-center"
-                    onClick={() => !(isProcessing || isViewOnly) && imageInputRef.current?.click()}
+                    onClick={() => !(isProcessing || isViewOnly) && onShowComingSoon('Multiple Image to 3D')}
                     style={{
                       padding: '10px',
                       cursor: isProcessing || isViewOnly ? 'not-allowed' : 'pointer',
@@ -249,7 +250,7 @@ const LeftScan = ({
 
                   <div
                     className="upload-box d-flex flex-column align-items-center justify-content-center text-center"
-                    onClick={() => !(isProcessing || isViewOnly) && imageInputRef.current?.click()}
+                    onClick={() => !(isProcessing || isViewOnly) && onShowComingSoon('Multiple Image to 3D')}
                     style={{
                       padding: '10px',
                       cursor: isProcessing || isViewOnly ? 'not-allowed' : 'pointer',
@@ -262,7 +263,7 @@ const LeftScan = ({
 
                   <div
                     className="upload-box d-flex flex-column align-items-center justify-content-center text-center"
-                    onClick={() => !(isProcessing || isViewOnly) && imageInputRef.current?.click()}
+                    onClick={() => !(isProcessing || isViewOnly) && onShowComingSoon('Multiple Image to 3D')}
                     style={{
                       padding: '10px',
                       cursor: isProcessing || isViewOnly ? 'not-allowed' : 'pointer',
@@ -305,7 +306,7 @@ const LeftScan = ({
                     {images.length < 15 && (
                       <div
                         className="thumb-box add"
-                        onClick={() => !(isProcessing || isViewOnly) && imageInputRef.current?.click()}
+                        onClick={() => !(isProcessing || isViewOnly) && onShowComingSoon('Multiple Image to 3D')}
                       >
                         <Plus size={20} />
                       </div>
@@ -342,7 +343,7 @@ const LeftScan = ({
             <div
               className={`video-upload-zone border-dashed rounded-4 p-3 text-center mb-4 cursor-pointer ${isProcessing || isViewOnly ? 'pe-none opacity-50' : ''
                 }`}
-              onClick={() => !(isProcessing || isViewOnly) && videoInputRef.current?.click()}
+              onClick={() => !(isProcessing || isViewOnly) && onShowComingSoon('Video to 3D')}
             >
               <img
                 src={videoIcon}

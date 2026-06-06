@@ -231,7 +231,7 @@ const ScanPage = () => {
       const projectToken = response.data?.token || response.data?.data?.token;
 
       if (projectToken) {
-        window.location.href = `/platform/preview/${projectToken}`;
+        window.location.href = `/3dio/preview/${projectToken}`;
       } else {
         throw new Error('Project token not returned');
       }
@@ -664,7 +664,7 @@ const ScanPage = () => {
 
     const newToken = response.data.token;
     if (newToken) {
-      navigate(`/platform/preview/${newToken}`);
+      navigate(`/3dio/preview/${newToken}`);
     } else {
       throw new Error("No token returned from generation");
     }
@@ -779,7 +779,7 @@ const ScanPage = () => {
 
   //   setIsLoading(true);
   //   try {
-  //     navigate(`/platform/preview/${videoProjectToken}`, {
+  //     navigate(`/3dio/preview/${videoProjectToken}`, {
   //       state: { selectedFrames },
   //     });
   //   } catch (err) {
@@ -932,10 +932,10 @@ const ScanPage = () => {
             { headers: { Authorization: `Bearer ${token}` } },
           );
           if (completeRes.status === 200) {
-            window.location.href = `/platform/preview/${createdProjectToken}`;
+            window.location.href = `/3dio/preview/${createdProjectToken}`;
           }
         } catch (err) {
-          window.location.href = `/platform/preview/${createdProjectToken}`;
+          window.location.href = `/3dio/preview/${createdProjectToken}`;
         }
       } else {
         setSuccessMsg('Some images failed to upload.');
@@ -1037,7 +1037,7 @@ const ScanPage = () => {
       const projectToken =
         res.data?.token || res.data?.data?.token || res.data?.id || res.data?.data?.id;
       if (res.status === 200 && projectToken) {
-        navigate(`/platform/preview/${projectToken}`);
+        navigate(`/3dio/preview/${projectToken}`);
       }
     } catch (err) {
       setPromptError(

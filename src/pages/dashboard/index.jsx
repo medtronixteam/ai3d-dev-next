@@ -826,10 +826,10 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
                   ? 'linear-gradient(90deg, #3E112C, #190F21)'
                   : 'linear-gradient(90deg, #FFEDF7, #F2F0FE)'),
             borderRadius: 28,
-            maxWidth: '650px',
+            maxWidth: '850px',
             width: '90vw',
-            height: '70%',
-            maxHeight: '65vh',
+            height: '80%',
+            maxHeight: '80vh',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'flex-end',
@@ -1097,6 +1097,8 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
                     height: '100%',
                     display: 'flex',
                     flexDirection: 'column',
+                    padding: '80px 40px 40px',
+                    boxSizing: 'border-box',
                   }}
                 >
                   <model-viewer

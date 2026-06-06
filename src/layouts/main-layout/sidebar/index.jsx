@@ -651,7 +651,7 @@ const Sidebar = ({ open = false, onClose, disableExpand = false }) => {
                 </span>
               ) : (
                 <div className="d-flex gap-2">
-                  <span className="user-name">{displayName}</span>
+                  <span className="user-name">{displayName ? displayName.trim().split(' ')[0] : ''}</span>
                   <div className="upgrade-coins-btn">
                     <img
                       src={UpgradeCoin}
@@ -779,7 +779,7 @@ const Sidebar = ({ open = false, onClose, disableExpand = false }) => {
                 <p>{contributorError}</p>
 
                 <a
-                  href="https://dev_frontend.ai3dscanning.com/contributor/program"
+                  href="/contributor/program"
                   rel="noopener noreferrer"
                   style={{
                     textDecoration: 'underline',

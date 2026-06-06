@@ -107,7 +107,15 @@ const ReferralPage = () => {
 
         setReferralList(listRes.data?.data || []);
 
-        const rawUrl = linkRes.data?.url || '';
+        let rawUrl = linkRes.data?.url || '';
+        if (rawUrl) {
+          try {
+            const urlObj = new URL(rawUrl);
+            rawUrl = `${window.location.origin}${urlObj.pathname}${urlObj.search}`;
+          } catch (e) {
+            console.error('Error parsing referral URL:', e);
+          }
+        }
         setInviteLink(rawUrl);
       } catch (err) {
         console.error('Failed to fetch referral data:', err);

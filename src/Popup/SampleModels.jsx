@@ -1,6 +1,104 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './samplemodel.css';
 import { Maximize, Maximize2, X } from 'lucide-react';
+import { FastAverageColor } from 'fast-average-color';
+import CustomLoader from '../components/loader/CustomLoader';
+
+const makeColorLighter = (hexColor, percent = 40) => {
+  let hex = hexColor.replace(/^\s*#|\s*$/g, '');
+  if (hex.length === 3) {
+    hex = hex.replace(/(.)/g, '$1$1');
+  }
+  let r = parseInt(hex.substr(0, 2), 16),
+      g = parseInt(hex.substr(2, 2), 16),
+      b = parseInt(hex.substr(4, 2), 16);
+
+  r = Math.min(255, Math.floor(r + (255 - r) * (percent / 100)));
+  g = Math.min(255, Math.floor(g + (255 - g) * (percent / 100)));
+  b = Math.min(255, Math.floor(b + (255 - b) * (percent / 100)));
+
+  return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+};
+
+const getDeterministicHexColor = (id, text = '') => {
+  if (!id) return '#f5f5f5';
+  let hash = 0;
+  const str = String(id) + (text ? String(text) : '');
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  
+  const hue = Math.abs(hash) % 360;
+  const s = 65; 
+  const l = 60; 
+  
+  const hDecimal = hue / 360;
+  const sDecimal = s / 100;
+  const lDecimal = l / 100;
+  
+  let r, g, b;
+  
+  if (sDecimal === 0) {
+    r = g = b = lDecimal;
+  } else {
+    const q = lDecimal < 0.5 ? lDecimal * (1 + sDecimal) : lDecimal + sDecimal - lDecimal * sDecimal;
+    const p = 2 * lDecimal - q;
+    
+    const hue2rgb = (p, q, t) => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1/6) return p + (q - p) * 6 * t;
+      if (t < 1/2) return q;
+      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      return p;
+    };
+    
+    r = hue2rgb(p, q, hDecimal + 1/3);
+    g = hue2rgb(p, q, hDecimal);
+    b = hue2rgb(p, q, hDecimal - 1/3);
+  }
+  
+  const toHex = (x) => {
+    const hex = Math.round(x * 255).toString(16);
+    return hex.length === 1 ? '0' : '' + hex;
+  };
+  
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+};
+
+const getCardBgColor = (baseColor, isDark) => {
+  if (!baseColor) {
+    return isDark ? '#1b1b22' : '#ffffff';
+  }
+  let hex = baseColor.replace(/^\s*#|\s*$/g, '');
+  if (hex.length === 3) {
+    hex = hex.replace(/(.)/g, '$1$1');
+  }
+  let r = parseInt(hex.substr(0, 2), 16),
+      g = parseInt(hex.substr(2, 2), 16),
+      b = parseInt(hex.substr(4, 2), 16);
+      
+  if (isNaN(r) || isNaN(g) || isNaN(b)) {
+    return isDark ? '#1b1b22' : '#ffffff';
+  }
+
+  if (isDark) {
+    r = Math.min(255, Math.floor(r * 0.45) + 20);
+    g = Math.min(255, Math.floor(g * 0.45) + 20);
+    b = Math.min(255, Math.floor(b * 0.45) + 25);
+  } else {
+    r = Math.min(255, Math.floor(r + (255 - r) * 0.2));
+    g = Math.min(255, Math.floor(g + (255 - g) * 0.2));
+    b = Math.min(255, Math.floor(b + (255 - b) * 0.2));
+  }
+
+  const toHexVal = (x) => {
+    const hexVal = Math.round(x).toString(16);
+    return hexVal.length === 1 ? '0' : '' + hexVal;
+  };
+
+  return `#${toHexVal(r)}${toHexVal(g)}${toHexVal(b)}`;
+};
 
 const SampleModels = ({ model, onClose }) => {
   const overlayRef  = useRef(null);
@@ -35,6 +133,45 @@ const SampleModels = ({ model, onClose }) => {
   const imgUrl = model?.image
     ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
     : null;
+
+  const [modalBgColor, setModalBgColor] = useState(null);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
+
+  // Theme detection
+  useEffect(() => {
+    const checkTheme = () => {
+      setIsDarkMode(document.documentElement.getAttribute('data-theme') === 'dark');
+    };
+    checkTheme();
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+    return () => observer.disconnect();
+  }, []);
+
+  // Background color extraction
+  useEffect(() => {
+    if (imgUrl) {
+      const fallback = getDeterministicHexColor(model?.id, model?.title || model?.name);
+      setModalBgColor(fallback);
+
+      const fac = new FastAverageColor();
+      fac.getColorAsync(imgUrl, { algorithm: 'simple' })
+        .then((color) => {
+          const lighter = makeColorLighter(color.hex, 30);
+          setModalBgColor(lighter);
+        })
+        .catch((err) => {
+          console.error('Error getting light average color:', err);
+          setModalBgColor(fallback);
+        });
+    } else {
+      setModalBgColor(null);
+    }
+  }, [imgUrl, model]);
 
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') onClose(); };
@@ -78,7 +215,16 @@ const SampleModels = ({ model, onClose }) => {
       aria-modal="true"
       aria-label={model?.title || '3D Model Preview'}
     >
-      <div className="sm-modal">
+      <div 
+        className="sm-modal"
+        style={{
+          background: modalBgColor
+            ? getCardBgColor(modalBgColor, isDarkMode)
+            : (isDarkMode
+                ? 'linear-gradient(90deg, #3E112C, #190F21)'
+                : 'linear-gradient(90deg, #FFEDF7, #F2F0FE)'),
+        }}
+      >
 
         <div className="sm-header">
           <h3 className="sm-title">
@@ -173,7 +319,17 @@ const SampleModels = ({ model, onClose }) => {
             </>
           ) : imgUrl ? (
             <div className="sm-img-fallback">
-              <img src={imgUrl} alt={model?.title || 'Model preview'} />
+              {!imgLoaded && (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px', width: '100%' }}>
+                  <CustomLoader />
+                </div>
+              )}
+              <img 
+                src={imgUrl} 
+                alt={model?.title || 'Model preview'} 
+                onLoad={() => setImgLoaded(true)}
+                style={{ display: imgLoaded ? 'block' : 'none' }}
+              />
             </div>
           ) : (
             <div className="sm-empty-state">

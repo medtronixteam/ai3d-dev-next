@@ -16,6 +16,103 @@ import fullScreen from '../../pages/images/icons/full-screen.png';
 import { useAuth } from '../../context/AuthContext';
 import { baseURL } from '../../config';
 import { toast } from 'react-toastify';
+import { FastAverageColor } from 'fast-average-color';
+
+const makeColorLighter = (hexColor, percent = 40) => {
+  let hex = hexColor.replace(/^\s*#|\s*$/g, '');
+  if (hex.length === 3) {
+    hex = hex.replace(/(.)/g, '$1$1');
+  }
+  let r = parseInt(hex.substr(0, 2), 16),
+      g = parseInt(hex.substr(2, 2), 16),
+      b = parseInt(hex.substr(4, 2), 16);
+
+  r = Math.min(255, Math.floor(r + (255 - r) * (percent / 100)));
+  g = Math.min(255, Math.floor(g + (255 - g) * (percent / 100)));
+  b = Math.min(255, Math.floor(b + (255 - b) * (percent / 100)));
+
+  return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+};
+
+const getDeterministicHexColor = (id, text = '') => {
+  if (!id) return '#f5f5f5';
+  let hash = 0;
+  const str = String(id) + (text ? String(text) : '');
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  
+  const hue = Math.abs(hash) % 360;
+  const s = 65; 
+  const l = 60; 
+  
+  const hDecimal = hue / 360;
+  const sDecimal = s / 100;
+  const lDecimal = l / 100;
+  
+  let r, g, b;
+  
+  if (sDecimal === 0) {
+    r = g = b = lDecimal;
+  } else {
+    const q = lDecimal < 0.5 ? lDecimal * (1 + sDecimal) : lDecimal + sDecimal - lDecimal * sDecimal;
+    const p = 2 * lDecimal - q;
+    
+    const hue2rgb = (p, q, t) => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1/6) return p + (q - p) * 6 * t;
+      if (t < 1/2) return q;
+      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      return p;
+    };
+    
+    r = hue2rgb(p, q, hDecimal + 1/3);
+    g = hue2rgb(p, q, hDecimal);
+    b = hue2rgb(p, q, hDecimal - 1/3);
+  }
+  
+  const toHex = (x) => {
+    const hex = Math.round(x * 255).toString(16);
+    return hex.length === 1 ? '0' : '' + hex;
+  };
+  
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+};
+
+const getCardBgColor = (baseColor, isDark) => {
+  if (!baseColor) {
+    return isDark ? '#1b1b22' : '#ffffff';
+  }
+  let hex = baseColor.replace(/^\s*#|\s*$/g, '');
+  if (hex.length === 3) {
+    hex = hex.replace(/(.)/g, '$1$1');
+  }
+  let r = parseInt(hex.substr(0, 2), 16),
+      g = parseInt(hex.substr(2, 2), 16),
+      b = parseInt(hex.substr(4, 2), 16);
+      
+  if (isNaN(r) || isNaN(g) || isNaN(b)) {
+    return isDark ? '#1b1b22' : '#ffffff';
+  }
+
+  if (isDark) {
+    r = Math.min(255, Math.floor(r * 0.45) + 20);
+    g = Math.min(255, Math.floor(g * 0.45) + 20);
+    b = Math.min(255, Math.floor(b * 0.45) + 25);
+  } else {
+    r = Math.min(255, Math.floor(r + (255 - r) * 0.2));
+    g = Math.min(255, Math.floor(g + (255 - g) * 0.2));
+    b = Math.min(255, Math.floor(b + (255 - b) * 0.2));
+  }
+
+  const toHexVal = (x) => {
+    const hexVal = Math.round(x).toString(16);
+    return hexVal.length === 1 ? '0' : '' + hexVal;
+  };
+
+  return `#${toHexVal(r)}${toHexVal(g)}${toHexVal(b)}`;
+};
 
 const RightScan = ({
   activeTab,
@@ -41,6 +138,64 @@ const RightScan = ({
   const [page, setPage] = React.useState(1);
   const [hasMore, setHasMore] = React.useState(true);
   const [searchText, setSearchText] = React.useState('');
+  const [cardBgColors, setCardBgColors] = React.useState({});
+  const [isDarkMode, setIsDarkMode] = React.useState(false);
+  const [loadedImages, setLoadedImages] = React.useState({});
+
+  // Theme detection
+  React.useEffect(() => {
+    const checkTheme = () => {
+      setIsDarkMode(document.documentElement.getAttribute('data-theme') === 'dark');
+    };
+    checkTheme();
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+    return () => observer.disconnect();
+  }, []);
+
+  // Background color extraction for library cards
+  React.useEffect(() => {
+    const fetchColors = async () => {
+      const promises = libraryModels.map(async (model) => {
+        const fallback = getDeterministicHexColor(model.id, model.title || model.name);
+        const imgUrl = model.thumbnail
+          ? `https://app.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
+          : model.image
+            ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
+            : null;
+
+        if (imgUrl) {
+          try {
+            const fac = new FastAverageColor();
+            const color = await fac.getColorAsync(imgUrl, { algorithm: 'simple' });
+            const lightColor = makeColorLighter(color.hex, 30);
+            return { id: model.id, color: lightColor };
+          } catch (e) {
+            console.error('Error extracting color for model', model.id, e);
+            return { id: model.id, color: fallback };
+          }
+        }
+        return { id: model.id, color: fallback };
+      });
+
+      const results = await Promise.all(promises);
+      const newColors = {};
+      results.forEach(res => {
+        if (res.color) {
+          newColors[res.id] = res.color;
+        }
+      });
+
+      setCardBgColors(prev => ({ ...prev, ...newColors }));
+    };
+
+    if (libraryModels.length > 0) {
+      fetchColors();
+    }
+  }, [libraryModels]);
 
   const fetchLibraryModels = React.useCallback(async (pageNum = 1, query = '', append = false) => {
     setLibraryLoading(true);
@@ -189,6 +344,56 @@ const RightScan = ({
 
   return (
     <div className="col-lg-3 ps-lg-3 my-lg-0 mt-3 mb-5">
+      <style>{`
+        /* Custom image loader matching platform styling */
+        .rp-img-loader {
+          width: 56px;
+          height: 56px;
+          position: relative;
+          background: transparent !important;
+          border-radius: 4px;
+          overflow: hidden;
+        }
+
+        .rp-img-loader:before {
+          content: "";
+          position: absolute;
+          left: 0;
+          bottom: 0;
+          width: 36px;
+          height: 36px;
+          transform: rotate(45deg) translate(30%, 40%);
+          background: color-mix(in srgb, #DE3996 60%, #ffffff 40%);
+          box-shadow: 24px -26px 0 4px #DE3996;
+          animation: rp-slide 2s infinite ease-in-out alternate;
+        }
+
+        .rp-img-loader:after {
+          content: "";
+          position: absolute;
+          left: 10px;
+          top: 10px;
+          width: 14px;
+          height: 14px;
+          border-radius: 50%;
+          background: #DE3996;
+          transform: rotate(0deg);
+          transform-origin: 25px 105px;
+          animation: rp-rotate 2s infinite ease-in-out;
+        }
+
+        @keyframes rp-slide {
+          0%, 100% { bottom: -25px }
+          25%, 75% { bottom: -1px }
+          20%, 80% { bottom: 1px }
+        }
+
+        @keyframes rp-rotate {
+          0% { transform: rotate(-15deg) }
+          25%, 75% { transform: rotate(0deg) }
+          100% { transform: rotate(25deg) }
+        }
+      `}</style>
       <div className="library-card-outer">
         {activeTab === 'library' && (
           <div className="upgrade-box p-2 rounded-4 m-3">
@@ -241,20 +446,47 @@ const RightScan = ({
                           ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
                           : 'https://picsum.photos/200/200?random=' + model.id;
 
+                      const isImgLoaded = loadedImages[model.id];
+                      const bgColor = cardBgColors[model.id] || '#f5f5f5';
+
                       return (
                         <div key={model.id} className="col-6">
                           <div
-                            className="gallery-card rounded-3 shadow-sm cursor-pointer position-relative overflow-hidden"
+                            className="gallery-card rounded-3 shadow-sm cursor-pointer position-relative overflow-hidden d-flex align-items-center justify-content-center"
                             style={{
-                              backgroundImage: `url(${imgUrl})`,
-                              backgroundSize: 'cover',
-                              backgroundPosition: 'center',
+                              backgroundColor: getCardBgColor(bgColor, isDarkMode),
                               height: '110px',
                               border: '1px solid rgba(255,255,255,0.05)',
                             }}
                             onClick={() => handleModelClick(model)}
                             title={model.title || model.name}
                           >
+                            {!isImgLoaded && (
+                              <div
+                                style={{
+                                  position: 'absolute',
+                                  inset: 0,
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  zIndex: 2,
+                                }}
+                              >
+                                <span className="rp-img-loader" aria-label="loading thumbnail"></span>
+                              </div>
+                            )}
+                            <img
+                              src={imgUrl}
+                              alt={model.title || model.name}
+                              onLoad={() => setLoadedImages(prev => ({ ...prev, [model.id]: true }))}
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                                opacity: isImgLoaded ? 1 : 0,
+                                transition: 'opacity 0.3s ease',
+                              }}
+                            />
                             <div 
                               style={{
                                 position: 'absolute',
@@ -269,6 +501,7 @@ const RightScan = ({
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
                                 textAlign: 'center',
+                                zIndex: 3,
                               }}
                             >
                               {model.title || model.name || 'Untitled'}

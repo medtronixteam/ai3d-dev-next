@@ -308,6 +308,21 @@ const RightScan = ({
               tempUrl = tempUrl.replace('/storage//', '/storage/models/');
             }
             url = tempUrl;
+
+            // Record view count
+            try {
+              fetch(`${baseURL}/model/view/count`, {
+                method: 'POST',
+                headers: {
+                  ...headers,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ model_id: model.id }),
+              });
+              console.log('Successfully recorded view for library model:', model.id);
+            } catch (err) {
+              console.error('Failed to hit view count API:', err);
+            }
           }
         }
       } catch (err) {

@@ -3,6 +3,7 @@ import './samplemodel.css';
 import { Maximize, Maximize2, X } from 'lucide-react';
 import { FastAverageColor } from 'fast-average-color';
 import CustomLoader from '../components/loader/CustomLoader';
+import { baseURL } from '../config';
 
 const makeColorLighter = (hexColor, percent = 40) => {
   let hex = hexColor.replace(/^\s*#|\s*$/g, '');
@@ -101,6 +102,7 @@ const getCardBgColor = (baseColor, isDark) => {
 };
 
 const SampleModels = ({ model, onClose }) => {
+  console.log('SampleModels render model:', model);
   const overlayRef  = useRef(null);
   const viewerRef   = useRef(null);
   const [modelLoaded, setModelLoaded] = useState(false);
@@ -136,9 +138,7 @@ const SampleModels = ({ model, onClose }) => {
 
   const [modalBgColor, setModalBgColor] = useState(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [imgLoaded, setImgLoaded] = useState(false);
 
-  // Theme detection
   useEffect(() => {
     const checkTheme = () => {
       setIsDarkMode(document.documentElement.getAttribute('data-theme') === 'dark');
@@ -151,6 +151,8 @@ const SampleModels = ({ model, onClose }) => {
     });
     return () => observer.disconnect();
   }, []);
+
+  const [imgLoaded, setImgLoaded] = useState(false);
 
   // Background color extraction
   useEffect(() => {
@@ -182,6 +184,32 @@ const SampleModels = ({ model, onClose }) => {
       document.body.style.overflow = '';
     };
   }, [onClose]);
+
+  useEffect(() => {
+    if (model?.id) {
+      const recordView = async () => {
+        try {
+          const token = localStorage.getItem('token');
+          const headers = {
+            'Content-Type': 'application/json',
+          };
+          if (token && token !== 'null' && token !== 'undefined') {
+            headers['Authorization'] = `Bearer ${token}`;
+          }
+          
+          await fetch(`${baseURL}/model/view/count`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ model_id: model.id }),
+          });
+          console.log('Successfully recorded view for sample model:', model.id);
+        } catch (err) {
+          console.error('Failed to hit view count API:', err);
+        }
+      };
+      recordView();
+    }
+  }, [model?.id]);
 
   useEffect(() => {
     const el = viewerRef.current;
@@ -218,11 +246,7 @@ const SampleModels = ({ model, onClose }) => {
       <div 
         className="sm-modal"
         style={{
-          background: modalBgColor
-            ? getCardBgColor(modalBgColor, isDarkMode)
-            : (isDarkMode
-                ? 'linear-gradient(90deg, #3E112C, #190F21)'
-                : 'linear-gradient(90deg, #FFEDF7, #F2F0FE)'),
+          background: '#ffffff',
         }}
       >
 

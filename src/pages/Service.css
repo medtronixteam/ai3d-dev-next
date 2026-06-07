@@ -328,10 +328,10 @@ html, body {
   height: auto;
 }
 .settings-page-root {
-  background-color: #ffeef8 !important;
+  background-color: #ffffff !important;
 }
 [data-theme='dark'] .settings-page-root {
-  background-color: #110e1f !important;
+  background-color: #000000 !important;
 }
 .profile-main-card {
   background-color: white;

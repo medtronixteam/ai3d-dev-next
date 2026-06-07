@@ -254,11 +254,7 @@ const routes = [
       },
       {
         path: '/signup',
-        element: (
-          <AuthLayout>
-            <SignUp />
-          </AuthLayout>
-        ),
+        element: <Navigate to="/signin" replace />,
       },
       { path: '/reset-password', element: <ResetPassword /> },
 

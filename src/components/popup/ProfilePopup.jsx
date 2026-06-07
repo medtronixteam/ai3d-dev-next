@@ -347,7 +347,7 @@ if (showManagePopup) {
                 <FiUsers size={18} />
                 <span>My Teams</span>
               </div>
-              <Link to="/support" className="menu-item" onClick={onClose}>
+              <Link to="/3dio/support" className="menu-item" onClick={onClose}>
                 <FiHelpCircle size={18} />
                 <span>Help & resources</span>
               </Link>
@@ -359,7 +359,7 @@ if (showManagePopup) {
                 <Trash2 size={18} />
                 <span>Trash</span>
               </Link>
-              <Link to="/session-history" className="menu-item" onClick={onClose}>
+              <Link to="/3dio/session-history" className="menu-item" onClick={onClose}>
                 <FiClock size={18} />
                 <span>Session history</span>
               </Link>

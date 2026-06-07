@@ -651,7 +651,9 @@ const Sidebar = ({ open = false, onClose, disableExpand = false }) => {
                 </span>
               ) : (
                 <div className="d-flex gap-2">
-                  <span className="user-name">{displayName}</span>
+                  <span className="user-name">
+                    {displayName && displayName.length > 10 ? displayName.split(' ')[0] : displayName}
+                  </span>
                   <div className="upgrade-coins-btn">
                     <img
                       src={UpgradeCoin}

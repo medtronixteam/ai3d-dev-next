@@ -10,7 +10,9 @@ import ReferalShare from '../../assets/images/referalShare.svg';
 import Whatsapp from '../../assets/images/Whatsapp.svg';
 import Telegram from '../../assets/images/Telegram.png';
 import CopyLink from '../../assets/images/CopyLink.png';
-import { FiFacebook, FiGithub, FiInstagram, FiLink, FiLinkedin, FiSend } from 'react-icons/fi';
+import { FiFacebook, FiGithub, FiInstagram, FiLink, FiLinkedin, FiSend, FiGift } from 'react-icons/fi';
+import { MdApi } from 'react-icons/md';
+import '../ApiSdk.css';
 import axios from 'axios';
 import { baseURL } from '../../config';
 import { GiTick } from 'react-icons/gi';
@@ -19,6 +21,19 @@ import { ChevronLeft, ChevronRight, Send, Share, Share2 } from 'lucide-react';
 import CustomLoader from '../../components/loader/CustomLoader';
 
 const ReferralPage = () => {
+  return (
+    <div className="api-sdk-container">
+      <div className="api-sdk-card">
+        <MdApi className="api-sdk-icon" />
+        <h2 className="api-sdk-title">Coming Soon</h2>
+        <div className="api-sdk-desc">
+          Referral features are launching soon. Stay tuned!
+        </div>
+      </div>
+    </div>
+  );
+
+  /*
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [filter, setFilter] = useState('All');
   const [referralList, setReferralList] = useState([]);
@@ -436,7 +451,7 @@ const ReferralPage = () => {
                     </div>
                   ) : (
                     <>
-                      {/* Mobile View */}
+                      // Mobile View
                       <div className="referal-page-mobile-history-record">
                         <div className="referal-page-mobile-person-record">
                           <h3>{item.name}</h3>
@@ -542,6 +557,7 @@ const ReferralPage = () => {
       </div>
     </section>
   );
+  */
 };
 
 export default ReferralPage;

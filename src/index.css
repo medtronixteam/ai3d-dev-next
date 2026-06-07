@@ -268,9 +268,14 @@ ul {
 
 /* pink toast style */
 .pink-toast {
-  background: #fff !important;     
+  background: var(--body-bg) !important;     
   border-left: 5px solid #DE3996; 
-  color: #000 !important;          
+  color: var(--text-primary) !important;          
+}
+
+[data-theme='dark'] .pink-toast {
+  border: 1px solid #333333;
+  border-left: 5px solid #DE3996;
 }
 
 .pink-toast .Toastify__progress-bar {
@@ -279,7 +284,33 @@ ul {
 
 .pink-toast svg {
   color: #DE3996 !important;      
-   fill: #DE3996 !important;
+  fill: #DE3996 !important;
+}
+
+/* Custom info toast style styled to match project's pink theme and light/dark theme */
+.Toastify__toast--info {
+  background: var(--body-bg) !important;
+  color: var(--text-primary) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+[data-theme='dark'] .Toastify__toast--info {
+  border: 1px solid #333333 !important;
+}
+
+.Toastify__toast--info .Toastify__progress-bar {
+  background: #DE3996 !important;
+}
+
+.Toastify__toast--info .Toastify__toast-icon svg,
+.Toastify__toast--info svg:first-of-type {
+  color: #DE3996 !important;
+  fill: #DE3996 !important;
+}
+
+.Toastify__toast--info .Toastify__close-button svg {
+  color: inherit !important;
+  fill: inherit !important;
 }
 
 /* Ensure toast notifications are above modals */

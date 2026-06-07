@@ -214,7 +214,7 @@ const Subscription = () => {
                         <button
                           className="sub-btn"
                           onClick={(e) => handlePlanClick('Freemium', e)}
-                          disabled={subscribingPlan === `Freemium-monthly`}
+                          disabled={true}
                         >
                           {subscribingPlan === `Freemium-monthly`
                             ? 'Processing…'
@@ -269,7 +269,7 @@ const Subscription = () => {
                         </p>
                         <button
                           className="sub-btn"
-                          disabled={!!activeTeam || subscribingPlan === `Starter-monthly`}
+                          disabled={true}
                           onClick={(e) => handlePlanClick('Starter', e)}
                         >
                           {subscribingPlan === `Starter-monthly` ? 'Processing…' : 'Choose Starter'}
@@ -332,7 +332,7 @@ const Subscription = () => {
                         </p>
                         <button
                           className="sub-btn"
-                          disabled={!!activeTeam || subscribingPlan === `Premium-monthly`}
+                          disabled={true}
                           onClick={(e) => handlePlanClick('Premium', e)}
                         >
                           {subscribingPlan === `Premium-monthly` ? 'Processing…' : 'Choose Premium'}
@@ -397,7 +397,7 @@ const Subscription = () => {
                         </p>
                         <button
                           className="sub-btn"
-                          disabled={!!activeTeam || subscribingPlan === `Starter-annually`}
+                          disabled={true}
                           onClick={(e) => handlePlanClick('Starter', e)}
                         >
                           {subscribingPlan === `Starter-annually`
@@ -462,7 +462,7 @@ const Subscription = () => {
                         </p>
                         <button
                           className="sub-btn"
-                          disabled={!!activeTeam || subscribingPlan === `Premium-annually`}
+                          disabled={true}
                           onClick={(e) => handlePlanClick('Premium', e)}
                         >
                           {subscribingPlan === `Premium-annually`
@@ -531,6 +531,7 @@ const Subscription = () => {
                         <button
                           className="sub-btn"
                           onClick={(e) => handlePlanClick('Enterprise', e)}
+                          disabled={true}
                         >
                           Contact Sales
                         </button>

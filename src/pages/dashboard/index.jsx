@@ -592,6 +592,19 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
       let url = data.url || data.temp_url || data.model_url || data.data?.url || data.data?.temp_url;
       if (!url) return null;
       url = url.replace(/\\\//g, '/').trim();
+
+      // Record view count
+      try {
+        fetch(`${baseURL}/model/view/count`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ model_id: id }),
+        });
+        console.log('Successfully recorded view for model:', id);
+      } catch (err) {
+        console.error('Failed to hit view count API:', err);
+      }
+
       return url;
     } catch (error) {
       console.error('Error fetching 3D model URL:', error);
@@ -820,11 +833,7 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
         <div
           style={{
             position: 'relative',
-            background: modalBgColor
-              ? getCardBgColor(modalBgColor, isDarkMode)
-              : (isDarkMode
-                  ? 'linear-gradient(90deg, #3E112C, #190F21)'
-                  : 'linear-gradient(90deg, #FFEDF7, #F2F0FE)'),
+            background: isDarkMode ? '#000000' : '#ffffff',
             borderRadius: 28,
             maxWidth: '850px',
             width: '90vw',

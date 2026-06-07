@@ -504,6 +504,24 @@ const ModelGenerator = ({ isDarkMode = false }) => {
         const finalUrl = addCacheBuster(url);
 
         console.log('URL loaded:', finalUrl);
+
+        // Record view count
+        try {
+          await axios.post(
+            `${baseURL}/model/view/count`,
+            { model_id: token_id },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+          console.log('Successfully recorded view for model:', token_id);
+        } catch (err) {
+          console.error('Failed to hit view count API:', err);
+        }
+
         setModelUrl(finalUrl);
         setProjectStatus('completed');
         setShowLoadingUI(false);

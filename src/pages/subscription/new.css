@@ -299,3 +299,15 @@
 [data-theme="dark"] .sub-btn:hover {
   background: #e33374;
 }
+
+.sub-btn:disabled,
+.sub-btn[disabled] {
+  cursor: not-allowed !important;
+  opacity: 0.65;
+  background: #ec008c !important;
+}
+
+[data-theme="dark"] .sub-btn:disabled,
+[data-theme="dark"] .sub-btn[disabled] {
+  background: #DE3996 !important;
+}

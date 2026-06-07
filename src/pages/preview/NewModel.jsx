@@ -67,6 +67,24 @@ const NewModel = () => {
 
       url = url.replace(/\\\//g, '/').trim();
       const finalUrl = addCacheBuster(url);
+
+      // Record view count
+      try {
+        await axios.post(
+          `${baseURL}/model/view/count`,
+          { model_id: projectId },
+          {
+            headers: {
+              Authorization: `Bearer ${mobileToken}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        console.log('Successfully recorded view for model:', projectId);
+      } catch (err) {
+        console.error('Failed to hit view count API:', err);
+      }
+
       setIsModelRendering(true);
       setModelUrl(finalUrl);
     } catch (err) {

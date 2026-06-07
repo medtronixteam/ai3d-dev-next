@@ -40,7 +40,7 @@
 }
 
 [data-theme='dark'] .api-sdk-container {
-  background:black !important;
+  background: transparent !important;
 }
 [data-theme='dark'] .api-sdk-card {
   background: #000000 !important;

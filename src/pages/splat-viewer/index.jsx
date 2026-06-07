@@ -59,6 +59,22 @@ const SplatViewer = () => {
         
         if (splatFileUrl) {
           setSplatUrl(splatFileUrl);
+
+          // Record view count
+          try {
+            fetch(`${baseURL}/model/view/count`, {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ model_id: id }),
+            });
+            console.log('Successfully recorded view for model in splat-viewer:', id);
+          } catch (err) {
+            console.error('Failed to hit view count API:', err);
+          }
+
           // Determine viewer type based on file extension and project type
           if (splatFileUrl.includes('.glb') || splatFileUrl.includes('.gltf')) {
             setViewerType('threejs');

@@ -290,6 +290,23 @@ const ImagePreview = () => {
 
       const finalUrl = addCacheBuster(urlFromApi);
 
+      // Record view count
+      try {
+        await axios.post(
+          `${baseURL}/model/view/count`,
+          { model_id: id },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        console.log('Successfully recorded view for model:', id);
+      } catch (err) {
+        console.error('Failed to hit view count API:', err);
+      }
+
       setModelUrl(finalUrl);
       console.log('✅ Model URL cleaned and loaded:', finalUrl);
     } catch (err) {

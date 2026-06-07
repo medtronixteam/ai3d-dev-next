@@ -14,6 +14,7 @@
 }
 
 .shared-coins-content {
+  --modal-bg: #ffffff;
   background: var(--modal-bg);
   border-radius: 10px;
   max-width: 500px;
@@ -24,6 +25,10 @@
   box-sizing: border-box;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   scrollbar-width: none;
+}
+
+[data-theme='dark'] .shared-coins-content {
+  --modal-bg: #000000;
 }
 
 .total-coins-img-container {
@@ -312,14 +317,31 @@ input[type=number] {
 
 .coins-popup-cross-btn {
   position: absolute;
-  top: 10px !important;
+  top: 15px !important;
   right: 20px !important;
   cursor: pointer;
-  background-color: #fff;
-  color: #de3996;
+  background-color: #DE3996 !important;
+  color: #ffffff !important;
   border-radius: 50%;
-  padding: 4px;
-  transition: 0.3s ease;
+  width: 32px;
+  height: 32px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  outline: none;
+  box-shadow: 0 2px 8px rgba(222, 57, 150, 0.3);
+  transition: all 0.3s ease;
+}
+
+.coins-popup-cross-btn svg {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+.coins-popup-cross-btn:hover {
+  background-color: #b01d70 !important;
+  transform: scale(1.05);
 }
 
 [data-theme='dark'] .share-coin-user-info p {

@@ -555,7 +555,21 @@ useEffect(() => {
       });
     } catch (err) {
       console.error('Export failed:', err);
-      toast.error('Failed to export project. Please try again.', {
+      let errMsg = 'Failed to export project. Please try again.';
+      if (err.response?.data instanceof Blob) {
+        try {
+          const text = await err.response.data.text();
+          const parsed = JSON.parse(text);
+          if (parsed.message) {
+            errMsg = parsed.message;
+          }
+        } catch (e) {
+          console.error('Error parsing error blob:', e);
+        }
+      } else if (err.response?.data?.message) {
+        errMsg = err.response.data.message;
+      }
+      toast.error(errMsg, {
         position: 'top-right',
         autoClose: 4000,
       });

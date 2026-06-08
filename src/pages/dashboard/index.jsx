@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import './SimplePage.css';
-import { FiSearch, FiArrowRight, FiX, FiMaximize2, FiEdit2, FiArrowUp } from 'react-icons/fi';
+import { FiSearch, FiArrowRight, FiX, FiMaximize2, FiEdit2, FiArrowUp, FiEye, FiDownload } from 'react-icons/fi';
 import search from '../../assets/images/search.svg';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -521,14 +521,33 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
     if (node) {
       if (node._cleanup) node._cleanup();
 
-      const onLoad = () => {
-        console.log('Model-viewer loaded successfully');
+      const onPosterDismissed = () => {
+        console.log('Model-viewer poster dismissed, rendering complete');
         setLoading(false);
         setMediaError(false);
         if (mediaTimeoutRef.current) {
           clearTimeout(mediaTimeoutRef.current);
           mediaTimeoutRef.current = null;
         }
+      };
+
+      const onLoad = () => {
+        console.log('Model-viewer loaded assets, waiting for render...');
+        // Fallback: if poster-dismissed doesn't fire, hide loader after 1 second
+        setTimeout(() => {
+          setLoading((currLoading) => {
+            if (currLoading) {
+              console.log('Poster dismissed fallback triggered');
+              if (mediaTimeoutRef.current) {
+                clearTimeout(mediaTimeoutRef.current);
+                mediaTimeoutRef.current = null;
+              }
+              return false;
+            }
+            return currLoading;
+          });
+          setMediaError(false);
+        }, 1000);
       };
 
       const onError = (err) => {
@@ -549,10 +568,12 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
       };
 
       node.addEventListener('load', onLoad);
+      node.addEventListener('poster-dismissed', onPosterDismissed);
       node.addEventListener('error', onError);
 
       node._cleanup = () => {
         node.removeEventListener('load', onLoad);
+        node.removeEventListener('poster-dismissed', onPosterDismissed);
         node.removeEventListener('error', onError);
       };
     }
@@ -1160,6 +1181,40 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
               )}
             </>
           )}
+
+          {/* Views & Downloads Stats Badge */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: isMobile ? '12px' : '20px',
+              left: isMobile ? '12px' : '20px',
+              zIndex: 1000,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              background: isDarkMode ? 'rgba(255, 255, 255, 0.07)' : 'rgba(0, 0, 0, 0.05)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              padding: '6px 14px',
+              borderRadius: '20px',
+              border: isDarkMode ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid rgba(0, 0, 0, 0.08)',
+              fontSize: '13px',
+              color: isDarkMode ? '#ffffff' : '#1a1a24',
+              fontWeight: '500',
+              boxShadow: isDarkMode ? '0 8px 32px 0 rgba(0, 0, 0, 0.3)' : '0 8px 32px 0 rgba(0, 0, 0, 0.05)',
+              pointerEvents: 'none',
+            }}
+          >
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }} title="Views">
+              <FiEye size={15} style={{ color: '#DE3996' }} />
+              <span>{modelData?.views ?? 0}</span>
+            </span>
+            <div style={{ width: '1px', height: '12px', background: isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.15)' }} />
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }} title="Downloads">
+              <FiDownload size={15} style={{ color: '#DE3996' }} />
+              <span>{modelData?.downloads ?? 0}</span>
+            </span>
+          </div>
         </div>
 
         <style>{`
@@ -1510,6 +1565,9 @@ const Dashboard = () => {
   // Current models to display (either regular or favorites)
   const currentModels = useMemo(() => {
     if (isFavoriteModeActive) {
+      if (selectedType === 'all') {
+        return favoriteModels;
+      }
       return favoriteModels.filter((m) => m.category === selectedType);
     }
     return models;
@@ -2075,7 +2133,7 @@ const Dashboard = () => {
                       overflow: 'hidden',
                     }}
                   >
-                    {model.is_free !== 1 && (
+                    {!model.is_free && (
                       <img
                         src={Paid}
                         alt="paid"

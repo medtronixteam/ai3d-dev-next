@@ -925,7 +925,21 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       toast.success('Model exported successfully!');
     } catch (err) {
       console.error('Export failed:', err);
-      toast.error('Failed to export model');
+      let errMsg = 'Failed to export model';
+      if (err.response?.data instanceof Blob) {
+        try {
+          const text = await err.response.data.text();
+          const parsed = JSON.parse(text);
+          if (parsed.message) {
+            errMsg = parsed.message;
+          }
+        } catch (e) {
+          console.error('Error parsing error blob:', e);
+        }
+      } else if (err.response?.data?.message) {
+        errMsg = err.response.data.message;
+      }
+      toast.error(errMsg);
     }
   };
 

@@ -614,18 +614,6 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
       if (!url) return null;
       url = url.replace(/\\\//g, '/').trim();
 
-      // Record view count
-      try {
-        fetch(`${baseURL}/model/view/count`, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({ model_id: id }),
-        });
-        console.log('Successfully recorded view for model:', id);
-      } catch (err) {
-        console.error('Failed to hit view count API:', err);
-      }
-
       return url;
     } catch (error) {
       console.error('Error fetching 3D model URL:', error);
@@ -2133,7 +2121,7 @@ const Dashboard = () => {
                       overflow: 'hidden',
                     }}
                   >
-                    {!model.is_free && (
+                    {model.is_free !== undefined && model.is_free !== null && (model.is_free === false || model.is_free === 0 || model.is_free === '0' || model.is_free === 'false') && (
                       <img
                         src={Paid}
                         alt="paid"

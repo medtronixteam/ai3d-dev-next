@@ -66,38 +66,38 @@ const RecentProjects = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [shareMessage, setShareMessage] = useState('');
   const [shareMessageType, setShareMessageType] = useState('');
-  
+
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [totalProjects, setTotalProjects] = useState(0);
   const observerTarget = useRef(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  
-    useEffect(() => {
-      const checkTheme = () => {
-        setIsDarkMode(document.documentElement.getAttribute('data-theme') === 'dark');
-      };
-  
-      checkTheme();
-  
-      const observer = new MutationObserver(checkTheme);
-      observer.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['data-theme'],
-      });
-  
-      return () => observer.disconnect();
-    }, []);
+
+  useEffect(() => {
+    const checkTheme = () => {
+      setIsDarkMode(document.documentElement.getAttribute('data-theme') === 'dark');
+    };
+
+    checkTheme();
+
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   const getProjectKey = (p) => p?.id ?? p?.token ?? p?.name ?? p?.title ?? Math.random();
 
   const fetchProjects = async (filter, page = 1, append = false) => {
     if (append) {
-    setLoadingMore(true);
-  } else {
-    setLoading(true);
-    setImgLoadedById({});
-  }
+      setLoadingMore(true);
+    } else {
+      setLoading(true);
+      setImgLoadedById({});
+    }
 
     try {
       let url = `${baseURL}/project?page=${page}`;
@@ -129,7 +129,7 @@ const RecentProjects = () => {
         setProjects(pageProjects);
         setHasMore(false);
         setTotalProjects(pageProjects.length);
-        
+
         const newLoadedState = {};
         pageProjects.forEach(p => {
           newLoadedState[getProjectKey(p)] = false;
@@ -143,7 +143,7 @@ const RecentProjects = () => {
         });
 
         pageProjects = res.data?.data?.data || [];
-        
+
         pageProjects.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
         const newLoadedState = {};
@@ -262,39 +262,39 @@ const RecentProjects = () => {
   }, [activeFilter, location.pathname]);
 
   useEffect(() => {
-  setImgLoadedById((prev) => {
-    const next = { ...prev };
-    (projects || []).forEach((p) => {
-      const key = getProjectKey(p);
-      if (!(key in next)) {
-        next[key] = false;
-      }
+    setImgLoadedById((prev) => {
+      const next = { ...prev };
+      (projects || []).forEach((p) => {
+        const key = getProjectKey(p);
+        if (!(key in next)) {
+          next[key] = false;
+        }
+      });
+      return next;
     });
-    return next;
-  });
-}, [projects]);
+  }, [projects]);
 
   const markImageLoaded = (projectKey) => {
-  if (projectKey === undefined || projectKey === null) return;
-  setImgLoadedById((prev) => {
-    if (prev[projectKey] === true) return prev;
-    return { ...prev, [projectKey]: true };
-  });
-};
+    if (projectKey === undefined || projectKey === null) return;
+    setImgLoadedById((prev) => {
+      if (prev[projectKey] === true) return prev;
+      return { ...prev, [projectKey]: true };
+    });
+  };
 
-const markImageError = (projectKey) => {
-  if (projectKey === undefined || projectKey === null) return;
-  setImgLoadedById((prev) => {
-    if (prev[projectKey] === true) return prev;
-    return { ...prev, [projectKey]: true };
-  });
-};
+  const markImageError = (projectKey) => {
+    if (projectKey === undefined || projectKey === null) return;
+    setImgLoadedById((prev) => {
+      if (prev[projectKey] === true) return prev;
+      return { ...prev, [projectKey]: true };
+    });
+  };
 
-useEffect(() => {
-  if (activeFilter) {
-    setImgLoadedById({});
-  }
-}, [activeFilter]);
+  useEffect(() => {
+    if (activeFilter) {
+      setImgLoadedById({});
+    }
+  }, [activeFilter]);
 
 
   useEffect(() => {
@@ -381,17 +381,17 @@ useEffect(() => {
   // };
 
   const handleViewProject = (project) => {
-  setDropdownOpen(null);
-  console.log('[Recent Projects] 🚀 Navigating to view project:', project.id);
-  console.log('[Recent Projects] 📦 Project data:', project);
-  
-  navigate('/3dio/new/scan', { 
-    state: { 
-      projectId: project.id,
-      viewMode: true 
-    } 
-  });
-};
+    setDropdownOpen(null);
+    console.log('[Recent Projects] 🚀 Navigating to view project:', project.id);
+    console.log('[Recent Projects] 📦 Project data:', project);
+
+    navigate('/3dio/new/scan', {
+      state: {
+        projectId: project.id,
+        viewMode: true
+      }
+    });
+  };
 
   const handleShareClick = (project) => {
     setDropdownOpen(null);
@@ -577,106 +577,106 @@ useEffect(() => {
   };
 
   const ProjectPreview = ({ project, pKey, isListView = false }) => {
-  const isTextTo3D = project.type === 'text_to_3d' || project.type === 'prompt_to_3d';
-  const hasImage = project.screenshot || project.thumbnail;
+    const isTextTo3D = project.type === 'text_to_3d' || project.type === 'prompt_to_3d';
+    const hasImage = project.screenshot || project.thumbnail;
 
-  if (isTextTo3D && !project.screenshot && !project.thumbnail) {
-    return (
-      <div
-        style={{
-          width: isListView ? 90 : '100%',
-          height: isListView ? 70 : '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'rgba(230, 51, 153, 0.05)',
-          borderRadius: '8px',
-        }}
-      >
-        <span
-          style={{
-            fontSize: isListView ? '12px' : '16px',
-            color: '#e63399',
-            fontWeight: '600',
-            textAlign: 'center',
-            lineHeight: '1.2',
-            padding: '10px',
-          }}
-        >
-          Text to 3D
-        </span>
-      </div>
-    );
-  }
-
-  if (!hasImage) {
-    return (
-      <div
-        style={{
-          width: isListView ? 90 : '100%',
-          height: isListView ? 70 : '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: isDarkMode ? '#2d2430' : '#fef5fa',
-        }}
-      >
-        <Image
-          size={isListView ? 24 : 40} 
-          color="#aaa" 
-          strokeWidth={1.5}
-        />
-      </div>
-    );
-  }
-
-  return (
-    <div
-      style={{
-        position: 'relative',
-        width: isListView ? 90 : '100%',
-        height: isListView ? 70 : '100%',
-        overflow: 'hidden',
-        flexShrink: 0,
-      }}
-    >
-      {!imgLoadedById[pKey] && (
+    if (isTextTo3D && !project.screenshot && !project.thumbnail) {
+      return (
         <div
           style={{
-            position: 'absolute',
-            inset: 0,
+            width: isListView ? 90 : '100%',
+            height: isListView ? 70 : '100%',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            zIndex: 1,
-            background: 'transparent',
+            background: 'rgba(230, 51, 153, 0.05)',
+            borderRadius: '8px',
           }}
         >
           <span
-            className={`rp-img-loader ${isListView ? 'rp-sm' : ''}`}
-            aria-label="loading thumbnail"
-          ></span>
+            style={{
+              fontSize: isListView ? '12px' : '16px',
+              color: '#e63399',
+              fontWeight: '600',
+              textAlign: 'center',
+              lineHeight: '1.2',
+              padding: '10px',
+            }}
+          >
+            Text to 3D
+          </span>
         </div>
-      )}
-      <img
-        src={project.screenshot || project.thumbnail}
-        alt={project.name}
-        className={isListView ? 'rp-list-img' : 'rp-card-img'}
+      );
+    }
+
+    if (!hasImage) {
+      return (
+        <div
+          style={{
+            width: isListView ? 90 : '100%',
+            height: isListView ? 70 : '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: isDarkMode ? '#2d2430' : '#fef5fa',
+          }}
+        >
+          <Image
+            size={isListView ? 24 : 40}
+            color="#aaa"
+            strokeWidth={1.5}
+          />
+        </div>
+      );
+    }
+
+    return (
+      <div
         style={{
-          opacity: imgLoadedById[pKey] ? 1 : 0,
-          transition: 'opacity 0.3s ease-in-out',
-          zIndex: 2,
+          position: 'relative',
+          width: isListView ? 90 : '100%',
+          height: isListView ? 70 : '100%',
+          overflow: 'hidden',
+          flexShrink: 0,
         }}
-        onLoad={() => markImageLoaded(pKey)}
-        onError={(e) => {
-          markImageError(pKey);
-          e.target.style.display = 'none';
-        }}
-         loading="lazy"
-      />
-    </div>
-  );
-};
+      >
+        {!imgLoadedById[pKey] && (
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 1,
+              background: 'transparent',
+            }}
+          >
+            <span
+              className={`rp-img-loader ${isListView ? 'rp-sm' : ''}`}
+              aria-label="loading thumbnail"
+            ></span>
+          </div>
+        )}
+        <img
+          src={project.screenshot || project.thumbnail}
+          alt={project.name}
+          className={isListView ? 'rp-list-img' : 'rp-card-img'}
+          style={{
+            opacity: imgLoadedById[pKey] ? 1 : 0,
+            transition: 'opacity 0.3s ease-in-out',
+            zIndex: 2,
+          }}
+          onLoad={() => markImageLoaded(pKey)}
+          onError={(e) => {
+            markImageError(pKey);
+            e.target.style.display = 'none';
+          }}
+          loading="lazy"
+        />
+      </div>
+    );
+  };
 
   return (
     <div className="recent-projects-modern-container mt-5 mb-4">
@@ -735,7 +735,7 @@ useEffect(() => {
               onClick={() => setViewMode('grid')}
               aria-label="Grid view"
             >
-              <LayoutGrid color= {isDarkMode ? '#fff' : '#000'}/>
+              <LayoutGrid color={isDarkMode ? '#fff' : '#000'} />
             </button>
             <button
               className={`rp-view-toggle${viewMode === 'list' ? ' active' : ''}`}
@@ -806,7 +806,7 @@ useEffect(() => {
         ) : (
           <SkeletonListLoader />
         )
-      ): projects.length === 0 ? (
+      ) : projects.length === 0 ? (
         <div style={{ textAlign: 'center', padding: 60, color: '#888', fontSize: 20 }}>
           <div style={{ fontSize: 48, marginBottom: 12 }}>📂</div>
           No projects found
@@ -820,12 +820,12 @@ useEffect(() => {
               return (
                 <div className="rp-card" key={pKey}>
                   {!isSharedView && (
-                        <button
-                          className="rec-rp-fav-btn"
-                          onClick={() => handleFavoriteToggle(project)}
-                        >
-                          {project.favorite ? <FaHeart size={14} /> : <FaRegHeart size={14} />}
-                        </button>
+                    <button
+                      className="rec-rp-fav-btn"
+                      onClick={() => handleFavoriteToggle(project)}
+                    >
+                      {project.favorite ? <FaHeart size={14} /> : <FaRegHeart size={14} />}
+                    </button>
                   )}
                   <div className="rp-card-img-wrap">
                     <div
@@ -854,10 +854,10 @@ useEffect(() => {
                         <div className="rp-card-date">
                           {project.created_at
                             ? new Date(project.created_at).toLocaleDateString('en-US', {
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric',
-                              })
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric',
+                            })
                             : ''}
                         </div>
                       </div>
@@ -898,7 +898,7 @@ useEffect(() => {
               );
             })}
           </div>
-          
+
           {loadingMore && (
             <div className="text-center mx-auto my-5">
               <div
@@ -920,85 +920,85 @@ useEffect(() => {
         `}</style>
             </div>
           )}
-          
+
           {hasMore && !loadingMore && (
             <div ref={observerTarget} style={{ height: 20, width: '100%' }} />
           )}
         </>
       ) : (
         <>
-        <div className="rp-list-view">
-          {Object.entries(grouped).map(([group, items]) => (
-            <div key={group} className="rp-list-group">
-              {items.map((project) => {
-                const pKey = getProjectKey(project);
-                const isSharedView = activeFilter === 'Shared Project';
-                return (
-                  <div className="rp-list-item" key={pKey}>
-                    <ProjectPreview project={project} pKey={pKey} isListView={true} />
-                    <div className="rp-list-info">
-                      <div className="rp-list-title">{project.name}</div>
-                      <div className="rp-list-date">
-                        {project.created_at
-                          ? new Date(project.created_at).toLocaleDateString('en-US', {
+          <div className="rp-list-view">
+            {Object.entries(grouped).map(([group, items]) => (
+              <div key={group} className="rp-list-group">
+                {items.map((project) => {
+                  const pKey = getProjectKey(project);
+                  const isSharedView = activeFilter === 'Shared Project';
+                  return (
+                    <div className="rp-list-item" key={pKey}>
+                      <ProjectPreview project={project} pKey={pKey} isListView={true} />
+                      <div className="rp-list-info">
+                        <div className="rp-list-title">{project.name}</div>
+                        <div className="rp-list-date">
+                          {project.created_at
+                            ? new Date(project.created_at).toLocaleDateString('en-US', {
                               month: 'short',
                               day: 'numeric',
                               year: 'numeric',
                             })
-                          : ''}
+                            : ''}
+                        </div>
                       </div>
+                      <button
+                        className="rp-card-menu-btn"
+                        onClick={() =>
+                          setDropdownOpen(dropdownOpen === project.id ? null : project.id)
+                        }
+                      >
+                        <FaEllipsisV size={16} />
+                      </button>
+                      {dropdownOpen === project.id && (
+                        <div className="rp-card-menu">
+                          <button onClick={() => handleViewProject(project)}>
+                            <TabletSmartphone size={16} /> View
+                          </button>
+                          {!isSharedView && (
+                            <>
+                              <button onClick={() => handleRenameClick(project)}>
+                                <FolderPen size={16} /> Rename
+                              </button>
+                              <button onClick={() => handleFavoriteToggle(project)}>
+                                {project.favorite ? <FaHeart className='pinky' size={13} /> : <FaRegHeart size={16} />} Favorite
+                              </button>
+                              <button onClick={() => handleExportClick(project)}>
+                                <Download size={16} /> Export
+                              </button>
+                              <button onClick={() => handleShareClick(project)}>
+                                <Send size={16} /> Share
+                              </button>
+                              <button onClick={() => handleDeleteClick(project)}>
+                                <Trash2 size={16} /> Remove
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      )}
                     </div>
-                    <button
-                      className="rp-card-menu-btn"
-                      onClick={() =>
-                        setDropdownOpen(dropdownOpen === project.id ? null : project.id)
-                      }
-                    >
-                      <FaEllipsisV size={16} />
-                    </button>
-                    {dropdownOpen === project.id && (
-                      <div className="rp-card-menu">
-                        <button onClick={() => handleViewProject(project)}>
-                          <TabletSmartphone size={16} /> View
-                        </button>
-                        {!isSharedView && (
-                          <>
-                            <button onClick={() => handleRenameClick(project)}>
-                              <FolderPen size={16} /> Rename
-                            </button>
-                            <button onClick={() => handleFavoriteToggle(project)}>
-                              {project.favorite ? <FaHeart className='pinky' size={13} /> : <FaRegHeart size={16} />} Favorite
-                            </button>
-                            <button onClick={() => handleExportClick(project)}>
-                              <Download size={16} /> Export
-                            </button>
-                            <button onClick={() => handleShareClick(project)}>
-                              <Send size={16} /> Share
-                            </button>
-                            <button onClick={() => handleDeleteClick(project)}>
-                              <Trash2 size={16} /> Remove
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          ))}
-        </div>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
 
-        {loadingMore && (
+          {loadingMore && (
             <div>
               <SkeletonListLoader />
             </div>
           )}
-          
+
           {hasMore && !loadingMore && (
             <div ref={observerTarget} style={{ height: 20, width: '100%' }} />
           )}
-          </>
+        </>
       )}
 
       {renameModalOpen && (
@@ -1144,9 +1144,8 @@ useEffect(() => {
                       {foundUsers.map((user) => (
                         <div
                           key={user.id || user.email}
-                          className={`share-coin-user-item ${
-                            selectedUser?.email === user.email ? 'selected' : ''
-                          }`}
+                          className={`share-coin-user-item ${selectedUser?.email === user.email ? 'selected' : ''
+                            }`}
                           onClick={() => setSelectedUser(user)}
                         >
                           <div className="share-coin-avatar">

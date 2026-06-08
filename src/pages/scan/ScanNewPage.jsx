@@ -83,6 +83,18 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   const [selectedProjectForShare, setSelectedProjectForShare] = useState(null);
   const typingTimeoutRef = useRef(null);
 
+  const getFullImageUrl = (path) => {
+    if (!path) return null;
+    if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('blob:')) {
+      return path;
+    }
+    const cleanPath = path.replace(/^\/+/, '');
+    if (cleanPath.startsWith('storage/')) {
+      return `https://app.ai3dscanning.com/${cleanPath}`;
+    }
+    return `https://app.ai3dscanning.com/storage/${cleanPath}`;
+  };
+
   const fetchHistory = useCallback(async () => {
     try {
       setHistoryLoading(true);
@@ -91,22 +103,27 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       });
       const rawData = res.data?.data?.data || [];
 
-      const formattedData = rawData.map(item => ({
-        id: item.token || item.id,
-        token: item.token || item.id,
-        name: item.name || 'Untitled',
-        time: item.created_at ? new Date(item.created_at).toLocaleString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        }) : 'Recent',
-        type: item.type === 'text_to_3d' ? 'prompt' : (item.type === 'video_to_3d' ? 'video' : 'image'),
-        status: item.status,
-        progress: item.progress || 0,
-        thumbnail: item.screenshot || item.thumbnail || 'https://picsum.photos/50/50?random=' + (item.token || item.id),
-        favorite: !!item.favorite,
-      }));
+      const formattedData = rawData.map(item => {
+        const rawImg = item.screenshot || item.thumbnail;
+        const imgUrl = getFullImageUrl(rawImg);
+        return {
+          id: item.token || item.id,
+          token: item.token || item.id,
+          name: item.name || 'Untitled',
+          time: item.created_at ? new Date(item.created_at).toLocaleString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          }) : 'Recent',
+          type: item.type === 'text_to_3d' ? 'prompt' : (item.type === 'video_to_3d' ? 'video' : 'image'),
+          rawType: item.type,
+          status: item.status,
+          progress: item.progress || 0,
+          thumbnail: imgUrl,
+          favorite: !!item.favorite,
+        };
+      });
 
       setHistoryData(formattedData);
     } catch (err) {

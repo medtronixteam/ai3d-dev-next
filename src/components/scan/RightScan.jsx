@@ -8,6 +8,7 @@ import {
   Box,
   Clock,
   Edit2,
+  Image,
 } from 'lucide-react';
 import hugeiconsCrown from '../../pages/images/icons/hugeicons_crown-02.png';
 import Crown from '../../pages/images/icons/crown.png';
@@ -357,6 +358,111 @@ const RightScan = ({
     historyFilter === 'all' ? true : item.status === historyFilter,
   );
 
+  const renderHistoryThumb = (item) => {
+    const isTextTo3D = item.rawType === 'text_to_3d' || item.rawType === 'prompt_to_3d' || item.type === 'prompt';
+    const hasImage = !!item.thumbnail;
+
+    if (isTextTo3D && !hasImage) {
+      return (
+        <div
+          className="history-thumb"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'rgba(230, 51, 153, 0.05)',
+            borderRadius: '8px',
+            boxShadow: 'none',
+          }}
+        >
+          <span
+            style={{
+              fontSize: '10px',
+              color: '#e63399',
+              fontWeight: '600',
+              textAlign: 'center',
+              lineHeight: '1.2',
+              padding: '5px',
+            }}
+          >
+            Text to 3D
+          </span>
+        </div>
+      );
+    }
+
+    if (!hasImage) {
+      return (
+        <div
+          className="history-thumb"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: isDarkMode ? '#2d2430' : '#fef5fa',
+            boxShadow: 'none',
+          }}
+        >
+          <Image
+            size={20}
+            color="#aaa"
+            strokeWidth={1.5}
+          />
+        </div>
+      );
+    }
+
+    const isImgLoaded = !!loadedImages[item.id];
+
+    return (
+      <div
+        className="history-thumb"
+        style={{
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        {!isImgLoaded && (
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 1,
+              background: 'transparent',
+            }}
+          >
+            <span
+              className="rp-img-loader rp-sm"
+              style={{ width: '24px', height: '24px' }}
+              aria-label="loading thumbnail"
+            ></span>
+          </div>
+        )}
+        <img
+          src={item.thumbnail}
+          alt={item.name}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            opacity: isImgLoaded ? 1 : 0,
+            transition: 'opacity 0.3s ease-in-out',
+            zIndex: 2,
+          }}
+          onLoad={() => setLoadedImages(prev => ({ ...prev, [item.id]: true }))}
+          onError={(e) => {
+            setLoadedImages(prev => ({ ...prev, [item.id]: true }));
+            e.target.style.display = 'none';
+          }}
+          loading="lazy"
+        />
+      </div>
+    );
+  };
+
   return (
     <div className="col-lg-3 ps-lg-3 my-lg-0 mt-3 mb-5">
       <style>{`
@@ -579,10 +685,7 @@ const RightScan = ({
                   filteredHistory.map((item) => (
                     <div key={item.id} className="history-item border">
                       <div className="d-flex align-items-start gap-3">
-                        <div
-                          className="history-thumb"
-                          style={{ backgroundImage: `url(${item.thumbnail})` }}
-                        ></div>
+                        {renderHistoryThumb(item)}
 
                         <div className="flex-grow-1">
                           <div className="d-flex justify-content-between align-items-start">

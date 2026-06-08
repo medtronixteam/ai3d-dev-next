@@ -349,105 +349,39 @@ const RightScan = ({
 
   const renderHistoryThumb = (item) => {
     const isTextTo3D = item.rawType === 'text_to_3d' || item.rawType === 'prompt_to_3d' || item.type === 'prompt';
-    const hasImage = !!item.thumbnail;
+    const isVideoTo3D = item.rawType === 'video_to_3d' || item.type === 'video';
 
-    if (isTextTo3D && !hasImage) {
-      return (
-        <div
-          className="history-thumb"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'rgba(230, 51, 153, 0.05)',
-            borderRadius: '8px',
-            boxShadow: 'none',
-          }}
-        >
-          <span
-            style={{
-              fontSize: '10px',
-              color: '#e63399',
-              fontWeight: '600',
-              textAlign: 'center',
-              lineHeight: '1.2',
-              padding: '5px',
-            }}
-          >
-            Text to 3D
-          </span>
-        </div>
-      );
+    let textLabel = 'Image to 3D';
+    if (isTextTo3D) {
+      textLabel = 'Text to 3D';
+    } else if (isVideoTo3D) {
+      textLabel = 'Video to 3D';
     }
-
-    if (!hasImage) {
-      return (
-        <div
-          className="history-thumb"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: isDarkMode ? '#2d2430' : '#fef5fa',
-            boxShadow: 'none',
-          }}
-        >
-          <Image
-            size={20}
-            color="#aaa"
-            strokeWidth={1.5}
-          />
-        </div>
-      );
-    }
-
-    const isImgLoaded = !!loadedImages[item.id];
 
     return (
       <div
         className="history-thumb"
         style={{
-          position: 'relative',
-          overflow: 'hidden',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'rgba(230, 51, 153, 0.05)',
+          borderRadius: '8px',
+          boxShadow: 'none',
         }}
       >
-        {!isImgLoaded && (
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              zIndex: 1,
-              background: 'transparent',
-            }}
-          >
-            <span
-              className="rp-img-loader rp-sm"
-              style={{ width: '24px', height: '24px' }}
-              aria-label="loading thumbnail"
-            ></span>
-          </div>
-        )}
-        <img
-          src={item.thumbnail}
-          alt={item.name}
+        <span
           style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            opacity: isImgLoaded ? 1 : 0,
-            transition: 'opacity 0.3s ease-in-out',
-            zIndex: 2,
+            fontSize: '10px',
+            color: '#e63399',
+            fontWeight: '600',
+            textAlign: 'center',
+            lineHeight: '1.2',
+            padding: '5px',
           }}
-          onLoad={() => setLoadedImages(prev => ({ ...prev, [item.id]: true }))}
-          onError={(e) => {
-            setLoadedImages(prev => ({ ...prev, [item.id]: true }));
-            e.target.style.display = 'none';
-          }}
-          loading="lazy"
-        />
+        >
+          {textLabel}
+        </span>
       </div>
     );
   };

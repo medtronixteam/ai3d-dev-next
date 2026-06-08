@@ -1046,6 +1046,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             currentStep={currentStep}
             projectStatus={projectStatus}
             onModelRendered={takeScreenshot}
+            transformControls={transformControls}
           />
           <RightScan
             activeTab={activeTab}

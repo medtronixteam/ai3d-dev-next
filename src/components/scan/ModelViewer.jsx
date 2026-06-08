@@ -20,7 +20,23 @@ const Model = ({ url , onLoaded }) => {
   return <primitive object={scene} />;
 };
 
-const ModelViewer = ({ modelUrl, onModelLoaded }) => {
+const ModelViewer = ({ 
+  modelUrl, 
+  onModelLoaded,
+  transformControls = {
+    position: { x: 0, y: 0, z: 0 },
+    rotation: { x: 0, y: 0, z: 0 },
+    scale: 1,
+  }
+}) => {
+  const pos = transformControls?.position || { x: 0, y: 0, z: 0 };
+  const rot = transformControls?.rotation || { x: 0, y: 0, z: 0 };
+  const scl = transformControls?.scale !== undefined ? transformControls.scale : 1;
+
+  const rotX = (rot.x * Math.PI) / 180;
+  const rotY = (rot.y * Math.PI) / 180;
+  const rotZ = (rot.z * Math.PI) / 180;
+
   return (
     <Canvas
       shadows
@@ -70,9 +86,15 @@ const ModelViewer = ({ modelUrl, onModelLoaded }) => {
       />
 
       <Suspense fallback={null}>
-        <Center top>
-          <Model url={modelUrl} onLoaded={onModelLoaded} />
-        </Center>
+        <group
+          position={[pos.x, pos.y, pos.z]}
+          rotation={[rotX, rotY, rotZ]}
+          scale={[scl, scl, scl]}
+        >
+          <Center top>
+            <Model url={modelUrl} onLoaded={onModelLoaded} />
+          </Center>
+        </group>
       </Suspense>
 
       <Environment preset="city" />

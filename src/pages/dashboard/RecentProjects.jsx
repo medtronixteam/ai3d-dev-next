@@ -596,102 +596,39 @@ const RecentProjects = () => {
 
   const ProjectPreview = ({ project, pKey, isListView = false }) => {
     const isTextTo3D = project.type === 'text_to_3d' || project.type === 'prompt_to_3d';
-    const hasImage = project.screenshot || project.thumbnail;
+    const isVideoTo3D = project.type === 'video_to_3d' || project.type === 'video';
 
-    if (isTextTo3D && !project.screenshot && !project.thumbnail) {
-      return (
-        <div
-          style={{
-            width: isListView ? 90 : '100%',
-            height: isListView ? 70 : '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'rgba(230, 51, 153, 0.05)',
-            borderRadius: '8px',
-          }}
-        >
-          <span
-            style={{
-              fontSize: isListView ? '12px' : '16px',
-              color: '#e63399',
-              fontWeight: '600',
-              textAlign: 'center',
-              lineHeight: '1.2',
-              padding: '10px',
-            }}
-          >
-            Text to 3D
-          </span>
-        </div>
-      );
-    }
-
-    if (!hasImage) {
-      return (
-        <div
-          style={{
-            width: isListView ? 90 : '100%',
-            height: isListView ? 70 : '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: isDarkMode ? '#2d2430' : '#fef5fa',
-          }}
-        >
-          <Image
-            size={isListView ? 24 : 40}
-            color="#aaa"
-            strokeWidth={1.5}
-          />
-        </div>
-      );
+    let textLabel = 'Image to 3D';
+    if (isTextTo3D) {
+      textLabel = 'Text to 3D';
+    } else if (isVideoTo3D) {
+      textLabel = 'Video to 3D';
     }
 
     return (
       <div
         style={{
-          position: 'relative',
           width: isListView ? 90 : '100%',
           height: isListView ? 70 : '100%',
-          overflow: 'hidden',
-          flexShrink: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'rgba(230, 51, 153, 0.05)',
+          borderRadius: '8px',
         }}
       >
-        {!imgLoadedById[pKey] && (
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              zIndex: 1,
-              background: 'transparent',
-            }}
-          >
-            <span
-              className={`rp-img-loader ${isListView ? 'rp-sm' : ''}`}
-              aria-label="loading thumbnail"
-            ></span>
-          </div>
-        )}
-        <img
-          src={project.screenshot || project.thumbnail}
-          alt={project.name}
-          className={isListView ? 'rp-list-img' : 'rp-card-img'}
+        <span
           style={{
-            opacity: imgLoadedById[pKey] ? 1 : 0,
-            transition: 'opacity 0.3s ease-in-out',
-            zIndex: 2,
+            fontSize: isListView ? '12px' : '16px',
+            color: '#e63399',
+            fontWeight: '600',
+            textAlign: 'center',
+            lineHeight: '1.2',
+            padding: '10px',
           }}
-          onLoad={() => markImageLoaded(pKey)}
-          onError={(e) => {
-            markImageError(pKey);
-            e.target.style.display = 'none';
-          }}
-          loading="lazy"
-        />
+        >
+          {textLabel}
+        </span>
       </div>
     );
   };

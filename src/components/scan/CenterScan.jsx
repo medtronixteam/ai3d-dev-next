@@ -44,6 +44,7 @@ const CenterScan = ({
   projectStatus,
   modelViewerRef,
   onModelRendered,
+  transformControls,
 }) => {
   const [isActuallyRendered, setIsActuallyRendered] = React.useState(false);
 
@@ -235,6 +236,7 @@ const CenterScan = ({
                     <ModelViewer
                       modelUrl={modelUrl}
                       onModelLoaded={handleModelLoaded}
+                      transformControls={transformControls}
                     />
                   </div>
                   <div className="bottom-info-bar">
@@ -248,13 +250,13 @@ const CenterScan = ({
                       <span className="info-text">Position</span>
                     </div>
                     <div className="info-item">
-                      <span className="info-text">X:0.0</span>
+                      <span className="info-text">X:{transformControls?.position?.x ?? 0.0}</span>
                     </div>
                     <div className="info-item">
-                      <span className="info-text">Y:0.0</span>
+                      <span className="info-text">Y:{transformControls?.position?.y ?? 0.0}</span>
                     </div>
                     <div className="info-item">
-                      <span className="info-text">Z:0.0</span>
+                      <span className="info-text">Z:{transformControls?.position?.z ?? 0.0}</span>
                     </div>
                   </div>
                 </div>

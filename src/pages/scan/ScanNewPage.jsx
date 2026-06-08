@@ -503,6 +503,20 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     return `${url}${separator}_t=${Date.now()}`;
   };
 
+  const adjustUrlForLocalhost = (url) => {
+    if (!url) return url;
+    if (
+      (window.location.hostname === 'localhost' ||
+        window.location.hostname === '127.0.0.1' ||
+        window.location.hostname === '0.0.0.0' ||
+        window.location.port === '3000') &&
+      url.includes('ai3dscanning-crm.s3.ap-south-1.amazonaws.com')
+    ) {
+      return url.replace('https://ai3dscanning-crm.s3.ap-south-1.amazonaws.com', '/s3-proxy');
+    }
+    return url;
+  };
+
   const fetchModelUrl = async (token_id) => {
     try {
       setModelLoading(true);
@@ -518,26 +532,11 @@ const ModelGenerator = ({ isDarkMode = false }) => {
 
       if (url) {
         url = url.replace(/\\\//g, '/').trim();
-        const finalUrl = addCacheBuster(url);
+        const finalUrl = adjustUrlForLocalhost(addCacheBuster(url));
 
         console.log('URL loaded:', finalUrl);
 
-        // Record view count
-        try {
-          await axios.post(
-            `${baseURL}/model/view/count`,
-            { model_id: token_id },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json',
-              },
-            }
-          );
-          console.log('Successfully recorded view for model:', token_id);
-        } catch (err) {
-          console.error('Failed to hit view count API:', err);
-        }
+
 
         setModelUrl(finalUrl);
         setProjectStatus('completed');
@@ -1064,7 +1063,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             historySearchQuery={historySearchQuery}
             setHistorySearchQuery={setHistorySearchQuery}
             onSelectModel={(url) => {
-              setModelUrl(url);
+              setModelUrl(adjustUrlForLocalhost(url));
               setModelReady(true);
               setProjectStatus('completed');
               setShowLoadingUI(false);

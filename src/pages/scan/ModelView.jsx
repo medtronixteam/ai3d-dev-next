@@ -76,7 +76,7 @@ const ModelView = () => {
                 Join thousands of 3D artists earning passive income from their creative work
               </span>
             </div>
-            <button className="a3d-join-btn">Join Now</button>
+            <button className="a3d-join-btn" style={{ cursor: "not-allowed", position: "relative", zIndex: 1000 }}>Join Now</button>
           </div>
         </div>
 
@@ -173,17 +173,17 @@ const ModelView = () => {
 
               {/* Sidebar Footer */}
               <div className="export-button-bar">
-                    <button className="export-action-btn small">
-                      <Edit size={14} className="action-icon" />
-                    </button>
-                    <button className="export-action-btn small">
-                      <Share size={14} className="action-icon" />
-                    </button>
-                    <button className="export-action-btn export">
-                      <Download size={14} className="me-1" />
-                      Export
-                    </button>
-                  </div>
+                <button className="export-action-btn small">
+                  <Edit size={14} className="action-icon" />
+                </button>
+                <button className="export-action-btn small">
+                  <Share size={14} className="action-icon" />
+                </button>
+                <button className="export-action-btn export">
+                  <Download size={14} className="me-1" />
+                  Export
+                </button>
+              </div>
             </div>
           </div>
         </div>

@@ -79,7 +79,7 @@ const CenterScan = ({
                 Join thousands of 3D artists earning passive income from their creative work
               </p>
             </div>
-            <button className="btn-join-now ms-3 mt-1">Join Now</button>
+            <button className="btn-join-now ms-3 mt-1" style={{ cursor: "not-allowed", position: "relative", zIndex: 1000 }}>Join Now</button>
           </div>
         </div>
       </div>

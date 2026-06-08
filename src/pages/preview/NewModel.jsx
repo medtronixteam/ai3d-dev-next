@@ -34,6 +34,20 @@ const NewModel = () => {
     return `${url}${separator}_t=${Date.now()}`;
   };
 
+  const adjustUrlForLocalhost = (url) => {
+    if (!url) return url;
+    if (
+      (window.location.hostname === 'localhost' ||
+        window.location.hostname === '127.0.0.1' ||
+        window.location.hostname === '0.0.0.0' ||
+        window.location.port === '3000') &&
+      url.includes('ai3dscanning-crm.s3.ap-south-1.amazonaws.com')
+    ) {
+      return url.replace('https://ai3dscanning-crm.s3.ap-south-1.amazonaws.com', '/s3-proxy');
+    }
+    return url;
+  };
+
   const fetchTempModelUrl = async () => {
     try {
       setLoading(true);
@@ -56,7 +70,7 @@ const NewModel = () => {
       const data = await response.json();
 
       let url =
-        data.url || data.temp_url || data.model_url || data.data?.url || data.data?.temp_url;
+          data.url || data.temp_url || data.model_url || data.data?.url || data.data?.temp_url;
 
       if (!url) {
         navigate('/model/error/page', {
@@ -66,24 +80,9 @@ const NewModel = () => {
       }
 
       url = url.replace(/\\\//g, '/').trim();
-      const finalUrl = addCacheBuster(url);
+      const finalUrl = adjustUrlForLocalhost(addCacheBuster(url));
 
-      // Record view count
-      try {
-        await axios.post(
-          `${baseURL}/model/view/count`,
-          { model_id: projectId },
-          {
-            headers: {
-              Authorization: `Bearer ${mobileToken}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-        console.log('Successfully recorded view for model:', projectId);
-      } catch (err) {
-        console.error('Failed to hit view count API:', err);
-      }
+
 
       setIsModelRendering(true);
       setModelUrl(finalUrl);

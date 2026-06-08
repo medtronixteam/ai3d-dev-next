@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   ArrowRight,
   Search,
@@ -132,6 +133,7 @@ const RightScan = ({
   setHistorySearchQuery,
   onSelectModel,
 }) => {
+  const navigate = useNavigate();
   const { token } = useAuth();
   const [libraryModels, setLibraryModels] = React.useState([]);
   const [libraryLoading, setLibraryLoading] = React.useState(false);
@@ -310,20 +312,7 @@ const RightScan = ({
             }
             url = tempUrl;
 
-            // Record view count
-            try {
-              fetch(`${baseURL}/model/view/count`, {
-                method: 'POST',
-                headers: {
-                  ...headers,
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ model_id: model.id }),
-              });
-              console.log('Successfully recorded view for library model:', model.id);
-            } catch (err) {
-              console.error('Failed to hit view count API:', err);
-            }
+
           }
         }
       } catch (err) {
@@ -529,7 +518,7 @@ const RightScan = ({
               collaboration features.
             </p>
             <div className="d-flex justify-content-end">
-              <button className="upgrade-btn-card rounded-pill border-0">
+              <button className="upgrade-btn-card rounded-pill border-0" onClick={() => navigate('/3dio/subscription')}>
                 <img
                   src={Crown}
                   alt="Diamond"

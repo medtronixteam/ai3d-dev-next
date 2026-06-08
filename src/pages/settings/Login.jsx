@@ -273,62 +273,106 @@ const LoginSettings = () => {
           </div>
         </div>
 
-        <div className="settings-note py-3">
-          <div className="note-icon" aria-hidden="true">
-            <FiLock />
-          </div>
+        {(() => {
+          const sections = [
+            {
+              id: 'password',
+              title: 'Password',
+              text: 'To add a password to your account for the first time, you will need to use the password reset page so we can verify your identity.',
+              render: () => (
+                <div className="settings-note py-3" key="password">
+                  <div className="note-icon" aria-hidden="true">
+                    <FiLock />
+                  </div>
+                  <div className="note-content">
+                    <div className="note-title">Password</div>
+                    <div className="note-text">
+                      To add a password to your account for the first time, you will need to use the{' '}
+                      <a
+                        style={{ color: '#DE3996', cursor: 'pointer', textDecoration: 'underline' }}
+                        onClick={() => setShowForgotPassword(true)}
+                      >
+                        password reset
+                      </a>{' '}
+                      page so we can verify your identity.
+                    </div>
+                  </div>
+                </div>
+              ),
+            },
+            {
+              id: 'security',
+              title: 'Security',
+              subheading: 'Sign out from all devices',
+              desc: 'Logged in on a shared device but forgot to sign out? End all sessions by sign out from all devices.',
+              render: () => (
+                <div className="settings-card" key="security">
+                  <div className="settings-heading">Security</div>
+                  <div className="settings-subheading">Sign out from all devices</div>
+                  <p className="settings-desc">
+                    Logged in on a shared device but forgot to sign out? End all sessions by sign out from
+                    all devices.
+                  </p>
+                  <button
+                    className="settings-btn-login"
+                    onClick={() => {
+                      setPopupType('logout');
+                      setError('');
+                    }}
+                  >
+                    Sign out from all devices
+                  </button>
+                </div>
+              ),
+            },
+            {
+              id: 'delete_account',
+              title: 'Delete your account',
+              subheading: 'Delete Account',
+              desc: "By deleting your account, you'll no longer be able to access any of your data. This action cannot be undone.",
+              render: () => (
+                <div className="settings-card" key="delete_account">
+                  <div className="settings-heading">Delete your account</div>
+                  <div className="settings-subheading">Delete Account</div>
+                  <p className="settings-desc">
+                    By deleting your account, you'll no longer be able to access any of your data. This
+                    action cannot be undone.
+                  </p>
+                  <button
+                    className="settings-btn-login"
+                    onClick={() => {
+                      setPopupType('delete');
+                      setError('');
+                    }}
+                  >
+                    Delete Account
+                  </button>
+                </div>
+              ),
+            },
+          ];
 
-          <div className="note-content">
-            <div className="note-title">Password</div>
-            <div className="note-text">
-              To add a password to your account for the first time, you will need to use the{' '}
-              {/* <a onClick={() => setShowChangePassword(true)} */}
-              <a
-                style={{ color: '#DE3996', cursor: 'pointer', textDecoration: 'underline' }}
-                onClick={() => setShowForgotPassword(true)}
-              >
-                password reset
-              </a>{' '}
-              page so we can verify your identity.
-            </div>
-          </div>
-        </div>
+          const filteredSections = sections.filter((sec) => {
+            if (!searchQuery.trim()) return true;
+            const query = searchQuery.toLowerCase();
+            return (
+              sec.title?.toLowerCase().includes(query) ||
+              sec.text?.toLowerCase().includes(query) ||
+              sec.subheading?.toLowerCase().includes(query) ||
+              sec.desc?.toLowerCase().includes(query)
+            );
+          });
 
-        <div className="settings-card">
-          <div className="settings-heading">Security</div>
-          <div className="settings-subheading">Sign out from all devices</div>
-          <p className="settings-desc">
-            Logged in on a shared device but forgot to sign out? End all sessions by sign out from
-            all devices.
-          </p>
-          <button
-            className="settings-btn-login"
-            onClick={() => {
-              setPopupType('logout');
-              setError('');
-            }}
-          >
-            Sign out from all devices
-          </button>
-        </div>
+          if (filteredSections.length === 0) {
+            return (
+              <div style={{ textAlign: 'center', padding: '32px 16px', color: '#888', fontSize: '18px' }}>
+                No security settings match your search.
+              </div>
+            );
+          }
 
-        <div className="settings-card">
-          <div className="settings-heading">Delete your account</div>
-          <div className="settings-subheading">Delete Account</div>
-          <p className="settings-desc">
-            By deleting your account, you'll no longer be able to access any of your data. This
-            action cannot be undone.
-          </p>
-          <button
-            className="settings-btn-login"
-            onClick={() => {
-              setPopupType('delete');
-              setError('');
-            }}
-          >
-            Delete Account
-          </button>
-        </div>
+          return filteredSections.map((sec) => sec.render());
+        })()}
       </div>
 
       {/* Change Password Modal */}

@@ -220,6 +220,17 @@ const Navbar = ({ onSidebarToggle, sidebarOpen }) => {
   // Check if current route is a settings page or recent projects page
   const isSettingsPage = location.pathname.startsWith('/3dio/settings');
   const isRecentProjectsPage = location.pathname === '/3dio/recent-projects';
+  const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    setSearchQuery('');
+  }, [location.pathname]);
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    window.dispatchEvent(new CustomEvent('recentProjectsSearch', { detail: { query: value } }));
+  };
 
   // Close dropdown on outside click
   React.useEffect(() => {
@@ -254,7 +265,13 @@ const Navbar = ({ onSidebarToggle, sidebarOpen }) => {
         <div className="navbar-left">
           <div className={`navbar-search-container navbar-search-container--white`}>
             <FiSearch className="navbar-search-icon" />
-            <input type="text" placeholder="Search" className="navbar-search-input" />
+            <input
+              type="text"
+              placeholder="Search"
+              className="navbar-search-input"
+              value={searchQuery}
+              onChange={handleSearchChange}
+            />
           </div>
         </div>
       )}

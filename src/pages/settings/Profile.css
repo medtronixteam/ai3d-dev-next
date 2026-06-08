@@ -1065,6 +1065,11 @@ select:-webkit-autofill:focus {
   color: #f3f3fa !important;
 }
 
+[data-theme='dark'] .profile-main-card div.profile-placeholder-avatar,
+.dark .profile-main-card div.profile-placeholder-avatar {
+  color: #DE3996 !important;
+}
+
 /* Profile name and email color toggling */
 .profile-main-card .profile-name {
   color: #232334;

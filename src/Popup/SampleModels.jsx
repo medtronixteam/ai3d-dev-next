@@ -185,31 +185,7 @@ const SampleModels = ({ model, onClose }) => {
     };
   }, [onClose]);
 
-  useEffect(() => {
-    if (model?.id) {
-      const recordView = async () => {
-        try {
-          const token = localStorage.getItem('token');
-          const headers = {
-            'Content-Type': 'application/json',
-          };
-          if (token && token !== 'null' && token !== 'undefined') {
-            headers['Authorization'] = `Bearer ${token}`;
-          }
-          
-          await fetch(`${baseURL}/model/view/count`, {
-            method: 'POST',
-            headers,
-            body: JSON.stringify({ model_id: model.id }),
-          });
-          console.log('Successfully recorded view for sample model:', model.id);
-        } catch (err) {
-          console.error('Failed to hit view count API:', err);
-        }
-      };
-      recordView();
-    }
-  }, [model?.id]);
+
 
   useEffect(() => {
     const el = viewerRef.current;

@@ -1063,6 +1063,7 @@ const Profile = () => {
               />
             ) : (
               <div
+                className="profile-placeholder-avatar"
                 style={{
                   width: 72,
                   height: 72,
@@ -1142,42 +1143,42 @@ const Profile = () => {
         </div>
         {/* 2-column form */}
         <div className="profile-grid">
-          <div>
-            <label className="form-label">Name</label>
-            <input className="form-control profile-input" value={user.name || ''} disabled />
-          </div>
-          <div>
-            <label className="form-label">Email Address</label>
-            <input className="form-control profile-input" value={user.email || ''} disabled />
-          </div>
-          <div>
-            <label className="form-label">Gender</label>
-            <input className="form-control profile-input" value={user.gender || ''} disabled />
-          </div>
-          <div>
-            <label className="form-label">Country</label>
-            <input className="form-control profile-input" value={user.country || ''} disabled />
-          </div>
-          <div>
-            <label className="form-label">Language</label>
-            <input className="form-control profile-input" value={user.language || ''} disabled />
-          </div>
-          <div>
-            <label className="form-label">Phone Number</label>
-            <input className="form-control profile-input" value={user.phone || ''} disabled />
-          </div>
-          <div>
-            <label className="form-label">Time Zone</label>
-            <input className="form-control profile-input" value={user.time_zone || ''} disabled />
-          </div>
-          <div>
-            <label className="form-label">AI Model Setting</label>
-            <input
-              className="form-control profile-input"
-              value={user.ai_model_setting || user.aiModel || ''}
-              disabled
-            />
-          </div>
+          {(() => {
+            const profileFields = [
+              { label: 'Name', value: user.name || '' },
+              { label: 'Email Address', value: user.email || '' },
+              { label: 'Gender', value: user.gender || '' },
+              { label: 'Country', value: user.country || '' },
+              { label: 'Language', value: user.language || '' },
+              { label: 'Phone Number', value: user.phone || '' },
+              { label: 'Time Zone', value: user.time_zone || '' },
+              { label: 'AI Model Setting', value: user.ai_model_setting || user.aiModel || '' },
+            ];
+
+            const filteredFields = profileFields.filter((field) => {
+              if (!searchQuery.trim()) return true;
+              const query = searchQuery.toLowerCase();
+              return (
+                field.label.toLowerCase().includes(query) ||
+                field.value.toString().toLowerCase().includes(query)
+              );
+            });
+
+            if (filteredFields.length === 0) {
+              return (
+                <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '32px 16px', color: '#888', fontSize: '18px' }}>
+                  No fields match your search.
+                </div>
+              );
+            }
+
+            return filteredFields.map((field, index) => (
+              <div key={index}>
+                <label className="form-label">{field.label}</label>
+                <input className="form-control profile-input" value={field.value} disabled />
+              </div>
+            ));
+          })()}
         </div>
         {/* My email address section */}
         {/* <div className="emails-container" style={{ marginTop: 32 }}>
@@ -1260,6 +1261,7 @@ const EditProfileModal = ({ onClose, user, setUser, onChangePassword, onSuccess 
   const [imgUploading, setImgUploading] = useState(false);
   const [imgUrl, setImgUrl] = useState(user?.avatar || user?.image || '');
   const [successMsg, setSuccessMsg] = useState('');
+  const [formErrors, setFormErrors] = useState({});
   const { token } = useAuth();
   const fileInputRef = React.useRef();
 
@@ -1287,6 +1289,9 @@ const EditProfileModal = ({ onClose, user, setUser, onChangePassword, onSuccess 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     if (error) setError('');
+    if (formErrors[e.target.name]) {
+      setFormErrors((prev) => ({ ...prev, [e.target.name]: '' }));
+    }
   };
 
   useEffect(() => {
@@ -1344,18 +1349,19 @@ const EditProfileModal = ({ onClose, user, setUser, onChangePassword, onSuccess 
   };
 
   const validateForm = () => {
+    const errors = {};
     for (let field of requiredFields) {
       if (!form[field] || form[field].toString().trim() === '') {
-        return false;
+        errors[field] = 'This field is required';
       }
     }
-    return true;
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const handleSave = async () => {
     setError('');
     if (!validateForm()) {
-      setError('Please fill all required fields.');
       return;
     }
     setSaving(true);
@@ -1427,6 +1433,7 @@ const EditProfileModal = ({ onClose, user, setUser, onChangePassword, onSuccess 
         .edit-modal .modal-actions .save-btn { background: #DE3996; color: #fff; }
         .edit-modal .change-password-btn { background: none; color: #DE3996; border: none; text-decoration: underline; cursor: pointer; margin-right: auto; font-size: 1rem; }
         .edit-modal .error-msg { color: #DE3996; margin-top: 16px; font-weight: 500; }
+        .edit-modal .error-msg-inline { color: #DE3996; font-size: 0.8rem; margin-top: 4px; display: block; text-align: start; }
       `}</style>
       <div className="edit-modal-backdrop">
         <div className="edit-modal">
@@ -1548,6 +1555,7 @@ const EditProfileModal = ({ onClose, user, setUser, onChangePassword, onSuccess 
                 required
                 maxLength={15}
               />
+              {formErrors.name && <span className="error-msg-inline">{formErrors.name}</span>}
             </div>
             <div>
               <label>
@@ -1561,6 +1569,7 @@ const EditProfileModal = ({ onClose, user, setUser, onChangePassword, onSuccess 
                 required
                 type="email"
               />
+              {formErrors.email && <span className="error-msg-inline">{formErrors.email}</span>}
             </div>
             <div>
               <label>
@@ -1582,6 +1591,7 @@ const EditProfileModal = ({ onClose, user, setUser, onChangePassword, onSuccess 
                 </select>
                 <FiChevronDown className="select-chevron" />
               </div>
+              {formErrors.gender && <span className="error-msg-inline">{formErrors.gender}</span>}
             </div>
             <div>
               <label>
@@ -1604,6 +1614,7 @@ const EditProfileModal = ({ onClose, user, setUser, onChangePassword, onSuccess 
                 </select>
                 <FiChevronDown className="select-chevron" />
               </div>
+              {formErrors.country && <span className="error-msg-inline">{formErrors.country}</span>}
             </div>
             <div>
               <label>
@@ -1626,6 +1637,7 @@ const EditProfileModal = ({ onClose, user, setUser, onChangePassword, onSuccess 
                 </select>
                 <FiChevronDown className="select-chevron" />
               </div>
+              {formErrors.language && <span className="error-msg-inline">{formErrors.language}</span>}
             </div>
             <div>
               <label>
@@ -1672,6 +1684,7 @@ const EditProfileModal = ({ onClose, user, setUser, onChangePassword, onSuccess 
                   }}
                 />
               </div>
+              {formErrors.phone && <span className="error-msg-inline">{formErrors.phone}</span>}
             </div>
             <div>
               <label>
@@ -1694,6 +1707,7 @@ const EditProfileModal = ({ onClose, user, setUser, onChangePassword, onSuccess 
                 </select>
                 <FiChevronDown className="select-chevron" />
               </div>
+              {formErrors.time_zone && <span className="error-msg-inline">{formErrors.time_zone}</span>}
             </div>
             <div>
               <label>
@@ -1715,6 +1729,7 @@ const EditProfileModal = ({ onClose, user, setUser, onChangePassword, onSuccess 
                 </select>
                 <FiChevronDown className="select-chevron" />
               </div>
+              {formErrors.ai_model_setting && <span className="error-msg-inline">{formErrors.ai_model_setting}</span>}
             </div>
             <button className="change-password-btn" onClick={onChangePassword}>
               Change Password

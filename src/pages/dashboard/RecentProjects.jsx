@@ -72,6 +72,17 @@ const RecentProjects = () => {
   const [totalProjects, setTotalProjects] = useState(0);
   const observerTarget = useRef(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    const handleSearch = (e) => {
+      setSearchQuery(e.detail?.query || '');
+    };
+    window.addEventListener('recentProjectsSearch', handleSearch);
+    return () => {
+      window.removeEventListener('recentProjectsSearch', handleSearch);
+    };
+  }, []);
 
   useEffect(() => {
     const checkTheme = () => {
@@ -315,8 +326,14 @@ const RecentProjects = () => {
 
   let filtered = projects;
 
+  if (searchQuery.trim()) {
+    filtered = filtered.filter((p) =>
+      p.name?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }
+
   if (sortOption === 'Name') {
-    filtered = [...filtered].sort((a, b) => a.name.localeCompare(b.name));
+    filtered = [...filtered].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
   } else if (sortOption === 'Date') {
     filtered = [...filtered].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   } else if (sortOption === 'Size') {
@@ -382,12 +399,13 @@ const RecentProjects = () => {
 
   const handleViewProject = (project) => {
     setDropdownOpen(null);
-    console.log('[Recent Projects] 🚀 Navigating to view project:', project.id);
+    const targetToken = project.token || project.id;
+    console.log('[Recent Projects] 🚀 Navigating to view project:', targetToken);
     console.log('[Recent Projects] 📦 Project data:', project);
 
     navigate('/3dio/new/scan', {
       state: {
-        projectId: project.id,
+        projectId: targetToken,
         viewMode: true
       }
     });
@@ -806,10 +824,12 @@ const RecentProjects = () => {
         ) : (
           <SkeletonListLoader />
         )
-      ) : projects.length === 0 ? (
+      ) : filtered.length === 0 ? (
         <div style={{ textAlign: 'center', padding: 60, color: '#888', fontSize: 20 }}>
-          <div style={{ fontSize: 48, marginBottom: 12 }}>📂</div>
-          No projects found
+          <div style={{ fontSize: 48, marginBottom: 12 }}>
+            {projects.length === 0 ? '📂' : '🔍'}
+          </div>
+          {projects.length === 0 ? 'No projects found' : 'No projects match your search'}
         </div>
       ) : viewMode === 'grid' ? (
         <>

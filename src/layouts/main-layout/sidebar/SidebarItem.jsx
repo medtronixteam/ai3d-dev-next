@@ -85,8 +85,11 @@ const SidebarItem = ({ item, isCollapsed }) => {
     }
   };
 
-  const shouldAutoCollapse = item.path === '/team' || item.path === '/settings/profile';
-  const handleNavClick = (e) => {};
+  const handleNavClick = (e) => {
+    if (item.path === '/3dio/new/scan') {
+      window.dispatchEvent(new CustomEvent('reset-scan-new'));
+    }
+  };
 
   const isPreview =
     item.title === 'Preview' && item.path && item.path.startsWith('/3dio/preview');

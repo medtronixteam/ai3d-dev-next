@@ -27,19 +27,22 @@ const ModelViewer = ({
     position: { x: 0, y: 0, z: 0 },
     rotation: { x: 0, y: 0, z: 0 },
     scale: 1,
-  }
+  },
+  shadowsEnabled = true,
+  gridVisible = true,
+  autoRotate = false,
 }) => {
   const pos = transformControls?.position || { x: 0, y: 0, z: 0 };
   const rot = transformControls?.rotation || { x: 0, y: 0, z: 0 };
   const scl = transformControls?.scale !== undefined ? transformControls.scale : 1;
 
-  const rotX = (rot.x * Math.PI) / 180;
-  const rotY = (rot.y * Math.PI) / 180;
+  const rotX = (rot.y * Math.PI) / 180;
+  const rotY = (rot.x * Math.PI) / 180;
   const rotZ = (rot.z * Math.PI) / 180;
 
   return (
     <Canvas
-      shadows
+      shadows={shadowsEnabled}
       camera={{ position: [0, 2, 6], fov: 50 }} 
       style={{ width: "100%", height: "100%", background: "#F8F9FA" }}
       gl={{ preserveDrawingBuffer: true }}
@@ -47,19 +50,21 @@ const ModelViewer = ({
       <ambientLight intensity={0.8} />
       <spotLight position={[5, 10, 5]} angle={0.15} penumbra={1} intensity={1} />
 
-    <Grid
-    position={[0, -0.01, 0]} 
-    args={[10, 10]}
-    cellSize={0.5}
-    cellThickness={1}
-    cellColor="#bcbcbc" 
-    sectionSize={2}
-    sectionThickness={1.5}
-    sectionColor="#9a9a9a"
-    fadeDistance={25}
-    fadeStrength={1}
-    infiniteGrid
-    />
+    {gridVisible && (
+      <Grid
+        position={[0, -0.01, 0]} 
+        args={[10, 10]}
+        cellSize={0.5}
+        cellThickness={1}
+        cellColor="#bcbcbc" 
+        sectionSize={2}
+        sectionThickness={1.5}
+        sectionColor="#9a9a9a"
+        fadeDistance={25}
+        fadeStrength={1}
+        infiniteGrid
+      />
+    )}
 
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
     <circleGeometry args={[1.7, 64]} /> 
@@ -77,13 +82,15 @@ const ModelViewer = ({
     />
     </mesh>
 
-      <ContactShadows 
-        position={[0, 0, 0]} 
-        opacity={0.5} 
-        scale={6} 
-        blur={2} 
-        far={1} 
-      />
+      {shadowsEnabled && (
+        <ContactShadows 
+          position={[0, 0, 0]} 
+          opacity={0.5} 
+          scale={6} 
+          blur={2} 
+          far={1} 
+        />
+      )}
 
       <Suspense fallback={null}>
         <group
@@ -97,13 +104,16 @@ const ModelViewer = ({
         </group>
       </Suspense>
 
-      <Environment preset="city" />
+      <Suspense fallback={null}>
+        <Environment preset="city" />
+      </Suspense>
 
       <OrbitControls
         enableDamping
         makeDefault
         minPolarAngle={0}
         maxPolarAngle={Math.PI / 1.8}
+        autoRotate={autoRotate}
       />
     </Canvas>
   );

@@ -313,6 +313,33 @@ ul {
   fill: inherit !important;
 }
 
+/* Custom success toast style styled to match project's pink theme and light/dark theme */
+.Toastify__toast--success {
+  background: var(--body-bg) !important;
+  color: var(--text-primary) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+[data-theme='dark'] .Toastify__toast--success {
+  border: 1px solid #333333 !important;
+}
+
+.Toastify__toast--success .Toastify__progress-bar--success,
+.Toastify__toast--success .Toastify__progress-bar {
+  background: #DE3996 !important;
+}
+
+.Toastify__toast--success .Toastify__toast-icon svg,
+.Toastify__toast--success svg:first-of-type {
+  color: #DE3996 !important;
+  fill: #DE3996 !important;
+}
+
+.Toastify__toast--success .Toastify__close-button svg {
+  color: inherit !important;
+  fill: inherit !important;
+}
+
 /* Ensure toast notifications are above modals */
 .Toastify__toast-container {
   z-index: 99999 !important;

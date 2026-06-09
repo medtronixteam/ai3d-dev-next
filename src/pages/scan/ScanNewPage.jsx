@@ -467,7 +467,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     }
   }, [notifications, videoProjectToken]);
 
-  const resetAllInputs = () => {
+  const resetAllInputs = useCallback(() => {
     setPrompt('');
     setImages([]);
     setImageFiles([]);
@@ -487,7 +487,21 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     setShowLoadingUI(false);
     setShowBlackOverlay(false);
     setProgress(0);
-  };
+    setActiveTab('library');
+    setIsActuallyRendered(false);
+  }, []);
+
+  useEffect(() => {
+    const handleReset = () => {
+      console.log('[ScanNewPage] Resetting Scan New page state due to sidebar click.');
+      resetAllInputs();
+    };
+
+    window.addEventListener('reset-scan-new', handleReset);
+    return () => {
+      window.removeEventListener('reset-scan-new', handleReset);
+    };
+  }, [resetAllInputs]);
 
   const addCacheBuster = (url) => {
     if (!url) return url;

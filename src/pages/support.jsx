@@ -192,7 +192,30 @@ export default function Support() {
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
+    if (activeTerm && e.target.value !== activeTerm) {
+      setActiveTerm(null);
+    }
   };
+
+  // Filtered results based on searchQuery
+  const filteredCategories = searchQuery.trim()
+    ? helpCategories.filter(
+        (item) =>
+          item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.description.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : helpCategories;
+
+  const filteredFaqs = searchQuery.trim()
+    ? faqs.filter(
+        (faq) =>
+          faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : faqs;
+
+  const hasNoResults =
+    searchQuery.trim() && filteredCategories.length === 0 && filteredFaqs.length === 0;
 
   return (
     <div style={{ background: isDarkMode ? '#000' : '#fdf8fc' }}>
@@ -249,8 +272,18 @@ export default function Support() {
             placeholder="Search for help, guide, and more.."
             value={searchQuery}
             onChange={handleSearchChange}
+            onKeyDown={(e) => e.key === 'Escape' && setSearchQuery('')}
             className="search-input"
           />
+          {searchQuery && (
+            <button
+              className="search-clear-btn"
+              onClick={() => { setSearchQuery(''); setActiveTerm(null); }}
+              title="Clear search"
+            >
+              ✕
+            </button>
+          )}
           <button className="search-btn">
             <Search size={18} />
           </button>
@@ -271,23 +304,31 @@ export default function Support() {
           )}
         </div>
 
-        <div className="help-categories-grid">
-          {helpCategories.map((item, index) => (
-            <div key={index} className="help-card">
-              <div className="d-flex align-items-center gap-3">
-                <span className="linear-span-bg">
-                  <img src={item.icon} alt={item.title} />
-                </span>
-                <h3>{item.title}</h3>
+        {hasNoResults ? (
+          <div className="search-no-results">
+            <Search size={40} style={{ opacity: 0.3, marginBottom: '12px' }} />
+            <h3>No results found</h3>
+            <p>No help articles match <strong>"{searchQuery}"</strong>. Try a different keyword or <button className="link-btn" onClick={() => { setSearchQuery(''); setActiveTerm(null); }}>clear the search</button>.</p>
+          </div>
+        ) : (
+          <div className="help-categories-grid">
+            {filteredCategories.map((item, index) => (
+              <div key={index} className="help-card">
+                <div className="d-flex align-items-center gap-3">
+                  <span className="linear-span-bg">
+                    <img src={item.icon} alt={item.title} />
+                  </span>
+                  <h3>{item.title}</h3>
+                </div>
+                <p>{item.description}</p>
+                <button className="learn-more-btn mt-1">
+                  <Link2 size={16} />
+                  Visit
+                </button>
               </div>
-              <p>{item.description}</p>
-              <button className="learn-more-btn mt-1">
-                <Link2 size={16} />
-                Visit
-              </button>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         <div className="aithreed">
           <section className="dropdown mt-5" id="FAQs">
@@ -297,7 +338,7 @@ export default function Support() {
               </h2>
               {/* Accordion */}
               <div className="accordion" ref={accordionRef}>
-                {faqs.map((faq, index) => (
+                {filteredFaqs.length > 0 ? filteredFaqs.map((faq, index) => (
                   <div className="accordion-item border-0 mb-3" key={index}>
                     <h2 className="accordion-header justify">
                       <button
@@ -328,12 +369,12 @@ export default function Support() {
                     {openIndex === index && (
                       <div className="accordion-collapse show">
                         <div className="cet">
-                          <div className="accordion-body" >{faq.answer}</div>
+                          <div className="accordion-body">{faq.answer}</div>
                         </div>
                       </div>
                     )}
                   </div>
-                ))}
+                )) : searchQuery.trim() ? null : null}
               </div>
             </div>
           </section>

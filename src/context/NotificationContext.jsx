@@ -129,20 +129,36 @@ export const NotificationProvider = ({ children, fetchCoins }) => {
             className: 'pink-toast',
           });
 
-          const body = payload.notification.body.toLowerCase();
+          console.log('FCM Notification received in foreground:', payload);
+          const title = (payload.notification.title || '').toLowerCase();
+          const body = (payload.notification.body || '').toLowerCase();
+          const combined = `${title} ${body}`;
           
-          if (body.includes('notification')) {
+          if (combined.includes('notification')) {
             setTimeout(() => {
               fetchNotifications();
             }, 500);
           } 
-          else if (body.includes('coin')) {
+          else if (combined.includes('coin')) {
             if (typeof fetchCoins === 'function') {
               await fetchCoins();
             }
           } 
-          else if (body.includes('extraction')) {
+          else if (combined.includes('extraction')) {
             window.dispatchEvent(new CustomEvent('videoProcessingComplete', {
+              detail: { 
+                notification: payload.notification,
+                body: payload.notification.body 
+              }
+            }));
+            
+            setTimeout(() => {
+              fetchNotifications();
+            }, 500);
+          }
+          else if (combined.includes('complete') || combined.includes('ready') || combined.includes('success') || combined.includes('generated') || combined.includes('finish') || combined.includes('done')) {
+            console.log('Project completion matched, dispatching projectProcessingComplete event');
+            window.dispatchEvent(new CustomEvent('projectProcessingComplete', {
               detail: { 
                 notification: payload.notification,
                 body: payload.notification.body 

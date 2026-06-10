@@ -21,7 +21,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   const { token } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const { queue_system, frame_extraction } = useSocket();
+  const { queue_system, frame_extraction, clearActiveQueueRegistration } = useSocket();
   const { fcmToken, notifications } = useNotification();
 
   const [prompt, setPrompt] = useState('');
@@ -373,6 +373,9 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       toast.error('Failed to load project');
       setShowLoadingUI(false);
       setShowBlackOverlay(false);
+    } finally {
+      setIsGenerating(false);
+      setIsArrowLoading(false);
     }
   };
 
@@ -467,6 +470,20 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     }
   }, [notifications, videoProjectToken]);
 
+  useEffect(() => {
+    const handleProjectCompleteNotification = (event) => {
+      console.log('Project processing complete notification received:', event.detail);
+      if (projectToken) {
+        fetchInitialProject(projectToken);
+      }
+    };
+
+    window.addEventListener('projectProcessingComplete', handleProjectCompleteNotification);
+    return () => {
+      window.removeEventListener('projectProcessingComplete', handleProjectCompleteNotification);
+    };
+  }, [projectToken]);
+
   const resetAllInputs = useCallback(() => {
     setPrompt('');
     setImages([]);
@@ -489,7 +506,8 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     setProgress(0);
     setActiveTab('library');
     setIsActuallyRendered(false);
-  }, []);
+    clearActiveQueueRegistration();
+  }, [clearActiveQueueRegistration]);
 
   useEffect(() => {
     const handleReset = () => {
@@ -560,6 +578,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
         setShowQueueUI(false);
         setActiveTab('transform');
         setIsViewOnly(true);
+        clearActiveQueueRegistration();
       } else {
         throw new Error('Model URL not found in response');
       }
@@ -882,7 +901,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       if (newToken) {
         setProjectToken(newToken);
         setGeneratedPrompt('Video Frames');
-        startGenerationFlow(token_id);
+        startGenerationFlow(newToken);
       }
     } catch (err) {
       console.error(err);
@@ -892,8 +911,6 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   };
 
   const startGenerationFlow = (tokenId) => {
-    setIsGenerating(false);
-    setIsArrowLoading(false);
     setCurrentStep(1);
     fetchHistory();
 

@@ -10,6 +10,10 @@ export const SocketProvider = ({ children }) => {
   const [connected, setConnected] = useState(false);
   const [queueData, setQueueData] = useState(null);
 
+  const activeDeviceIdRef = useRef(null);
+  const activeVideoTokenRef = useRef(null);
+  const activeFcmTokenRef = useRef(null);
+
   useEffect(() => {
     const socket = io('https://node.ai3dscanning.com');
     socketRef.current = socket;
@@ -17,6 +21,19 @@ export const SocketProvider = ({ children }) => {
     socket.on('connect', () => {
       console.log(`Connected sockets ${socket.id}`, 'success');
       setConnected(true);
+
+      // Auto re-register active deviceId or videoToken upon reconnection
+      if (activeDeviceIdRef.current) {
+        console.log(`Auto re-registering active deviceId: ${activeDeviceIdRef.current} on reconnect`);
+        socket.emit('register-device', { deviceId: activeDeviceIdRef.current });
+      }
+      if (activeVideoTokenRef.current) {
+        console.log(`Auto re-registering active projectToken: ${activeVideoTokenRef.current} on reconnect`);
+        socket.emit('register-device', { 
+          projectToken: activeVideoTokenRef.current, 
+          fcmToken: activeFcmTokenRef.current 
+        });
+      }
     });
 
     socket.on('disconnect', (reason) => {
@@ -40,15 +57,24 @@ export const SocketProvider = ({ children }) => {
       return;
     }
 
-    if (!projectId || !fcmToken) {
-      console.log('Missing projectId or fcmToken', 'error');
+    if (!projectId) {
+      console.log('Missing projectId', 'error');
       return;
     }
 
+    // Save active registration details for reconnection auto-recovery
+    activeDeviceIdRef.current = projectId;
+    activeFcmTokenRef.current = fcmToken;
+    activeVideoTokenRef.current = null;
+
     console.log(`Project ID: ${projectId}`, 'info');
-    console.log(`FCM Token: ${fcmToken.substring(0, 20)}...`, 'info');
+    if (fcmToken) {
+      console.log(`FCM Token: ${fcmToken.substring(0, 20)}...`, 'info');
+    }
 
     socketRef.current.emit('register-device', { deviceId : projectId });
+
+    socketRef.current.off('status_update');
 
     socketRef.current.on('status_update', (data) => {
       console.log('Queue update:', data);
@@ -67,15 +93,29 @@ export const SocketProvider = ({ children }) => {
       return;
     }
 
+    // Save active registration details for reconnection auto-recovery
+    activeVideoTokenRef.current = videoProjectToken;
+    activeFcmTokenRef.current = fcmToken;
+    activeDeviceIdRef.current = null;
+
     console.log(`Project Token: ${videoProjectToken}`, 'info');
     console.log(`FCM Token: ${fcmToken.substring(0, 20)}...`, 'info');
 
     socketRef.current.emit('register-device', { projectToken: videoProjectToken, fcmToken });
 
+    socketRef.current.off('frame_extraction');
+
     socketRef.current.on('frame_extraction', (data) => {
-    console.log('Frame extraction update:', data);
+      console.log('Frame extraction update:', data);
     });
 
+  }, []);
+
+  const clearActiveQueueRegistration = useCallback(() => {
+    activeDeviceIdRef.current = null;
+    activeVideoTokenRef.current = null;
+    activeFcmTokenRef.current = null;
+    setQueueData(null);
   }, []);
 
   const subscribe = useCallback((eventName, callback) => {
@@ -106,6 +146,7 @@ export const SocketProvider = ({ children }) => {
     queueData,
     queue_system,
     frame_extraction,
+    clearActiveQueueRegistration,
     subscribe,
   };
 

@@ -146,6 +146,74 @@
   background-color: #c22f83;
 }
 
+/* Clear (✕) button inside search bar */
+.search-clear-btn {
+  position: absolute;
+  right: 54px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #aaa;
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 4px;
+  transition: color 0.2s ease;
+}
+
+.search-clear-btn:hover {
+  color: #DE3996;
+}
+
+/* No results state */
+.search-no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #888;
+}
+
+.search-no-results h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.search-no-results p {
+  font-size: 14px;
+  color: #888;
+  margin: 0;
+}
+
+[data-theme='dark'] .search-no-results h3 {
+  color: #ddd;
+}
+
+[data-theme='dark'] .search-no-results p {
+  color: #aaa;
+}
+
+/* Inline link button (for "clear the search") */
+.link-btn {
+  background: transparent;
+  border: none;
+  color: #DE3996;
+  text-decoration: underline;
+  font-size: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.link-btn:hover {
+  color: #c42981;
+}
+
 
 /* Ticket History Link */
 .ticket-history-link {

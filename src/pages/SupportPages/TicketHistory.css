@@ -328,3 +328,148 @@
     font-size: 13px;
   }
 }
+
+/* =============================================
+   Delete Ticket Modal Styles
+   ============================================= */
+
+.confirm-logout-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.confirm-logout-popup.modern-confirm-modal {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 36px 32px 28px;
+  max-width: 420px;
+  width: 90%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme='dark'] .confirm-logout-popup.modern-confirm-modal {
+  background: #1a1128;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* X Close Button */
+.request-refund-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: #e6339a;
+  border: none;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: all 0.2s ease;
+}
+
+.request-refund-close:hover {
+  background: #c42981;
+  transform: scale(1.1);
+}
+
+/* Modal title */
+.cancel-modal-title {
+  color: #1a1a1a;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 12px 0 8px;
+}
+
+[data-theme='dark'] .cancel-modal-title {
+  color: #ffffff;
+}
+
+/* Modal message */
+.cancel-modal-message {
+  color: rgba(30, 30, 30, 0.75);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+[data-theme='dark'] .cancel-modal-message {
+  color: rgba(220, 220, 220, 0.8);
+}
+
+/* Footer buttons row */
+.cancel-modal-footer {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Cancel button */
+.keep-plan-button {
+  background: #e5e5e5;
+  border: none;
+  border-radius: 8px;
+  color: #262626;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 24px;
+  cursor: pointer;
+  min-width: 100px;
+  transition: background 0.2s ease;
+}
+
+.keep-plan-button:hover {
+  background: #cacaca;
+}
+
+[data-theme='dark'] .keep-plan-button {
+  background: rgba(238, 204, 238, 0.45);
+  color: #ffffff;
+}
+
+[data-theme='dark'] .keep-plan-button:hover {
+  background: rgba(238, 204, 238, 0.6);
+}
+
+/* Delete / Confirm button */
+.cancel-button {
+  background: #de3996;
+  border: none;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 24px;
+  cursor: pointer;
+  min-width: 100px;
+  transition: background 0.2s ease;
+}
+
+.cancel-button:hover {
+  background: #c42981;
+}
+
+.cancel-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+

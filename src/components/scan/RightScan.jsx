@@ -686,45 +686,6 @@ const RightScan = ({
                       <img src={fullScreen} alt="" />
                       <h3 className="section-title mx-2">Transform Controls</h3>
                     </div>
-                    {/* Position Section */}
-                    <div className="input-group">
-                      <label className="input-label">Position</label>
-                      <div className="vector-inputs">
-                        <div className="input-field">
-                          <span className="axis-label">X</span>
-                          <input
-                            type="number"
-                            value={transformControls.position.x}
-                            onChange={(e) =>
-                              handleTransformChange('position', 'x', e.target.value)
-                            }
-                            className="number-input"
-                          />
-                        </div>
-                        <div className="input-field">
-                          <span className="axis-label">Y</span>
-                          <input
-                            type="number"
-                            value={transformControls.position.y}
-                            onChange={(e) =>
-                              handleTransformChange('position', 'y', e.target.value)
-                            }
-                            className="number-input"
-                          />
-                        </div>
-                        <div className="input-field">
-                          <span className="axis-label">Z</span>
-                          <input
-                            type="number"
-                            value={transformControls.position.z}
-                            onChange={(e) =>
-                              handleTransformChange('position', 'z', e.target.value)
-                            }
-                            className="number-input"
-                          />
-                        </div>
-                      </div>
-                    </div>
                     {/* Rotation Section */}
                     <div className="input-group">
                       <label className="input-label">Rotation (degree)</label>

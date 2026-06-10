@@ -181,19 +181,9 @@ const CenterScan = ({
             <div className="viewport-section w-100">
               <div className="viewport-content">
                 {!isActuallyRendered && (
-                  <div className="model-loading-overlay" style={{
-                    position: 'absolute',
-                    inset: 0,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    background: '#F8F9FA',
-                    zIndex: 20,
-                    borderRadius: '12px'
-                  }}>
+                  <div className="model-loading-overlay">
                     <div className="spinner-border text-pink" role="status"></div>
-                    <p className="mt-3 fw-bold text-dark">Initializing 3D View...</p>
+                    <p className="model-loading-text">Initializing 3D View...</p>
                   </div>
                 )}
                 <div className="layered-background">

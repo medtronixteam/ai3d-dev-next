@@ -322,12 +322,26 @@
 
 [data-theme='dark'] .search-arrow {
     background-color: black !important;
+    color: white !important;
+}
+
+[data-theme='dark'] .search-arrow svg {
+    color: white !important;
+    stroke: white !important;
 }
 
 [data-theme='dark'] .controls-section,
-[data-theme='dark'] .right-action-buttons,
-[data-theme='dark'] .bottom-info-bar {
+[data-theme='dark'] .right-action-buttons {
     background: transparent !important;
+}
+
+[data-theme='dark'] .bottom-info-bar {
+    background: #DE3996 !important;
+    color: white !important;
+}
+
+[data-theme='dark'] .bottom-info-bar .info-text {
+    color: white !important;
 }
 
 [data-theme='dark'] .export-action-btn,
@@ -1660,9 +1674,10 @@
     background: #DE3996;
     padding: 6px 12px;
     border-radius: 6px;
-    color: white;
+    color: white !important;
     font-size: 0.75rem;
     z-index: 1000;
+    pointer-events: auto;
 }
 
 .bottom-info-bar .info-item {
@@ -1678,6 +1693,8 @@
 
 .bottom-info-bar .info-text {
     font-weight: 500;
+    color: white !important;
+    opacity: 1 !important;
 }
 
 /* Right Action Buttons */
@@ -1871,3 +1888,30 @@
 [data-theme='dark'] .bg-pink-light {
     background-color: #2d1424 !important;
 }
+
+/* Model Loading Overlay inside 3D viewport */
+.model-loading-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #F8F9FA;
+    z-index: 20;
+    border-radius: 12px;
+}
+
+.model-loading-text {
+    margin-top: 1rem;
+    font-weight: 700;
+    color: #212529;
+}
+
+[data-theme='dark'] .model-loading-overlay {
+    background: #110E20;
+}
+
+[data-theme='dark'] .model-loading-text {
+    color: #ffffff;
+}

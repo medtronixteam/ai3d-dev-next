@@ -73,7 +73,10 @@ const ModelView = () => {
   }, [location]);
 
   const handleTransformChange = (type, axis, value) => {
-    const numericValue = parseFloat(value) || 0;
+    let numericValue = parseFloat(value) || 0;
+    if (type === 'scale') {
+      numericValue = Math.max(-5, Math.min(5, numericValue));
+    }
     setTransformControls((prev) => {
       const newControls = {
         ...prev,
@@ -363,6 +366,9 @@ const ModelView = () => {
                 <div className="a3d-field w-100">
                   <input
                     type="number"
+                    min="-5"
+                    max="5"
+                    step="0.1"
                     value={transformControls.scale}
                     onChange={(e) => handleTransformChange('scale', '', e.target.value)}
                     className="text-start ps-2"

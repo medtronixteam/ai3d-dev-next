@@ -217,7 +217,7 @@ const RightScan = ({
         });
         data = await res.json();
       } else {
-        const res = await fetch(`${baseURL}/model/all?page=${pageNum}`, { headers });
+        const res = await fetch(`${baseURL}/top/models?page=${pageNum}`, { headers });
         data = await res.json();
       }
 
@@ -438,7 +438,7 @@ const RightScan = ({
           100% { transform: rotate(25deg) }
         }
       `}</style>
-      <div className="library-card-outer">
+      <div className={`library-card-outer ${activeTab === 'transform' ? 'transform-tab' : ''}`}>
         {activeTab === 'library' && (
           <div className="upgrade-box p-2 rounded-4 m-3">
             <p className="text-pink x-small fw-bold mb-2">
@@ -731,6 +731,9 @@ const RightScan = ({
                       <div className="scale-input">
                         <input
                           type="number"
+                          min="-5"
+                          max="5"
+                          step="0.1"
                           value={transformControls.scale}
                           onChange={(e) => handleTransformChange('scale', '', e.target.value)}
                           className="number-input"

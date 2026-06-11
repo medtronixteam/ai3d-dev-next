@@ -15,6 +15,7 @@ import line from '../../pages/images/line.png';
 import dot from '../../pages/images/do.png';
 import arrow from '../../pages/images/arri.png';
 import { FaChevronDown, FaArrowUp } from 'react-icons/fa';
+import FooterLangCurrency from '../../components/footer/FooterLangCurrency';
 
 const ServicePage = () => {
   const { pathname, hash, key } = useLocation();
@@ -118,95 +119,7 @@ const ServicePage = () => {
                     </Link>
                   </div>
 
-                  {/* Mobile Language Dropdown */}
-
-                  <div className="dropdown btn-wrapper d-lg-none d-md-none d-sm-none d-block">
-                    <button
-                      className="btn english"
-                      type="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      <img src={world} alt="World" style={{ width: 18, marginRight: 6 }} />
-                      English
-                      <FaChevronDown size={12} className="ms-2" />
-                    </button>
-
-                    <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
-                      <li>
-                        <a className="dropdown-item black" href="#">
-                          English
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-
-                  {/* Mobile Currency Dropdown */}
-
-                  <div className="dropdown btn-wrapper d-lg-none d-md-none d-sm-none d-block">
-                    <button
-                      className="btn usd"
-                      type="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      $USD
-                      <FaChevronDown size={12} className="ms-2" />
-                    </button>
-
-                    <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
-                      <li>
-                        <a className="dropdown-item black" href="#">
-                          $USD
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-
-                  {/* Desktop Language + Currency */}
-
-                  <div className="d-flex gap-2 none">
-                    <div className="dropdown btn-wrapper none">
-                      <button
-                        className="btn english"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        <img src={world} alt="World" style={{ width: 18, marginRight: 6 }} />
-                        English
-                        <FaChevronDown size={12} className="ms-2" />
-                      </button>
-
-                      <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
-                        <li>
-                          <a className="dropdown-item black" href="#">
-                            English
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-
-                    <div className="dropdown btn-wrapper none">
-                      <button
-                        className="btn usd"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        $USD
-                        <FaChevronDown size={12} className="ms-2" />
-                      </button>
-
-                      <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
-                        <li>
-                          <a className="black" href="#">
-                            $USD
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
+                    <FooterLangCurrency />
                 </div>
               </div>
 

@@ -143,7 +143,7 @@ function VideoModal({ open, onClose }) {
           loop
           muted
           playsInline
-          controls={false}
+          controls={true}
           style={{
             maxWidth: '100%',
             maxHeight: '80vh',

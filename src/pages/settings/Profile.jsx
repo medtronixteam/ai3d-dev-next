@@ -51,43 +51,175 @@ const modalAnim = {
 };
 const keyframes = `@keyframes modalPopIn { 0% { opacity: 0; transform: scale(0.85); } 100% { opacity: 1; transform: scale(1); } }`;
 
-const countryList = [
-  'Pakistan',
-  'India',
-  'United States',
-  'United Kingdom',
-  'Canada',
-  'Australia',
-  'Germany',
-  'France',
-  'China',
-  'Japan',
-  'Other',
+const defaultCountryData = [
+  { name: "Afghanistan", dialCode: "+93" },
+  { name: "Albania", dialCode: "+355" },
+  { name: "Algeria", dialCode: "+213" },
+  { name: "Andorra", dialCode: "+376" },
+  { name: "Angola", dialCode: "+244" },
+  { name: "Argentina", dialCode: "+54" },
+  { name: "Armenia", dialCode: "+374" },
+  { name: "Australia", dialCode: "+61" },
+  { name: "Austria", dialCode: "+43" },
+  { name: "Azerbaijan", dialCode: "+994" },
+  { name: "Bahamas", dialCode: "+1" },
+  { name: "Bahrain", dialCode: "+973" },
+  { name: "Bangladesh", dialCode: "+880" },
+  { name: "Belgium", dialCode: "+32" },
+  { name: "Bolivia", dialCode: "+591" },
+  { name: "Brazil", dialCode: "+55" },
+  { name: "Bulgaria", dialCode: "+359" },
+  { name: "Cambodia", dialCode: "+855" },
+  { name: "Cameroon", dialCode: "+237" },
+  { name: "Canada", dialCode: "+1" },
+  { name: "Chile", dialCode: "+56" },
+  { name: "China", dialCode: "+86" },
+  { name: "Colombia", dialCode: "+57" },
+  { name: "Costa Rica", dialCode: "+506" },
+  { name: "Croatia", dialCode: "+385" },
+  { name: "Cuba", dialCode: "+53" },
+  { name: "Cyprus", dialCode: "+357" },
+  { name: "Czechia", dialCode: "+420" },
+  { name: "Denmark", dialCode: "+45" },
+  { name: "Dominican Republic", dialCode: "+1" },
+  { name: "Ecuador", dialCode: "+593" },
+  { name: "Egypt", dialCode: "+20" },
+  { name: "El Salvador", dialCode: "+503" },
+  { name: "Estonia", dialCode: "+372" },
+  { name: "Ethiopia", dialCode: "+251" },
+  { name: "Finland", dialCode: "+358" },
+  { name: "France", dialCode: "+33" },
+  { name: "Georgia", dialCode: "+995" },
+  { name: "Germany", dialCode: "+49" },
+  { name: "Ghana", dialCode: "+233" },
+  { name: "Greece", dialCode: "+30" },
+  { name: "Guatemala", dialCode: "+502" },
+  { name: "Honduras", dialCode: "+504" },
+  { name: "Hong Kong", dialCode: "+852" },
+  { name: "Hungary", dialCode: "+36" },
+  { name: "Iceland", dialCode: "+354" },
+  { name: "India", dialCode: "+91" },
+  { name: "Indonesia", dialCode: "+62" },
+  { name: "Iran", dialCode: "+98" },
+  { name: "Iraq", dialCode: "+964" },
+  { name: "Ireland", dialCode: "+353" },
+  { name: "Israel", dialCode: "+972" },
+  { name: "Italy", dialCode: "+39" },
+  { name: "Jamaica", dialCode: "+1" },
+  { name: "Japan", dialCode: "+81" },
+  { name: "Jordan", dialCode: "+962" },
+  { name: "Kazakhstan", dialCode: "+7" },
+  { name: "Kenya", dialCode: "+254" },
+  { name: "Kuwait", dialCode: "+965" },
+  { name: "Lebanon", dialCode: "+961" },
+  { name: "Libya", dialCode: "+218" },
+  { name: "Lithuania", dialCode: "+370" },
+  { name: "Luxembourg", dialCode: "+352" },
+  { name: "Malaysia", dialCode: "+60" },
+  { name: "Maldives", dialCode: "+960" },
+  { name: "Malta", dialCode: "+356" },
+  { name: "Mexico", dialCode: "+52" },
+  { name: "Monaco", dialCode: "+377" },
+  { name: "Mongolia", dialCode: "+976" },
+  { name: "Morocco", dialCode: "+212" },
+  { name: "Nepal", dialCode: "+977" },
+  { name: "Netherlands", dialCode: "+31" },
+  { name: "New Zealand", dialCode: "+64" },
+  { name: "Nicaragua", dialCode: "+505" },
+  { name: "Nigeria", dialCode: "+234" },
+  { name: "Norway", dialCode: "+47" },
+  { name: "Oman", dialCode: "+968" },
+  { name: "Pakistan", dialCode: "+92" },
+  { name: "Palestine", dialCode: "+970" },
+  { name: "Panama", dialCode: "+507" },
+  { name: "Paraguay", dialCode: "+595" },
+  { name: "Peru", dialCode: "+51" },
+  { name: "Philippines", dialCode: "+63" },
+  { name: "Poland", dialCode: "+48" },
+  { name: "Portugal", dialCode: "+351" },
+  { name: "Qatar", dialCode: "+974" },
+  { name: "Romania", dialCode: "+40" },
+  { name: "Russia", dialCode: "+7" },
+  { name: "Saudi Arabia", dialCode: "+966" },
+  { name: "Senegal", dialCode: "+221" },
+  { name: "Serbia", dialCode: "+381" },
+  { name: "Singapore", dialCode: "+65" },
+  { name: "Slovakia", dialCode: "+421" },
+  { name: "Slovenia", dialCode: "+386" },
+  { name: "South Africa", dialCode: "+27" },
+  { name: "South Korea", dialCode: "+82" },
+  { name: "Spain", dialCode: "+34" },
+  { name: "Sri Lanka", dialCode: "+94" },
+  { name: "Sudan", dialCode: "+249" },
+  { name: "Sweden", dialCode: "+46" },
+  { name: "Switzerland", dialCode: "+41" },
+  { name: "Syria", dialCode: "+963" },
+  { name: "Taiwan", dialCode: "+886" },
+  { name: "Tajikistan", dialCode: "+992" },
+  { name: "Tanzania", dialCode: "+255" },
+  { name: "Thailand", dialCode: "+66" },
+  { name: "Tunisia", dialCode: "+216" },
+  { name: "Turkey", dialCode: "+90" },
+  { name: "Uganda", dialCode: "+256" },
+  { name: "Ukraine", dialCode: "+380" },
+  { name: "United Arab Emirates", dialCode: "+971" },
+  { name: "United Kingdom", dialCode: "+44" },
+  { name: "United States", dialCode: "+1" },
+  { name: "Uruguay", dialCode: "+598" },
+  { name: "Uzbekistan", dialCode: "+998" },
+  { name: "Venezuela", dialCode: "+58" },
+  { name: "Vietnam", dialCode: "+84" },
+  { name: "Yemen", dialCode: "+967" },
+  { name: "Zimbabwe", dialCode: "+263" }
 ];
-// Country dial codes for phone number prefix selection (show codes only)
-const countryDialCodes = [
-  { value: '+92', label: '+92' },
-  { value: '+91', label: '+91' },
-  { value: '+1', label: '+1' },
-  { value: '+44', label: '+44' },
-  { value: '+61', label: '+61' },
-  { value: '+49', label: '+49' },
-  { value: '+33', label: '+33' },
-  { value: '+86', label: '+86' },
-  { value: '+81', label: '+81' },
-];
-const timeZoneList = [
-  'Asia/Karachi',
-  'Asia/Kolkata',
-  'America/New_York',
-  'Europe/London',
-  'Europe/Berlin',
-  'Australia/Sydney',
-  'Asia/Tokyo',
-  'Africa/Cairo',
-  'Europe/Paris',
-  'UTC',
-];
+
+const countryList = Array.from(new Set(defaultCountryData.map(c => c.name))).sort();
+if (!countryList.includes("Other")) {
+  countryList.push("Other");
+}
+
+const uniqueDialCodesStatic = Array.from(new Set(defaultCountryData.map(c => c.dialCode))).sort((a, b) => {
+  const numA = parseInt(a.replace(/[^\d]/g, ''), 10);
+  const numB = parseInt(b.replace(/[^\d]/g, ''), 10);
+  return numA - numB;
+});
+const countryDialCodes = uniqueDialCodesStatic.map(code => ({ value: code, label: code }));
+let timeZoneList = [];
+try {
+  timeZoneList = Intl.supportedValuesOf('timeZone');
+} catch (e) {
+  timeZoneList = [
+    'Africa/Cairo',
+    'America/Argentina/Buenos_Aires',
+    'America/Bogota',
+    'America/Chicago',
+    'America/Denver',
+    'America/Los_Angeles',
+    'America/Mexico_City',
+    'America/New_York',
+    'America/Sao_Paulo',
+    'Asia/Bangkok',
+    'Asia/Dubai',
+    'Asia/Hong_Kong',
+    'Asia/Jakarta',
+    'Asia/Karachi',
+    'Asia/Kolkata',
+    'Asia/Manila',
+    'Asia/Riyadh',
+    'Asia/Seoul',
+    'Asia/Shanghai',
+    'Asia/Singapore',
+    'Asia/Tokyo',
+    'Australia/Sydney',
+    'Europe/Berlin',
+    'Europe/London',
+    'Europe/Madrid',
+    'Europe/Moscow',
+    'Europe/Paris',
+    'Europe/Rome',
+    'UTC',
+  ];
+}
 const aiModelOptions = [
   { value: 'basic', label: 'Basic' },
   { value: 'enterprise', label: 'Enterprise' },
@@ -1265,6 +1397,116 @@ const EditProfileModal = ({ onClose, user, setUser, onChangePassword, onSuccess 
   const { token } = useAuth();
   const fileInputRef = React.useRef();
 
+  const [countries, setCountries] = useState(countryList);
+  const [phoneCodes, setPhoneCodes] = useState(countryDialCodes);
+  const [countryDataList, setCountryDataList] = useState(defaultCountryData);
+
+  useEffect(() => {
+    fetch('https://restcountries.com/v3.1/all?fields=name,idd,cca2')
+      .then((res) => {
+        if (!res.ok) throw new Error('API failed');
+        return res.json();
+      })
+      .then((data) => {
+        if (data && Array.isArray(data)) {
+          const fetched = data.map((item) => {
+            const name = item.name?.common || '';
+            let dialCode = '';
+            if (item.idd && item.idd.root) {
+              const root = item.idd.root;
+              const suffixes = item.idd.suffixes || [];
+              if (root === '+1') {
+                dialCode = '+1';
+              } else if (suffixes.length === 1) {
+                dialCode = root + suffixes[0];
+              } else if (suffixes.length > 1) {
+                if (root === '+7') {
+                  dialCode = '+7';
+                } else {
+                  dialCode = root + (suffixes[0].length <= 2 ? suffixes[0] : '');
+                }
+              } else {
+                dialCode = root;
+              }
+            }
+            return { name, dialCode };
+          })
+          .filter(c => c.name && c.dialCode);
+
+          fetched.sort((a, b) => a.name.localeCompare(b.name));
+
+          const uniqueNames = Array.from(new Set(fetched.map(c => c.name)));
+          if (!uniqueNames.includes('Other')) {
+            uniqueNames.push('Other');
+          }
+
+          const uniqueCodesMap = new Map();
+          fetched.forEach(c => {
+            if (c.dialCode && !uniqueCodesMap.has(c.dialCode)) {
+              uniqueCodesMap.set(c.dialCode, { value: c.dialCode, label: c.dialCode });
+            }
+          });
+          
+          defaultCountryData.forEach(c => {
+            if (c.dialCode && !uniqueCodesMap.has(c.dialCode)) {
+              uniqueCodesMap.set(c.dialCode, { value: c.dialCode, label: c.dialCode });
+            }
+          });
+
+          const sortedCodes = Array.from(uniqueCodesMap.values()).sort((a, b) => {
+            const numA = parseInt(a.value.replace(/[^\d]/g, ''), 10);
+            const numB = parseInt(b.value.replace(/[^\d]/g, ''), 10);
+            return numA - numB;
+          });
+
+          setCountries(uniqueNames);
+          setPhoneCodes(sortedCodes);
+          setCountryDataList(fetched);
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to fetch country list from API:', err);
+      });
+  }, []);
+
+  const handleCountryChange = (e) => {
+    const selectedCountry = e.target.value;
+    setForm((prev) => {
+      const updated = { ...prev, country: selectedCountry };
+      if (selectedCountry) {
+        const countryInfo = countryDataList.find(
+          (c) => c.name.toLowerCase() === selectedCountry.toLowerCase()
+        );
+        if (countryInfo && countryInfo.dialCode) {
+          updated.phone_country_code = countryInfo.dialCode;
+        } else {
+          let defaultCode = '';
+          const cLower = selectedCountry.toLowerCase();
+          if (cLower.includes('pakistan')) defaultCode = '+92';
+          else if (cLower.includes('india')) defaultCode = '+91';
+          else if (cLower.includes('united states') || cLower === 'usa' || cLower === 'us')
+            defaultCode = '+1';
+          else if (cLower.includes('united kingdom') || cLower === 'uk') defaultCode = '+44';
+          else if (cLower.includes('canada')) defaultCode = '+1';
+          else if (cLower.includes('australia')) defaultCode = '+61';
+          else if (cLower.includes('germany')) defaultCode = '+49';
+          else if (cLower.includes('france')) defaultCode = '+33';
+          else if (cLower.includes('china')) defaultCode = '+86';
+          else if (cLower.includes('japan')) defaultCode = '+81';
+          if (defaultCode) {
+            updated.phone_country_code = defaultCode;
+          }
+        }
+      }
+      return updated;
+    });
+
+    if (error) setError('');
+    if (formErrors.country) {
+      setFormErrors((prev) => ({ ...prev, country: '' }));
+    }
+  };
+
   // List of required fields
   const requiredFields = [
     'name',
@@ -1601,12 +1843,12 @@ const EditProfileModal = ({ onClose, user, setUser, onChangePassword, onSuccess 
                 <select
                   name="country"
                   value={form.country || ''}
-                  onChange={handleChange}
+                  onChange={handleCountryChange}
                   className="form-control"
                   required
                 >
                   <option value="">Select Country</option>
-                  {countryList.map((c) => (
+                  {countries.map((c) => (
                     <option key={c} value={c}>
                       {c}
                     </option>
@@ -1659,7 +1901,7 @@ const EditProfileModal = ({ onClose, user, setUser, onChangePassword, onSuccess 
                     }}
                   >
                     {/* <option value="">Code</option> */}
-                    {countryDialCodes.map((opt) => (
+                    {phoneCodes.map((opt) => (
                       <option key={`${opt.label}-${opt.value}`} value={opt.value}>
                         {opt.label}
                       </option>

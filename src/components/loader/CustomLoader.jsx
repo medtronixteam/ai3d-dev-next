@@ -19,7 +19,7 @@ const CustomLoader = () => (
         padding: 0 48px;
         font-size: 3rem;
         font-family: "Lateef", monospace;
-        color: #DE3996;
+        color: #DE3996 !important;
         overflow: visible;
       }
       .loader::before,

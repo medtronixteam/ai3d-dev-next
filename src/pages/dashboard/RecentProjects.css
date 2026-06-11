@@ -926,11 +926,24 @@
     gap: 18px;
     align-items: flex-start;
     margin-top: 2rem;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .rp-filter-bar {
     justify-content: start;
     margin-bottom: 8px;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+    scrollbar-width: none; /* Hide scrollbar for clean aesthetic */
+  }
+
+  .rp-filter-bar::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Safari/Chrome */
   }
 
   .recent-projects-header-spacer {
@@ -938,9 +951,8 @@
   }
 
   .recent-projects-header-actions {
-    justify-content: end;
+    justify-content: flex-end;
     width: 100%;
-    margin-right: 2rem;
   }
 }
 

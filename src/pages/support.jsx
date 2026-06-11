@@ -453,10 +453,13 @@ export const SupportTicketPopup = ({ onClose }) => {
 
   useEffect(() => {
     if (showSuccessPopup) {
-      const timer = setTimeout(() => setShowSuccessPopup(false), 3000); // 3 seconds
+      const timer = setTimeout(() => {
+        setShowSuccessPopup(false);
+        if (onClose) onClose();
+      }, 3000); // 3 seconds
       return () => clearTimeout(timer);
     }
-  }, [showSuccessPopup]);
+  }, [showSuccessPopup, onClose]);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);

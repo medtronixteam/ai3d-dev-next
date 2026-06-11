@@ -34,7 +34,7 @@ const TicketHistory = () => {
   const fetchTickets = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${baseURL}/support/ticket`);
+      const response = await axios.get(`${baseURL}/support/ticket?_t=${Date.now()}`);
       setTickets(response.data.data || response.data);
       setFilteredTickets(response.data.data || response.data);
     } catch (error) {
@@ -217,7 +217,18 @@ const TicketHistory = () => {
           deleting={loading}
         />
       )}
-      {showFormPopup && <SupportTicketPopup onClose={() => setShowFormPopup(false)} />}
+      {showFormPopup && (
+        <SupportTicketPopup
+          onClose={() => {
+            setShowFormPopup(false);
+            fetchTickets();
+            // Fetch again after a short delay to account for potential DB replication/write lag
+            setTimeout(() => {
+              fetchTickets();
+            }, 800);
+          }}
+        />
+      )}
     </div>
   );
 };

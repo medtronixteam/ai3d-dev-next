@@ -920,11 +920,15 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   };
 
   const handleTransformChange = (type, axis, value) => {
+    let numericValue = parseFloat(value) || 0;
+    if (type === 'scale') {
+      numericValue = Math.max(-5, Math.min(5, numericValue));
+    }
     setTransformControls((prev) => ({
       ...prev,
       [type]: axis
-        ? { ...prev[type], [axis]: parseFloat(value) || 0 }
-        : parseFloat(value) || 0,
+        ? { ...prev[type], [axis]: numericValue }
+        : numericValue,
     }));
   };
 

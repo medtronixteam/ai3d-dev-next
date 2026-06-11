@@ -69,19 +69,19 @@ const CenterScan = ({
   return (
     <div className="col-lg-6 col-md-8 negative-margin contributor-card position-relative mt-lg-0 mt-4">
       <div className="contributor-banner d-flex align-items-center justify-content-between mb-2">
-        <div className="d-flex gap-3 align-items-start">
-          <div className="rocket-icon-wrapper">
-            <Rocket size={24} color="#DE3996" />
-          </div>
-          <div className="text-start d-flex justify-content-between align-items-start">
-            <div>
+        <div className="d-flex gap-3 align-items-center w-100 flex-column flex-sm-row">
+          <div className="d-flex gap-3 align-items-center flex-grow-1">
+            <div className="rocket-icon-wrapper flex-shrink-0">
+              <Rocket size={24} color="#DE3996" />
+            </div>
+            <div className="text-start">
               <h6 className="fw-bold text-pink m-0">Join Our Contributor Account for Free!</h6>
               <p className="text-muted" style={{ fontSize: '11px', margin: 0 }}>
                 Join thousands of 3D artists earning passive income from their creative work
               </p>
             </div>
-            <button className="btn-join-now ms-3 mt-1" style={{ cursor: "not-allowed", position: "relative", zIndex: 1000 }}>Join Now</button>
           </div>
+          <button className="btn-join-now flex-shrink-0 mt-2 mt-sm-0" style={{ cursor: "not-allowed", position: "relative", zIndex: 1000 }}>Join Now</button>
         </div>
       </div>
 

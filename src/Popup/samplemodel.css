@@ -30,6 +30,7 @@
   justify-content: flex-start;
   align-items: center;
   overflow: hidden;
+  transform-origin: center center !important;
   animation: sm-modal-pop-in 0.55s cubic-bezier(0.25, 1.7, 0.45, 1.32);
 }
 
@@ -274,11 +275,8 @@
 
 
 .animated-loader {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;

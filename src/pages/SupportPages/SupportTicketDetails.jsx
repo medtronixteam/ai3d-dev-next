@@ -128,7 +128,6 @@ const SupportTicketDetails = () => {
                       <span className="ticket-comment-author">
                         <User size={16} /> {comment.from || 'User'}
                       </span>
-                       {/* {user?.email || 'User@company.com'} */}
                       <span className="ticket-comment-date">
                         {new Date(comment.created_at).toLocaleString()}
                       </span>
@@ -191,26 +190,15 @@ const SupportTicketDetails = () => {
                   <span className="ticket-value">
                     {new Date(ticket.updated_at).toLocaleString()}
                   </span>
-                </div>
-                {/* <div className="ticket-info-item">
-                  <span className="ticket-icon"><User size={16} color={isDarkMode ? '#dadada' : '#666'} /></span>
-                  <span className="ticket-label">Assigned to:</span>
-                  <span className="ticket-value">{ticket.assigned_to || 'Unassigned'}</span>
-                </div> */}
-              </div>
-
-              <div className="ticket-section ticket-urgent-help">
-                <h3>
-                  <CircleAlert size={18} color="#165EFC" /> Need Urgent Help?
-                </h3>
-                <p>For critical issues, contact IT directly at ext.2345 or emergency hotline.</p>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  );
+  </div>
+);
 };
 
 export default SupportTicketDetails;
+

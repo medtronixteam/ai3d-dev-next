@@ -716,10 +716,10 @@ const RecentProjects = () => {
             </button>
             {sortDropdownOpen && (
               <ul className="dropdown-menu dropdown-menu-end show" style={{ display: 'block' }}>
-                {['Default', 'Name', 'Date', 'Size'].map((option) => (
+                {['Default', 'Name', 'Date'].map((option) => (
                   <li
                     key={option}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = '#FFF2F7')}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = isDarkMode ? 'rgba(255, 255, 255, 0.08)' : '#FFF2F7')}
                     onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                   >
                     <label

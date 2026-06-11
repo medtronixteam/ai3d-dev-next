@@ -308,7 +308,7 @@ const TrashProjects = () => {
                 {['Default', 'Name', 'Date'].map((option) => (
                   <li
                     key={option}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = '#FFF2F7')}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = isDarkMode ? 'rgba(255, 255, 255, 0.08)' : '#FFF2F7')}
                     onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                   >
                     <label
@@ -338,6 +338,10 @@ const TrashProjects = () => {
             )}
           </div>
         </div>
+      </div>
+
+      <div className="trash-notice-text mb-3 px-2" style={{ fontSize: '13px', color: '#8e8e93', fontWeight: '500' }}>
+        Trash items will be automatically deleted after 30 days
       </div>
 
       {loading ? (

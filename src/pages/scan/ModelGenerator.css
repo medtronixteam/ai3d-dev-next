@@ -1159,13 +1159,63 @@
 }
 
 @media (max-width: 991.98px) {
+    #model-viewport-section {
+        scroll-margin-top: 12px;
+        scroll-margin-bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 12px);
+    }
+
     .library-card-outer {
         position: relative;
         top: 0;
-        width: 100%;
+        width: 100% !important;
         height: 550px !important;
         display: flex !important;
-        width: 100% !important;
+    }
+
+    .library-card-outer.transform-tab,
+    .library-card-outer.model-ready-panel {
+        height: auto !important;
+        min-height: auto !important;
+        max-height: none !important;
+        margin-bottom: 0 !important;
+    }
+
+    .library-card-outer.transform-tab .library-card-scroll,
+    .library-card-outer.model-ready-panel .library-card-scroll {
+        flex: 0 0 auto !important;
+        overflow: visible !important;
+    }
+
+    .main-wrapper {
+        padding-bottom: 0 !important;
+    }
+
+    .main-wrapper .container-fluid > .row.g-0 {
+        height: auto !important;
+        min-height: auto !important;
+    }
+
+    .library-card-tabs:has(.export-button-bar) {
+        flex: 0 0 auto !important;
+        height: auto !important;
+        min-height: 52px !important;
+        padding: 10px 16px !important;
+        background: var(--bg-card);
+        border-top: 1px solid var(--border-color);
+        position: relative;
+    }
+
+    .export-button-bar {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        right: auto;
+        z-index: 1;
+        background: transparent;
+        padding: 0;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
     }
 }
 
@@ -1919,17 +1969,9 @@
 }
 
 /* Responsive adjustments for 3D Viewport Controls */
-@media (max-width: 991.98px) {
-    .library-card-outer.transform-tab {
-        height: auto !important;
-        min-height: auto !important;
-        max-height: none !important;
-    }
-}
-
 @media (max-width: 575px) {
     .bottom-info-bar {
-        bottom: 58px;
+        bottom: 10px;
         left: 10px;
     }
 
@@ -1967,4 +2009,4 @@
         width: 14px;
         height: 14px;
     }
-}
+}

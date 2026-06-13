@@ -45,6 +45,7 @@ const CenterScan = ({
   modelViewerRef,
   onModelRendered,
   transformControls,
+  sectionRef,
 }) => {
   const [isActuallyRendered, setIsActuallyRendered] = React.useState(false);
 
@@ -85,7 +86,11 @@ const CenterScan = ({
         </div>
       </div>
 
-      <div className="center-card-wrapper position-relative">
+      <div
+        id="model-viewport-section"
+        ref={sectionRef}
+        className="center-card-wrapper position-relative"
+      >
         {showBlackOverlay && <div className="black-overlay fade-in"></div>}
         <div
           className={`d-flex align-items-center justify-content-center px-3 center-card ${modelReady ? 'center-card--no-padding' : ''

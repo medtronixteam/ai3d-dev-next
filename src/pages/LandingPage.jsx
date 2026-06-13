@@ -1272,8 +1272,8 @@ const LandingPage = () => {
                   className="a3d-btn d-flex align-items-center gap-3 flex-wrap a3d-slide-up"
                   style={{ animationDelay: '0.2s' }}
                 >
-                  <Link to="/book-demo">
-                    <button className="a3d-join-btn">Book a Demo</button>
+                  <Link to="/signin">
+                    <button className="a3d-join-btn">Log in for free</button>
                   </Link>
                   {/* <Link to="/3dio/subscription"> */}
                   <Link to="/services">

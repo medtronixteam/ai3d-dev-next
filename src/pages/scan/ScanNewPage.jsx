@@ -310,6 +310,18 @@ const ModelGenerator = ({ isDarkMode = false }) => {
 
   const lottieRef = useRef(null);
   const modelViewerRef = useRef(null);
+  const modelViewportRef = useRef(null);
+
+  const scrollToModelViewport = useCallback(() => {
+    if (window.matchMedia('(min-width: 992px)').matches) return;
+
+    requestAnimationFrame(() => {
+      modelViewportRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    });
+  }, []);
 
   const isProcessing = isGenerating || showSuccessUI || showQueueUI || showLoadingUI || isArrowLoading || videoLoading;
   const isCancelled = projectStatus === 'canceled' || projectStatus === 'cancelled';
@@ -432,6 +444,11 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   // }, [projectToken, token, queue_system]);
 
   const { queueData } = useSocket();
+
+  useEffect(() => {
+    if (!showLoadingUI && !showQueueUI) return;
+    scrollToModelViewport();
+  }, [showLoadingUI, showQueueUI, scrollToModelViewport]);
 
   useEffect(() => {
     if (!queueData || !projectToken) return;
@@ -702,6 +719,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   const handleSingleImageGenerate = async () => {
     if (isProcessing || !singleImageFile || isViewOnly) return;
 
+    scrollToModelViewport();
     setIsArrowLoading(true);
 
     try {
@@ -736,6 +754,8 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   const handleGenerate = async () => {
     if (isProcessing || isViewOnly) return;
     if (!prompt.trim() && images.length === 0 && !video) return;
+
+    scrollToModelViewport();
 
     try {
       setIsGenerating(true);
@@ -888,6 +908,8 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       toast.error('Project token missing');
       return;
     }
+
+    scrollToModelViewport();
 
     try {
       setIsGenerating(true);
@@ -1082,6 +1104,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             projectStatus={projectStatus}
             onModelRendered={takeScreenshot}
             transformControls={transformControls}
+            sectionRef={modelViewportRef}
           />
           <RightScan
             activeTab={activeTab}

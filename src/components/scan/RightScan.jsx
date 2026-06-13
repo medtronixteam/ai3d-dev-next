@@ -387,7 +387,7 @@ const RightScan = ({
   };
 
   return (
-    <div className="col-lg-3 ps-lg-3 my-lg-0 mt-3 mb-5">
+    <div className="col-lg-3 ps-lg-3 my-lg-0 mt-3 mb-0 mb-lg-5 scan-right-column">
       <style>{`
         /* Custom image loader matching platform styling */
         .rp-img-loader {
@@ -438,7 +438,7 @@ const RightScan = ({
           100% { transform: rotate(25deg) }
         }
       `}</style>
-      <div className={`library-card-outer ${activeTab === 'transform' ? 'transform-tab' : ''}`}>
+      <div className={`library-card-outer${activeTab === 'transform' ? ' transform-tab' : ''}${modelReady ? ' model-ready-panel' : ''}`}>
         {activeTab === 'library' && (
           <div className="upgrade-box p-2 rounded-4 m-3">
             <p className="text-pink x-small fw-bold mb-2">

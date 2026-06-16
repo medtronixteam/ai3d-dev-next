@@ -12,6 +12,7 @@ import './ModelGenerator.css';
 import LeftScan from '../../components/scan/LeftScan';
 import CenterScan from '../../components/scan/CenterScan';
 import RightScan from '../../components/scan/RightScan';
+import ModelReviewModal from '../../components/popup/ModelReviewModal';
 import { useRouteLeave } from '../../hooks/useRouteLeave';
 import * as THREE from 'three';
 import { FiX, FiCheck } from 'react-icons/fi';
@@ -65,7 +66,9 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   const [isActuallyRendered, setIsActuallyRendered] = useState(false);
   const [comingSoonModalOpen, setComingSoonModalOpen] = useState(false);
   const [comingSoonFeature, setComingSoonFeature] = useState('');
+  const [showReviewModal, setShowReviewModal] = useState(false);
   const socketRef = useRef(null);
+  const shouldShowReviewRef = useRef(false);
 
   const [historyData, setHistoryData] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(false);
@@ -307,6 +310,20 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     rotation: { x: 0, y: 0, z: 0 },
     scale: 1,
   });
+  const defaultTransformControls = {
+    position: { x: 0, y: 0, z: 0 },
+    rotation: { x: 0, y: 0, z: 0 },
+    scale: 1,
+  };
+  const [transformHistory, setTransformHistory] = useState([defaultTransformControls]);
+  const [transformHistoryIndex, setTransformHistoryIndex] = useState(0);
+  const [shadowsEnabled, setShadowsEnabled] = useState(true);
+  const [gridVisible, setGridVisible] = useState(true);
+  const [autoRotate, setAutoRotate] = useState(false);
+  const [activeViewportTool, setActiveViewportTool] = useState('Picker');
+  const [isUserOwnedProject, setIsUserOwnedProject] = useState(false);
+  const transformHistoryRef = useRef([defaultTransformControls]);
+  const transformHistoryIndexRef = useRef(0);
 
   const lottieRef = useRef(null);
   const modelViewerRef = useRef(null);
@@ -333,6 +350,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       console.log('Loading project:', projectId);
 
       setIsViewOnly(true);
+      setIsUserOwnedProject(false);
       setProjectToken(projectId);
       fetchInitialProject(projectId);
 
@@ -453,7 +471,6 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   useEffect(() => {
     if (!queueData || !projectToken) return;
 
-    // Use deviceId if projectId is not present
     const qProjectId = queueData.projectId || queueData.deviceId;
     if (qProjectId !== projectToken) return;
 
@@ -523,6 +540,18 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     setProgress(0);
     setActiveTab('library');
     setIsActuallyRendered(false);
+    setShowReviewModal(false);
+    shouldShowReviewRef.current = false;
+    setTransformControls(defaultTransformControls);
+    setTransformHistory([defaultTransformControls]);
+    setTransformHistoryIndex(0);
+    setShadowsEnabled(true);
+    setGridVisible(true);
+    setAutoRotate(false);
+    setActiveViewportTool('Picker');
+    setIsUserOwnedProject(false);
+    transformHistoryRef.current = [defaultTransformControls];
+    transformHistoryIndexRef.current = 0;
     clearActiveQueueRegistration();
   }, [clearActiveQueueRegistration]);
 
@@ -595,7 +624,17 @@ const ModelGenerator = ({ isDarkMode = false }) => {
         setShowQueueUI(false);
         setActiveTab('transform');
         setIsViewOnly(true);
+        setTransformControls(defaultTransformControls);
+        setTransformHistory([defaultTransformControls]);
+        setTransformHistoryIndex(0);
+        transformHistoryRef.current = [defaultTransformControls];
+        transformHistoryIndexRef.current = 0;
         clearActiveQueueRegistration();
+
+        if (shouldShowReviewRef.current) {
+          shouldShowReviewRef.current = false;
+          setTimeout(() => setShowReviewModal(true), 10000);
+        }
       } else {
         throw new Error('Model URL not found in response');
       }
@@ -933,6 +972,8 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   };
 
   const startGenerationFlow = (tokenId) => {
+    shouldShowReviewRef.current = true;
+    setIsUserOwnedProject(true);
     setCurrentStep(1);
     fetchHistory();
 
@@ -946,12 +987,82 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     if (type === 'scale') {
       numericValue = Math.max(-5, Math.min(5, numericValue));
     }
-    setTransformControls((prev) => ({
-      ...prev,
-      [type]: axis
-        ? { ...prev[type], [axis]: numericValue }
-        : numericValue,
-    }));
+
+    setTransformControls((prev) => {
+      const newControls = {
+        ...prev,
+        [type]: axis
+          ? { ...prev[type], [axis]: numericValue }
+          : numericValue,
+      };
+
+      const index = transformHistoryIndexRef.current;
+      const nextHistory = [...transformHistoryRef.current.slice(0, index + 1), newControls];
+      transformHistoryRef.current = nextHistory;
+      transformHistoryIndexRef.current = nextHistory.length - 1;
+      setTransformHistory(nextHistory);
+      setTransformHistoryIndex(transformHistoryIndexRef.current);
+
+      return newControls;
+    });
+  };
+
+  const handleViewportUndo = () => {
+    if (transformHistoryIndexRef.current <= 0) return;
+
+    transformHistoryIndexRef.current -= 1;
+    const previousState = transformHistoryRef.current[transformHistoryIndexRef.current];
+    setTransformControls(previousState);
+    setTransformHistoryIndex(transformHistoryIndexRef.current);
+  };
+
+  const handleViewportRedo = () => {
+    if (transformHistoryIndexRef.current >= transformHistoryRef.current.length - 1) return;
+
+    transformHistoryIndexRef.current += 1;
+    const nextState = transformHistoryRef.current[transformHistoryIndexRef.current];
+    setTransformControls(nextState);
+    setTransformHistoryIndex(transformHistoryIndexRef.current);
+  };
+
+  const handleToggleAutoRotate = () => {
+    setAutoRotate((prev) => !prev);
+  };
+
+  const handleToggleShadows = () => {
+    setShadowsEnabled((prev) => !prev);
+  };
+
+  const handleToggleGrid = () => {
+    setGridVisible((prev) => !prev);
+  };
+
+  const handleViewportHelp = () => {
+    // Help info shown via tooltip/title — no toast
+  };
+
+  const handleViewportScreenshot = () => {
+    const canvas = modelViewerRef.current?.querySelector('canvas');
+    if (!canvas) return;
+
+    const link = document.createElement('a');
+    link.download = `3d_capture_${Date.now()}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  };
+
+  const handleResetTransform = () => {
+    setTransformControls(defaultTransformControls);
+    const index = transformHistoryIndexRef.current;
+    const nextHistory = [...transformHistoryRef.current.slice(0, index + 1), defaultTransformControls];
+    transformHistoryRef.current = nextHistory;
+    transformHistoryIndexRef.current = nextHistory.length - 1;
+    setTransformHistory(nextHistory);
+    setTransformHistoryIndex(transformHistoryIndexRef.current);
+  };
+
+  const handleSelectViewportTool = (toolName) => {
+    setActiveViewportTool(toolName);
   };
 
   const copyPrompt = () => {
@@ -970,7 +1081,24 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     }
   };
 
+  const handleShareCurrentProject = () => {
+    if (!isUserOwnedProject) return;
+
+    if (!projectToken) {
+      toast.error('Project not found');
+      return;
+    }
+
+    handleHistoryShare({
+      id: projectToken,
+      token: projectToken,
+      name: generatedPrompt || 'My Model',
+    });
+  };
+
   const handleExport = async () => {
+    if (!isUserOwnedProject) return;
+
     if (!projectToken) {
       toast.error('Project token not found');
       return;
@@ -989,7 +1117,18 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `model_${Date.now()}.glb`);
+
+      const contentDisposition = response.headers['content-disposition'];
+      let fileName = `${generatedPrompt || 'model'}.glb`;
+
+      if (contentDisposition) {
+        const fileNameMatch = contentDisposition.match(/filename="?(.+)"?/);
+        if (fileNameMatch?.[1]) {
+          fileName = fileNameMatch[1];
+        }
+      }
+
+      link.setAttribute('download', fileName);
       document.body.appendChild(link);
       link.click();
       link.parentNode.removeChild(link);
@@ -1105,6 +1244,19 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             onModelRendered={takeScreenshot}
             transformControls={transformControls}
             sectionRef={modelViewportRef}
+            activeViewportTool={activeViewportTool}
+            shadowsEnabled={shadowsEnabled}
+            gridVisible={gridVisible}
+            autoRotate={autoRotate}
+            onSelectViewportTool={handleSelectViewportTool}
+            onViewportUndo={handleViewportUndo}
+            onViewportRedo={handleViewportRedo}
+            onToggleAutoRotate={handleToggleAutoRotate}
+            onToggleShadows={handleToggleShadows}
+            onToggleGrid={handleToggleGrid}
+            onViewportHelp={handleViewportHelp}
+            onViewportScreenshot={handleViewportScreenshot}
+            onResetTransform={handleResetTransform}
           />
           <RightScan
             activeTab={activeTab}
@@ -1113,15 +1265,19 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             setHistoryFilter={setHistoryFilter}
             historyData={filteredHistoryData}
             modelReady={modelReady}
+            isUserOwnedProject={isUserOwnedProject}
             transformControls={transformControls}
             handleTransformChange={handleTransformChange}
             handleExport={handleExport}
+            onShareProject={handleShareCurrentProject}
             onHistoryExport={handleHistoryExport}
             onHistoryFavorite={handleHistoryFavorite}
             onHistoryShare={handleHistoryShare}
             historySearchQuery={historySearchQuery}
             setHistorySearchQuery={setHistorySearchQuery}
             onSelectModel={(url) => {
+              shouldShowReviewRef.current = false;
+              setIsUserOwnedProject(false);
               setModelUrl(adjustUrlForLocalhost(url));
               setModelReady(true);
               setProjectStatus('completed');
@@ -1130,6 +1286,11 @@ const ModelGenerator = ({ isDarkMode = false }) => {
               setShowQueueUI(false);
               setActiveTab('transform');
               setIsViewOnly(true);
+              setTransformControls(defaultTransformControls);
+              setTransformHistory([defaultTransformControls]);
+              setTransformHistoryIndex(0);
+              transformHistoryRef.current = [defaultTransformControls];
+              transformHistoryIndexRef.current = 0;
             }}
           />
         </div>
@@ -1447,6 +1608,12 @@ const ModelGenerator = ({ isDarkMode = false }) => {
           </div>
         )}
       </div>
+
+      <ModelReviewModal
+        isOpen={showReviewModal}
+        onClose={() => setShowReviewModal(false)}
+        projectToken={projectToken}
+      />
     </div>
   );
 };

@@ -123,9 +123,11 @@ const RightScan = ({
   setHistoryFilter,
   historyData,
   modelReady,
+  isUserOwnedProject,
   transformControls,
   handleTransformChange,
   handleExport,
+  onShareProject,
   onHistoryExport,
   onHistoryFavorite,
   onHistoryShare,
@@ -748,15 +750,32 @@ const RightScan = ({
         </div>
 
         <div className="library-card-tabs">
-          {modelReady ? (
+          {modelReady && isUserOwnedProject ? (
             <div className="export-button-bar">
-              <button className="export-action-btn small">
+              <button
+                type="button"
+                className="export-action-btn small"
+                title="Edit"
+                aria-label="Edit"
+              >
                 <Edit2 size={14} className="action-icon" />
               </button>
-              <button className="export-action-btn small">
+              <button
+                type="button"
+                className="export-action-btn small"
+                onClick={onShareProject}
+                title="Share project"
+                aria-label="Share project"
+              >
                 <Share2 size={14} className="action-icon" />
               </button>
-              <button className="export-action-btn export">
+              <button
+                type="button"
+                className="export-action-btn export"
+                onClick={handleExport}
+                title="Export GLB"
+                aria-label="Export model"
+              >
                 <Download size={14} className="me-1" />
                 Export
               </button>

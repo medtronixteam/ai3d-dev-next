@@ -46,6 +46,19 @@ const CenterScan = ({
   onModelRendered,
   transformControls,
   sectionRef,
+  activeViewportTool,
+  shadowsEnabled,
+  gridVisible,
+  autoRotate,
+  onSelectViewportTool,
+  onViewportUndo,
+  onViewportRedo,
+  onToggleAutoRotate,
+  onToggleShadows,
+  onToggleGrid,
+  onViewportHelp,
+  onViewportScreenshot,
+  onResetTransform,
 }) => {
   const [isActuallyRendered, setIsActuallyRendered] = React.useState(false);
 
@@ -66,6 +79,29 @@ const CenterScan = ({
   const handleModelLoaded = React.useCallback(() => {
     setIsActuallyRendered(true);
   }, []);
+
+  const leftToolbar = [
+    { name: 'Picker', img: PickerSelect, onClick: () => onSelectViewportTool?.('Picker') },
+    { name: 'Lasso', img: lassoTool, onClick: () => onSelectViewportTool?.('Lasso') },
+    { name: 'Polygon', img: polygon, onClick: () => onSelectViewportTool?.('Polygon') },
+    { name: 'Brush', img: brushSelect, onClick: () => onSelectViewportTool?.('Brush') },
+    { name: 'Flood', img: floodSelect, onClick: () => onSelectViewportTool?.('Flood') },
+    { name: 'Sphere', img: earthSphereLine, onClick: () => onSelectViewportTool?.('Sphere') },
+    { name: 'Square', img: squareSelect, onClick: () => onSelectViewportTool?.('Square') },
+    { name: 'Fly Through', img: flyThrough, onClick: () => { onSelectViewportTool?.('Fly Through'); onToggleAutoRotate?.(); } },
+    { name: 'Hotspot', img: hotspot, onClick: () => onSelectViewportTool?.('Hotspot') },
+    { name: 'Delete', img: trash, onClick: () => onResetTransform?.() },
+  ];
+
+  const bottomActions = [
+    { name: 'Undo', img: undo, onClick: () => onViewportUndo?.() },
+    { name: 'Redo', img: redo, onClick: () => onViewportRedo?.() },
+    { name: 'Auto Rotate', img: selection, onClick: () => onToggleAutoRotate?.(), active: autoRotate },
+    { name: 'Grid', img: setting, onClick: () => onToggleGrid?.(), active: gridVisible },
+    { name: 'Help', img: help, onClick: () => onViewportHelp?.(), title: 'Drag to rotate | Right-click to pan | Scroll to zoom' },
+    { name: 'Shadows', img: shadow, onClick: () => onToggleShadows?.(), active: shadowsEnabled },
+    { name: 'Screenshot', img: camera, onClick: () => onViewportScreenshot?.() },
+  ];
 
   return (
     <div className="col-lg-6 col-md-8 negative-margin contributor-card position-relative mt-lg-0 mt-4">
@@ -195,36 +231,18 @@ const CenterScan = ({
                   <div className="background-layer pattern-layer"></div>
                   <div className="background-layer grid-layer"></div>
                   <div className="control-icons-panel">
-                    <button className="control-icon-btn">
-                      <img src={PickerSelect} alt="Picker Select" className="control-icon" />
-                    </button>
-                    <button className="control-icon-btn">
-                      <img src={lassoTool} alt="Lasso Select" className="control-icon" />
-                    </button>
-                    <button className="control-icon-btn">
-                      <img src={polygon} alt="Polygon Select" className="control-icon" />
-                    </button>
-                    <button className="control-icon-btn">
-                      <img src={brushSelect} alt="Brush Select" className="control-icon" />
-                    </button>
-                    <button className="control-icon-btn">
-                      <img src={floodSelect} alt="Flood Select" className="control-icon" />
-                    </button>
-                    <button className="control-icon-btn">
-                      <img src={earthSphereLine} alt="Sphere Select" className="control-icon" />
-                    </button>
-                    <button className="control-icon-btn">
-                      <img src={squareSelect} alt="Square Select" className="control-icon" />
-                    </button>
-                    <button className="control-icon-btn">
-                      <img src={flyThrough} alt="Fly Throughs" className="control-icon" />
-                    </button>
-                    <button className="control-icon-btn">
-                      <img src={hotspot} alt="Hotspots" className="control-icon" />
-                    </button>
-                    <button className="control-icon-btn">
-                      <img src={trash} alt="Delete" className="control-icon" />
-                    </button>
+                    {leftToolbar.map((tool) => (
+                      <button
+                        key={tool.name}
+                        type="button"
+                        className={`control-icon-btn${activeViewportTool === tool.name ? ' active' : ''}`}
+                        onClick={tool.onClick}
+                        title={tool.name}
+                        aria-label={tool.name}
+                      >
+                        <img src={tool.img} alt={tool.name} className="control-icon" />
+                      </button>
+                    ))}
                   </div>
                   <div className="first-image-overlay"></div>
                   <div className="modal-image-center" ref={modelViewerRef}>
@@ -232,51 +250,25 @@ const CenterScan = ({
                       modelUrl={modelUrl}
                       onModelLoaded={handleModelLoaded}
                       transformControls={transformControls}
+                      shadowsEnabled={shadowsEnabled}
+                      gridVisible={gridVisible}
+                      autoRotate={autoRotate}
                     />
-                  </div>
-                  <div className="bottom-info-bar">
-                    <div className="info-item">
-                      <svg className="info-icon" viewBox="0 0 24 24" width="14" height="14">
-                        <path
-                          fill="white"
-                          d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z"
-                        />
-                      </svg>
-                      <span className="info-text">Position</span>
-                    </div>
-                    <div className="info-item">
-                      <span className="info-text">X:{transformControls?.position?.x ?? 0.0}</span>
-                    </div>
-                    <div className="info-item">
-                      <span className="info-text">Y:{transformControls?.position?.y ?? 0.0}</span>
-                    </div>
-                    <div className="info-item">
-                      <span className="info-text">Z:{transformControls?.position?.z ?? 0.0}</span>
-                    </div>
                   </div>
                 </div>
                 <div className="right-action-buttons">
-                  <button className="action-btn">
-                    <img src={undo} alt="undo" className="action-icon" />
-                  </button>
-                  <button className="action-btn">
-                    <img src={redo} alt="redo" className="action-icon" />
-                  </button>
-                  <button className="action-btn">
-                    <img src={selection} alt="Settings" className="action-icon" />
-                  </button>
-                  <button className="action-btn">
-                    <img src={setting} alt="Settings" className="action-icon" />
-                  </button>
-                  <button className="action-btn">
-                    <img src={help} alt="Help" className="action-icon" />
-                  </button>
-                  <button className="action-btn">
-                    <img src={shadow} alt="shadow" className="action-icon" />
-                  </button>
-                  <button className="action-btn">
-                    <img src={camera} alt="Camera" className="action-icon" />
-                  </button>
+                  {bottomActions.map((action) => (
+                    <button
+                      key={action.name}
+                      type="button"
+                      className={`action-btn${action.active ? ' active' : ''}`}
+                      onClick={action.onClick}
+                      title={action.title || action.name}
+                      aria-label={action.name}
+                    >
+                      <img src={action.img} alt={action.name} className="action-icon" />
+                    </button>
+                  ))}
                 </div>
               </div>
             </div>

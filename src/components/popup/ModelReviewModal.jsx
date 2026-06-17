@@ -146,16 +146,19 @@ const ModelReviewModal = ({ isOpen, onClose, projectToken }) => {
                   type="button"
                   role="radio"
                   aria-checked={rating === option.value}
+                  aria-label={`${option.value} – ${option.label}`}
                   className={`model-review-star-btn${rating === option.value ? ' selected' : ''}`}
                   onMouseEnter={() => setHoverRating(option.value)}
                   onMouseLeave={() => setHoverRating(null)}
+                  onFocus={() => setHoverRating(option.value)}
+                  onBlur={() => setHoverRating(null)}
                   onClick={() => setRating(option.value)}
                 >
                   <span className={`model-review-star${isActive ? ' active' : ''}`} aria-hidden="true">
                     ⭐
                   </span>
-                  <span className="model-review-star-label">
-                    {option.value} – {option.label}
+                  <span className="model-review-tooltip" role="tooltip">
+                    {option.label}
                   </span>
                 </button>
               );

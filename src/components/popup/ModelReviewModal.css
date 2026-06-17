@@ -74,22 +74,26 @@
 
 .model-review-stars {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: nowrap;
 }
 
 .model-review-star-btn {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 10px 12px;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
   border: 1.5px solid #ececf1;
   border-radius: 12px;
   background: #fafafa;
   cursor: pointer;
-  text-align: left;
-  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .model-review-star-btn:hover,
@@ -99,8 +103,12 @@
   box-shadow: 0 0 0 1px rgba(222, 57, 150, 0.08);
 }
 
+.model-review-star-btn:hover {
+  transform: translateY(-2px);
+}
+
 .model-review-star {
-  font-size: 1.1rem;
+  font-size: 1.35rem;
   line-height: 1;
   opacity: 0.35;
   filter: grayscale(1);
@@ -110,13 +118,43 @@
 .model-review-star.active {
   opacity: 1;
   filter: none;
-  transform: scale(1.05);
+  transform: scale(1.08);
 }
 
-.model-review-star-label {
-  font-size: 0.875rem;
+.model-review-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #1a202c;
+  color: #fff;
+  font-size: 0.75rem;
   font-weight: 600;
-  color: #2d3748;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s ease;
+  z-index: 2;
+}
+
+.model-review-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #1a202c;
+}
+
+.model-review-star-btn:hover .model-review-tooltip,
+.model-review-star-btn:focus-visible .model-review-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
 }
 
 .model-review-issues {
@@ -186,30 +224,42 @@
 
 .model-review-actions {
   display: flex;
-  justify-content: stretch;
-  margin-top: 22px;
+  justify-content: center;
+  margin-top: 24px;
 }
 
 .model-review-submit {
-  width: 100%;
-  min-height: 46px;
-  border-radius: 10px;
+  width: auto;
+  min-width: 168px;
+  padding: 11px 28px;
+  min-height: 44px;
+  border-radius: 999px;
   font-size: 0.9375rem;
   font-weight: 600;
+  letter-spacing: 0.01em;
   cursor: pointer;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   border: none;
-  background: #de3996;
+  background: linear-gradient(135deg, #de3996 0%, #c22d81 100%);
   color: #fff;
+  box-shadow: 0 4px 14px rgba(222, 57, 150, 0.28);
 }
 
 .model-review-submit:hover:not(:disabled) {
-  background: #c22d81;
+  background: linear-gradient(135deg, #c22d81 0%, #a8256d 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(222, 57, 150, 0.34);
+}
+
+.model-review-submit:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 3px 10px rgba(222, 57, 150, 0.24);
 }
 
 .model-review-submit:disabled {
   opacity: 0.55;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 .fade-in {
@@ -227,12 +277,6 @@
   }
 }
 
-@media (min-width: 480px) {
-  .model-review-submit {
-    width: 100%;
-  }
-}
-
 @media (max-width: 380px) {
   .model-review-modal {
     padding: 20px 16px 16px;
@@ -243,13 +287,13 @@
     font-size: 1.2rem;
   }
 
-  .model-review-star-btn,
-  .model-review-issue-option {
-    padding: 9px 10px;
+  .model-review-star-btn {
+    width: 42px;
+    height: 42px;
   }
 
-  .model-review-star-label {
-    font-size: 0.8125rem;
+  .model-review-star {
+    font-size: 1.2rem;
   }
 }
 
@@ -287,8 +331,13 @@
   background: rgba(222, 57, 150, 0.12);
 }
 
-[data-theme='dark'] .model-review-star-label {
-  color: #f3f3fa;
+[data-theme='dark'] .model-review-tooltip {
+  background: #f3f3fa;
+  color: #1a202c;
+}
+
+[data-theme='dark'] .model-review-tooltip::after {
+  border-top-color: #f3f3fa;
 }
 
 [data-theme='dark'] .model-review-issues {

@@ -134,18 +134,18 @@ const CenterScan = ({
         >
           {showLoadingUI ? (
             <div
-              className="text-center fade-in w-100"
+              className={`model-loading-panel text-center fade-in w-100${showBlackOverlay ? ' model-loading-panel--overlay' : ''}`}
               style={{ maxWidth: '450px', position: 'relative', zIndex: 10 }}
             >
               <div className="progress-circle-wrapper mb-4">
                 <svg className="progress-circle" width="120" height="120" viewBox="0 0 120 120">
-                  <circle cx="60" cy="60" r="54" fill="none" stroke="#f0f0f0" strokeWidth="8" />
+                  <circle className="progress-circle-track" cx="60" cy="60" r="54" fill="none" strokeWidth="8" />
                   <circle
+                    className="progress-circle-fill"
                     cx="60"
                     cy="60"
                     r="54"
                     fill="none"
-                    stroke="#DE3996"
                     strokeWidth="8"
                     strokeLinecap="round"
                     strokeDasharray="339.292"
@@ -157,11 +157,11 @@ const CenterScan = ({
                   <span className="progress-percent">{Math.round(progress)}%</span>
                 </div>
               </div>
-              <div style={{ marginTop: '20px' }}>
-                <h3 className="fw-bold mb-2 text-white">
+              <div className="model-loading-copy">
+                <h3 className="model-loading-title fw-bold mb-2">
                   Creating your <span className="text-pink">model</span>
                 </h3>
-                <p className="small mb-4 text-white">We are working on it, give us a minute</p>
+                <p className="model-loading-subtitle small mb-4">We are working on it, give us a minute</p>
               </div>
               <button
                 className="btn btn-outline-pink mt-2"

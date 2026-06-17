@@ -477,6 +477,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     if (queueData.status === 'processing') {
       setShowQueueUI(false);
       setShowLoadingUI(true);
+      setShowBlackOverlay(true);
     }
 
     if (queueData.status === 'completed') {

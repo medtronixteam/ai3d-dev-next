@@ -244,6 +244,22 @@
     background: #DE3996 !important;
 }
 
+[data-theme='dark'] .model-loading-title {
+    color: #f3f3fa;
+}
+
+[data-theme='dark'] .model-loading-subtitle {
+    color: #9a9ab0;
+}
+
+[data-theme='dark'] .progress-circle-track {
+    stroke: #3a3a4a;
+}
+
+[data-theme='dark'] .btn-outline-pink {
+    background: transparent;
+}
+
 
 
 
@@ -1429,6 +1445,41 @@
     transform: rotate(-90deg);
 }
 
+.progress-circle-track {
+    stroke: #d1d5db;
+}
+
+.progress-circle-fill {
+    stroke: #DE3996;
+}
+
+.model-loading-panel--overlay .progress-circle-track {
+    stroke: rgba(255, 255, 255, 0.22);
+}
+
+.model-loading-copy {
+    margin-top: 20px;
+}
+
+.model-loading-title {
+    color: #1a202c;
+    font-size: 1.25rem;
+}
+
+.model-loading-subtitle {
+    color: #64748b;
+    margin-bottom: 0;
+}
+
+.model-loading-panel--overlay .model-loading-title,
+.model-loading-panel--overlay .model-loading-subtitle {
+    color: #ffffff;
+}
+
+.model-loading-panel--overlay .model-loading-title .text-pink {
+    color: #ff8ec4;
+}
+
 .progress-text {
     position: absolute;
     top: 50%;
@@ -1441,6 +1492,10 @@
     font-size: 24px;
     font-weight: bold;
     color: #DE3996;
+}
+
+.model-loading-panel--overlay .progress-percent {
+    color: #ff8ec4;
 }
 
 /* Loading animation */
@@ -1462,12 +1517,24 @@
 .btn-outline-pink {
     border: 1px solid #DE3996;
     color: #DE3996;
-    background: transparent;
+    background: #fff;
     padding: 8px 24px;
     border-radius: 20px;
     font-size: 12px;
     font-weight: 600;
     transition: all 0.3s ease;
+}
+
+.model-loading-panel--overlay .btn-outline-pink {
+    background: transparent;
+    border-color: #ff8ec4;
+    color: #ff8ec4;
+}
+
+.model-loading-panel--overlay .btn-outline-pink:hover {
+    background: #DE3996;
+    border-color: #DE3996;
+    color: #fff;
 }
 
 .btn-outline-pink:hover {

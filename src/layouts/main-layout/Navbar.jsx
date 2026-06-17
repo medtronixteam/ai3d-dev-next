@@ -222,6 +222,8 @@ const Navbar = ({ onSidebarToggle, sidebarOpen }) => {
   const isSettingsPage = location.pathname.startsWith('/3dio/settings');
   const isRecentProjectsPage = location.pathname === '/3dio/recent-projects';
   const isPublicGuestView = isPublicProjectRoute(location.pathname) && !token;
+  const isSubscriptionPage = location.pathname === '/3dio/subscription';
+  const hideUpgradeButton = isPublicGuestView || (!token && isSubscriptionPage);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
@@ -294,7 +296,7 @@ const Navbar = ({ onSidebarToggle, sidebarOpen }) => {
                 <span>{coins.toLocaleString()}</span>{' '}
               </div>
             )}
-            {!isPublicGuestView && (
+            {!hideUpgradeButton && (
               <button className="upgrade-btn" onClick={() => setSubscriptionModalOpen(true)}>
                 <img src={Diamond} alt="Upgrade Icon" style={{ width: 18, marginRight: 6 }} />
                 Upgrade your plan

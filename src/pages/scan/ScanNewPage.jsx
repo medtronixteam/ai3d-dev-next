@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import lottie from 'lottie-web';
@@ -13,15 +13,22 @@ import LeftScan from '../../components/scan/LeftScan';
 import CenterScan from '../../components/scan/CenterScan';
 import RightScan from '../../components/scan/RightScan';
 import ModelReviewModal from '../../components/popup/ModelReviewModal';
+import PublicShareLinkSection from '../../components/popup/PublicShareLinkSection';
 import { useRouteLeave } from '../../hooks/useRouteLeave';
 import * as THREE from 'three';
 import { FiX, FiCheck } from 'react-icons/fi';
 import { Hourglass } from 'lucide-react';
+import { fetchPublicProject, isPublicProjectRoute } from '../../utils/publicProjectShare';
+
+const hasProjectFeedback = (value) =>
+  value === true || value === 1 || value === '1';
 
 const ModelGenerator = ({ isDarkMode = false }) => {
   const { token } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const { slug: publicSlug } = useParams();
+  const isPublicView = isPublicProjectRoute(location.pathname) && Boolean(publicSlug);
   const { queue_system, frame_extraction, clearActiveQueueRegistration } = useSocket();
   const { fcmToken, notifications } = useNotification();
 
@@ -69,6 +76,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   const [showReviewModal, setShowReviewModal] = useState(false);
   const socketRef = useRef(null);
   const shouldShowReviewRef = useRef(false);
+  const openedFromRecentRef = useRef(false);
 
   const [historyData, setHistoryData] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(false);
@@ -345,9 +353,18 @@ const ModelGenerator = ({ isDarkMode = false }) => {
 
   // fetch recent projects model
   useEffect(() => {
+    if (isPublicView) return;
+
     if (location.state?.projectId && location.state?.viewMode) {
       const projectId = location.state.projectId;
+      const feedbackGiven = location.state.feedbackGiven;
       console.log('Loading project:', projectId);
+
+      openedFromRecentRef.current = true;
+
+      if (!hasProjectFeedback(feedbackGiven)) {
+        shouldShowReviewRef.current = true;
+      }
 
       setIsViewOnly(true);
       setIsUserOwnedProject(false);
@@ -373,6 +390,11 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       }
 
       console.log('Project data:', proj);
+
+      if (openedFromRecentRef.current && proj.status === 'completed' && !hasProjectFeedback(proj.feedback_given)) {
+        shouldShowReviewRef.current = true;
+      }
+      openedFromRecentRef.current = false;
 
       setProjectStatus(proj.status);
       setGeneratedPrompt(proj.prompt || proj.name || 'Project');
@@ -403,6 +425,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       toast.error('Failed to load project');
       setShowLoadingUI(false);
       setShowBlackOverlay(false);
+      openedFromRecentRef.current = false;
     } finally {
       setIsGenerating(false);
       setIsArrowLoading(false);
@@ -543,6 +566,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     setIsActuallyRendered(false);
     setShowReviewModal(false);
     shouldShowReviewRef.current = false;
+    openedFromRecentRef.current = false;
     setTransformControls(defaultTransformControls);
     setTransformHistory([defaultTransformControls]);
     setTransformHistoryIndex(0);
@@ -595,6 +619,64 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     }
     return url;
   };
+
+  useEffect(() => {
+    if (!isPublicView || !publicSlug) return;
+
+    let cancelled = false;
+
+    const loadPublicProject = async () => {
+      try {
+        setShowLoadingUI(true);
+        setShowBlackOverlay(true);
+        setIsViewOnly(true);
+        setIsUserOwnedProject(false);
+        setModelReady(false);
+        setModelUrl(null);
+        setCurrentStep(4);
+        setProjectStatus('completed');
+
+        const result = await fetchPublicProject(publicSlug);
+        if (cancelled) return;
+
+        const { project, modelUrl: fetchedModelUrl } = result;
+
+        if (!fetchedModelUrl) {
+          throw new Error('Model file not available for this project.');
+        }
+
+        const finalUrl = adjustUrlForLocalhost(addCacheBuster(fetchedModelUrl));
+
+        setGeneratedPrompt(project?.prompt || project?.name || 'Shared Project');
+        setModelUrl(finalUrl);
+        setModelReady(true);
+        setShowLoadingUI(false);
+        setShowBlackOverlay(false);
+        setActiveTab('transform');
+        setTransformControls(defaultTransformControls);
+        setTransformHistory([defaultTransformControls]);
+        setTransformHistoryIndex(0);
+        transformHistoryRef.current = [defaultTransformControls];
+        transformHistoryIndexRef.current = 0;
+      } catch (err) {
+        if (cancelled) return;
+        console.error('Failed to load public project:', err);
+        toast.error(
+          err?.response?.data?.message ||
+            err?.message ||
+            'This shared project could not be loaded.',
+        );
+        setShowLoadingUI(false);
+        setShowBlackOverlay(false);
+      }
+    };
+
+    loadPublicProject();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isPublicView, publicSlug]);
 
   const fetchModelUrl = async (token_id) => {
     try {
@@ -1183,7 +1265,11 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       )}
 
       <div className="container-fluid pe-md-3 p-0">
-        <div className="row g-0" style={{ height: 'calc(100vh - 80px)' }}>
+        <div
+          className={`row g-0${isPublicView ? ' scan-public-view' : ''}`}
+          style={{ height: 'calc(100vh - 80px)' }}
+        >
+          {!isPublicView && (
           <LeftScan
             prompt={prompt}
             setPrompt={setPrompt}
@@ -1224,8 +1310,10 @@ const ModelGenerator = ({ isDarkMode = false }) => {
               setComingSoonModalOpen(true);
             }}
           />
+          )}
 
           <CenterScan
+            expanded={isPublicView}
             showLoadingUI={showLoadingUI}
             showQueueUI={showQueueUI}
             showSuccessUI={showSuccessUI}
@@ -1420,6 +1508,11 @@ const ModelGenerator = ({ isDarkMode = false }) => {
                     )}
                   </div>
                 </div>
+
+                <PublicShareLinkSection
+                  projectId={selectedProjectForShare?.id || selectedProjectForShare?.token}
+                  authToken={token}
+                />
               </div>
 
               <div className="d-flex gap-2 align-items-center justify-content-end">

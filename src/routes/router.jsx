@@ -58,6 +58,7 @@ const PurchaseHistory = lazy(() => import('pages/settings/PurchaseHistory'));
 const SessionHistory = lazy(() => import('pages/settings/SessionHistory'));
 const ServicePage = lazy(() => import('pages/Service/ServicePage'))
 const CookiePolicy = lazy(() => import('../pages/CookiePolicy'));
+const PublicProjectPage = lazy(() => import('../pages/public/PublicProjectPage'));
 
 const routes = [
   {
@@ -237,6 +238,27 @@ const routes = [
       // Other Routes
       { path: '/3dio/subscription/card', element: <CardPayment /> },
       { path: '/login/success', element: <OAuthSuccess /> },
+      {
+        path: '/public/project/:slug',
+        element: (
+          <MainLayout>
+            <Suspense fallback={<PageLoader />}>
+              <ScanNewPage />
+            </Suspense>
+          </MainLayout>
+        ),
+      },
+      {
+        path: '/project/:slug',
+        element: (
+          <MainLayout>
+            <Suspense fallback={<PageLoader />}>
+              <ScanNewPage />
+            </Suspense>
+          </MainLayout>
+        ),
+      },
+      { path: '/3dio/public/:slug', element: <PublicProjectPage /> },
       { path: '/subscription/success', element: <SubscriptionSuccess /> },
       {
         path: '/subscription/cancelled',

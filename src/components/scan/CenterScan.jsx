@@ -59,6 +59,7 @@ const CenterScan = ({
   onViewportHelp,
   onViewportScreenshot,
   onResetTransform,
+  expanded = false,
 }) => {
   const [isActuallyRendered, setIsActuallyRendered] = React.useState(false);
 
@@ -104,7 +105,11 @@ const CenterScan = ({
   ];
 
   return (
-    <div className="col-lg-6 col-md-8 negative-margin contributor-card position-relative mt-lg-0 mt-4">
+    <div
+      className={`${
+        expanded ? 'col-lg-9 col-md-8' : 'col-lg-6 col-md-8'
+      } negative-margin contributor-card position-relative mt-lg-0 mt-4`}
+    >
       <div className="contributor-banner d-flex align-items-center justify-content-between mb-2">
         <div className="d-flex gap-3 align-items-center w-100 flex-column flex-sm-row">
           <div className="d-flex gap-3 align-items-center flex-grow-1">

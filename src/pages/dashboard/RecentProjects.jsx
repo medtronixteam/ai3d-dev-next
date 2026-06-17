@@ -32,6 +32,7 @@ import sorticon from '../../assets/images/sort-icon.svg';
 import { Download, Eye, FolderPen, Grid, Image, LayoutGrid, Pen, Send, TabletSmartphone, Trash, Trash2 } from 'lucide-react';
 import '../settings/Profile.css';
 import SkeletonListLoader from '../../components/loader/SkeletonListLoader';
+import PublicShareLinkSection from '../../components/popup/PublicShareLinkSection';
 
 const FILTERS = ['All', 'Recent Project', 'Favourite Project', 'Shared Project'];
 
@@ -406,8 +407,9 @@ const RecentProjects = () => {
     navigate('/3dio/new/scan', {
       state: {
         projectId: targetToken,
-        viewMode: true
-      }
+        viewMode: true,
+        feedbackGiven: project.feedback_given,
+      },
     });
   };
 
@@ -1138,6 +1140,11 @@ const RecentProjects = () => {
                   )}
                 </div>
               </div>
+
+              <PublicShareLinkSection
+                projectId={selectedProject?.id || selectedProject?.token}
+                authToken={token}
+              />
             </div>
 
             <div className="d-flex gap-2 align-items-center justify-content-end">

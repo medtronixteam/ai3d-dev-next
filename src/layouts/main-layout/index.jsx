@@ -73,7 +73,12 @@ const MainLayout = ({ children }) => {
   // Auto-collapse sidebar on desktop for settings/team pages, expand otherwise
   useEffect(() => {
     if (!isMobile992) {
-      if (isCustomSidebarRoute || location.pathname === '/3dio/new/scan') {
+      if (
+        isCustomSidebarRoute ||
+        location.pathname === '/3dio/new/scan' ||
+        location.pathname.startsWith('/public/project/') ||
+        /^\/project\/[^/]+$/.test(location.pathname)
+      ) {
         setIsCollapsed(true);
       } else {
         setIsCollapsed(false);
@@ -132,7 +137,12 @@ const MainLayout = ({ children }) => {
           isCollapsed={isCollapsed}
           onToggleCollapse={handleCollapseToggle} 
           onAutoCollapse={handleAutoCollapse}
-          disableExpand={!isMobile992 && location.pathname === '/3dio/new/scan'}
+          disableExpand={
+            !isMobile992 &&
+            (location.pathname === '/3dio/new/scan' ||
+              location.pathname.startsWith('/public/project/') ||
+              /^\/project\/[^/]+$/.test(location.pathname))
+          }
         />
       )}
       {shouldShowCustomSidebar && <CustomSidebar onClose={handleSidebarClose} />}

@@ -134,6 +134,7 @@ const RightScan = ({
   historySearchQuery,
   setHistorySearchQuery,
   onSelectModel,
+  hideUpgradePromo = false,
 }) => {
   const navigate = useNavigate();
   const { token } = useAuth();
@@ -441,7 +442,7 @@ const RightScan = ({
         }
       `}</style>
       <div className={`library-card-outer${activeTab === 'transform' ? ' transform-tab' : ''}${modelReady ? ' model-ready-panel' : ''}`}>
-        {activeTab === 'library' && (
+        {activeTab === 'library' && !hideUpgradePromo && (
           <div className="upgrade-box p-2 rounded-4 m-3">
             <p className="text-pink x-small fw-bold mb-2">
               <img

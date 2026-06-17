@@ -60,6 +60,7 @@ const CenterScan = ({
   onViewportScreenshot,
   onResetTransform,
   expanded = false,
+  hideContributorBanner = false,
 }) => {
   const [isActuallyRendered, setIsActuallyRendered] = React.useState(false);
 
@@ -110,6 +111,7 @@ const CenterScan = ({
         expanded ? 'col-lg-9 col-md-8' : 'col-lg-6 col-md-8'
       } negative-margin contributor-card position-relative mt-lg-0 mt-4`}
     >
+      {hideContributorBanner ? null : (
       <div className="contributor-banner d-flex align-items-center justify-content-between mb-2">
         <div className="d-flex gap-3 align-items-center w-100 flex-column flex-sm-row">
           <div className="d-flex gap-3 align-items-center flex-grow-1">
@@ -126,6 +128,7 @@ const CenterScan = ({
           <button className="btn-join-now flex-shrink-0 mt-2 mt-sm-0" style={{ cursor: "not-allowed", position: "relative", zIndex: 1000 }}>Join Now</button>
         </div>
       </div>
+      )}
 
       <div
         id="model-viewport-section"

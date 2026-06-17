@@ -125,6 +125,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { Link } from 'react-router-dom';
 import useSidebarCollapse from '../../../hooks/useSidebarCollapse';
 import { useLocation } from 'react-router-dom';
+import { isPublicProjectRoute } from '../../../utils/publicProjectShare';
 import Referal from '../../../assets/images/Referal.svg';
 import ProjectIcon from '../../../assets/images/project.svg';
 import AiModel from '../../../assets/images/aimodal.svg';
@@ -204,14 +205,16 @@ const Sidebar = ({ open = false, onClose, disableExpand = false }) => {
   const location = useLocation();
   const isSettingsPage = location.pathname.startsWith('/3dio/settings');
   const isScanNewPage = location.pathname === '/3dio/new/scan';
+  const isPublicProjectPage = isPublicProjectRoute(location.pathname);
+  const isFixedCollapsedPage = isScanNewPage || isPublicProjectPage;
 
   useEffect(() => {
-    if ((isSettingsPage || isScanNewPage) && !isCollapsed) {
+    if ((isSettingsPage || isFixedCollapsedPage) && !isCollapsed) {
       toggleCollapse();
     }
-  }, [isSettingsPage, isScanNewPage, isCollapsed, toggleCollapse]);
+  }, [isSettingsPage, isFixedCollapsedPage, isCollapsed, toggleCollapse]);
   const handleToggleClick = () => {
-    if (!isSettingsPage && !disableExpand) toggleCollapse();
+    if (!isSettingsPage && !isFixedCollapsedPage && !disableExpand) toggleCollapse();
   };
 
   const [toggleHovered, setToggleHovered] = useState(false);
@@ -482,10 +485,12 @@ const Sidebar = ({ open = false, onClose, disableExpand = false }) => {
               onClick={handleToggleClick}
               onMouseEnter={handleToggleMouseEnter}
               onMouseLeave={handleToggleMouseLeave}
-              disabled={isSettingsPage || disableExpand}
+              disabled={isSettingsPage || isFixedCollapsedPage || disableExpand}
               style={{
                 display: window.innerWidth > 992 ? 'flex' : 'none',
-                ...(isSettingsPage || disableExpand ? { cursor: 'not-allowed' } : {}),
+                ...(isSettingsPage || isFixedCollapsedPage || disableExpand
+                  ? { cursor: 'not-allowed' }
+                  : {}),
               }}
               aria-label={isCollapsed ? 'Expand Menu' : 'Close Menu'}
             >

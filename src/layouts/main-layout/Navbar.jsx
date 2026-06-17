@@ -15,6 +15,7 @@ import { FiCheck } from 'react-icons/fi';
 import modalVideo from '../../assets/images/3dModal.mp4';
 import SubscriptionModal from '../../components/popup/SubscriptionModal';
 import UpgradeCoin from '../../assets/images/UpgradeCoin.svg';
+import { isPublicProjectRoute } from '../../utils/publicProjectShare';
 import { baseURL } from '../../config';
 import CoinsPopup from '../../components/popup/CoinsPopup';
 // const VIDEO_URL = modalVideo;
@@ -220,6 +221,7 @@ const Navbar = ({ onSidebarToggle, sidebarOpen }) => {
   // Check if current route is a settings page or recent projects page
   const isSettingsPage = location.pathname.startsWith('/3dio/settings');
   const isRecentProjectsPage = location.pathname === '/3dio/recent-projects';
+  const isPublicGuestView = isPublicProjectRoute(location.pathname) && !token;
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
@@ -292,10 +294,12 @@ const Navbar = ({ onSidebarToggle, sidebarOpen }) => {
                 <span>{coins.toLocaleString()}</span>{' '}
               </div>
             )}
-            <button className="upgrade-btn" onClick={() => setSubscriptionModalOpen(true)}>
-              <img src={Diamond} alt="Upgrade Icon" style={{ width: 18, marginRight: 6 }} />
-              Upgrade your plan
-            </button>
+            {!isPublicGuestView && (
+              <button className="upgrade-btn" onClick={() => setSubscriptionModalOpen(true)}>
+                <img src={Diamond} alt="Upgrade Icon" style={{ width: 18, marginRight: 6 }} />
+                Upgrade your plan
+              </button>
+            )}
             {/* {!token && (
               <button
                 className="sign-in-btn"

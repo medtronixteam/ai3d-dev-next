@@ -163,6 +163,10 @@
   border-top: 1px solid #ececf1;
 }
 
+.model-review-issues--positive .model-review-issues-title {
+  color: #de3996;
+}
+
 .model-review-issues-title {
   margin: 0 0 12px;
   font-size: 1rem;
@@ -338,6 +342,10 @@
 
 [data-theme='dark'] .model-review-tooltip::after {
   border-top-color: #f3f3fa;
+}
+
+[data-theme='dark'] .model-review-issues--positive .model-review-issues-title {
+  color: #ff8ec4;
 }
 
 [data-theme='dark'] .model-review-issues {

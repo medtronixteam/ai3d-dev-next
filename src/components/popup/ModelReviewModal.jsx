@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { FiX } from 'react-icons/fi';
 import { toast } from 'react-toastify';
@@ -14,16 +14,68 @@ const RATING_OPTIONS = [
   { value: 5, label: 'Excellent' },
 ];
 
-const ISSUE_OPTIONS = [
-  { value: 'prompt_mismatch', label: 'Prompt mismatch' },
-  { value: 'missing_parts', label: 'Missing parts' },
-  { value: 'wrong_proportions', label: 'Wrong proportions' },
-  { value: 'texture_material', label: 'Texture/material issues' },
-  { value: 'low_detail', label: 'Low detail' },
-  { value: 'other', label: 'Other' },
-];
+const OTHER_OPTION = { value: 'other', label: 'Other' };
 
-const ModelReviewModal = ({ isOpen, onClose, projectToken }) => {
+const NEGATIVE_OPTIONS = {
+  text_to_3d: [
+    { value: 'prompt_mismatch', label: 'Prompt mismatch' },
+    { value: 'missing_parts', label: 'Missing parts' },
+    { value: 'wrong_proportions', label: 'Wrong proportions' },
+    { value: 'texture_material', label: 'Texture/material issues' },
+    { value: 'low_detail', label: 'Low detail' },
+    OTHER_OPTION,
+  ],
+  image_to_3d: [
+    { value: 'source_mismatch', label: "Doesn't match source image" },
+    { value: 'missing_parts', label: 'Missing parts' },
+    { value: 'wrong_proportions', label: 'Wrong proportions' },
+    { value: 'texture_material', label: 'Texture/material issues' },
+    { value: 'low_detail', label: 'Low detail' },
+    OTHER_OPTION,
+  ],
+};
+
+const POSITIVE_OPTIONS = {
+  text_to_3d: [
+    { value: 'prompt_accuracy', label: 'Accurate to prompt' },
+    { value: 'great_detail', label: 'Great detail & quality' },
+    { value: 'good_proportions', label: 'Good proportions' },
+    { value: 'nice_textures', label: 'Nice textures & materials' },
+    { value: 'fast_generation', label: 'Fast generation' },
+    OTHER_OPTION,
+  ],
+  image_to_3d: [
+    { value: 'source_accuracy', label: 'Matches source image well' },
+    { value: 'great_detail', label: 'Great detail & quality' },
+    { value: 'good_proportions', label: 'Good proportions' },
+    { value: 'nice_textures', label: 'Nice textures & materials' },
+    { value: 'fast_generation', label: 'Fast generation' },
+    OTHER_OPTION,
+  ],
+};
+
+export const normalizeReviewProjectType = (type) => {
+  if (!type) return 'text_to_3d';
+
+  const normalized = String(type).toLowerCase();
+
+  if (normalized === 'text_to_3d' || normalized === 'prompt') {
+    return 'text_to_3d';
+  }
+
+  if (
+    normalized.includes('image') ||
+    normalized.includes('video') ||
+    normalized === 'single_image_to_3d' ||
+    normalized === 'multi_image_to_3d'
+  ) {
+    return 'image_to_3d';
+  }
+
+  return 'text_to_3d';
+};
+
+const ModelReviewModal = ({ isOpen, onClose, projectToken, projectType = 'text_to_3d' }) => {
   const { token } = useAuth();
   const [rating, setRating] = useState(null);
   const [hoverRating, setHoverRating] = useState(null);
@@ -31,6 +83,22 @@ const ModelReviewModal = ({ isOpen, onClose, projectToken }) => {
   const [otherFeedback, setOtherFeedback] = useState('');
   const [isVisible, setIsVisible] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+
+  const reviewProjectType = normalizeReviewProjectType(projectType);
+  const isPositiveRating = rating !== null && rating >= 4;
+
+  const feedbackOptions = useMemo(() => {
+    const optionSet = isPositiveRating ? POSITIVE_OPTIONS : NEGATIVE_OPTIONS;
+    return optionSet[reviewProjectType] || optionSet.text_to_3d;
+  }, [isPositiveRating, reviewProjectType]);
+
+  const feedbackTitle = isPositiveRating
+    ? 'What did you like most?'
+    : 'What was the main issue?';
+
+  const otherPlaceholder = isPositiveRating
+    ? 'Tell us what you liked...'
+    : 'Tell us more about the issue...';
 
   useEffect(() => {
     if (isOpen) {
@@ -55,6 +123,11 @@ const ModelReviewModal = ({ isOpen, onClose, projectToken }) => {
       setSubmitting(false);
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    setIssue('');
+    setOtherFeedback('');
+  }, [rating, reviewProjectType]);
 
   if (!isOpen) return null;
 
@@ -166,11 +239,17 @@ const ModelReviewModal = ({ isOpen, onClose, projectToken }) => {
           </div>
 
           {rating !== null && (
-            <div className="model-review-issues fade-in">
-              <h3 className="model-review-issues-title">What was the main issue?</h3>
-              <div className="model-review-issue-list" role="radiogroup" aria-label="Main issue">
-                {ISSUE_OPTIONS.map((option) => (
-                  <label key={option.value} className={`model-review-issue-option${issue === option.value ? ' selected' : ''}`}>
+            <div
+              className={`model-review-issues fade-in${isPositiveRating ? ' model-review-issues--positive' : ''}`}
+              key={`${rating}-${reviewProjectType}`}
+            >
+              <h3 className="model-review-issues-title">{feedbackTitle}</h3>
+              <div className="model-review-issue-list" role="radiogroup" aria-label={feedbackTitle}>
+                {feedbackOptions.map((option) => (
+                  <label
+                    key={option.value}
+                    className={`model-review-issue-option${issue === option.value ? ' selected' : ''}`}
+                  >
                     <input
                       type="radio"
                       name="review-issue"
@@ -186,7 +265,7 @@ const ModelReviewModal = ({ isOpen, onClose, projectToken }) => {
               {issue === 'other' && (
                 <textarea
                   className="model-review-textarea"
-                  placeholder="Tell us more about the issue..."
+                  placeholder={otherPlaceholder}
                   value={otherFeedback}
                   onChange={(e) => setOtherFeedback(e.target.value)}
                   rows={3}

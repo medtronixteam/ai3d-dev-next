@@ -29,6 +29,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   const location = useLocation();
   const { slug: publicSlug } = useParams();
   const isPublicView = isPublicProjectRoute(location.pathname) && Boolean(publicSlug);
+  const isPublicGuestView = isPublicView && !token;
   const { queue_system, frame_extraction, clearActiveQueueRegistration } = useSocket();
   const { fcmToken, notifications } = useNotification();
 
@@ -55,6 +56,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   const [originalPrompt, setOriginalPrompt] = useState('');
 
   const [projectToken, setProjectToken] = useState(null);
+  const [projectType, setProjectType] = useState('text_to_3d');
   const [projectStatus, setProjectStatus] = useState('pending');
   const [modelUrl, setModelUrl] = useState(null);
   const [modelLoading, setModelLoading] = useState(false);
@@ -398,6 +400,9 @@ const ModelGenerator = ({ isDarkMode = false }) => {
 
       setProjectStatus(proj.status);
       setGeneratedPrompt(proj.prompt || proj.name || 'Project');
+      if (proj.type) {
+        setProjectType(proj.type);
+      }
 
       const statusMap = {
         submitted: 1,
@@ -861,6 +866,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
 
       if (token_id) {
         setProjectToken(token_id);
+        setProjectType('image_to_3d');
         setGeneratedPrompt(singleImageName);
         startGenerationFlow(token_id);
       } else {
@@ -893,6 +899,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
         const token_id = res.data?.token || res.data?.data?.token;
         if (token_id) {
           setProjectToken(token_id);
+          setProjectType('text_to_3d');
           setGeneratedPrompt(prompt);
           startGenerationFlow(token_id);
         }
@@ -928,6 +935,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
+        setProjectType('image_to_3d');
         setGeneratedPrompt('Multiple Images');
         startGenerationFlow(token_id);
       }
@@ -1044,6 +1052,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       const newToken = response.data.token;
       if (newToken) {
         setProjectToken(newToken);
+        setProjectType('video_to_3d');
         setGeneratedPrompt('Video Frames');
         startGenerationFlow(newToken);
       }
@@ -1314,6 +1323,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
 
           <CenterScan
             expanded={isPublicView}
+            hideContributorBanner={isPublicGuestView}
             showLoadingUI={showLoadingUI}
             showQueueUI={showQueueUI}
             showSuccessUI={showSuccessUI}
@@ -1355,6 +1365,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             historyData={filteredHistoryData}
             modelReady={modelReady}
             isUserOwnedProject={isUserOwnedProject}
+            hideUpgradePromo={isPublicGuestView}
             transformControls={transformControls}
             handleTransformChange={handleTransformChange}
             handleExport={handleExport}
@@ -1707,6 +1718,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
         isOpen={showReviewModal}
         onClose={() => setShowReviewModal(false)}
         projectToken={projectToken}
+        projectType={projectType}
       />
     </div>
   );

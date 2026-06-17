@@ -55,23 +55,24 @@ export const isPublicProjectRoute = (pathname) =>
 
 export const fetchPublicProject = async (slug) => {
   const response = await axios.get(`${baseURL}/project/public/${slug}`);
-  const payload = response.data?.data ?? response.data;
-  const project = payload?.project ?? payload?.data ?? payload;
+  const root = response.data ?? {};
+  const project = root.data ?? root.project ?? root;
 
   let modelUrl =
+    root['file-url'] ??
+    root['file-splat_url'] ??
+    root.file_url ??
+    root.file_splat_url ??
     project?.splat_url ??
     project?.splat_file_url ??
     project?.model_url ??
     project?.url ??
     project?.temp_url ??
-    payload?.splat_url ??
-    payload?.model_url ??
-    payload?.temp_url ??
     null;
 
   if (modelUrl) {
     modelUrl = normalizeUrl(modelUrl);
   }
 
-  return { project, modelUrl };
+  return { project, modelUrl, raw: root };
 };

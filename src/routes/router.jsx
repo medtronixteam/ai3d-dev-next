@@ -131,12 +131,16 @@ const routes = [
         children: [
           { index: true, element: <Dashboard /> },
           {
-            path: 'recent-projects',
+            path: 'workspace',
             element: (
               <ProtectedRoute>
                 <RecentProjects />
               </ProtectedRoute>
             ),
+          },
+          {
+            path: 'recent-projects',
+            element: <Navigate to="/3dio/workspace" replace />,
           },
           {
             path: '/3dio/trash/projects',

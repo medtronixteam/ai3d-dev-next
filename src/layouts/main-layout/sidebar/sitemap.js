@@ -57,13 +57,13 @@ export const sitemap = [
   },
   {
     id: 5,
-    title: 'Recent projects',
+    title: 'My Workspace',
     icon: {
       light: ProjectIcon,
       dark: WhiteProject,
       active: ProjectIcon,
     },
-    path: '/3dio/recent-projects',
+    path: '/3dio/workspace',
     authRequired: true,
   },
 ];

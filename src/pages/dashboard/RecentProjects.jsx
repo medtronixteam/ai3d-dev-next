@@ -35,15 +35,15 @@ import SkeletonListLoader from '../../components/loader/SkeletonListLoader';
 import PublicShareLinkSection from '../../components/popup/PublicShareLinkSection';
 import MoveToWorkspaceModal from '../../components/workspace/MoveToWorkspaceModal';
 import { useWorkspace } from '../../context/WorkspaceContext';
-import { getProjectId, getProjectWorkspaceId, WORKSPACE_FILTER_NONE } from '../../utils/workspaceApi';
+import { getProjectId, getProjectWorkspaceId } from '../../utils/workspaceApi';
 import { FiEdit2, FiFolder, FiPlus, FiTrash2 } from 'react-icons/fi';
 import WorkspaceFormModal from '../../components/workspace/WorkspaceFormModal';
 
 const FILTER_OPTIONS = [
   { id: 'All', label: 'Models' },
   { id: 'Workspaces', label: 'Workspaces' },
-  { id: 'Favourite Project', label: 'Favourite Project' },
-  { id: 'Shared Project', label: 'Shared Project' },
+  { id: 'Favourite Project', label: 'Favourite Models' },
+  { id: 'Shared Project', label: 'Shared Models' },
 ];
 
 const WORKSPACE_INNER_FILTER_OPTIONS = [
@@ -112,6 +112,7 @@ const RecentProjects = () => {
     updateWorkspace,
     deleteWorkspace,
     refreshWorkspaces,
+    setActiveCreationWorkspaceId,
   } = useWorkspace();
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -157,7 +158,6 @@ const RecentProjects = () => {
 
   const activeWorkspaceName = useMemo(() => {
     if (!workspaceBrowseId) return null;
-    if (workspaceBrowseId === 'none') return 'Unassigned';
     return workspaces.find((ws) => String(ws.id) === String(workspaceBrowseId))?.name || 'Workspace';
   }, [workspaceBrowseId, workspaces]);
 
@@ -176,29 +176,15 @@ const RecentProjects = () => {
     return () => document.removeEventListener('mousedown', handleWorkspaceMenuOutside);
   }, [wsMenuOpenId]);
 
-  const unassignedCount = useMemo(
-    () => projects.filter((project) => !getProjectWorkspaceId(project)).length,
-    [projects],
-  );
-
   const workspaceBrowseItems = useMemo(
-    () => [
-      {
-        id: 'none',
-        name: 'Unassigned',
-        count: unassignedCount,
-        muted: true,
-        workspace: null,
-      },
-      ...workspaces.map((workspace) => ({
+    () =>
+      workspaces.map((workspace) => ({
         id: String(workspace.id),
         name: workspace.name,
         count: workspace.projectsCount,
-        muted: false,
         workspace,
       })),
-    ],
-    [workspaces, unassignedCount],
+    [workspaces],
   );
 
   const getWorkspaceCountLabel = (count) => {
@@ -212,12 +198,6 @@ const RecentProjects = () => {
     setWorkspaceBrowseId(workspaceId);
     setWorkspaceInnerFilter('All');
     setWsMenuOpenId(null);
-
-    if (workspaceId === 'none') {
-      setSelectedFilter(WORKSPACE_FILTER_NONE);
-      return;
-    }
-
     setSelectedFilter(String(workspaceId));
     loadWorkspaceProjects(workspaceId);
   };
@@ -261,7 +241,11 @@ const RecentProjects = () => {
       if (wsFormMode === 'edit' && wsEditing) {
         await updateWorkspace(wsEditing.id, name);
       } else {
-        await createWorkspace(name);
+        const created = await createWorkspace(name);
+        if (created?.id) {
+          setActiveFilter('Workspaces');
+          openWorkspaceBrowse(String(created.id));
+        }
       }
       setWsFormOpen(false);
       setWsEditing(null);
@@ -270,6 +254,12 @@ const RecentProjects = () => {
     } finally {
       setWsFormLoading(false);
     }
+  };
+
+  const handleCreateModelInWorkspace = () => {
+    if (!workspaceBrowseId) return;
+    setActiveCreationWorkspaceId(String(workspaceBrowseId));
+    navigate('/3dio/new/scan');
   };
 
   const handleWorkspaceDeleteConfirm = async () => {
@@ -517,11 +507,9 @@ const RecentProjects = () => {
     : activeFilter === 'All'
       ? projects
       : activeFilter === 'Workspaces' && workspaceBrowseId
-        ? workspaceBrowseId === 'none'
-          ? projects.filter((project) => !getProjectWorkspaceId(project))
-          : workspaceProjects.length > 0 && selectedFilter === String(workspaceBrowseId)
-            ? workspaceProjects
-            : filterProjectsByWorkspace(projects)
+        ? workspaceProjects.length > 0 && selectedFilter === String(workspaceBrowseId)
+          ? workspaceProjects
+          : filterProjectsByWorkspace(projects)
         : activeFilter === 'Favourite Project'
           ? projects
           : filterProjectsByWorkspace(projects);
@@ -952,16 +940,19 @@ const RecentProjects = () => {
 
       <div className="rp-page-head">
         <div className="rp-page-head-copy">
-          <h1 className="rp-page-title">{isInsideWorkspace ? activeWorkspaceName : 'My Models'}</h1>
+          <h1 className="rp-page-title">{isInsideWorkspace ? activeWorkspaceName : 'My Workspace'}</h1>
           <p className="rp-page-subtitle">
             {isInsideWorkspace
-              ? workspaceBrowseId === 'none'
-                ? 'Models without a workspace.'
-                : 'Models inside this workspace.'
-              : 'Browse, organize, and manage your generated 3D models.'}
+              ? 'Models inside this workspace.'
+              : 'Browse, organize, and manage your workspaces and 3D models.'}
           </p>
         </div>
-        {!isInsideWorkspace && (
+        {isInsideWorkspace ? (
+          <button type="button" className="rp-new-workspace-btn" onClick={handleCreateModelInWorkspace}>
+            <FiPlus size={15} />
+            Create new 3D model
+          </button>
+        ) : (
           <button type="button" className="rp-new-workspace-btn" onClick={openWorkspaceCreate}>
             <FiPlus size={15} />
             New workspace
@@ -1074,6 +1065,12 @@ const RecentProjects = () => {
             ))}
           </div>
         ) : viewMode === 'grid' ? (
+          workspaces.length === 0 ? (
+            <div className="rp-workspace-empty-state">
+              <FiFolder size={40} className="rp-workspace-empty-icon" />
+              <p>You don&apos;t have any workspace yet. Create one to get started.</p>
+            </div>
+          ) : (
           <div className="rp-grid rp-workspace-grid">
             {workspaceBrowseItems.map((item) => (
               <div
@@ -1085,22 +1082,17 @@ const RecentProjects = () => {
                 onKeyDown={(e) => e.key === 'Enter' && openWorkspaceBrowse(item.id)}
               >
                 <div className="rp-card-img-wrap">
-                  <div
-                    className={`rp-workspace-card-visual${item.muted ? ' rp-workspace-card-visual--muted' : ''}`}
-                  >
+                  <div className="rp-workspace-card-visual">
                     <span className="rp-workspace-card-visual-icon">
                       <FiFolder size={34} />
                     </span>
-                    <span className="rp-workspace-card-visual-label">
-                      {item.muted ? 'Unassigned' : 'Workspace'}
-                    </span>
+                    <span className="rp-workspace-card-visual-label">Workspace</span>
                   </div>
                 </div>
                 <div className="rp-card-body">
                   <div className="rp-card-header-row">
                     <div className="rp-card-title">{item.name}</div>
-                    {item.workspace && (
-                      <div className="rp-workspace-card-menu-wrap">
+                    <div className="rp-workspace-card-menu-wrap">
                         <button
                           type="button"
                           className="rp-card-menu-btn"
@@ -1137,7 +1129,6 @@ const RecentProjects = () => {
                           </div>
                         )}
                       </div>
-                    )}
                   </div>
                   <div className="rp-card-meta">
                     <div className="rp-card-date">{getWorkspaceCountLabel(item.count)}</div>
@@ -1145,12 +1136,12 @@ const RecentProjects = () => {
                 </div>
               </div>
             ))}
-
-            {workspaces.length === 0 && (
-              <p className="rp-workspace-grid-empty">
-                No workspaces yet. Use &quot;New workspace&quot; above to create one.
-              </p>
-            )}
+          </div>
+          )
+        ) : workspaces.length === 0 ? (
+          <div className="rp-workspace-empty-state">
+            <FiFolder size={40} className="rp-workspace-empty-icon" />
+            <p>You don&apos;t have any workspace yet. Create one to get started.</p>
           </div>
         ) : (
           <div className="rp-list-view rp-workspace-list-view">
@@ -1163,18 +1154,15 @@ const RecentProjects = () => {
                 onClick={() => openWorkspaceBrowse(item.id)}
                 onKeyDown={(e) => e.key === 'Enter' && openWorkspaceBrowse(item.id)}
               >
-                <div
-                  className={`rp-workspace-list-thumb${item.muted ? ' rp-workspace-list-thumb--muted' : ''}`}
-                >
+                <div className="rp-workspace-list-thumb">
                   <FiFolder size={22} />
-                  <span>{item.muted ? 'Unassigned' : 'Workspace'}</span>
+                  <span>Workspace</span>
                 </div>
                 <div className="rp-list-info">
                   <div className="rp-list-title">{item.name}</div>
                   <div className="rp-list-date">{getWorkspaceCountLabel(item.count)}</div>
                 </div>
-                {item.workspace ? (
-                  <div className="rp-workspace-card-menu-wrap">
+                <div className="rp-workspace-card-menu-wrap">
                     <button
                       type="button"
                       className="rp-card-menu-btn"
@@ -1210,17 +1198,8 @@ const RecentProjects = () => {
                       </div>
                     )}
                   </div>
-                ) : (
-                  <span className="rp-workspace-list-spacer" aria-hidden="true" />
-                )}
               </div>
             ))}
-
-            {workspaces.length === 0 && (
-              <p className="rp-workspace-grid-empty">
-                No workspaces yet. Use &quot;New workspace&quot; above to create one.
-              </p>
-            )}
           </div>
         )
       ) : loading || (activeFilter === 'Workspaces' && workspaceBrowseId && workspaceProjectsLoading) ? (
@@ -1234,12 +1213,36 @@ const RecentProjects = () => {
           <SkeletonListLoader />
         )
       ) : filtered.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: 60, color: '#888', fontSize: 20 }}>
-          <div style={{ fontSize: 48, marginBottom: 12 }}>
-            {projects.length === 0 ? '📂' : '🔍'}
+        isInsideWorkspace && !searchQuery.trim() && workspaceInnerFilter === 'All' ? (
+          <div className="rp-workspace-models-empty">
+            <div className="rp-workspace-models-empty-icon-wrap">
+              <FaCube size={32} />
+            </div>
+            <h3 className="rp-workspace-models-empty-title">This workspace is empty</h3>
+            <p className="rp-workspace-models-empty-text">
+              You haven&apos;t added any models here yet. Create your first 3D model with a photo upload or text prompt.
+            </p>
+            <button type="button" className="rp-new-workspace-btn" onClick={handleCreateModelInWorkspace}>
+              <FiPlus size={15} />
+              Scan new
+            </button>
           </div>
-          {projects.length === 0 ? 'No projects found' : 'No projects match your search'}
-        </div>
+        ) : (
+          <div className="rp-models-empty-state">
+            <div className="rp-models-empty-icon">
+              {searchQuery.trim() ? '🔍' : '📂'}
+            </div>
+            <p>
+              {isInsideWorkspace && !searchQuery.trim() && workspaceInnerFilter === 'Favourite Project'
+                ? 'No favourite models in this workspace.'
+                : isInsideWorkspace && !searchQuery.trim() && workspaceInnerFilter === 'Recent Project'
+                  ? 'No recent models in this workspace.'
+                  : searchQuery.trim()
+                    ? 'No models match your search'
+                    : 'No models found'}
+            </p>
+          </div>
+        )
       ) : viewMode === 'grid' ? (
         <>
           <div className="rp-grid">

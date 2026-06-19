@@ -15,6 +15,7 @@ import RightScan from '../../components/scan/RightScan';
 import ModelReviewModal from '../../components/popup/ModelReviewModal';
 import PublicShareLinkSection from '../../components/popup/PublicShareLinkSection';
 import { useRouteLeave } from '../../hooks/useRouteLeave';
+import { useWorkspace } from '../../context/WorkspaceContext';
 import * as THREE from 'three';
 import { FiX, FiCheck } from 'react-icons/fi';
 import { Hourglass } from 'lucide-react';
@@ -25,6 +26,7 @@ const hasProjectFeedback = (value) =>
 
 const ModelGenerator = ({ isDarkMode = false }) => {
   const { token } = useAuth();
+  const { activeCreationWorkspaceId, assignProjectToWorkspace } = useWorkspace();
   const navigate = useNavigate();
   const location = useLocation();
   const { slug: publicSlug } = useParams();
@@ -1068,6 +1070,13 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     setIsUserOwnedProject(true);
     setCurrentStep(1);
     fetchHistory();
+
+    if (activeCreationWorkspaceId) {
+      assignProjectToWorkspace(tokenId, activeCreationWorkspaceId).catch((err) => {
+        console.error('Failed to assign project to workspace:', err);
+        toast.warn('Model created, but could not assign to workspace.');
+      });
+    }
 
     setTimeout(() => {
       fetchInitialProject(tokenId);

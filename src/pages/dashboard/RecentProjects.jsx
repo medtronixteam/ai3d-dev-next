@@ -1,5 +1,5 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import {
   FaPen,
   FaUpload,
@@ -29,12 +29,29 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import GridIcon from '../../assets/images/grid-icon.svg';
 import CardIcon from '../../assets/images/card-icon.svg';
 import sorticon from '../../assets/images/sort-icon.svg';
-import { Download, Eye, FolderPen, Grid, Image, LayoutGrid, Pen, Send, TabletSmartphone, Trash, Trash2 } from 'lucide-react';
+import { Download, Eye, FolderOutput, FolderPen, Grid, Image, LayoutGrid, Pen, Send, TabletSmartphone, Trash, Trash2 } from 'lucide-react';
 import '../settings/Profile.css';
 import SkeletonListLoader from '../../components/loader/SkeletonListLoader';
 import PublicShareLinkSection from '../../components/popup/PublicShareLinkSection';
+import MoveToWorkspaceModal from '../../components/workspace/MoveToWorkspaceModal';
+import { useWorkspace } from '../../context/WorkspaceContext';
+import { getProjectId, getProjectWorkspaceId, WORKSPACE_FILTER_NONE } from '../../utils/workspaceApi';
+import { FiEdit2, FiFolder, FiPlus, FiTrash2 } from 'react-icons/fi';
+import WorkspaceFormModal from '../../components/workspace/WorkspaceFormModal';
 
-const FILTERS = ['All', 'Recent Project', 'Favourite Project', 'Shared Project'];
+const FILTER_OPTIONS = [
+  { id: 'All', label: 'Models' },
+  { id: 'Workspaces', label: 'Workspaces' },
+  { id: 'Favourite Project', label: 'Favourite Project' },
+  { id: 'Shared Project', label: 'Shared Project' },
+];
+
+const WORKSPACE_INNER_FILTER_OPTIONS = [
+  { id: 'Workspaces', label: 'Workspaces', isBack: true },
+  { id: 'All', label: 'All' },
+  { id: 'Recent Project', label: 'Recent' },
+  { id: 'Favourite Project', label: 'Favourite' },
+];
 
 const RecentProjects = () => {
   const { token } = useAuth();
@@ -67,6 +84,35 @@ const RecentProjects = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [shareMessage, setShareMessage] = useState('');
   const [shareMessageType, setShareMessageType] = useState('');
+  const [moveModalOpen, setMoveModalOpen] = useState(false);
+  const [moveTargetProject, setMoveTargetProject] = useState(null);
+  const [moveLoading, setMoveLoading] = useState(false);
+  const [workspaceBrowseId, setWorkspaceBrowseId] = useState(null);
+  const [workspaceInnerFilter, setWorkspaceInnerFilter] = useState('All');
+  const [wsMenuOpenId, setWsMenuOpenId] = useState(null);
+  const [wsFormOpen, setWsFormOpen] = useState(false);
+  const [wsFormMode, setWsFormMode] = useState('create');
+  const [wsEditing, setWsEditing] = useState(null);
+  const [wsFormLoading, setWsFormLoading] = useState(false);
+  const [wsDeleteOpen, setWsDeleteOpen] = useState(false);
+  const [wsDeleteTarget, setWsDeleteTarget] = useState(null);
+
+  const {
+    workspaces,
+    loading: workspacesLoading,
+    selectedFilter,
+    setSelectedFilter,
+    filterProjectsByWorkspace,
+    workspaceProjects,
+    workspaceProjectsLoading,
+    loadWorkspaceProjects,
+    assignProjectToWorkspace,
+    removeProjectFromWorkspace,
+    createWorkspace,
+    updateWorkspace,
+    deleteWorkspace,
+    refreshWorkspaces,
+  } = useWorkspace();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -101,6 +147,148 @@ const RecentProjects = () => {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    if (activeFilter !== 'Workspaces') {
+      setWorkspaceBrowseId(null);
+      setWorkspaceInnerFilter('All');
+      setWsMenuOpenId(null);
+    }
+  }, [activeFilter]);
+
+  const activeWorkspaceName = useMemo(() => {
+    if (!workspaceBrowseId) return null;
+    if (workspaceBrowseId === 'none') return 'Unassigned';
+    return workspaces.find((ws) => String(ws.id) === String(workspaceBrowseId))?.name || 'Workspace';
+  }, [workspaceBrowseId, workspaces]);
+
+  const isInsideWorkspace = activeFilter === 'Workspaces' && workspaceBrowseId !== null;
+
+  useEffect(() => {
+    if (!wsMenuOpenId) return undefined;
+
+    const handleWorkspaceMenuOutside = (event) => {
+      if (!event.target.closest('.rp-workspace-card-menu-wrap')) {
+        setWsMenuOpenId(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleWorkspaceMenuOutside);
+    return () => document.removeEventListener('mousedown', handleWorkspaceMenuOutside);
+  }, [wsMenuOpenId]);
+
+  const unassignedCount = useMemo(
+    () => projects.filter((project) => !getProjectWorkspaceId(project)).length,
+    [projects],
+  );
+
+  const workspaceBrowseItems = useMemo(
+    () => [
+      {
+        id: 'none',
+        name: 'Unassigned',
+        count: unassignedCount,
+        muted: true,
+        workspace: null,
+      },
+      ...workspaces.map((workspace) => ({
+        id: String(workspace.id),
+        name: workspace.name,
+        count: workspace.projectsCount,
+        muted: false,
+        workspace,
+      })),
+    ],
+    [workspaces, unassignedCount],
+  );
+
+  const getWorkspaceCountLabel = (count) => {
+    if (count > 0) {
+      return `${count} model${count === 1 ? '' : 's'}`;
+    }
+    return 'No models yet';
+  };
+
+  const openWorkspaceBrowse = (workspaceId) => {
+    setWorkspaceBrowseId(workspaceId);
+    setWorkspaceInnerFilter('All');
+    setWsMenuOpenId(null);
+
+    if (workspaceId === 'none') {
+      setSelectedFilter(WORKSPACE_FILTER_NONE);
+      return;
+    }
+
+    setSelectedFilter(String(workspaceId));
+    loadWorkspaceProjects(workspaceId);
+  };
+
+  const backToWorkspaceCards = () => {
+    setWorkspaceBrowseId(null);
+    setWorkspaceInnerFilter('All');
+    setWsMenuOpenId(null);
+  };
+
+  const handleFilterChange = (id) => {
+    if (id === 'Workspaces' && activeFilter === 'Workspaces' && workspaceBrowseId !== null) {
+      backToWorkspaceCards();
+      return;
+    }
+    setActiveFilter(id);
+  };
+
+  const openWorkspaceEdit = (workspace) => {
+    setWsMenuOpenId(null);
+    setWsFormMode('edit');
+    setWsEditing(workspace);
+    setWsFormOpen(true);
+  };
+
+  const openWorkspaceCreate = () => {
+    setWsFormMode('create');
+    setWsEditing(null);
+    setWsFormOpen(true);
+  };
+
+  const openWorkspaceDelete = (workspace) => {
+    setWsMenuOpenId(null);
+    setWsDeleteTarget(workspace);
+    setWsDeleteOpen(true);
+  };
+
+  const handleWorkspaceFormSubmit = async (name) => {
+    setWsFormLoading(true);
+    try {
+      if (wsFormMode === 'edit' && wsEditing) {
+        await updateWorkspace(wsEditing.id, name);
+      } else {
+        await createWorkspace(name);
+      }
+      setWsFormOpen(false);
+      setWsEditing(null);
+    } catch {
+      // toast handled in context
+    } finally {
+      setWsFormLoading(false);
+    }
+  };
+
+  const handleWorkspaceDeleteConfirm = async () => {
+    if (!wsDeleteTarget) return;
+    setWsFormLoading(true);
+    try {
+      await deleteWorkspace(wsDeleteTarget.id);
+      if (String(workspaceBrowseId) === String(wsDeleteTarget.id)) {
+        backToWorkspaceCards();
+      }
+      setWsDeleteOpen(false);
+      setWsDeleteTarget(null);
+    } catch {
+      // toast handled in context
+    } finally {
+      setWsFormLoading(false);
+    }
+  };
+
   const getProjectKey = (p) => p?.id ?? p?.token ?? p?.name ?? p?.title ?? Math.random();
 
   const fetchProjects = async (filter, page = 1, append = false) => {
@@ -114,8 +302,7 @@ const RecentProjects = () => {
     try {
       let url = `${baseURL}/project?page=${page}`;
 
-      if (filter === "Recent Project") url += `&recent=recent`;
-      if (filter === "Favourite Project") url += `&favorite=favorite`;
+      if (filter === 'Favourite Project') url += `&favorite=favorite`;
 
       let pageProjects = [];
 
@@ -325,7 +512,19 @@ const RecentProjects = () => {
     };
   }, [sortDropdownOpen]);
 
-  let filtered = projects;
+  let filtered = activeFilter === 'Shared Project'
+    ? projects
+    : activeFilter === 'All'
+      ? projects
+      : activeFilter === 'Workspaces' && workspaceBrowseId
+        ? workspaceBrowseId === 'none'
+          ? projects.filter((project) => !getProjectWorkspaceId(project))
+          : workspaceProjects.length > 0 && selectedFilter === String(workspaceBrowseId)
+            ? workspaceProjects
+            : filterProjectsByWorkspace(projects)
+        : activeFilter === 'Favourite Project'
+          ? projects
+          : filterProjectsByWorkspace(projects);
 
   if (searchQuery.trim()) {
     filtered = filtered.filter((p) =>
@@ -348,7 +547,86 @@ const RecentProjects = () => {
     filtered = [...filtered].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   }
 
+  if (isInsideWorkspace) {
+    if (workspaceInnerFilter === 'Favourite Project') {
+      filtered = filtered.filter((p) => p.favorite);
+    } else if (workspaceInnerFilter === 'Recent Project') {
+      const cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() - 30);
+      filtered = filtered.filter((p) => p.created_at && new Date(p.created_at) >= cutoff);
+    }
+  }
+
   const grouped = { All: filtered };
+
+  const handleMoveClick = (project) => {
+    setDropdownOpen(null);
+    setMoveTargetProject(project);
+    setMoveModalOpen(true);
+  };
+
+  const handleMoveConfirm = async (workspaceId) => {
+    if (!moveTargetProject) return;
+
+    const projectId = getProjectId(moveTargetProject);
+    if (!projectId) {
+      toast.error('Project not found.');
+      return;
+    }
+
+    setMoveLoading(true);
+    try {
+      await assignProjectToWorkspace(projectId, workspaceId);
+      toast.success(workspaceId ? 'Project moved to workspace.' : 'Project moved to unassigned.');
+      setMoveModalOpen(false);
+      setMoveTargetProject(null);
+      setCurrentPage(1);
+      setProjects([]);
+      fetchProjects(activeFilter, 1, false);
+      await refreshWorkspaces();
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Failed to move project.');
+    } finally {
+      setMoveLoading(false);
+    }
+  };
+
+  const handleRemoveFromWorkspace = async (project) => {
+    setDropdownOpen(null);
+
+    const projectId = getProjectId(project);
+    if (!projectId) {
+      toast.error('Project not found.');
+      return;
+    }
+
+    if (!getProjectWorkspaceId(project)) {
+      toast.info('This project is already unassigned.');
+      return;
+    }
+
+    const workspaceId = getProjectWorkspaceId(project);
+
+    setMoveLoading(true);
+    try {
+      await removeProjectFromWorkspace(projectId, workspaceId);
+      toast.success('Project removed from workspace.');
+      setCurrentPage(1);
+      setProjects([]);
+      fetchProjects(activeFilter, 1, false);
+      await refreshWorkspaces();
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Failed to remove project from workspace.');
+    } finally {
+      setMoveLoading(false);
+    }
+  };
+
+  const getWorkspaceName = (project) => {
+    const workspaceId = getProjectWorkspaceId(project);
+    if (!workspaceId) return null;
+    return workspaces.find((ws) => String(ws.id) === String(workspaceId))?.name || 'Workspace';
+  };
 
   const handleRenameClick = (project) => {
     setDropdownOpen(null);
@@ -672,15 +950,50 @@ const RecentProjects = () => {
         }
       `}</style>
 
+      <div className="rp-page-head">
+        <div className="rp-page-head-copy">
+          <h1 className="rp-page-title">{isInsideWorkspace ? activeWorkspaceName : 'My Models'}</h1>
+          <p className="rp-page-subtitle">
+            {isInsideWorkspace
+              ? workspaceBrowseId === 'none'
+                ? 'Models without a workspace.'
+                : 'Models inside this workspace.'
+              : 'Browse, organize, and manage your generated 3D models.'}
+          </p>
+        </div>
+        {!isInsideWorkspace && (
+          <button type="button" className="rp-new-workspace-btn" onClick={openWorkspaceCreate}>
+            <FiPlus size={15} />
+            New workspace
+          </button>
+        )}
+      </div>
+
       <div className="recent-projects-header d-flex flex-wrap">
         <div className="rp-filter-bar">
-          {FILTERS.map((filter) => (
+          {(isInsideWorkspace ? WORKSPACE_INNER_FILTER_OPTIONS : FILTER_OPTIONS).map(({ id, label, isBack }) => (
             <button
-              key={filter}
-              className={`rp-filter-pill${activeFilter === filter ? ' active' : ''}`}
-              onClick={() => setActiveFilter(filter)}
+              key={id}
+              className={`rp-filter-pill${
+                isBack
+                  ? ''
+                  : (isInsideWorkspace ? workspaceInnerFilter : activeFilter) === id
+                    ? ' active'
+                    : ''
+              }`}
+              onClick={() => {
+                if (isBack) {
+                  backToWorkspaceCards();
+                  return;
+                }
+                if (isInsideWorkspace) {
+                  setWorkspaceInnerFilter(id);
+                } else {
+                  handleFilterChange(id);
+                }
+              }}
             >
-              {filter}
+              {label}
             </button>
           ))}
         </div>
@@ -753,7 +1066,164 @@ const RecentProjects = () => {
         </div>
       </div>
 
-      {loading ? (
+      {activeFilter === 'Workspaces' && workspaceBrowseId === null ? (
+        workspacesLoading ? (
+          <div className="recent-loader-item">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="recent-loader-loader" />
+            ))}
+          </div>
+        ) : viewMode === 'grid' ? (
+          <div className="rp-grid rp-workspace-grid">
+            {workspaceBrowseItems.map((item) => (
+              <div
+                key={item.id}
+                className="rp-card rp-workspace-card-item"
+                role="button"
+                tabIndex={0}
+                onClick={() => openWorkspaceBrowse(item.id)}
+                onKeyDown={(e) => e.key === 'Enter' && openWorkspaceBrowse(item.id)}
+              >
+                <div className="rp-card-img-wrap">
+                  <div
+                    className={`rp-workspace-card-visual${item.muted ? ' rp-workspace-card-visual--muted' : ''}`}
+                  >
+                    <span className="rp-workspace-card-visual-icon">
+                      <FiFolder size={34} />
+                    </span>
+                    <span className="rp-workspace-card-visual-label">
+                      {item.muted ? 'Unassigned' : 'Workspace'}
+                    </span>
+                  </div>
+                </div>
+                <div className="rp-card-body">
+                  <div className="rp-card-header-row">
+                    <div className="rp-card-title">{item.name}</div>
+                    {item.workspace && (
+                      <div className="rp-workspace-card-menu-wrap">
+                        <button
+                          type="button"
+                          className="rp-card-menu-btn"
+                          aria-label={`Options for ${item.name}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setWsMenuOpenId(wsMenuOpenId === item.workspace.id ? null : item.workspace.id);
+                          }}
+                        >
+                          <FaEllipsisV />
+                        </button>
+
+                        {wsMenuOpenId === item.workspace.id && (
+                          <div className="rp-card-menu">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openWorkspaceEdit(item.workspace);
+                              }}
+                            >
+                              <FiEdit2 size={14} /> Rename
+                            </button>
+                            <button
+                              type="button"
+                              className="danger"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openWorkspaceDelete(item.workspace);
+                              }}
+                            >
+                              <FiTrash2 size={14} /> Delete
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  <div className="rp-card-meta">
+                    <div className="rp-card-date">{getWorkspaceCountLabel(item.count)}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {workspaces.length === 0 && (
+              <p className="rp-workspace-grid-empty">
+                No workspaces yet. Use &quot;New workspace&quot; above to create one.
+              </p>
+            )}
+          </div>
+        ) : (
+          <div className="rp-list-view rp-workspace-list-view">
+            {workspaceBrowseItems.map((item) => (
+              <div
+                key={item.id}
+                className="rp-list-item rp-workspace-list-item"
+                role="button"
+                tabIndex={0}
+                onClick={() => openWorkspaceBrowse(item.id)}
+                onKeyDown={(e) => e.key === 'Enter' && openWorkspaceBrowse(item.id)}
+              >
+                <div
+                  className={`rp-workspace-list-thumb${item.muted ? ' rp-workspace-list-thumb--muted' : ''}`}
+                >
+                  <FiFolder size={22} />
+                  <span>{item.muted ? 'Unassigned' : 'Workspace'}</span>
+                </div>
+                <div className="rp-list-info">
+                  <div className="rp-list-title">{item.name}</div>
+                  <div className="rp-list-date">{getWorkspaceCountLabel(item.count)}</div>
+                </div>
+                {item.workspace ? (
+                  <div className="rp-workspace-card-menu-wrap">
+                    <button
+                      type="button"
+                      className="rp-card-menu-btn"
+                      aria-label={`Options for ${item.name}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setWsMenuOpenId(wsMenuOpenId === item.workspace.id ? null : item.workspace.id);
+                      }}
+                    >
+                      <FaEllipsisV size={16} />
+                    </button>
+                    {wsMenuOpenId === item.workspace.id && (
+                      <div className="rp-card-menu">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openWorkspaceEdit(item.workspace);
+                          }}
+                        >
+                          <FiEdit2 size={14} /> Rename
+                        </button>
+                        <button
+                          type="button"
+                          className="danger"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openWorkspaceDelete(item.workspace);
+                          }}
+                        >
+                          <FiTrash2 size={14} /> Delete
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <span className="rp-workspace-list-spacer" aria-hidden="true" />
+                )}
+              </div>
+            ))}
+
+            {workspaces.length === 0 && (
+              <p className="rp-workspace-grid-empty">
+                No workspaces yet. Use &quot;New workspace&quot; above to create one.
+              </p>
+            )}
+          </div>
+        )
+      ) : loading || (activeFilter === 'Workspaces' && workspaceBrowseId && workspaceProjectsLoading) ? (
         viewMode === 'grid' ? (
           <div className="recent-loader-item">
             {[...Array(8)].map((_, i) => (
@@ -800,26 +1270,8 @@ const RecentProjects = () => {
                     </div>
                   </div>
                   <div className="rp-card-body">
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'flex-start',
-                        justifyContent: 'space-between',
-                        gap: 8,
-                      }}
-                    >
-                      <div>
-                        <div className="rp-card-title">{project.name}</div>
-                        <div className="rp-card-date">
-                          {project.created_at
-                            ? new Date(project.created_at).toLocaleDateString('en-US', {
-                              month: 'short',
-                              day: 'numeric',
-                              year: 'numeric',
-                            })
-                            : ''}
-                        </div>
-                      </div>
+                    <div className="rp-card-header-row">
+                      <div className="rp-card-title">{project.name}</div>
                       <button
                         className="rp-card-menu-btn"
                         onClick={() =>
@@ -828,6 +1280,17 @@ const RecentProjects = () => {
                       >
                         <FaEllipsisV />
                       </button>
+                    </div>
+                    <div className="rp-card-meta">
+                      <div className="rp-card-date">
+                        {project.created_at
+                          ? new Date(project.created_at).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                          })
+                          : ''}
+                      </div>
                     </div>
                     {dropdownOpen === project.id && (
                       <div className="rp-card-menu">
@@ -845,8 +1308,16 @@ const RecentProjects = () => {
                             <button onClick={() => handleShareClick(project)}>
                               <Send size={16} /> Share
                             </button>
+                            <button onClick={() => handleMoveClick(project)}>
+                              <FolderPen size={16} /> Move to workspace
+                            </button>
+                            {getWorkspaceName(project) && (
+                              <button onClick={() => handleRemoveFromWorkspace(project)}>
+                                <FolderOutput size={16} /> Remove from workspace
+                              </button>
+                            )}
                             <button onClick={() => handleDeleteClick(project)}>
-                              <Trash2 size={16} /> Remove
+                              <Trash2 size={16} /> Delete project
                             </button>
                           </>
                         )}
@@ -934,8 +1405,16 @@ const RecentProjects = () => {
                               <button onClick={() => handleShareClick(project)}>
                                 <Send size={16} /> Share
                               </button>
+                              <button onClick={() => handleMoveClick(project)}>
+                                <FolderPen size={16} /> Move to workspace
+                              </button>
+                              {getWorkspaceName(project) && (
+                                <button onClick={() => handleRemoveFromWorkspace(project)}>
+                                  <FolderOutput size={16} /> Remove from workspace
+                                </button>
+                              )}
                               <button onClick={() => handleDeleteClick(project)}>
-                                <Trash2 size={16} /> Remove
+                                <Trash2 size={16} /> Delete project
                               </button>
                             </>
                           )}
@@ -1183,6 +1662,44 @@ const RecentProjects = () => {
           </div>
         </div>
       )}
+
+      <MoveToWorkspaceModal
+        open={moveModalOpen}
+        project={moveTargetProject}
+        workspaces={workspaces}
+        loading={moveLoading}
+        onClose={() => {
+          setMoveModalOpen(false);
+          setMoveTargetProject(null);
+        }}
+        onMove={handleMoveConfirm}
+      />
+
+      <WorkspaceFormModal
+        open={wsFormOpen}
+        mode={wsFormMode}
+        initialName={wsEditing?.name || ''}
+        loading={wsFormLoading}
+        onClose={() => {
+          setWsFormOpen(false);
+          setWsEditing(null);
+        }}
+        onSubmit={handleWorkspaceFormSubmit}
+      />
+
+      <ConfirmModal
+        open={wsDeleteOpen}
+        onClose={() => {
+          setWsDeleteOpen(false);
+          setWsDeleteTarget(null);
+        }}
+        onConfirm={handleWorkspaceDeleteConfirm}
+        title="Delete workspace?"
+        message={`Delete "${wsDeleteTarget?.name || 'this workspace'}"? Projects inside will remain available without a workspace.`}
+        confirmText={wsFormLoading ? 'Deleting...' : 'Delete'}
+        cancelText="Cancel"
+        iconType="warning"
+      />
     </div>
   );
 };

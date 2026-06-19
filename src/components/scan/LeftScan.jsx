@@ -16,6 +16,7 @@ import promptIcon from '../../pages/images/promptIcon.svg';
 import ImgIcon from '../../pages/images/img-icon.svg';
 import Logo from '../../pages/images/logo.png';
 import SingleImgIcon from '../../pages/images/icons/single-img.svg';
+import WorkspaceSelect from '../workspace/WorkspaceSelect';
 
 const LeftScan = ({
   prompt,
@@ -124,9 +125,11 @@ const LeftScan = ({
     <div className="col-lg-3 col-md-4 pe-md-3 negative-margin">
       <img src={Logo} alt="logo" className="mb-2 mx-3" style={{ width: '90px' }} />
       <div className="side-column p-3">
-        <h5 className="fw-bold mb-3">
+        <h5 className="fw-bold mb-2">
           New <span className="text-pink">Model</span>
         </h5>
+
+        {!isViewOnly && <WorkspaceSelect disabled={isProcessing} />}
 
         {/* TOP BANNER - SINGLE IMAGE UPLOAD */}
         <div

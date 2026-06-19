@@ -9,6 +9,7 @@ import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AuthProvider } from './context/AuthContext';
 import { NotificationProvider } from './context/NotificationContext';
+import { WorkspaceProvider } from './context/WorkspaceContext';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 
@@ -144,10 +145,12 @@ try {
       <ErrorBoundary>
         <AuthProvider>
           <NotificationProvider>
+            <WorkspaceProvider>
             <Elements stripe={stripePromise}>
               <ToastContainer position="top-right" autoClose={3000} />
               <RouterProvider router={router} />
             </Elements>
+            </WorkspaceProvider>
           </NotificationProvider>
         </AuthProvider>
       </ErrorBoundary>

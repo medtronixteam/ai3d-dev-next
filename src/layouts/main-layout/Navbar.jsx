@@ -221,7 +221,9 @@ const Navbar = ({ onSidebarToggle, sidebarOpen }) => {
   // Check if current route is a settings page or recent projects page
   const isSettingsPage = location.pathname.startsWith('/3dio/settings');
   const isRecentProjectsPage =
-    location.pathname === '/3dio/workspace' || location.pathname === '/3dio/recent-projects';
+    location.pathname.startsWith('/3dio/models') ||
+    location.pathname.startsWith('/3dio/workspace') ||
+    location.pathname === '/3dio/recent-projects';
   const isPublicGuestView = isPublicProjectRoute(location.pathname) && !token;
   const isSubscriptionPage = location.pathname === '/3dio/subscription';
   const hideUpgradeButton = isPublicGuestView || (!token && isSubscriptionPage);

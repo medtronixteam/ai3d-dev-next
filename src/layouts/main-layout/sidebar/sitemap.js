@@ -57,13 +57,13 @@ export const sitemap = [
   },
   {
     id: 5,
-    title: 'My Workspace',
+    title: 'My Models',
     icon: {
       light: ProjectIcon,
       dark: WhiteProject,
       active: ProjectIcon,
     },
-    path: '/3dio/workspace',
+    path: '/3dio/models',
     authRequired: true,
   },
 ];

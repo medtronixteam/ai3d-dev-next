@@ -25,9 +25,9 @@ const BottomNavBar = () => {
           <BiScan className="scan-icon" style={{ color: '#fff', fontSize: 32 }} />
         </div>
       </NavLink>
-      <NavLink to="/3dio/workspace" className="bottom-nav-item">
+      <NavLink to="/3dio/models" className="bottom-nav-item">
         <FiClock className="bottom-nav-icon" />
-        <span className="bottom-nav-label">Workspace</span>
+        <span className="bottom-nav-label">Models</span>
       </NavLink>
       <NavLink to="/3dio/settings/profile" className="bottom-nav-item">
         <FiSettings className="bottom-nav-icon" />

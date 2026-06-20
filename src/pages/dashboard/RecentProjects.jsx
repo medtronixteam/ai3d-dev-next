@@ -25,7 +25,7 @@ import CreateTeamPopup from '../../components/popup/CreateTeamPopup';
 import ConfirmModal from '../../components/popup/ConfirmLogoutPopup';
 import { FiCheck, FiX } from 'react-icons/fi';
 import CustomLoader from '../../components/loader/CustomLoader';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import GridIcon from '../../assets/images/grid-icon.svg';
 import CardIcon from '../../assets/images/card-icon.svg';
 import sorticon from '../../assets/images/sort-icon.svg';
@@ -38,6 +38,7 @@ import { useWorkspace } from '../../context/WorkspaceContext';
 import { getProjectId, getProjectWorkspaceId } from '../../utils/workspaceApi';
 import { FiEdit2, FiFolder, FiPlus, FiTrash2 } from 'react-icons/fi';
 import WorkspaceFormModal from '../../components/workspace/WorkspaceFormModal';
+import WorkspaceNotesPanel from '../../components/workspace/WorkspaceNotesPanel';
 
 const FILTER_OPTIONS = [
   { id: 'All', label: 'Models' },
@@ -49,14 +50,15 @@ const FILTER_OPTIONS = [
 const WORKSPACE_INNER_FILTER_OPTIONS = [
   { id: 'Workspaces', label: 'Workspaces', isBack: true },
   { id: 'All', label: 'All' },
-  { id: 'Recent Project', label: 'Recent' },
-  { id: 'Favourite Project', label: 'Favourite' },
+  { id: 'Models', label: 'Models' },
+  { id: 'Notes', label: 'Notes' },
 ];
 
 const RecentProjects = () => {
   const { token } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const { workspaceId: routeWorkspaceId } = useParams();
   const [viewMode, setViewMode] = useState('grid');
   const [activeFilter, setActiveFilter] = useState('All');
   const [sortOption, setSortOption] = useState('Default');
@@ -66,6 +68,7 @@ const RecentProjects = () => {
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const sortBtnRef = useRef();
+  const notesPanelRef = useRef(null);
   const [renameModalOpen, setRenameModalOpen] = useState(false);
   const [renameProjectId, setRenameProjectId] = useState(null);
   const [newProjectName, setNewProjectName] = useState('');
@@ -149,12 +152,39 @@ const RecentProjects = () => {
   }, []);
 
   useEffect(() => {
-    if (activeFilter !== 'Workspaces') {
+    const search = new URLSearchParams(location.search);
+    const path = location.pathname;
+
+    if (routeWorkspaceId) {
+      setActiveFilter('Workspaces');
+      setWorkspaceBrowseId(String(routeWorkspaceId));
+      setSelectedFilter(String(routeWorkspaceId));
+      loadWorkspaceProjects(routeWorkspaceId);
+
+      const tab = search.get('tab');
+      if (tab === 'notes') setWorkspaceInnerFilter('Notes');
+      else if (tab === 'models') setWorkspaceInnerFilter('Models');
+      else setWorkspaceInnerFilter('All');
+      return;
+    }
+
+    if (path === '/3dio/workspace') {
+      setActiveFilter('Workspaces');
       setWorkspaceBrowseId(null);
       setWorkspaceInnerFilter('All');
-      setWsMenuOpenId(null);
+      return;
     }
-  }, [activeFilter]);
+
+    if (path === '/3dio/models') {
+      setWorkspaceBrowseId(null);
+      setWorkspaceInnerFilter('All');
+
+      const tab = search.get('tab');
+      if (tab === 'favourite') setActiveFilter('Favourite Project');
+      else if (tab === 'shared') setActiveFilter('Shared Project');
+      else setActiveFilter('All');
+    }
+  }, [location.pathname, location.search, routeWorkspaceId, loadWorkspaceProjects, setSelectedFilter]);
 
   const activeWorkspaceName = useMemo(() => {
     if (!workspaceBrowseId) return null;
@@ -162,6 +192,7 @@ const RecentProjects = () => {
   }, [workspaceBrowseId, workspaces]);
 
   const isInsideWorkspace = activeFilter === 'Workspaces' && workspaceBrowseId !== null;
+  const isNotesView = isInsideWorkspace && workspaceInnerFilter === 'Notes';
 
   useEffect(() => {
     if (!wsMenuOpenId) return undefined;
@@ -195,25 +226,37 @@ const RecentProjects = () => {
   };
 
   const openWorkspaceBrowse = (workspaceId) => {
-    setWorkspaceBrowseId(workspaceId);
-    setWorkspaceInnerFilter('All');
-    setWsMenuOpenId(null);
-    setSelectedFilter(String(workspaceId));
-    loadWorkspaceProjects(workspaceId);
+    navigate(`/3dio/workspace/${workspaceId}`);
   };
 
   const backToWorkspaceCards = () => {
-    setWorkspaceBrowseId(null);
-    setWorkspaceInnerFilter('All');
-    setWsMenuOpenId(null);
+    navigate('/3dio/workspace');
+  };
+
+  const navigateInnerFilter = (filterId) => {
+    if (!workspaceBrowseId) return;
+    if (filterId === 'Notes') {
+      navigate(`/3dio/workspace/${workspaceBrowseId}?tab=notes`);
+    } else if (filterId === 'Models') {
+      navigate(`/3dio/workspace/${workspaceBrowseId}?tab=models`);
+    } else {
+      navigate(`/3dio/workspace/${workspaceBrowseId}`);
+    }
   };
 
   const handleFilterChange = (id) => {
-    if (id === 'Workspaces' && activeFilter === 'Workspaces' && workspaceBrowseId !== null) {
-      backToWorkspaceCards();
+    if (id === 'Workspaces') {
+      if (activeFilter === 'Workspaces' && workspaceBrowseId !== null) {
+        backToWorkspaceCards();
+        return;
+      }
+      navigate('/3dio/workspace');
       return;
     }
-    setActiveFilter(id);
+
+    if (id === 'All') navigate('/3dio/models');
+    else if (id === 'Favourite Project') navigate('/3dio/models?tab=favourite');
+    else if (id === 'Shared Project') navigate('/3dio/models?tab=shared');
   };
 
   const openWorkspaceEdit = (workspace) => {
@@ -243,8 +286,7 @@ const RecentProjects = () => {
       } else {
         const created = await createWorkspace(name);
         if (created?.id) {
-          setActiveFilter('Workspaces');
-          openWorkspaceBrowse(String(created.id));
+          navigate(`/3dio/workspace/${created.id}`);
         }
       }
       setWsFormOpen(false);
@@ -268,7 +310,7 @@ const RecentProjects = () => {
     try {
       await deleteWorkspace(wsDeleteTarget.id);
       if (String(workspaceBrowseId) === String(wsDeleteTarget.id)) {
-        backToWorkspaceCards();
+        navigate('/3dio/workspace');
       }
       setWsDeleteOpen(false);
       setWsDeleteTarget(null);
@@ -535,10 +577,8 @@ const RecentProjects = () => {
     filtered = [...filtered].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   }
 
-  if (isInsideWorkspace) {
-    if (workspaceInnerFilter === 'Favourite Project') {
-      filtered = filtered.filter((p) => p.favorite);
-    } else if (workspaceInnerFilter === 'Recent Project') {
+  if (isInsideWorkspace && !isNotesView) {
+    if (workspaceInnerFilter === 'Models') {
       const cutoff = new Date();
       cutoff.setDate(cutoff.getDate() - 30);
       filtered = filtered.filter((p) => p.created_at && new Date(p.created_at) >= cutoff);
@@ -940,14 +980,25 @@ const RecentProjects = () => {
 
       <div className="rp-page-head">
         <div className="rp-page-head-copy">
-          <h1 className="rp-page-title">{isInsideWorkspace ? activeWorkspaceName : 'My Workspace'}</h1>
+          <h1 className="rp-page-title">{isInsideWorkspace ? activeWorkspaceName : 'My Models'}</h1>
           <p className="rp-page-subtitle">
             {isInsideWorkspace
-              ? 'Models inside this workspace.'
-              : 'Browse, organize, and manage your workspaces and 3D models.'}
+              ? isNotesView
+                ? 'Write and manage notes for this workspace.'
+                : 'Models inside this workspace.'
+              : 'Browse, organize, and manage your 3D models and workspaces.'}
           </p>
         </div>
-        {isInsideWorkspace ? (
+        {isInsideWorkspace && isNotesView ? (
+          <button
+            type="button"
+            className="rp-new-workspace-btn"
+            onClick={() => notesPanelRef.current?.openCreate()}
+          >
+            <FiPlus size={15} />
+            Create note
+          </button>
+        ) : isInsideWorkspace && !isNotesView ? (
           <button type="button" className="rp-new-workspace-btn" onClick={handleCreateModelInWorkspace}>
             <FiPlus size={15} />
             Create new 3D model
@@ -978,10 +1029,14 @@ const RecentProjects = () => {
                   return;
                 }
                 if (isInsideWorkspace) {
-                  setWorkspaceInnerFilter(id);
-                } else {
-                  handleFilterChange(id);
+                  if (id === 'Notes' && workspaceInnerFilter === 'Notes') {
+                    notesPanelRef.current?.backToGrid?.();
+                    return;
+                  }
+                  navigateInnerFilter(id);
+                  return;
                 }
+                handleFilterChange(id);
               }}
             >
               {label}
@@ -1006,6 +1061,7 @@ const RecentProjects = () => {
               <img src={CardIcon} alt="List view" />
             </button>
           </div>
+          {!isNotesView && (
           <div className="rp-sort-dropdown" ref={sortBtnRef}>
             <button
               className={`rp-sort-btn${sortDropdownOpen ? ' open' : ''}`}
@@ -1054,10 +1110,18 @@ const RecentProjects = () => {
               </ul>
             )}
           </div>
+          )}
         </div>
       </div>
 
-      {activeFilter === 'Workspaces' && workspaceBrowseId === null ? (
+      {isNotesView ? (
+        <WorkspaceNotesPanel
+          ref={notesPanelRef}
+          workspaceId={workspaceBrowseId}
+          workspaceName={activeWorkspaceName}
+          viewMode={viewMode}
+        />
+      ) : activeFilter === 'Workspaces' && workspaceBrowseId === null ? (
         workspacesLoading ? (
           <div className="recent-loader-item">
             {[...Array(4)].map((_, i) => (
@@ -1233,11 +1297,9 @@ const RecentProjects = () => {
               {searchQuery.trim() ? '🔍' : '📂'}
             </div>
             <p>
-              {isInsideWorkspace && !searchQuery.trim() && workspaceInnerFilter === 'Favourite Project'
-                ? 'No favourite models in this workspace.'
-                : isInsideWorkspace && !searchQuery.trim() && workspaceInnerFilter === 'Recent Project'
-                  ? 'No recent models in this workspace.'
-                  : searchQuery.trim()
+              {isInsideWorkspace && !searchQuery.trim() && workspaceInnerFilter === 'Models'
+                ? 'No recent models in this workspace.'
+                : searchQuery.trim()
                     ? 'No models match your search'
                     : 'No models found'}
             </p>

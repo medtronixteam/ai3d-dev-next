@@ -131,6 +131,14 @@ const routes = [
         children: [
           { index: true, element: <Dashboard /> },
           {
+            path: 'models',
+            element: (
+              <ProtectedRoute>
+                <RecentProjects />
+              </ProtectedRoute>
+            ),
+          },
+          {
             path: 'workspace',
             element: (
               <ProtectedRoute>
@@ -139,8 +147,16 @@ const routes = [
             ),
           },
           {
+            path: 'workspace/:workspaceId',
+            element: (
+              <ProtectedRoute>
+                <RecentProjects />
+              </ProtectedRoute>
+            ),
+          },
+          {
             path: 'recent-projects',
-            element: <Navigate to="/3dio/workspace" replace />,
+            element: <Navigate to="/3dio/models" replace />,
           },
           {
             path: '/3dio/trash/projects',

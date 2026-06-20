@@ -33,7 +33,7 @@ const SidebarItem = ({ item, isCollapsed }) => {
 
   // 👇 Render icon logic
   const renderIcon = () => {
-    if (item.title === 'Recent Projects' || item.title === 'Workspaces' || item.title === 'My Workspace') {
+    if (item.title === 'Recent Projects' || item.title === 'Workspaces' || item.title === 'My Models') {
       return <FiFolder className="sidebar-react-icon" />;
     } else if (item.title === 'Subscription') {
       let subscriptionImage;

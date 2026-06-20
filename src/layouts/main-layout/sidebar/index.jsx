@@ -136,7 +136,7 @@ const Icon = (src, alt) => <img src={src} alt={alt} className="sidebar-svg-icon"
 const IconHome = () => Icon(HomeIcon, 'Home');
 const IconScan = () => Icon(ScanIcon, 'Scan');
 const IconApi = () => Icon(ApiIcon, 'API & SDK');
-const IconRecent = () => Icon(RecentProjectsIcon, 'My Workspace');
+const IconRecent = () => Icon(RecentProjectsIcon, 'My Models');
 const IconSettings = () => Icon(SettingsIcon, 'Settings');
 const IconSupport = () => Icon(SupportIcon, 'Support');
 const IconProfile = () => Icon(ProfileIcon, 'Profile');
@@ -150,7 +150,7 @@ const sidebarOptions = [
   { title: 'Home', icon: IconHome, path: '/3dio/' },
   { title: 'Scan new', icon: IconScan, path: '/3dio/new/scan' },
   { title: 'API & SDK', icon: IconApi, path: '/3dio/api-sdk' },
-  { title: 'My Workspace', icon: IconRecent, path: '/3dio/workspace' },
+  { title: 'My Models', icon: IconRecent, path: '/3dio/models' },
   { title: 'Settings', icon: IconSettings, path: '/3dio/settings/profile' },
   { title: 'Support', icon: IconSupport, path: '/3dio/support' },
   { title: 'Profile', icon: IconProfile, path: '/3dio/settings/profile' },
@@ -301,7 +301,7 @@ const Sidebar = ({ open = false, onClose, disableExpand = false }) => {
   const itemsToHideForAuthenticatedMobile = [
     'API & SDK',
     'Scan new',
-    'My Workspace',
+    'My Models',
     'Settings',
   ];
 

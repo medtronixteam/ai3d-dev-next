@@ -6,8 +6,14 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
-  margin: 0 20px;
+  margin: 0;
+  padding: 0 20px;
   min-height: 560px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .ws-notes-title-field {
@@ -15,11 +21,15 @@
   align-items: center;
   gap: 8px;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   min-height: 48px;
   padding: 4px 6px 4px 14px;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   background: #fff;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .ws-notes-title-field:focus-within {
@@ -122,6 +132,10 @@
 .ws-notes-editor-body {
   flex: 1;
   min-height: 0;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .ws-notes-action-btn {
@@ -334,9 +348,12 @@
 
 @media (max-width: 900px) {
   .ws-notes-grid,
-  .ws-notes-list-view,
+  .ws-notes-list-view {
+    padding: 0 16px;
+  }
+
   .ws-notes-editor-screen {
-    margin: 0 16px;
+    padding: 0 16px;
   }
 
   .ws-notes-title-actions {

@@ -1,5 +1,6 @@
 .sidebar {
   font-family: "Exo 2", sans-serif !important;
+  flex-shrink: 0;
   max-width: 288px;
   height: 100vh;
   background-color: var(--sidebar-bg);

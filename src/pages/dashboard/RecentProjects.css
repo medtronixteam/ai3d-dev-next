@@ -88,7 +88,24 @@
 
 .recent-projects-modern-container {
   padding: 35px 0 0 0;
-  overflow-x: clip;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.rp-page-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 0 20px 18px;
+  margin-bottom: 4px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .rp-filter-bar {
@@ -129,15 +146,6 @@
 .rp-filter-pill.active {
   background: var(--primary-color);
   color: #fff;
-}
-
-.rp-page-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 20px;
-  padding: 0 20px 18px;
-  margin-bottom: 4px;
 }
 
 .rp-page-head .rp-new-workspace-btn {
@@ -583,8 +591,11 @@
   align-items: center;
   flex-wrap: wrap;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   margin: 0 0 20px 0;
   padding: 0 20px;
+  box-sizing: border-box;
 }
 
 .recent-projects-header-spacer {

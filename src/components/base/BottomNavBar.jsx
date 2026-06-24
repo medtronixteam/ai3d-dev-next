@@ -1,11 +1,19 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { FiHome, FiSettings, FiClock } from 'react-icons/fi';
 import { LuCalendarRange } from 'react-icons/lu';
 import { BiScan } from 'react-icons/bi';
 import './BottomNavBar.css';
 
 const BottomNavBar = () => {
+  const location = useLocation();
+
+  const handleScanNavClick = () => {
+    if (location.pathname !== '/3dio/new/scan') {
+      window.dispatchEvent(new CustomEvent('reset-scan-new'));
+    }
+  };
+
   return (
     <div className="bottom-nav-bar">
       <a href="/3dio/" className="bottom-nav-item">
@@ -19,7 +27,7 @@ const BottomNavBar = () => {
       <NavLink 
         to="/3dio/new/scan" 
         className="bottom-nav-scan"
-        onClick={() => window.dispatchEvent(new CustomEvent('reset-scan-new'))}
+        onClick={handleScanNavClick}
       >
         <div className="scan-btn">
           <BiScan className="scan-icon" style={{ color: '#fff', fontSize: 32 }} />

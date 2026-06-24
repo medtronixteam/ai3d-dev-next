@@ -73,10 +73,28 @@ const LeftScan = ({
     return () => URL.revokeObjectURL(previewUrl);
   }, [singleImageFile]);
 
+  useEffect(() => {
+    if (!singleImageFile && singleImageInputRef.current) {
+      singleImageInputRef.current.value = '';
+    }
+  }, [singleImageFile]);
+
+  useEffect(() => {
+    if (!video && videoInputRef.current) {
+      videoInputRef.current.value = '';
+    }
+  }, [video]);
+
+  useEffect(() => {
+    if (images.length === 0 && imageInputRef.current) {
+      imageInputRef.current.value = '';
+    }
+  }, [images.length]);
+
   // url update
   const handleSingleImageChange = (e) => {
     if (isProcessing || isViewOnly) return;
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
     if (file) {
       setSingleImageName(file.name);
       setSingleImageFile(file);
@@ -85,6 +103,7 @@ const LeftScan = ({
       setVideo(null);
       setPrompt('');
     }
+    e.target.value = '';
   };
 
   const handleMultipleFileChange = (e) => {
@@ -102,6 +121,7 @@ const LeftScan = ({
     setSingleImageName('');
     setSingleImageFile(null);
     setVideo(null);
+    e.target.value = '';
   };
 
   const handleVideoChange = (e) => {
@@ -113,6 +133,7 @@ const LeftScan = ({
       setSingleImageName('');
       setSingleImageFile(null);
     }
+    e.target.value = '';
   };
 
   const removeImage = (index) => {

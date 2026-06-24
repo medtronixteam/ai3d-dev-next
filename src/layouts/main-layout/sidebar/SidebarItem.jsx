@@ -85,8 +85,8 @@ const SidebarItem = ({ item, isCollapsed }) => {
     }
   };
 
-  const handleNavClick = (e) => {
-    if (item.path === '/3dio/new/scan') {
+  const handleNavClick = () => {
+    if (item.path === '/3dio/new/scan' && location.pathname !== '/3dio/new/scan') {
       window.dispatchEvent(new CustomEvent('reset-scan-new'));
     }
   };

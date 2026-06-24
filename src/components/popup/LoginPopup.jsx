@@ -8,6 +8,7 @@ import { FiEye, FiEyeOff, FiX } from 'react-icons/fi';
 import './LoginPopup.css';
 import Google from "../../assets/images/google.png";
 import Facebook from "../../assets/images/facebook.png";
+import { getPostLoginPath, startFacebookLogin, startGoogleLogin } from '../../utils/authRedirect';
 
 const LoginPopup = ({ onClose, onLoginSuccess }) => {
   const [email, setEmail] = useState('');
@@ -68,10 +69,11 @@ const LoginPopup = ({ onClose, onLoginSuccess }) => {
       toast.success(res.data?.message || 'Login successful!');
       handleClose();
 
-      // Call onLoginSuccess callback if provided, otherwise reload page
       if (onLoginSuccess) {
         onLoginSuccess();
       }
+
+      navigate(getPostLoginPath(), { replace: true });
     } catch (err) {
       toast.error(err?.response?.data?.message || 'Login failed. Please check your credentials.');
     } finally {
@@ -85,9 +87,9 @@ const LoginPopup = ({ onClose, onLoginSuccess }) => {
         <button className="close-btn" onClick={handleClose}><FiX /></button>
         <div className="login-form-container">
           <h3 className="fw-bold mb-2">Sign in</h3>
-          {/* <p className="mb-3">
+          <p className="mb-3">
             New user? <Link to="/signup" onClick={handleClose} style={{ color: '#e6339a' }}>Create an account.</Link>
-          </p> */}
+          </p>
           <form onSubmit={handleSubmit} autoComplete='off'>
             <div className="mb-3">
               <label className="form-label">Email address</label>
@@ -150,21 +152,13 @@ const LoginPopup = ({ onClose, onLoginSuccess }) => {
             </div>
             <div className="or-divider">OR</div>
             <div className="social-buttons-container mt-3">
-              <button type="button" className="btn social-btn" onClick={() => {
-                // For social login, we'll need to handle the redirect back
-                // For now, just redirect and let the main app handle the success
-                window.location.href = 'https://app.ai3dscanning.com/auth/google';
-              }}>
+              <button type="button" className="btn social-btn" onClick={startGoogleLogin}>
                 <span className="social-icon">
                   <img src={Google} alt="Google" />
                 </span>
                 <span className="social-text">Continue with Google</span>
               </button>
-              <button type="button" className="btn social-btn" onClick={() => {
-                // For social login, we'll need to handle the redirect back
-                // For now, just redirect and let the main app handle the success
-                window.location.href = 'https://app.ai3dscanning.com/auth/facebook';
-              }}>
+              <button type="button" className="btn social-btn" onClick={startFacebookLogin}>
                 <span className="social-icon">
                   <img src={Facebook} alt="Facebook" />
                 </span>

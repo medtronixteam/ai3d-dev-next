@@ -32,6 +32,7 @@ import minusIcon from './images/minus.png';
 import { useMediaQuery } from 'react-responsive';
 import { FaArrowAltCircleUp, FaChevronDown } from 'react-icons/fa';
 import WaitlistModal from '../components/popup/WaitlistModal';
+import JoinPlatformCta from '../components/landing/JoinPlatformCta';
 import FooterLangCurrency from '../components/footer/FooterLangCurrency';
 
 const Referral = () => {
@@ -247,7 +248,7 @@ const Referral = () => {
                   <Link to="/book-demo">
                     <button className="a3d-book-demo-btn">Book a Demo</button>
                   </Link>
-                  <button className="a3d-join-btn" onClick={() => setIsWaitlistOpen(true)}>Join Waitlist</button>
+                  <JoinPlatformCta onWaitlistOpen={() => setIsWaitlistOpen(true)} />
                 </div>
               </div>
             </header>
@@ -312,7 +313,10 @@ const Referral = () => {
                   <Link to="/book-demo">
                     <button className="a3d-book-demo-btn">Book a Demo</button>
                   </Link>
-                  <button className="a3d-join-btn" onClick={() => { setIsWaitlistOpen(true); setIsOpen(false); }}>Join Waitlist</button>
+                  <JoinPlatformCta
+                    onWaitlistOpen={() => setIsWaitlistOpen(true)}
+                    onAfterClick={() => setIsOpen(false)}
+                  />
                 </div>
               </nav>
             </div>

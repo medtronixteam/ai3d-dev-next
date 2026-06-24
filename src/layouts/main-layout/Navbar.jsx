@@ -305,7 +305,7 @@ const Navbar = ({ onSidebarToggle, sidebarOpen }) => {
                 Upgrade your plan
               </button>
             )}
-            {/* {!token && (
+            {!token && (
               <button
                 className="sign-in-btn"
                 onClick={() => navigate('/signup')}
@@ -313,7 +313,7 @@ const Navbar = ({ onSidebarToggle, sidebarOpen }) => {
               >
                 Sign up
               </button>
-            )} */}
+            )}
           </>
         )}
       </div>

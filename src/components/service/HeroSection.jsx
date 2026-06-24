@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import logo from '../../pages/images/logo.png';
 import elipse from '../../pages/images/heading_ellipse.png';
 import WaitlistModal from '../../components/popup/WaitlistModal';
+import JoinPlatformCta from '../../components/landing/JoinPlatformCta';
 
 const TICKER_ITEMS = [
   'AI Development',
@@ -169,7 +170,7 @@ const HeroSection = ({ scrollContainerRef }) => {
                     <button className="a3d-book-demo-btn">Book a Demo</button>
                   </Link>
                   <Link>
-                    <button className="a3d-join-btn" onClick={() => setIsWaitlistOpen(true)}>Join Waitlist</button>
+                    <JoinPlatformCta onWaitlistOpen={() => setIsWaitlistOpen(true)} />
                   </Link>
                 </div>
 
@@ -205,7 +206,7 @@ const HeroSection = ({ scrollContainerRef }) => {
                     <button className="a3d-book-demo-btn">Book a Demo</button>
                   </Link>
                   <Link>
-                    <button className="a3d-join-btn" onClick={() => setIsWaitlistOpen(true)}>Join Waitlist</button>
+                    <JoinPlatformCta onWaitlistOpen={() => setIsWaitlistOpen(true)} />
                   </Link>
               </div>
             </nav>

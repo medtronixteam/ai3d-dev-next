@@ -10,6 +10,7 @@ import Logo from '../../assets/images/Logo.png';
 import Robot from '../../assets/images/robot-img.png';
 import Google from '../../assets/images/google.png';
 import Facebook from '../../assets/images/facebook.png';
+import { getPostLoginPath, startFacebookLogin, startGoogleLogin } from '../../utils/authRedirect';
 // import Apple from "../../assets/images/apple-img.png";
 
 const SignIn = () => {
@@ -78,12 +79,7 @@ const SignIn = () => {
 
       // Login ke baad wait karte hain ke state update ho jaye
       setTimeout(() => {
-        const inviteToken = localStorage.getItem('invite_token');
-        if (inviteToken) {
-          navigate(`/3dio/team/invite/accept/${inviteToken}`);
-        } else {
-          navigate('/3dio/');
-        }
+        navigate(getPostLoginPath(), { replace: true });
       }, 100);
 
     } catch (err) {
@@ -121,9 +117,9 @@ const SignIn = () => {
           <div className="col-md-7 col-lg-5 d-flex align-items-center justify-content-center pb-5">
             <div className="card w-100 mx-lg-4">
               <h3 className="fw-bold mb-2">Sign in</h3>
-              {/* <p className="mb-3">
+              <p className="mb-3">
                 New user? <Link to="/signup">Create an account.</Link>
-              </p> */}
+              </p>
               <form onSubmit={handleSubmit} autoComplete="off">
                 <div className="mb-3">
                   <label className="form-label">Email address</label>
@@ -208,9 +204,7 @@ const SignIn = () => {
                   <button
                     type="button"
                     className="btn social-btn"
-                    onClick={() => {
-                      window.location.href = 'https://app.ai3dscanning.com/auth/google';
-                    }}
+                    onClick={startGoogleLogin}
                   >
                     <span className="social-icon">
                       <img src={Google} alt="Google" />
@@ -220,9 +214,7 @@ const SignIn = () => {
                   <button
                     type="button"
                     className="btn social-btn"
-                    onClick={() => {
-                      window.location.href = 'https://app.ai3dscanning.com/auth/facebook';
-                    }}
+                    onClick={startFacebookLogin}
                   >
                     <span className="social-icon">
                       <img src={Facebook} alt="Facebook" />

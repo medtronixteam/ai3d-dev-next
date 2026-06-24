@@ -25,6 +25,12 @@ import {
 const CREATION_KEY = 'activeCreationWorkspaceId';
 const FILTER_KEY = 'selectedWorkspaceFilter';
 
+const isWorkspaceMissingError = (err) => {
+  const status = err?.response?.status;
+  const message = String(err?.response?.data?.message || '').toLowerCase();
+  return status === 404 || message.includes('workspace not found') || message.includes('not found');
+};
+
 const WorkspaceContext = createContext(null);
 
 export const WorkspaceProvider = ({ children }) => {
@@ -39,6 +45,7 @@ export const WorkspaceProvider = ({ children }) => {
   );
   const [workspaceProjects, setWorkspaceProjects] = useState([]);
   const [workspaceProjectsLoading, setWorkspaceProjectsLoading] = useState(false);
+  const [workspacesHydrated, setWorkspacesHydrated] = useState(false);
 
   const setSelectedFilter = useCallback((value) => {
     setSelectedFilterState(value);
@@ -55,9 +62,34 @@ export const WorkspaceProvider = ({ children }) => {
     }
   }, []);
 
+  const reconcileStoredWorkspaceIds = useCallback((list) => {
+    const validIds = new Set(list.map((workspace) => String(workspace.id)));
+
+    setSelectedFilterState((current) => {
+      if (
+        current !== WORKSPACE_FILTER_ALL &&
+        current !== WORKSPACE_FILTER_NONE &&
+        !validIds.has(String(current))
+      ) {
+        localStorage.setItem(FILTER_KEY, WORKSPACE_FILTER_ALL);
+        return WORKSPACE_FILTER_ALL;
+      }
+      return current;
+    });
+
+    setActiveCreationWorkspaceIdState((current) => {
+      if (current && !validIds.has(String(current))) {
+        localStorage.removeItem(CREATION_KEY);
+        return '';
+      }
+      return current;
+    });
+  }, []);
+
   const refreshWorkspaces = useCallback(async () => {
     if (!token) {
       setWorkspaces([]);
+      setWorkspacesHydrated(true);
       return [];
     }
 
@@ -65,6 +97,7 @@ export const WorkspaceProvider = ({ children }) => {
     try {
       const list = await fetchWorkspaces(token);
       setWorkspaces(list);
+      reconcileStoredWorkspaceIds(list);
       return list;
     } catch (err) {
       console.error('Failed to fetch workspaces:', err);
@@ -73,8 +106,9 @@ export const WorkspaceProvider = ({ children }) => {
       return [];
     } finally {
       setLoading(false);
+      setWorkspacesHydrated(true);
     }
-  }, [token]);
+  }, [token, reconcileStoredWorkspaceIds]);
 
   const loadWorkspaceProjects = useCallback(
     async (workspaceId) => {
@@ -91,7 +125,17 @@ export const WorkspaceProvider = ({ children }) => {
         return projects;
       } catch (err) {
         console.error('Failed to fetch workspace detail:', err);
-        toast.error(err?.response?.data?.message || 'Failed to load workspace projects.');
+        if (isWorkspaceMissingError(err)) {
+          setSelectedFilterState((current) => {
+            if (String(current) === String(workspaceId)) {
+              localStorage.setItem(FILTER_KEY, WORKSPACE_FILTER_ALL);
+              return WORKSPACE_FILTER_ALL;
+            }
+            return current;
+          });
+        } else {
+          toast.error(err?.response?.data?.message || 'Failed to load workspace projects.');
+        }
         setWorkspaceProjects([]);
         return [];
       } finally {
@@ -106,6 +150,8 @@ export const WorkspaceProvider = ({ children }) => {
   }, [refreshWorkspaces]);
 
   useEffect(() => {
+    if (!workspacesHydrated) return;
+
     if (
       selectedFilter &&
       selectedFilter !== WORKSPACE_FILTER_ALL &&
@@ -115,7 +161,7 @@ export const WorkspaceProvider = ({ children }) => {
     } else {
       setWorkspaceProjects([]);
     }
-  }, [selectedFilter, loadWorkspaceProjects]);
+  }, [selectedFilter, loadWorkspaceProjects, workspacesHydrated]);
 
   const handleCreateWorkspace = useCallback(
     async (name) => {

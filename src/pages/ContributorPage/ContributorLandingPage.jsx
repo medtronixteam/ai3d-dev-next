@@ -25,6 +25,7 @@ import ProtectedWork from '../images/ProtectedWork.svg';
 import EarnMore from '../images/EarnMore.svg';
 import EasyUpload from '../images/EasyUpload.svg';
 import WaitlistModal from '../../components/popup/WaitlistModal';
+import JoinPlatformCta from '../../components/landing/JoinPlatformCta';
 import { useLocation } from 'react-router-dom';
 import FooterLangCurrency from '../../components/footer/FooterLangCurrency';
 
@@ -303,7 +304,7 @@ const ContributorLandingPage = () => {
                   <button className="a3d-book-demo-btn">Book a Demo</button>
                 </Link>
                 <Link>
-                  <button className="a3d-join-btn" onClick={() => setIsWaitlistOpen(true)}>Join Waitlist</button>
+                  <JoinPlatformCta onWaitlistOpen={() => setIsWaitlistOpen(true)} />
                 </Link>
               </div>
             </div>
@@ -365,7 +366,7 @@ const ContributorLandingPage = () => {
                   <button className="a3d-book-demo-btn">Book a Demo</button>
                 </Link>
                 <Link>
-                  <button className="a3d-join-btn" onClick={() => setIsWaitlistOpen(true)}>Join Waitlist</button>
+                  <JoinPlatformCta onWaitlistOpen={() => setIsWaitlistOpen(true)} />
                 </Link>
               </div>
             </nav>

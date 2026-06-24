@@ -296,7 +296,11 @@ const routes = [
       },
       {
         path: '/signup',
-        element: <Navigate to="/signin" replace />,
+        element: (
+          <AuthLayout>
+            <SignUp />
+          </AuthLayout>
+        ),
       },
       { path: '/reset-password', element: <ResetPassword /> },
 

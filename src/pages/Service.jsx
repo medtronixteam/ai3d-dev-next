@@ -31,6 +31,7 @@ import Circle from './Animation/Circle';
 import { FaChevronDown, FaArrowUp } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import WaitlistModal from '../components/popup/WaitlistModal';
+import JoinPlatformCta from '../components/landing/JoinPlatformCta';
 import FooterLangCurrency from '../components/footer/FooterLangCurrency';
 const Service = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -260,7 +261,7 @@ const Service = () => {
                   </nav>
 
                   <div className="d-none d-lg-flex gap-3 align-items-center">
-                    <button className="a3d-join-btn" onClick={() => setIsWaitlistOpen(true)}>Join Waitlist</button>
+                    <JoinPlatformCta onWaitlistOpen={() => setIsWaitlistOpen(true)} />
                   </div>
                 </div>
               </header>
@@ -328,7 +329,10 @@ const Service = () => {
                   Sign-In
                 </Link> */}
 
-                  <button className="a3d-join-btn" onClick={() => { setIsWaitlistOpen(true); setIsOpen(false); }}>Join Waitlist</button>
+                  <JoinPlatformCta
+                    onWaitlistOpen={() => setIsWaitlistOpen(true)}
+                    onAfterClick={() => setIsOpen(false)}
+                  />
                 </nav>
               </div>
 

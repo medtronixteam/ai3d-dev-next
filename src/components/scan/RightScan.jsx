@@ -19,6 +19,7 @@ import { useAuth } from '../../context/AuthContext';
 import { baseURL } from '../../config';
 import { toast } from 'react-toastify';
 import { FastAverageColor } from 'fast-average-color';
+import ModelReviewModal from '../popup/ModelReviewModal';
 
 const makeColorLighter = (hexColor, percent = 40) => {
   let hex = hexColor.replace(/^\s*#|\s*$/g, '');
@@ -135,6 +136,10 @@ const RightScan = ({
   setHistorySearchQuery,
   onSelectModel,
   hideUpgradePromo = false,
+  showReviewModal = false,
+  onCloseReviewModal,
+  reviewProjectToken,
+  reviewProjectType,
 }) => {
   const navigate = useNavigate();
   const { token } = useAuth();
@@ -743,6 +748,18 @@ const RightScan = ({
                         />
                       </div>
                     </div>
+
+                    {showReviewModal && (
+                      <div id="scan-review-panel">
+                        <ModelReviewModal
+                          embedded
+                          isOpen={showReviewModal}
+                          onClose={onCloseReviewModal}
+                          projectToken={reviewProjectToken}
+                          projectType={reviewProjectType}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

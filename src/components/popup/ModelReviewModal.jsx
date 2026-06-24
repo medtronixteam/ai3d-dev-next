@@ -75,7 +75,13 @@ export const normalizeReviewProjectType = (type) => {
   return 'text_to_3d';
 };
 
-const ModelReviewModal = ({ isOpen, onClose, projectToken, projectType = 'text_to_3d' }) => {
+const ModelReviewModal = ({
+  isOpen,
+  onClose,
+  projectToken,
+  projectType = 'text_to_3d',
+  embedded = false,
+}) => {
   const { token } = useAuth();
   const [rating, setRating] = useState(null);
   const [hoverRating, setHoverRating] = useState(null);
@@ -102,17 +108,23 @@ const ModelReviewModal = ({ isOpen, onClose, projectToken, projectType = 'text_t
 
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      if (!embedded) {
+        document.body.style.overflow = 'hidden';
+      }
       requestAnimationFrame(() => setIsVisible(true));
     } else {
       setIsVisible(false);
-      document.body.style.overflow = '';
+      if (!embedded) {
+        document.body.style.overflow = '';
+      }
     }
 
     return () => {
-      document.body.style.overflow = '';
+      if (!embedded) {
+        document.body.style.overflow = '';
+      }
     };
-  }, [isOpen]);
+  }, [isOpen, embedded]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -184,23 +196,7 @@ const ModelReviewModal = ({ isOpen, onClose, projectToken, projectType = 'text_t
 
   const displayRating = hoverRating ?? rating;
 
-  return (
-    <div
-      className={`model-review-overlay${isVisible ? ' visible' : ''}`}
-      onClick={handleClose}
-      role="presentation"
-    >
-      <div
-        className={`model-review-modal${isVisible ? ' visible' : ''}`}
-        onClick={(e) => e.stopPropagation()}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="model-review-title"
-      >
-        <button type="button" className="model-review-close" onClick={handleClose} aria-label="Close">
-          <FiX size={20} />
-        </button>
-
+  const reviewForm = (
         <form onSubmit={handleSubmit} className="model-review-form">
           <h2 id="model-review-title" className="model-review-title">
             Rate this model
@@ -280,6 +276,40 @@ const ModelReviewModal = ({ isOpen, onClose, projectToken, projectType = 'text_t
             </button>
           </div>
         </form>
+  );
+
+  if (embedded) {
+    return (
+      <div
+        className={`model-review-embedded${isVisible ? ' visible' : ''}`}
+        role="region"
+        aria-labelledby="model-review-title"
+      >
+        <button type="button" className="model-review-close" onClick={handleClose} aria-label="Close">
+          <FiX size={16} />
+        </button>
+        {reviewForm}
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={`model-review-overlay${isVisible ? ' visible' : ''}`}
+      onClick={handleClose}
+      role="presentation"
+    >
+      <div
+        className={`model-review-modal${isVisible ? ' visible' : ''}`}
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="model-review-title"
+      >
+        <button type="button" className="model-review-close" onClick={handleClose} aria-label="Close">
+          <FiX size={20} />
+        </button>
+        {reviewForm}
       </div>
     </div>
   );

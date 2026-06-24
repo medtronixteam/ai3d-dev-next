@@ -1420,7 +1420,14 @@
   border: none !important;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 991.98px) {
+  .recent-projects-modern-container {
+    width: 100%;
+    max-width: 100%;
+    padding-top: 24px;
+    overflow-x: hidden;
+  }
+
   .rp-page-head {
     flex-direction: column;
     align-items: stretch;
@@ -1432,37 +1439,45 @@
     width: 100%;
     justify-content: center;
     margin-top: 0;
-  }
-}
-
-@media (max-width: 900px) {
-  .rp-grid {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    min-height: 44px;
+    padding: 10px 16px;
+    font-size: 0.875rem;
   }
 
   .recent-projects-header {
     flex-direction: column;
-    gap: 18px;
-    align-items: flex-start;
-    margin-top: 2rem;
-    width: 100%;
-    box-sizing: border-box;
+    align-items: stretch;
+    gap: 12px;
+    margin-top: 0.75rem;
+    padding: 0 16px;
   }
 
   .rp-filter-bar {
-    justify-content: start;
-    margin-bottom: 8px;
+    display: flex;
     width: 100%;
     max-width: 100%;
     overflow-x: auto;
+    overflow-y: hidden;
     white-space: nowrap;
-    -webkit-overflow-scrolling: touch;
     flex-wrap: nowrap;
-    scrollbar-width: none; /* Hide scrollbar for clean aesthetic */
+    gap: 8px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
   }
 
   .rp-filter-bar::-webkit-scrollbar {
-    display: none; /* Hide scrollbar for Safari/Chrome */
+    display: none;
+  }
+
+  .rp-filter-pill {
+    flex-shrink: 0;
+    padding: 8px 16px;
+    font-size: 12px;
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .recent-projects-header-spacer {
@@ -1470,8 +1485,42 @@
   }
 
   .recent-projects-header-actions {
-    justify-content: flex-end;
     width: 100%;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+
+  .rp-toggle-group {
+    flex-shrink: 0;
+  }
+
+  .rp-sort-btn {
+    flex-shrink: 0;
+    min-width: 44px;
+    min-height: 44px;
+    margin-left: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .rp-workspace-strip,
+  .rp-workspace-browse-head {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .rp-page-head {
+    padding: 0 16px 14px;
+  }
+}
+
+@media (max-width: 900px) {
+  .rp-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   }
 }
 

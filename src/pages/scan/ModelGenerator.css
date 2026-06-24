@@ -1,24 +1,25 @@
 /* ModelGenerator.css */
 
-/* === 1. THEME & GLOBAL VARIABLES === */
-:root {
+/* === 1. THEME & SCAN-PAGE VARIABLES (scoped — do not use :root) === */
+.main-wrapper {
     --primary-pink: #DE3996;
     --light-pink: #fff0f6;
     --border-color: #eee;
     --bg-light: #fcf8fd;
     --bg-card: #ffffff;
     --text-main: #333333;
-    /* Gradients */
     --main-bg-grad: linear-gradient(237.17deg, #F0F0FF 1.01%, #FFEDF7 87.86%);
     --sidebar-grad: linear-gradient(89.44deg, #E1E1FF 0.94%, #FFC6D5 99.98%);
+    width: 100%;
+    padding: 80px 0px 0px 0 !important;
+    background: var(--main-bg-grad);
 }
 
 /* Dark Theme Support */
-[data-theme="dark"] {
+[data-theme="dark"] .main-wrapper {
     --bg-light: #121212;
     --bg-card: #110E1F;
     --text-main: #f5f5f5;
-    /* ✅ Already set to light/white */
     --border-color: #333;
     --main-bg-grad: linear-gradient(237.17deg, #0d0d14 1.01%, #21121a 87.86%);
 }
@@ -386,18 +387,7 @@
     display: none !important;
 }
 
-/* === 3. GLOBAL & LAYOUT FIXES === */
-.main-content {
-    background: var(--main-bg-grad);
-}
-
-.main-wrapper {
-    width: 100%;
-    padding: 80px 0px 0px 0 !important;
-    /* min-height: 100vh; */
-}
-
-/* === 4. SIDEBAR COLUMNS (Left & Right) === */
+/* === 3. SCAN PAGE LAYOUT === */
 .side-column,
 .library-card-wrapper {
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
@@ -1206,9 +1196,27 @@
         padding-bottom: 0 !important;
     }
 
+    .scan-layout-row {
+        height: auto !important;
+        min-height: auto !important;
+        overflow: visible !important;
+    }
+
     .main-wrapper .container-fluid > .row.g-0 {
         height: auto !important;
         min-height: auto !important;
+    }
+
+    .center-card {
+        min-height: min(360px, 52vh) !important;
+    }
+
+    .viewport-content {
+        min-height: min(360px, 52vh) !important;
+    }
+
+    .library-card-outer {
+        overflow: visible !important;
     }
 
     .library-card-tabs:has(.export-button-bar) {
@@ -1559,9 +1567,14 @@
     }
 }
 
+/* Scan page row height: desktop only */
+.scan-layout-row {
+    height: calc(100vh - 80px);
+}
+
 /* Controls Section */
 .controls-section {
-    background: white;
+    background: var(--bg-card);
 }
 
 .control-section {

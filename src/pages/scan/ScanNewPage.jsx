@@ -12,7 +12,6 @@ import './ModelGenerator.css';
 import LeftScan from '../../components/scan/LeftScan';
 import CenterScan from '../../components/scan/CenterScan';
 import RightScan from '../../components/scan/RightScan';
-import ModelReviewModal from '../../components/popup/ModelReviewModal';
 import PublicShareLinkSection from '../../components/popup/PublicShareLinkSection';
 import { useRouteLeave } from '../../hooks/useRouteLeave';
 import { useWorkspace } from '../../context/WorkspaceContext';
@@ -316,6 +315,21 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       fetchHistory();
     }
   }, [token, fetchHistory]);
+
+  useEffect(() => {
+    if (!showReviewModal) return;
+
+    setActiveTab('transform');
+
+    if (!window.matchMedia('(max-width: 991.98px)').matches) return;
+
+    requestAnimationFrame(() => {
+      document.getElementById('scan-review-panel')?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+      });
+    });
+  }, [showReviewModal]);
 
   const [transformControls, setTransformControls] = useState({
     position: { x: 0, y: 0, z: 0 },
@@ -1283,10 +1297,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       )}
 
       <div className="container-fluid pe-md-3 p-0">
-        <div
-          className={`row g-0${isPublicView ? ' scan-public-view' : ''}`}
-          style={{ height: 'calc(100vh - 80px)' }}
-        >
+        <div className={`row g-0 scan-layout-row${isPublicView ? ' scan-public-view' : ''}`}>
           {!isPublicView && (
           <LeftScan
             prompt={prompt}
@@ -1401,6 +1412,10 @@ const ModelGenerator = ({ isDarkMode = false }) => {
               transformHistoryRef.current = [defaultTransformControls];
               transformHistoryIndexRef.current = 0;
             }}
+            showReviewModal={showReviewModal}
+            onCloseReviewModal={() => setShowReviewModal(false)}
+            reviewProjectToken={projectToken}
+            reviewProjectType={projectType}
           />
         </div>
 
@@ -1722,13 +1737,6 @@ const ModelGenerator = ({ isDarkMode = false }) => {
           </div>
         )}
       </div>
-
-      <ModelReviewModal
-        isOpen={showReviewModal}
-        onClose={() => setShowReviewModal(false)}
-        projectToken={projectToken}
-        projectType={projectType}
-      />
     </div>
   );
 };

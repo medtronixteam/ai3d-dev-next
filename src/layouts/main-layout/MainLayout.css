@@ -5,6 +5,13 @@
   overflow-x: hidden;
 }
 
+.main-layout > .main-content {
+  width: 100%;
+  max-width: 100%;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 .main-content {
   flex: 1 1 0;
   min-width: 0;
@@ -14,6 +21,7 @@
   overflow-y: auto;
   height: 100vh;
   position: relative;
+  background-color: var(--body-bg);
   /* scrollbar-width: none; */
 
 }
@@ -63,7 +71,16 @@
 }
 
 @media (max-width: 991.98px) {
-  .main-content {
+  .main-layout {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .main-layout > .main-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 1 1 100%;
+    min-width: 0;
     padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
   }
 }

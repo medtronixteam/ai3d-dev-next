@@ -637,9 +637,10 @@
 }
 
 @media (min-width: 992px) {
-.main-content {
-  width: 70%;
-}
+  .preview-container {
+    width: 100%;
+    max-width: 100%;
+  }
 }
 @media (max-width: 992px) {
   .preview-content {

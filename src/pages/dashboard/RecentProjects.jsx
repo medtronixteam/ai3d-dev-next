@@ -29,7 +29,7 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import GridIcon from '../../assets/images/grid-icon.svg';
 import CardIcon from '../../assets/images/card-icon.svg';
 import sorticon from '../../assets/images/sort-icon.svg';
-import { Download, Eye, FolderOutput, FolderPen, Grid, Image, LayoutGrid, Pen, Send, TabletSmartphone, Trash, Trash2 } from 'lucide-react';
+import { Download, Eye, FolderOutput, FolderPen, Grid, Image, LayoutGrid, Pen, Send, TabletSmartphone, Trash, Trash2, Video } from 'lucide-react';
 import '../settings/Profile.css';
 import SkeletonListLoader from '../../components/loader/SkeletonListLoader';
 import PublicShareLinkSection from '../../components/popup/PublicShareLinkSection';
@@ -39,6 +39,19 @@ import { getProjectId, getProjectWorkspaceId } from '../../utils/workspaceApi';
 import { FiEdit2, FiFolder, FiPlus, FiTrash2 } from 'react-icons/fi';
 import WorkspaceFormModal from '../../components/workspace/WorkspaceFormModal';
 import WorkspaceNotesPanel from '../../components/workspace/WorkspaceNotesPanel';
+
+const getProjectPreviewMeta = (project) => {
+  const isTextTo3D = project?.type === 'text_to_3d' || project?.type === 'prompt_to_3d';
+  const isVideoTo3D = project?.type === 'video_to_3d' || project?.type === 'video';
+
+  if (isTextTo3D) {
+    return { typeClass: 'text', label: 'Text to 3D', Icon: Pen };
+  }
+  if (isVideoTo3D) {
+    return { typeClass: 'video', label: 'Video to 3D', Icon: Video };
+  }
+  return { typeClass: 'image', label: 'Image to 3D', Icon: Image };
+};
 
 const FILTER_OPTIONS = [
   { id: 'All', label: 'Models' },
@@ -902,40 +915,19 @@ const RecentProjects = () => {
     }
   };
 
-  const ProjectPreview = ({ project, pKey, isListView = false }) => {
-    const isTextTo3D = project.type === 'text_to_3d' || project.type === 'prompt_to_3d';
-    const isVideoTo3D = project.type === 'video_to_3d' || project.type === 'video';
-
-    let textLabel = 'Image to 3D';
-    if (isTextTo3D) {
-      textLabel = 'Text to 3D';
-    } else if (isVideoTo3D) {
-      textLabel = 'Video to 3D';
-    }
+  const ProjectPreview = ({ project, isListView = false }) => {
+    const { typeClass, label, Icon } = getProjectPreviewMeta(project);
+    const iconSize = isListView ? 28 : 52;
 
     return (
-      <div
-        style={{
-          width: isListView ? 90 : '100%',
-          height: isListView ? 70 : '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'rgba(230, 51, 153, 0.05)',
-          borderRadius: '8px',
-        }}
-      >
-        <span
-          style={{
-            fontSize: isListView ? '12px' : '16px',
-            color: '#e63399',
-            fontWeight: '600',
-            textAlign: 'center',
-            lineHeight: '1.2',
-            padding: '10px',
-          }}
-        >
-          {textLabel}
+      <div className={`rp-project-preview rp-project-preview--${typeClass}${isListView ? ' is-list' : ''}`}>
+        <div className="rp-project-preview-pattern" aria-hidden="true" />
+        <div className="rp-project-preview-watermark" aria-hidden="true">
+          <Icon size={iconSize} strokeWidth={1.4} />
+        </div>
+        <span className="rp-project-preview-tag">
+          <Icon size={isListView ? 10 : 12} strokeWidth={2.4} aria-hidden="true" />
+          {label}
         </span>
       </div>
     );
@@ -1322,16 +1314,8 @@ const RecentProjects = () => {
                     </button>
                   )}
                   <div className="rp-card-img-wrap">
-                    <div
-                      className="rp-card-img-clip"
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        position: 'relative',
-                      }}
-                    >
-                      <ProjectPreview project={project} pKey={pKey} />
+                    <div className="rp-card-img-clip">
+                      <ProjectPreview project={project} />
                     </div>
                   </div>
                   <div className="rp-card-body">
@@ -1430,7 +1414,7 @@ const RecentProjects = () => {
                   const isSharedView = activeFilter === 'Shared Project';
                   return (
                     <div className="rp-list-item" key={pKey}>
-                      <ProjectPreview project={project} pKey={pKey} isListView={true} />
+                      <ProjectPreview project={project} isListView />
                       <div className="rp-list-info">
                         <div className="rp-list-title">{project.name}</div>
                         <div className="rp-list-date">

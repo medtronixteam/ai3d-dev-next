@@ -1339,7 +1339,9 @@ const Dashboard = () => {
   const [currentWord, setCurrentWord] = useState('images');
   const words = ['images', 'videos', 'prompt'];
   const [wordIndex, setWordIndex] = useState(0);
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(
+    () => document.documentElement.getAttribute('data-theme') === 'dark',
+  );
   const [favoriteModels, setFavoriteModels] = useState([]);
   const [isFavoriteModeActive, setIsFavoriteModeActive] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -1394,6 +1396,7 @@ const Dashboard = () => {
         setIsLoadingMore(true);
       } else {
         setLoading(true);
+        setModels([]);
       }
       setError('');
       try {
@@ -1533,9 +1536,10 @@ const Dashboard = () => {
   const handleFavoriteModelsClick = () => {
     if (isFavoriteModeActive) {
       setIsFavoriteModeActive(false);
+      setLoading(true);
+      setModels([]);
       setPage(1);
       setHasMore(true);
-      fetchModels(selectedType, 1, false);
     } else {
       setIsFavoriteModeActive(true);
       fetchFavoriteModels();
@@ -1543,12 +1547,12 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (!isFavoriteModeActive) {
-      setPage(1);
-      setHasMore(true);
-      fetchModels(selectedType, 1, false);
-    }
-  }, [selectedType, token, isFavoriteModeActive]);
+    if (isSearching || isFavoriteModeActive) return;
+
+    setPage(1);
+    setHasMore(true);
+    fetchModels(selectedType, 1, false);
+  }, [selectedType, token, location.key, isSearching, isFavoriteModeActive, fetchModels]);
 
   // Current models to display (either regular or favorites)
   const currentModels = useMemo(() => {
@@ -1653,15 +1657,6 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (!isSearching) {
-      setPage(1);
-      setHasMore(true);
-      fetchModels(selectedType, 1, false);
-    }
-    // eslint-disable-next-line
-  }, [selectedType, token, location.key]);
-
-  useEffect(() => {
     const interval = setInterval(() => {
       setWordIndex((prevIndex) => (prevIndex + 1) % words.length);
     }, 5000);
@@ -1708,11 +1703,17 @@ const Dashboard = () => {
   }, [hasMore, isLoadingMore, loading, isFavoriteModeActive, handleNext]);
 
   const handleCategoryClick = (type) => {
-    setSelectedType(type);
+    if (type === selectedType && !isFavoriteModeActive && !isSearching) return;
+
+    setIsFavoriteModeActive(false);
+    setIsSearching(false);
+    setLoading(true);
+    setModels([]);
+    setError('');
     setSearchText('');
     setPage(1);
     setHasMore(true);
-    fetchModels(type, 1, false);
+    setSelectedType(type);
   };
 
   const handleInputChange = (e) => {
@@ -1818,7 +1819,6 @@ const Dashboard = () => {
               width: '100%',
               height: '100%',
               objectFit: 'cover',
-
               pointerEvents: 'none',
               filter: 'brightness(0.85) saturate(1.1) blur(0.5px)',
               background: 'white',
@@ -1930,7 +1930,7 @@ const Dashboard = () => {
               <form className="search-box" onSubmit={handleSearch}>
                 <span className="borders"></span>
                 <div className="search-icon">
-                  <img src={search} />
+                  <img src={search} alt="" />
                 </div>
                 <input
                   type="text"
@@ -2018,24 +2018,8 @@ const Dashboard = () => {
       <section className="studio-section" style={{ overflow: 'hidden' }}>
         <div className="container-section">
           {loading ? (
-            <div className="text-center my-5">
-              <div
-                style={{
-                  width: '40px',
-                  height: '40px',
-                  border: '3px solid #f3f3f3',
-                  borderTop: '3px solid #e63399',
-                  borderRadius: '50%',
-                  animation: 'spin 1s linear infinite',
-                  margin: '0 auto',
-                }}
-              ></div>
-              <style>{`
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}</style>
+            <div className="dashboard-models-loader text-center my-5">
+              <CustomLoader />
             </div>
           ) : error ? (
             <div className="text-center my-5 text-danger">{error}</div>

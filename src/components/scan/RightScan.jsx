@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
   ArrowRight,
   Search,
@@ -20,6 +20,8 @@ import { baseURL } from '../../config';
 import { toast } from 'react-toastify';
 import { FastAverageColor } from 'fast-average-color';
 import ModelReviewModal from '../popup/ModelReviewModal';
+import CustomLoader from '../loader/CustomLoader';
+import paths from '../../routes/paths';
 
 const makeColorLighter = (hexColor, percent = 40) => {
   let hex = hexColor.replace(/^\s*#|\s*$/g, '');
@@ -121,8 +123,10 @@ const RightScan = ({
   activeTab,
   setActiveTab,
   historyFilter,
-  setHistoryFilter,
+  onHistoryFilterChange,
   historyData,
+  historyLoading = false,
+  historyFilterLoading = false,
   modelReady,
   isUserOwnedProject,
   transformControls,
@@ -132,6 +136,7 @@ const RightScan = ({
   onHistoryExport,
   onHistoryFavorite,
   onHistoryShare,
+  onHistoryOpen,
   historySearchQuery,
   setHistorySearchQuery,
   onSelectModel,
@@ -354,6 +359,16 @@ const RightScan = ({
   const filteredHistory = historyData.filter((item) =>
     historyFilter === 'all' ? true : item.status === historyFilter,
   );
+
+  const handleHistoryItemClick = (item) => {
+    onHistoryOpen?.(item);
+  };
+
+  const getHistoryBadgeLabel = (type) => {
+    if (type === 'prompt') return 'Text to 3D';
+    if (type === 'video') return 'Video to 3D';
+    return 'Image to 3D';
+  };
 
   const renderHistoryThumb = (item) => {
     const isTextTo3D = item.rawType === 'text_to_3d' || item.rawType === 'prompt_to_3d' || item.type === 'prompt';
@@ -585,7 +600,12 @@ const RightScan = ({
                 <h6 className="fw-bold mb-0">
                   Recent <span className="text-pink">Model</span>
                 </h6>
-                <span className="text-pink xx-small fw-bold cursor-pointer">View All</span>
+                <Link
+                  to={paths.models}
+                  className="text-pink xx-small fw-bold cursor-pointer text-decoration-none"
+                >
+                  View All
+                </Link>
               </div>
               <div className="search-wrap mb-3 position-relative">
                 <Search className="search-icon text-pink" size={14} />
@@ -605,29 +625,46 @@ const RightScan = ({
                   <button
                     key={filter}
                     className={`filter-pill ${historyFilter === filter ? 'active' : ''}`}
-                    onClick={() => setHistoryFilter(filter)}
+                    onClick={() => onHistoryFilterChange(filter)}
+                    disabled={historyLoading || historyFilterLoading}
                   >
                     {filter.charAt(0).toUpperCase() + filter.slice(1)}
                   </button>
                 ))}
               </div>
               <div className="history-list">
-                {filteredHistory.length > 0 ? (
+                {historyLoading || historyFilterLoading ? (
+                  <div className="history-list-loader">
+                    <CustomLoader />
+                  </div>
+                ) : filteredHistory.length > 0 ? (
                   filteredHistory.map((item) => (
-                    <div key={item.id} className="history-item border">
+                    <div
+                      key={item.id}
+                      className={`history-item border${onHistoryOpen ? ' history-item--clickable' : ''}`}
+                      onClick={() => handleHistoryItemClick(item)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          handleHistoryItemClick(item);
+                        }
+                      }}
+                      role={onHistoryOpen ? 'button' : undefined}
+                      tabIndex={onHistoryOpen ? 0 : undefined}
+                    >
                       <div className="d-flex align-items-start gap-3">
                         {renderHistoryThumb(item)}
 
                         <div className="flex-grow-1">
-                          <div className="d-flex justify-content-between align-items-start">
-                            <div className="mb-0">
-                              <h6 className="mb-0 fw-bold" style={{ fontSize: '11px' }}>
-                                {item.name}
-                              </h6>
-                              <span className="text-muted xx-small mb-0 mt-0">{item.time}</span>
-                            </div>
-                            <span className={`badge-type type-${item.type}`}>{item.type} to 3D</span>
+                          <div className="history-item-header">
+                            <h6 className="mb-0 fw-bold history-item-title" style={{ fontSize: '11px' }}>
+                              {item.name}
+                            </h6>
+                            <span className={`badge-type type-${item.type} flex-shrink-0`}>
+                              {getHistoryBadgeLabel(item.type)}
+                            </span>
                           </div>
+                          <span className="text-muted xx-small history-item-time">{item.time}</span>
 
                           {item.status === 'processing' ? (
                             <div className="mt-0">
@@ -646,7 +683,15 @@ const RightScan = ({
                             <div className="mt-3">
                               <div className="d-flex justify-content-between xx-small mb-1">
                                 <span className="text-danger fw-bold">Generation Failed</span>
-                                <span className="text-pink fw-bold cursor-pointer">Regenerate</span>
+                                <span
+                                  className="text-pink fw-bold cursor-pointer"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleHistoryItemClick(item);
+                                  }}
+                                >
+                                  Regenerate
+                                </span>
                               </div>
                               <div className="progress custom-progress">
                                 <div
@@ -656,14 +701,32 @@ const RightScan = ({
                               </div>
                             </div>
                           ) : (
-                            <div className="d-flex mt-1 gap-1">
-                              <div className="bg-icon cursor-pointer" onClick={() => onHistoryExport(item)}>
+                            <div className="history-item-actions d-flex gap-1">
+                              <div
+                                className="bg-icon cursor-pointer"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onHistoryExport(item);
+                                }}
+                              >
                                 <Download size={12} className="text-muted" />
                               </div>
-                              <div className="bg-icon cursor-pointer" onClick={() => onHistoryFavorite(item)}>
+                              <div
+                                className="bg-icon cursor-pointer"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onHistoryFavorite(item);
+                                }}
+                              >
                                 <Heart size={12} className={item.favorite ? 'text-pink' : 'text-muted'} fill={item.favorite ? '#DE3996' : 'none'} />
                               </div>
-                              <div className="bg-icon cursor-pointer" onClick={() => onHistoryShare(item)}>
+                              <div
+                                className="bg-icon cursor-pointer"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onHistoryShare(item);
+                                }}
+                              >
                                 <Share2 size={12} className="text-muted" />
                               </div>
                             </div>

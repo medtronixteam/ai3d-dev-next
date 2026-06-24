@@ -3,23 +3,38 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { FiHome, FiSettings, FiClock } from 'react-icons/fi';
 import { LuCalendarRange } from 'react-icons/lu';
 import { BiScan } from 'react-icons/bi';
+import { isDashboardHomePath } from '../../routes/paths';
 import './BottomNavBar.css';
 
 const BottomNavBar = () => {
   const location = useLocation();
 
-  const handleScanNavClick = () => {
-    if (location.pathname !== '/3dio/new/scan') {
-      window.dispatchEvent(new CustomEvent('reset-scan-new'));
+  const handleScanNavClick = (e) => {
+    if (location.pathname === '/3dio/new/scan') {
+      e.preventDefault();
+      window.dispatchEvent(
+        new CustomEvent('reset-scan-new', { detail: { fromSamePage: true } }),
+      );
+      return;
     }
+
+    window.dispatchEvent(
+      new CustomEvent('reset-scan-new', { detail: { fromSamePage: false } }),
+    );
   };
 
   return (
     <div className="bottom-nav-bar">
-      <a href="/3dio/" className="bottom-nav-item">
+      <NavLink
+        to="/3dio/"
+        end
+        className={() =>
+          `bottom-nav-item${isDashboardHomePath(location.pathname) ? ' active' : ''}`
+        }
+      >
         <FiHome className="bottom-nav-icon" />
         <span className="bottom-nav-label">Home</span>
-      </a>
+      </NavLink>
       <NavLink to="/3dio/api-sdk" className="bottom-nav-item">
         <LuCalendarRange className="bottom-nav-icon" />
         <span className="bottom-nav-label">API SDK</span>

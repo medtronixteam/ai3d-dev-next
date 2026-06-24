@@ -345,12 +345,12 @@
     /* color: black !important; */
 }
 
-[data-theme='dark'] .search-arrow {
+[data-theme='dark'] .search-wrap .search-arrow {
     background-color: black !important;
     color: white !important;
 }
 
-[data-theme='dark'] .search-arrow svg {
+[data-theme='dark'] .search-wrap .search-arrow svg {
     color: white !important;
     stroke: white !important;
 }
@@ -881,7 +881,7 @@
 
 }
 
-.search-icon {
+.search-wrap .search-icon {
     position: absolute;
     left: 12px;
     top: 50%;
@@ -898,7 +898,7 @@
 
 }
 
-.search-arrow {
+.search-wrap .search-arrow {
     position: absolute;
     right: 8px;
     top: 50%;
@@ -938,6 +938,21 @@
 }
 
 /* === 10. HISTORY SECTION === */
+.history-list {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+}
+
+.history-list-loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 160px;
+    width: 100%;
+}
+
 .filter-pill {
     padding: 2px 12px;
     border-radius: 20px;
@@ -964,6 +979,54 @@
     padding: 5px;
     margin-bottom: 12px;
     transition: all 0.2s ease;
+}
+
+.history-item-meta {
+    min-width: 0;
+    flex: 1;
+    padding-right: 6px;
+}
+
+.history-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+    min-width: 0;
+}
+
+.history-item .flex-grow-1 {
+    min-width: 0;
+}
+
+.history-item-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 0;
+}
+
+.history-item-time {
+    display: block;
+    white-space: nowrap;
+    line-height: 1.35;
+    margin-top: 8px;
+    margin-bottom: 18px;
+}
+
+.history-item-actions {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.history-item--clickable {
+    cursor: pointer;
+}
+
+.history-item--clickable:hover {
+    border-color: #FFC6D5 !important;
+    background-color: #fffafb;
 }
 
 .history-item:hover {
@@ -1006,6 +1069,7 @@
 
 /* Image colors ke mutabiq shades */
 .type-text,
+.type-prompt,
 .type-image,
 .type-video {
     background:
@@ -1308,10 +1372,6 @@
     width: 100%;
     margin-left: 0;
     margin-right: 0;
-}
-
-.chat-icon {
-    display: none;
 }
 
 .x-small {

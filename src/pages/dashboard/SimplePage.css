@@ -37,6 +37,56 @@
   overflow: hidden !important;
 }
 
+.studio-section .container-section {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  max-width: 80vw;
+}
+
+.studio-section .model-list-row {
+  width: 100%;
+}
+
+.dashboard-models-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+  overflow: visible !important;
+  padding: 12px 0;
+}
+
+.studio-section:has(.dashboard-models-loader) {
+  overflow: visible !important;
+}
+
+.studio-section:has(.dashboard-models-loader) .container-section {
+  overflow: visible !important;
+}
+
+[data-theme='dark'] .dashboard-models-loader .loader {
+  color: var(--primary-color, #de3996) !important;
+}
+
+[data-theme='dark'] .dashboard-models-loader .loader::before,
+[data-theme='dark'] .dashboard-models-loader .loader::after {
+  background: var(--primary-color, #de3996) !important;
+}
+
+@media (max-width: 765px) {
+  .studio-section .model-list-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .studio-section .model-card {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
 @keyframes bg-bubbles-move {
   0% {
     background: radial-gradient(circle at 20% 30%, rgba(230, 51, 154, 0.2) 0%, transparent 60%),
@@ -269,7 +319,10 @@
 }
 
 .hero-section .search-icon {
-  padding: 1rem;
+  position: static;
+  flex-shrink: 0;
+  transform: none;
+  padding: 0.75rem 0.5rem 0.75rem 0.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -278,12 +331,20 @@
   font-size: 20px;
 }
 
+.hero-section .search-icon img {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
 .hero-section .search-input {
   flex: 1;
-  padding: 22px 0px;
+  min-width: 0;
+  padding: 22px 12px 22px 4px;
   border: none;
   outline: none;
   font-size: 16px;
+  background: transparent;
 }
 
 .hero-section .search-input:focus {
@@ -291,6 +352,7 @@
 }
 
 .hero-section .arrow-icon {
+  flex-shrink: 0;
   height: 30px;
   width: 30px;
   border-radius: 50%;
@@ -589,7 +651,7 @@ svg {
 [data-theme='dark'] .hero-section h2,
 [data-theme='dark'] .hero-section p,
 [data-theme='dark'] .studio-section,
-[data-theme='dark'] .studio-section * {
+[data-theme='dark'] .studio-section *:not(.loader):not(.loader *) {
   color: #fff !important;
 }
 
@@ -846,7 +908,7 @@ svg {
     height: 3.5rem !important;
   }
   .hero-section .search-input {
-  padding: 14px 0px;
+  padding: 14px 12px 14px 4px;
 }
 .hero-section p {
   font-size: 0.95rem;

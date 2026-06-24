@@ -83,6 +83,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
 
   const [historyData, setHistoryData] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(false);
+  const [historyFilterLoading, setHistoryFilterLoading] = useState(false);
   const [historySearchQuery, setHistorySearchQuery] = useState('');
 
   // Share Modal States
@@ -124,12 +125,17 @@ const ModelGenerator = ({ isDarkMode = false }) => {
           id: item.token || item.id,
           token: item.token || item.id,
           name: item.name || 'Untitled',
-          time: item.created_at ? new Date(item.created_at).toLocaleString('en-US', {
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-          }) : 'Recent',
+          time: item.created_at
+            ? new Date(item.created_at)
+                .toLocaleString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  hour: 'numeric',
+                  minute: '2-digit',
+                  hour12: true,
+                })
+                .replace(/ (\b[AP]M\b)$/i, '\u00a0$1')
+            : 'Recent',
           type: item.type === 'text_to_3d' ? 'prompt' : (item.type === 'video_to_3d' ? 'video' : 'image'),
           rawType: item.type,
           status: item.status,
@@ -310,6 +316,18 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     item.name.toLowerCase().includes(historySearchQuery.toLowerCase())
   );
 
+  const handleHistoryFilterChange = (filter) => {
+    if (filter === historyFilter) return;
+    setHistoryFilterLoading(true);
+    setHistoryFilter(filter);
+  };
+
+  useEffect(() => {
+    if (!historyFilterLoading) return;
+    const timer = setTimeout(() => setHistoryFilterLoading(false), 350);
+    return () => clearTimeout(timer);
+  }, [historyFilter, historyFilterLoading]);
+
   useEffect(() => {
     if (token) {
       fetchHistory();
@@ -453,6 +471,27 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     }
   };
 
+  const handleHistoryOpen = (project) => {
+    if (!project?.token) return;
+
+    if (project.status === 'failed') {
+      toast.error('This project failed to generate. Please try again.');
+      return;
+    }
+
+    openedFromRecentRef.current = true;
+    shouldShowReviewRef.current = false;
+    setIsViewOnly(true);
+    setIsUserOwnedProject(true);
+    setProjectToken(project.token);
+    if (project.rawType) {
+      setProjectType(project.rawType);
+    }
+    setActiveTab('transform');
+    scrollToModelViewport();
+    fetchInitialProject(project.token);
+  };
+
   const handleRouteLeave = useCallback(() => {
     console.log('[Disconnecting socket due to route change');
     if (socketRef.current) {
@@ -582,6 +621,10 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     setScreenshotTaken(false);
     setShowLoadingUI(false);
     setShowBlackOverlay(false);
+    setShowQueueUI(false);
+    setShowSuccessUI(false);
+    setIsGenerating(false);
+    setIsArrowLoading(false);
     setProgress(0);
     setActiveTab('library');
     setIsActuallyRendered(false);
@@ -602,7 +645,22 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   }, [clearActiveQueueRegistration]);
 
   useEffect(() => {
-    const handleReset = () => {
+    const handleReset = (event) => {
+      const fromSamePage = event?.detail?.fromSamePage;
+      if (fromSamePage) {
+        const hasOpenModel =
+          modelReady ||
+          modelUrl ||
+          projectToken ||
+          isViewOnly ||
+          showLoadingUI ||
+          showQueueUI ||
+          showSuccessUI ||
+          isGenerating;
+
+        if (!hasOpenModel) return;
+      }
+
       console.log('[ScanNewPage] Resetting Scan New page state due to sidebar click.');
       resetAllInputs();
     };
@@ -611,7 +669,17 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     return () => {
       window.removeEventListener('reset-scan-new', handleReset);
     };
-  }, [resetAllInputs]);
+  }, [
+    resetAllInputs,
+    modelReady,
+    modelUrl,
+    projectToken,
+    isViewOnly,
+    showLoadingUI,
+    showQueueUI,
+    showSuccessUI,
+    isGenerating,
+  ]);
 
   const addCacheBuster = (url) => {
     if (!url) return url;
@@ -1381,8 +1449,10 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             activeTab={activeTab}
             setActiveTab={setActiveTab}
             historyFilter={historyFilter}
-            setHistoryFilter={setHistoryFilter}
+            onHistoryFilterChange={handleHistoryFilterChange}
             historyData={filteredHistoryData}
+            historyLoading={historyLoading}
+            historyFilterLoading={historyFilterLoading}
             modelReady={modelReady}
             isUserOwnedProject={isUserOwnedProject}
             hideUpgradePromo={isPublicGuestView}
@@ -1393,6 +1463,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             onHistoryExport={handleHistoryExport}
             onHistoryFavorite={handleHistoryFavorite}
             onHistoryShare={handleHistoryShare}
+            onHistoryOpen={handleHistoryOpen}
             historySearchQuery={historySearchQuery}
             setHistorySearchQuery={setHistorySearchQuery}
             onSelectModel={(url) => {

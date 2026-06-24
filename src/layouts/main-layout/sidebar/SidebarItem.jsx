@@ -4,18 +4,15 @@ import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import { FiFolder } from 'react-icons/fi';
 import './SidebarItem.css';
 import { SidebarPopover } from './index';
-import { useAuth } from '../../../context/AuthContext';
-import { useMediaQuery } from '@mui/material';
 import SubscriptionImg from '../../../assets/images/subsciption.png';
 import DarkSubscriptionImg from '../../../assets/images/darkSubscription.png';
 import ActiveSubscriptionImg from '../../../assets/images/darkSubscription.png';
+import { isDashboardHomePath } from '../../../routes/paths';
 // import ActiveSubscriptionImg from '../../../assets/images/activeSubscription.png';
 
 const SidebarItem = ({ item, isCollapsed }) => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
-  const { token } = useAuth();
-  const isMobile = useMediaQuery('(max-width:992px)');
 
   const isSubscription = item.title === 'Subscription';
   const isSubscriptionActive =
@@ -25,11 +22,14 @@ const SidebarItem = ({ item, isCollapsed }) => {
   // Check for Settings active state
   const isSettings = item.title === 'Settings';
   const isSettingsActive = isSettings && location.pathname.startsWith('/3dio/settings');
+  const isHome = item.title === 'Home';
+  const isHomeActive = isHome && isDashboardHomePath(location.pathname);
 
   // check dark mode
   const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
   // Update isActive logic to include Settings check
-  const isActive = location.pathname === item.path || (isSettings && isSettingsActive);
+  const isActive =
+    isHomeActive || location.pathname === item.path || (isSettings && isSettingsActive);
 
   // 👇 Render icon logic
   const renderIcon = () => {
@@ -85,22 +85,27 @@ const SidebarItem = ({ item, isCollapsed }) => {
     }
   };
 
-  const handleNavClick = () => {
-    if (item.path === '/3dio/new/scan' && location.pathname !== '/3dio/new/scan') {
-      window.dispatchEvent(new CustomEvent('reset-scan-new'));
+  const isScanNew = item.path === '/3dio/new/scan';
+
+  const handleNavClick = (e) => {
+    if (!isScanNew) return;
+
+    if (location.pathname === '/3dio/new/scan') {
+      e.preventDefault();
+      window.dispatchEvent(
+        new CustomEvent('reset-scan-new', { detail: { fromSamePage: true } }),
+      );
+      return;
     }
+
+    window.dispatchEvent(
+      new CustomEvent('reset-scan-new', { detail: { fromSamePage: false } }),
+    );
   };
 
   const isPreview =
     item.title === 'Preview' && item.path && item.path.startsWith('/3dio/preview');
   const isPreviewActive = isPreview && location.pathname.startsWith('/3dio/preview');
-
-  const handleSubscriptionClick = (e) => {
-    if (isSubscription && isMobile && !token) {
-      e.preventDefault();
-      window.location.href = '/3dio/subscription';
-    }
-  };
 
   const [hovered, setHovered] = useState(false);
   const [popoverPos, setPopoverPos] = useState({ top: 0, left: 0, itemHeight: 0 });
@@ -126,49 +131,28 @@ const SidebarItem = ({ item, isCollapsed }) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {item.title === 'Home' ? (
-        <a
-          href={item.path}
-          className={`sidebar-link${location.pathname === item.path ? ' active' : ''}`}
-          onClick={handleNavClick}
-        >
-          {renderIcon()}
-          <span className="sidebar-title">{item.title}</span>
-        </a>
-      ) : isPreview ? (
-        <a href={item.path} className={`sidebar-link${isPreviewActive ? ' active' : ''}`}>
-          {renderIcon()}
-          <span className="sidebar-title">{item.title}</span>
-        </a>
-      ) : isSubscription ? (
-        <a
-          href={item.path}
-          className={`sidebar-link${isSubscriptionActive ? ' active' : ''}`}
-          onClick={handleSubscriptionClick}
-        >
-          {renderIcon()}
-          <span className="sidebar-title">{item.title}</span>
-        </a>
-      ) : (
-        <NavLink
-          to={item.path}
-          className={({ isActive: navIsActive }) => {
-            // For Settings, check if we're on any settings page
-            const shouldBeActive = isSettings ? isSettingsActive : navIsActive;
-            return `sidebar-link${shouldBeActive ? ' active' : ''}`;
-          }}
-          onClick={handleNavClick}
-        >
-          {renderIcon()}
-          <span className="sidebar-title">{item.title}</span>
-          {item.children &&
-            (open ? (
-              <MdKeyboardArrowUp className="sidebar-dropdown-arrow open" />
-            ) : (
-              <MdKeyboardArrowDown className="sidebar-dropdown-arrow" />
-            ))}
-        </NavLink>
-      )}
+      <NavLink
+        to={item.path}
+        end={isHome}
+        className={() => {
+          let shouldBeActive = location.pathname === item.path;
+          if (isHome) shouldBeActive = isHomeActive;
+          else if (isPreview) shouldBeActive = isPreviewActive;
+          else if (isSubscription) shouldBeActive = isSubscriptionActive;
+          else if (isSettings) shouldBeActive = isSettingsActive;
+          return `sidebar-link${shouldBeActive ? ' active' : ''}`;
+        }}
+        onClick={handleNavClick}
+      >
+        {renderIcon()}
+        <span className="sidebar-title">{item.title}</span>
+        {item.children &&
+          (open ? (
+            <MdKeyboardArrowUp className="sidebar-dropdown-arrow open" />
+          ) : (
+            <MdKeyboardArrowDown className="sidebar-dropdown-arrow" />
+          ))}
+      </NavLink>
 
       {hovered && isCollapsed && (
         <SidebarPopover

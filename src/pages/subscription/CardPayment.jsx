@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../subscription/Subscription.css';
 import logo from '../../assets/images/Logo.png';
 import './CardPayment.css';
@@ -34,23 +35,19 @@ try {
 const total = plan.price + (plan.tax || 0);
 
 const CardPayment = () => {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [showSuccess, setShowSuccess] = useState(false);
   const handleBack = () => {
-    const ref = document.referrer;
-    if (ref) {
-      window.location.href = ref;
-      return;
-    }
     if (window.history.length > 1) {
-      window.history.back();
+      navigate(-1);
       return;
     }
     if (window.opener && !window.opener.closed) {
       window.close();
       return;
     }
-    window.location.href = '/3dio/subscription';
+    navigate('/3dio/subscription');
   };
 
   const handleTouchStart = (e) => {

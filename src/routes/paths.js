@@ -4,6 +4,10 @@ export const rootPaths = {
   authRoot: '',
   errorRoot: 'error'
 };
+
+export const isDashboardHomePath = (pathname) =>
+  pathname === '/3dio' || pathname === '/3dio/';
+
 export default {
   dashboard: '/3dio/',
   analytics: '/3dio/analytics',

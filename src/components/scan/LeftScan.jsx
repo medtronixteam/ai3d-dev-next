@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ArrowRight,
   Sparkles,
@@ -59,6 +59,20 @@ const LeftScan = ({
   const imageInputRef = useRef(null);
   const videoInputRef = useRef(null);
   const scrollRef = useRef(null);
+  const [singleImagePreview, setSingleImagePreview] = useState(null);
+
+  useEffect(() => {
+    if (!singleImageFile) {
+      setSingleImagePreview(null);
+      return undefined;
+    }
+
+    const previewUrl = URL.createObjectURL(singleImageFile);
+    setSingleImagePreview(previewUrl);
+
+    return () => URL.revokeObjectURL(previewUrl);
+  }, [singleImageFile]);
+
   // url update
   const handleSingleImageChange = (e) => {
     if (isProcessing || isViewOnly) return;
@@ -147,8 +161,19 @@ const LeftScan = ({
               </p>
             </div>
           </div>
-          <div className="banner-input rounded-pill d-flex align-items-center">
-            <img src={SingleImgIcon} alt="" style={{ height: '18px', width: '18px' }} />
+          <div
+            className="banner-input rounded-pill d-flex align-items-center"
+            onClick={() => !(isProcessing || isViewOnly) && singleImageInputRef.current?.click()}
+          >
+            {singleImagePreview ? (
+              <img
+                src={singleImagePreview}
+                alt="Selected upload preview"
+                className="banner-input-preview"
+              />
+            ) : (
+              <img src={SingleImgIcon} alt="" className="banner-input-icon" />
+            )}
             <input
               type="file"
               hidden
@@ -162,12 +187,15 @@ const LeftScan = ({
               className="form-control bg-transparent small py-1 ps-2"
               value={singleImageName}
               readOnly
-              onClick={() => !(isProcessing || isViewOnly) && singleImageInputRef.current?.click()}
             />
             <button
+              type="button"
               className="btn-pink-circle"
               disabled={isProcessing || !singleImageName || isViewOnly}
-              onClick={handleSingleImageGenerate}
+              onClick={(event) => {
+                event.stopPropagation();
+                handleSingleImageGenerate();
+              }}
             >
               {isArrowLoading ? (
                 <Loader2 size={14} className="animate-spin" />

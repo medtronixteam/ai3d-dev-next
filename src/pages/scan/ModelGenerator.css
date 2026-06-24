@@ -61,9 +61,16 @@
     display: none !important;
 }
 
-[data-theme='dark'] .banner-input img {
+[data-theme='dark'] .banner-input-icon {
     filter: brightness(0) invert(1) !important;
     opacity: 0.8 !important;
+}
+
+[data-theme='dark'] .banner-input-preview {
+    filter: none !important;
+    opacity: 1 !important;
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
 }
 
 [data-theme='dark'] .history-item {
@@ -523,14 +530,34 @@
 }
 
 .banner-input {
-    padding: 0 10px !important;
+    padding: 4px 5px 4px 10px !important;
     border-radius: 25px;
     /* border: 1.5px solid; */
     border-image-source: linear-gradient(90.98deg, #DE3996 10.01%, #D4CDFE 95.2%);
     position: relative;
     background: linear-gradient(90deg, #E5D4F4 0%, #FDC7D9 100%);
     cursor: pointer;
+    gap: 8px;
+    min-height: 36px;
+    overflow: hidden;
+}
 
+.banner-input-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+
+.banner-input-preview {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1.5px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 1px 4px rgba(34, 34, 59, 0.18);
+    background: #fff;
 }
 
 .banner-input input {
@@ -538,6 +565,12 @@
     border: none;
     color: var(--text-main);
     cursor: pointer;
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-right: 4px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .banner-input input::placeholder {
@@ -567,13 +600,21 @@
     background: var(--primary-pink);
     color: white;
     border: none;
-    width: 25px;
-    height: 20px;
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    padding: 0;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
     transition: transform 0.2s;
+}
+
+.btn-pink-circle:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
 }
 
 .btn-pink-circle:hover {

@@ -10,12 +10,51 @@ import modelEditorIcon from '../assets/api-sdk/icons/3dmodeleditoricon.svg';
 import restApiIcon from '../assets/api-sdk/icons/restapiicon.svg';
 import javascriptIcon from '../assets/api-sdk/icons/javascripticon.svg';
 import pythonIcon from '../assets/api-sdk/icons/pythonicon.svg';
+import phpIcon from '../assets/api-sdk/icons/phpicon.svg';
 import iosIcon from '../assets/api-sdk/icons/iosicon.svg';
 import androidIcon from '../assets/api-sdk/icons/andriodicon.svg';
-import unityIcon from '../assets/api-sdk/icons/unityicon.svg';
-import pythonCodeImg from '../assets/api-sdk/icons/pythoncodeimg.png';
-import javascriptCodeImg from '../assets/api-sdk/icons/javascriptcodeimg.png';
 import notificationIcon from '../assets/api-sdk/icons/notificationicon.png';
+
+const CODE_SAMPLES = [
+  {
+    id: 'python',
+    title: 'Python',
+    code: `import model3d
+
+# Initialize client
+client = model3d.Client(
+  api_key="your_api_key"
+)
+
+# Generate from text
+model = client.generate(
+  prompt="A futuristic car",
+  type="text"
+)
+
+# Download model
+model.download("car.obj")`,
+  },
+  {
+    id: 'javascript',
+    title: 'JavaScript',
+    code: `import Model3D from 'model3d-sdk';
+
+// Initialize client
+const client = new Model3D({
+  apiKey: 'your_api_key'
+});
+
+// Generate from image
+const model = await client.generate({
+  image: imageFile,
+  type: 'image'
+});
+
+// Get model URL
+console.log(model.url);`,
+  },
+];
 
 const API_FEATURES = [
   {
@@ -52,9 +91,9 @@ const INTEGRATIONS = [
   { id: 'rest', label: 'REST API', icon: restApiIcon },
   { id: 'js', label: 'JavaScript', icon: javascriptIcon },
   { id: 'python', label: 'Python', icon: pythonIcon },
-  { id: 'ios', label: 'iOS', icon: iosIcon },
+  { id: 'php', label: 'PHP', icon: phpIcon },
   { id: 'android', label: 'Android', icon: androidIcon },
-  { id: 'unity', label: 'Unity', icon: unityIcon },
+  { id: 'ios', label: 'iOS', icon: iosIcon },
 ];
 
 const MOBILE_SLIDER_MQ = '(max-width: 640px)';
@@ -326,16 +365,21 @@ const ApiSdkPage = () => {
 
       <section className="apisdk-code-samples" aria-label="Code examples">
         <div className="apisdk-code-grid">
-          <img
-            className="apisdk-code-img"
-            src={pythonCodeImg}
-            alt="Python API example code"
-          />
-          <img
-            className="apisdk-code-img"
-            src={javascriptCodeImg}
-            alt="JavaScript SDK example code"
-          />
+          {CODE_SAMPLES.map(({ id, title, code }) => (
+            <article key={id} className="apisdk-code-window">
+              <header className="apisdk-code-window-header">
+                <div className="apisdk-code-window-dots" aria-hidden="true">
+                  <span className="apisdk-code-dot apisdk-code-dot--red" />
+                  <span className="apisdk-code-dot apisdk-code-dot--yellow" />
+                  <span className="apisdk-code-dot apisdk-code-dot--green" />
+                </div>
+                <span className="apisdk-code-window-title">{title}</span>
+              </header>
+              <pre className="apisdk-code-block">
+                <code>{code}</code>
+              </pre>
+            </article>
+          ))}
         </div>
       </section>
 

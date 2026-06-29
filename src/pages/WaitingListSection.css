@@ -105,10 +105,14 @@
 .WL_main_desc {
     font-size: 14px;
     color: #666;
-    max-width: 550px;
+    max-width: 620px;
     line-height: 1.5;
-    margin-bottom: 30px;
+    margin-bottom: 16px;
     font-weight: 500;
+}
+
+.WL_main_desc_secondary {
+    margin-bottom: 36px;
 }
 
 
@@ -178,8 +182,27 @@
 }
 
 /* Timer Section */
+.WL_prelaunch_badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 14px;
+    margin-bottom: 14px;
+    border-radius: 999px;
+    background: rgba(222, 57, 150, 0.1);
+    border: 1px solid rgba(222, 57, 150, 0.25);
+    color: #DE3996;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+}
+
 .WL_countdown_section {
-    margin-bottom: 50px;
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .WL_timer_wrap {
@@ -282,6 +305,16 @@
 
     .WL_main_title {
         font-size: 32px;
+    }
+
+    .WL_countdown_heading {
+        font-size: 16px;
+    }
+
+    .WL_countdown_date {
+        font-size: 12px;
+        text-align: center;
+        max-width: 280px;
     }
 
     .WL_time_box {

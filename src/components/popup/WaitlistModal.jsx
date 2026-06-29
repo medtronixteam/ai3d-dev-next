@@ -6,10 +6,11 @@ import { toast } from 'react-toastify';
 import { baseURL } from '../../config';
 import { useAuth } from '../../context/AuthContext';
 import logo from '../../pages/images/logo.png';
-import headingEllipse from '../../pages/images/heading_ellipse.png';
-import astronautImg from '../../pages/images/astronaut.png';
-import listIcon from '../../assets/images/listIcon.png';
-import { Link } from 'react-router-dom';
+import {
+  EarlyAccessTitle,
+  EarlyAccessDescriptions,
+} from '../early-access/EarlyAccessPromoContent';
+import '../early-access/EarlyAccessPromo.css';
 
 
 const WaitlistModal = ({ isOpen, onClose }) => {
@@ -59,7 +60,7 @@ const WaitlistModal = ({ isOpen, onClose }) => {
 
             if (response.status === 200 || response.status === 201) {
                 setSuccess(true);
-                setMessage({ type: 'success', text: response.data.message || "Successfully joined the waiting list!" });
+                setMessage({ type: 'success', text: response.data.message || 'Successfully signed up for early access!' });
                 // Clear form
                 setFormData({ name: '', email: '', hear_about: '', use_for: '' });
                 // Automatically close after 3 seconds
@@ -102,36 +103,13 @@ const WaitlistModal = ({ isOpen, onClose }) => {
                             <img src={logo} alt="Logo" className="WM_logo" />
 
                             <div className="WM_title_wrap">
-                                <h1 className="WM_main_title">
-                                    Join the <span className="WM_accent_span">Waiting<img src={headingEllipse} alt="" className="WM_title_arc" /></span> List Get Early Access
-                                </h1>
-
+                                <EarlyAccessTitle as="h1" className="WM_main_title ea-title" />
                             </div>
 
-
-
-                            <p className="WM_desc">
-                                Be among the <span className="WM_pink_text">first to experience</span> AI3D. Reserve your spot on the waitlist and <span className="WM_pink_text">unlock</span> exclusive <span className="WM_pink_text">benefits</span> when we <span className="WM_pink_text">launch</span>.
-                            </p>
-
-                            <div className="WM_benefits_list">
-                                <div className="WM_benefit_item">
-                                    <img src={listIcon} alt="check" className="WM_list_icon_img" />
-                                    Early access to all new features
-                                </div>
-                                <div className="WM_benefit_item">
-                                    <img src={listIcon} alt="check" className="WM_list_icon_img" />
-                                    Free 3D Credits on launch
-                                </div>
-                                <div className="WM_benefit_item">
-                                    <img src={listIcon} alt="check" className="WM_list_icon_img" />
-                                    Priority access before public launch
-                                </div>
-                                <div className="WM_benefit_item">
-                                    <img src={listIcon} alt="check" className="WM_list_icon_img" />
-                                    API Beta Access
-                                </div>
-                            </div>
+                            <EarlyAccessDescriptions
+                              className="WM_desc ea-desc"
+                              secondaryClassName="WM_desc WM_desc_secondary ea-desc ea-desc-secondary"
+                            />
 
                             <p className="WM_footer_note">
                                 No Spam. Unsubscribe Anytime. We Respect your Privacy.
@@ -141,11 +119,6 @@ const WaitlistModal = ({ isOpen, onClose }) => {
                         {/* Right Section */}
                         <div className="WM_right_panel">
                             <div className="WM_form_card">
-                                <div className="WM_form_header">
-                                    <h2 className="WM_form_title">Reserve Your Spot</h2>
-                                    <p className="WM_form_subtitle">Fill in the form to join the waitlist.</p>
-                                </div>
-
                                 {message.text && (
                                     <div style={{
                                         padding: '10px 14px',
@@ -228,7 +201,7 @@ const WaitlistModal = ({ isOpen, onClose }) => {
                                         </label> */}
 
                                         <button type="submit" className="WM_submit_btn" disabled={loading}>
-                                            {loading ? "Joining..." : "Join Waitlist"} <i className="fa-solid fa-arrow-right"></i>
+                                            {loading ? "Signing up..." : "Sign Up Now"} <i className="fa-solid fa-arrow-right"></i>
                                         </button>
                                     </form>
                                 {/* )} */}

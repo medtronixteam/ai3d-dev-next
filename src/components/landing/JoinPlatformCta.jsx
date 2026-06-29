@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import paths from '../../routes/paths';
 import { getMsUntilPlatformLaunch, isPlatformLaunched } from '../../utils/platformLaunch';
 
 const JoinPlatformCta = ({
@@ -10,6 +12,7 @@ const JoinPlatformCta = ({
   ...rest
 }) => {
   const navigate = useNavigate();
+  const { token } = useAuth();
   const [launched, setLaunched] = useState(() => isPlatformLaunched());
 
   useEffect(() => {
@@ -21,8 +24,10 @@ const JoinPlatformCta = ({
   }, []);
 
   const handleClick = (event) => {
-    if (launched) {
-      navigate('/signup');
+    if (token) {
+      navigate(paths.dashboard);
+    } else if (launched) {
+      navigate(paths.signup);
     } else {
       onWaitlistOpen?.();
     }
@@ -31,7 +36,7 @@ const JoinPlatformCta = ({
 
   return (
     <button type="button" className={className} onClick={handleClick} style={style} {...rest}>
-      {launched ? 'Join Platform' : 'Join Waitlist'}
+      {token || launched ? 'Join Platform' : 'Join Waitlist'}
     </button>
   );
 };

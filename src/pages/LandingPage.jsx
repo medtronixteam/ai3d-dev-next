@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './LandingPage.css';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/splide/dist/css/splide.min.css';
@@ -96,6 +96,12 @@ import RoadmapSection from './LandingPageRoadmap';
 import TestimonialSection from './TestimonialSection';
 import LeadershipSection from './LeadershipSection';
 import WaitingListSection from './WaitingListSection';
+import EarlyAccessPopup from '../components/popup/EarlyAccessPopup';
+import {
+  shouldShowEarlyAccessPopup,
+  markEarlyAccessPopupDismissed,
+} from '../components/early-access/earlyAccessStorage';
+import paths from '../routes/paths';
 
 import FW from '../assets/service/FW.png'
 import RR from '../assets/service/rr.png'
@@ -105,6 +111,7 @@ import SampleModels from '../Popup/SampleModels';
 
 const LandingPage = () => {
   const { pathname, hash, key } = useLocation();
+  const navigate = useNavigate();
   const [subscriptionModalOpen, setSubscriptionModalOpen] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -657,7 +664,29 @@ const LandingPage = () => {
   }, []);
 
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
+  const [showEarlyAccessPopup, setShowEarlyAccessPopup] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (!shouldShowEarlyAccessPopup()) return undefined;
+
+    const timer = setTimeout(() => {
+      setShowEarlyAccessPopup(true);
+    }, 900);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleCloseEarlyAccessPopup = () => {
+    markEarlyAccessPopupDismissed();
+    setShowEarlyAccessPopup(false);
+  };
+
+  const handleEarlyAccessSignUp = () => {
+    markEarlyAccessPopupDismissed();
+    setShowEarlyAccessPopup(false);
+    navigate(token ? paths.dashboard : paths.signup);
+  };
 
   useEffect(() => {
     const section = document.querySelector('.slidertwooo');
@@ -2956,6 +2985,11 @@ const LandingPage = () => {
         />
       )}
       <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
+      <EarlyAccessPopup
+        isOpen={showEarlyAccessPopup}
+        onClose={handleCloseEarlyAccessPopup}
+        onSignUp={handleEarlyAccessSignUp}
+      />
 
       {selectedModel && (
         <SampleModels

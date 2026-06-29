@@ -156,14 +156,24 @@
     max-width: 100%;
 }
 
+.WM_left_panel .ea-title,
+.WM_left_panel .ea-desc {
+    text-align: left;
+    max-width: 420px;
+}
+
 
 
 .WM_desc {
     font-size: 16px;
     color: #666;
     line-height: 1.6;
-    margin-bottom: 20px;
+    margin-bottom: 14px;
     max-width: 420px;
+}
+
+.WM_desc_secondary {
+    margin-bottom: 20px;
 }
 
 .WM_pink_text {

@@ -31,8 +31,7 @@ const CookieConsent = () => {
     };
 
     const handleDecline = () => {
-        // Just hide for now, don't save to localStorage
-        // so it shows again on next refresh
+        localStorage.setItem('cookieConsent', 'declined');
         setIsVisible(false);
     };
 

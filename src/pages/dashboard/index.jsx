@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import './SimplePage.css';
-import { FiSearch, FiArrowRight, FiX, FiMaximize2, FiEdit2, FiArrowUp, FiEye, FiDownload } from 'react-icons/fi';
+import { FiSearch, FiArrowRight, FiX, FiMaximize2, FiEdit2, FiArrowUp, FiEye, FiDownload, FiSun, FiMoon } from 'react-icons/fi';
 import search from '../../assets/images/search.svg';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -480,14 +480,26 @@ const VideoModal = ({ open, videoUrl, onClose }) => {
   );
 };
 
-function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelTitle, modelData }) {
+const MODEL_VIEWER_ENV =
+  'https://modelviewer.dev/shared-assets/environments/neutral.hdr';
+
+function ModelCardVideoModal({
+  open,
+  fileUrl,
+  imageUrl,
+  onClose,
+  modelId,
+  modelTitle,
+  modelData,
+  platformIsDark,
+}) {
   const [loading, setLoading] = React.useState(true);
   const [modalVisible, setModalVisible] = React.useState(false);
   const [mediaError, setMediaError] = React.useState(false);
   const [isVideoMode, setIsVideoMode] = React.useState(false);
   const [is3DModel, setIs3DModel] = React.useState(false);
   const [modelUrl, setModelUrl] = React.useState(null);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [viewerIsDark, setViewerIsDark] = useState(platformIsDark);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [recording, setRecording] = React.useState(false);
   const [mediaRecorder, setMediaRecorder] = React.useState(null);
@@ -504,18 +516,11 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  useEffect(() => {
-    const checkTheme = () => {
-      setIsDarkMode(document.documentElement.getAttribute('data-theme') === 'dark');
-    };
-    checkTheme();
-    const observer = new MutationObserver(checkTheme);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['data-theme'],
-    });
-    return () => observer.disconnect();
-  }, []);
+  React.useEffect(() => {
+    if (open) {
+      setViewerIsDark(platformIsDark);
+    }
+  }, [open, modelId, platformIsDark]);
 
   const modelViewerRefCallback = useCallback((node) => {
     if (node) {
@@ -842,7 +847,7 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
         <div
           style={{
             position: 'relative',
-            background: isDarkMode ? '#000000' : '#ffffff',
+            background: viewerIsDark ? '#12121a' : '#ffffff',
             borderRadius: 28,
             maxWidth: '850px',
             width: '90vw',
@@ -947,6 +952,29 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
                 </button>
               )} */}
 
+              <button
+                onClick={() => setViewerIsDark((prev) => !prev)}
+                style={{
+                  background: '#fff',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: 32,
+                  height: 32,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                }}
+                aria-label={viewerIsDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                title={viewerIsDark ? 'Light mode' : 'Dark mode'}
+              >
+                {viewerIsDark ? (
+                  <FiSun size={16} color="#DE3996" />
+                ) : (
+                  <FiMoon size={16} color="#DE3996" />
+                )}
+              </button>
+
               {/* Fullscreen */}
               <button
                 onClick={() => {
@@ -1030,7 +1058,7 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
                     style={{
                       fontSize: '16px',
                       fontWeight: 500,
-                      color: isDarkMode ? '#fff' : '#000',
+                      color: viewerIsDark ? '#fff' : '#000',
                       marginTop: '10rem',
                     }}
                   >
@@ -1132,11 +1160,16 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
                     ar
                     ar-modes="webxr scene-viewer quick-look"
                     shadow-intensity="1"
+                    exposure="1"
+                    tone-mapping="commerce"
+                    environment-image={MODEL_VIEWER_ENV}
+                    interaction-prompt="none"
                     style={{
                       width: '100%',
                       height: '100%',
                       opacity: loading ? 0 : 1,
                       transition: 'opacity 0.3s ease',
+                      backgroundColor: viewerIsDark ? '#12121a' : '#ffffff',
                     }}
                   />
                 </div>
@@ -1180,16 +1213,16 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
               display: 'flex',
               alignItems: 'center',
               gap: '12px',
-              background: isDarkMode ? 'rgba(255, 255, 255, 0.07)' : 'rgba(0, 0, 0, 0.05)',
+              background: viewerIsDark ? 'rgba(255, 255, 255, 0.07)' : 'rgba(0, 0, 0, 0.05)',
               backdropFilter: 'blur(12px)',
               WebkitBackdropFilter: 'blur(12px)',
               padding: '6px 14px',
               borderRadius: '20px',
-              border: isDarkMode ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid rgba(0, 0, 0, 0.08)',
+              border: viewerIsDark ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid rgba(0, 0, 0, 0.08)',
               fontSize: '13px',
-              color: isDarkMode ? '#ffffff' : '#1a1a24',
+              color: viewerIsDark ? '#ffffff' : '#1a1a24',
               fontWeight: '500',
-              boxShadow: isDarkMode ? '0 8px 32px 0 rgba(0, 0, 0, 0.3)' : '0 8px 32px 0 rgba(0, 0, 0, 0.05)',
+              boxShadow: viewerIsDark ? '0 8px 32px 0 rgba(0, 0, 0, 0.3)' : '0 8px 32px 0 rgba(0, 0, 0, 0.05)',
               pointerEvents: 'none',
             }}
           >
@@ -1197,7 +1230,7 @@ function ModelCardVideoModal({ open, fileUrl, imageUrl, onClose, modelId, modelT
               <FiEye size={15} style={{ color: '#DE3996' }} />
               <span>{modelData?.views ?? 0}</span>
             </span>
-            <div style={{ width: '1px', height: '12px', background: isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.15)' }} />
+            <div style={{ width: '1px', height: '12px', background: viewerIsDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.15)' }} />
             <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }} title="Downloads">
               <FiDownload size={15} style={{ color: '#DE3996' }} />
               <span>{modelData?.downloads ?? 0}</span>
@@ -2533,6 +2566,7 @@ const Dashboard = () => {
         modelId={selectedModelData?.id}
         modelTitle={selectedModelData?.title || selectedModelData?.name || 'Model Preview'}
         modelData={selectedModelData}
+        platformIsDark={isDark}
         onClose={() => setModelVideoModalOpen(false)}
       />
 

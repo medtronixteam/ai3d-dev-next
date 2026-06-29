@@ -1,5 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 import './ApiSdk.css';
+import { baseURL } from '../config';
+import { useAuth } from '../context/AuthContext';
+import NotifyMeEmailModal from '../components/popup/NotifyMeEmailModal';
 
 import launchingSoonIcon from '../assets/api-sdk/icons/launchingsoonicon.svg';
 import blurStarIcon from '../assets/api-sdk/icons/blurstar.svg';
@@ -70,6 +75,7 @@ const API_FEATURES = [
     description:
       'Convert single or multiple images into stunning 3D models with our advanced AI algorithms',
     icon: imgTo3dIcon,
+    notifyType: 'images_to_3d',
   },
   {
     id: 'video',
@@ -77,6 +83,7 @@ const API_FEATURES = [
     description:
       'Transform videos into interactive 3D models with frame-by-frame analysis',
     icon: videoTo3dIcon,
+    notifyType: 'video_to_3d',
   },
   {
     id: 'editor',
@@ -100,10 +107,64 @@ const MOBILE_SLIDER_MQ = '(max-width: 640px)';
 const AUTO_SLIDE_MS = 4500;
 
 const ApiSdkPage = () => {
+  const { token, user } = useAuth();
   const featuresGridRef = useRef(null);
   const activeFeatureRef = useRef(0);
   const pauseAutoSlideRef = useRef(() => {});
   const [activeFeature, setActiveFeature] = useState(0);
+  const [notifyModalOpen, setNotifyModalOpen] = useState(false);
+  const [pendingNotifyType, setPendingNotifyType] = useState('api_sdk');
+  const [notifyLoading, setNotifyLoading] = useState(false);
+
+  const submitNotifyMe = useCallback(
+    async (type, email) => {
+      setNotifyLoading(true);
+      try {
+        const response = await axios.post(
+          `${baseURL}/notify-me`,
+          { email, type },
+          {
+            headers: {
+              ...(token && { Authorization: `Bearer ${token}` }),
+            },
+          },
+        );
+
+        toast.success(response.data?.message || "You're on the list! We'll notify you at launch.");
+        setNotifyModalOpen(false);
+      } catch (error) {
+        const message =
+          error.response?.data?.message ||
+          error.response?.data?.error ||
+          'Could not save your request. Please try again.';
+        toast.error(message);
+      } finally {
+        setNotifyLoading(false);
+      }
+    },
+    [token],
+  );
+
+  const handleNotifyMe = useCallback(
+    (type) => {
+      const loginEmail = user?.email?.trim();
+      if (loginEmail) {
+        submitNotifyMe(type, loginEmail);
+        return;
+      }
+      setPendingNotifyType(type);
+      setNotifyModalOpen(true);
+    },
+    [submitNotifyMe, user?.email],
+  );
+
+  const handleNotifyMeWithEmail = (email) => {
+    if (!email) {
+      toast.error('Please enter your email address.');
+      return;
+    }
+    submitNotifyMe(pendingNotifyType, email);
+  };
 
   const updateActiveFeature = useCallback(() => {
     const grid = featuresGridRef.current;
@@ -296,7 +357,7 @@ const ApiSdkPage = () => {
             aria-roledescription="carousel"
             aria-label="API feature cards"
           >
-            {API_FEATURES.map(({ id, title, description, icon }, index) => (
+            {API_FEATURES.map(({ id, title, description, icon, notifyType }, index) => (
               <article
                 key={id}
                 className="apisdk-feature-card"
@@ -320,6 +381,16 @@ const ApiSdkPage = () => {
                 <div className="apisdk-feature-content">
                   <h2 className="apisdk-feature-title">{title}</h2>
                   <p className="apisdk-feature-desc">{description}</p>
+                  {notifyType ? (
+                    <button
+                      type="button"
+                      className="apisdk-feature-notify-btn"
+                      onClick={() => handleNotifyMe(notifyType)}
+                      disabled={notifyLoading}
+                    >
+                      Notify Me
+                    </button>
+                  ) : null}
                 </div>
 
                 <div className="apisdk-feature-icon-wrap">
@@ -398,11 +469,23 @@ const ApiSdkPage = () => {
             released.
           </p>
 
-          <button type="button" className="apisdk-updates-btn">
-            Notify Me
+          <button
+            type="button"
+            className="apisdk-updates-btn"
+            onClick={() => handleNotifyMe('api_sdk')}
+            disabled={notifyLoading}
+          >
+            {notifyLoading ? 'Submitting...' : 'Notify Me'}
           </button>
         </div>
       </section>
+
+      <NotifyMeEmailModal
+        isOpen={notifyModalOpen}
+        onClose={() => !notifyLoading && setNotifyModalOpen(false)}
+        onSubmit={handleNotifyMeWithEmail}
+        loading={notifyLoading}
+      />
     </div>
   );
 };

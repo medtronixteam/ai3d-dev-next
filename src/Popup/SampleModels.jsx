@@ -1,105 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import './samplemodel.css';
-import { Maximize2, Moon, Sun, X } from 'lucide-react';
-import { FastAverageColor } from 'fast-average-color';
+import { Maximize2, X } from 'lucide-react';
 import CustomLoader from '../components/loader/CustomLoader';
 import { baseURL } from '../config';
 import { useAuth } from '../context/AuthContext';
 
-const isPlatformDark = () => document.documentElement.getAttribute('data-theme') === 'dark';
-
 const MODEL_VIEWER_ENV =
   'https://modelviewer.dev/shared-assets/environments/neutral.hdr';
 
-const makeColorLighter = (hexColor, percent = 40) => {
-  let hex = hexColor.replace(/^\s*#|\s*$/g, '');
-  if (hex.length === 3) {
-    hex = hex.replace(/(.)/g, '$1$1');
-  }
-  let r = parseInt(hex.substr(0, 2), 16),
-    g = parseInt(hex.substr(2, 2), 16),
-    b = parseInt(hex.substr(4, 2), 16);
-
-  r = Math.min(255, Math.floor(r + (255 - r) * (percent / 100)));
-  g = Math.min(255, Math.floor(g + (255 - g) * (percent / 100)));
-  b = Math.min(255, Math.floor(b + (255 - b) * (percent / 100)));
-
-  return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
-};
-
-const getDeterministicHexColor = (id, text = '') => {
-  if (!id) return '#f5f5f5';
-  let hash = 0;
-  const str = String(id) + (text ? String(text) : '');
-  for (let i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
-  }
-
-  const hue = Math.abs(hash) % 360;
-  const s = 65;
-  const l = 60;
-
-  const hDecimal = hue / 360;
-  const sDecimal = s / 100;
-  const lDecimal = l / 100;
-
-  let r, g, b;
-
-  if (sDecimal === 0) {
-    r = g = b = lDecimal;
-  } else {
-    const q = lDecimal < 0.5 ? lDecimal * (1 + sDecimal) : lDecimal + sDecimal - lDecimal * sDecimal;
-    const p = 2 * lDecimal - q;
-
-    const hue2rgb = (p, q, t) => {
-      if (t < 0) t += 1;
-      if (t > 1) t -= 1;
-      if (t < 1 / 6) return p + (q - p) * 6 * t;
-      if (t < 1 / 2) return q;
-      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-      return p;
-    };
-
-    r = hue2rgb(p, q, hDecimal + 1 / 3);
-    g = hue2rgb(p, q, hDecimal);
-    b = hue2rgb(p, q, hDecimal - 1 / 3);
-  }
-
-  const toHex = (x) => {
-    const hex = Math.round(x * 255).toString(16);
-    return hex.length === 1 ? '0' : '' + hex;
-  };
-
-  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
-};
-
-const getCardBgColor = (baseColor, isDark) => {
-  if (isDark) return '#12121a';
-  if (!baseColor) return '#f4f4f8';
-
-  let hex = baseColor.replace(/^\s*#|\s*$/g, '');
-  if (hex.length === 3) {
-    hex = hex.replace(/(.)/g, '$1$1');
-  }
-  let r = parseInt(hex.substr(0, 2), 16),
-    g = parseInt(hex.substr(2, 2), 16),
-    b = parseInt(hex.substr(4, 2), 16);
-
-  if (isNaN(r) || isNaN(g) || isNaN(b)) {
-    return '#f4f4f8';
-  }
-
-  r = Math.min(255, Math.floor(r + (255 - r) * 0.2));
-  g = Math.min(255, Math.floor(g + (255 - g) * 0.2));
-  b = Math.min(255, Math.floor(b + (255 - b) * 0.2));
-
-  const toHexVal = (x) => {
-    const hexVal = Math.round(x).toString(16);
-    return hexVal.length === 1 ? '0' : '' + hexVal;
-  };
-
-  return `#${toHexVal(r)}${toHexVal(g)}${toHexVal(b)}`;
-};
+const VIEWER_BG = '#ffffff';
 
 const addCacheBuster = (url) => {
   if (!url) return url;
@@ -147,35 +56,12 @@ const SampleModels = ({ model, onClose }) => {
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(model?.likes_count || 0);
   const [viewCount] = useState(model?.views_count || 0);
-  const [viewerIsDark, setViewerIsDark] = useState(isPlatformDark);
 
   const imgUrl = model?.image
     ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
     : null;
 
-  const [modalBgColor, setModalBgColor] = useState(null);
   const [imgLoaded, setImgLoaded] = useState(false);
-
-  const viewerBg = getCardBgColor(modalBgColor, viewerIsDark);
-
-  useEffect(() => {
-    if (imgUrl) {
-      const fallback = getDeterministicHexColor(model?.id, model?.title || model?.name);
-      setModalBgColor(fallback);
-
-      const fac = new FastAverageColor();
-      fac
-        .getColorAsync(imgUrl, { algorithm: 'simple' })
-        .then((color) => {
-          setModalBgColor(makeColorLighter(color.hex, 30));
-        })
-        .catch(() => {
-          setModalBgColor(fallback);
-        });
-    } else {
-      setModalBgColor(null);
-    }
-  }, [imgUrl, model]);
 
   useEffect(() => {
     let cancelled = false;
@@ -334,16 +220,6 @@ const SampleModels = ({ model, onClose }) => {
             <button
               type="button"
               className="sm-icon-btn"
-              onClick={() => setViewerIsDark((prev) => !prev)}
-              aria-label={viewerIsDark ? 'Switch to light mode' : 'Switch to dark mode'}
-              title={viewerIsDark ? 'Light mode' : 'Dark mode'}
-            >
-              {viewerIsDark ? <Sun size={16} color="#DE3996" /> : <Moon size={16} color="#DE3996" />}
-            </button>
-
-            <button
-              type="button"
-              className="sm-icon-btn"
               onClick={handleFullscreen}
               disabled={!modelLoaded && !!modelUrl}
               aria-label="Toggle fullscreen"
@@ -364,7 +240,7 @@ const SampleModels = ({ model, onClose }) => {
           </div>
         </div>
 
-        <div className="sm-viewer-area" style={{ background: viewerBg }}>
+        <div className="sm-viewer-area" style={{ background: VIEWER_BG }}>
           {modelUrl && !loadError ? (
             <>
               {!modelLoaded && (
@@ -410,7 +286,7 @@ const SampleModels = ({ model, onClose }) => {
                 class="sm-model-viewer"
                 style={{
                   opacity: modelLoaded ? 1 : 0,
-                  backgroundColor: viewerBg,
+                  backgroundColor: VIEWER_BG,
                 }}
               />
             </>

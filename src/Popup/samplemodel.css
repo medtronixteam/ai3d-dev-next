@@ -112,7 +112,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: background 0.25s ease;
+  background: #ffffff;
 }
 
 .sm-viewer-loader {
@@ -201,7 +201,8 @@
   height: 55vh;
   min-height: 360px;
   display: block;
-  transition: opacity 0.3s ease, background-color 0.25s ease;
+  background-color: #ffffff;
+  transition: opacity 0.3s ease;
 }
 
 /* ---------- Image Fallback ---------- */

@@ -37,11 +37,16 @@ const SignUp = () => {
         password,
         referral: referral || null,
       });
-      if (res.status === 200) {
-        toast.success(res.data?.message || '');
+
+      const message =
+        res.data?.message || 'Account created successfully! Please verify your email.';
+      const isSuccess = res.status >= 200 && res.status < 300 && res.data?.success !== false;
+
+      if (isSuccess) {
+        toast.success(message);
         navigate('/signin');
       } else {
-        toast.error(res.data?.message || '');
+        toast.error(message || 'Signup failed. Please try again.');
       }
     } catch (err) {
       toast.error(err?.response?.data?.message || '');

@@ -103,7 +103,7 @@ if (typeof document !== 'undefined' && !document.getElementById('sidebar-tooltip
 }
 import ThemeToggle from './ThemeToggle';
 import Profile from 'assets/images/Profile.png';
-import Logo from 'assets/images/Logo.png';
+import Logo from 'pages/images/logo.png';
 import ProfilePopup from 'components/popup/ProfilePopup';
 import axios from 'axios';
 import { baseURL } from '../../../config';
@@ -475,7 +475,7 @@ const Sidebar = ({ open = false, onClose, disableExpand = false }) => {
             {!isCollapsed && (
               <div>
                 <Link to="/3dio">
-                  <img src={Logo} className="sidebar-logo-icon" />
+                  <img src={Logo} className="sidebar-logo-icon platform-logo" alt="Logo" />
                 </Link>
               </div>
             )}

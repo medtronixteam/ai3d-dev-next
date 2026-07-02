@@ -1069,8 +1069,8 @@ const LandingPage = () => {
               className={`a3d-header container-fluid mb-4 a3d-fade-in ${isScrolled ? 'a3d-header-scrolled' : ''}`}
             >
               <div className="d-flex justify-content-between align-items-center">
-                <Link to="/">
-                  <img src={logo} alt="AI 3D Scanning Logo" style={{ width: '70%' }} />
+                <Link to="/" className="a3d-header-logo-link">
+                  <img src={logo} alt="AI 3D Scanning Logo" className="a3d-header-logo" />
                 </Link>
 
                 {/* Menu Button for Mobile */}
@@ -1149,8 +1149,8 @@ const LandingPage = () => {
 
             <div className={`mobile-sidebar ${isOpen ? 'open' : ''}`}>
               <div className="sidebar-header d-flex justify-content-between align-items-center px-3 py-2">
-                <Link to="/">
-                  <img src={logo} alt="AI 3D Scanning Logo" style={{ width: '70%' }} />
+                <Link to="/" className="a3d-header-logo-link">
+                  <img src={logo} alt="AI 3D Scanning Logo" className="a3d-header-logo" />
                 </Link>
 
                 <button

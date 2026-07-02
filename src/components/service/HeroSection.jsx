@@ -134,8 +134,8 @@ const HeroSection = ({ scrollContainerRef }) => {
             >
               <div className="d-flex justify-content-between align-items-center">
 
-                <Link to="/">
-                  <img src={logo} alt="Logo" style={{ width: '70%' }} />
+                <Link to="/" className="a3d-header-logo-link">
+                  <img src={logo} alt="Logo" className="a3d-header-logo" />
                 </Link>
 
                 {/* Hamburger */}
@@ -184,8 +184,8 @@ const HeroSection = ({ scrollContainerRef }) => {
           {/* Mobile Sidebar */}
           <div className={`mobile-sidebar ${isOpen ? 'open' : ''}`}>
             <div className="sidebar-header d-flex justify-content-between align-items-center px-3 py-2">
-              <Link to="/">
-                <img src={logo} alt="Logo" style={{ width: '70%' }} />
+              <Link to="/" className="a3d-header-logo-link">
+                <img src={logo} alt="Logo" className="a3d-header-logo" />
               </Link>
               <button
                 type="button"

@@ -358,3 +358,11 @@ body.dashboard-active *::-webkit-scrollbar {
   width: 0 !important;
   height: 0 !important;
 }
+
+.platform-logo {
+  width: auto;
+  max-width: 9rem;
+  max-height: 3rem;
+  height: auto;
+  object-fit: contain;
+}

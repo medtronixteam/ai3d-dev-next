@@ -3,7 +3,7 @@ import { Link, NavLink } from 'react-router-dom';
 // import { FiUser, FiSettings, FiLock, FiLogIn, FiCpu, FiUsers, FiCreditCard } from 'react-icons/fi';
 // import { FaReact } from 'react-icons/fa';
 import './CustomSidebar.css';
-import Logo from 'assets/images/Logo.png';
+import Logo from 'pages/images/logo.png';
 import ProfileIcon from '../../../assets/images/ProfileIcon.svg';
 import LoginIcon from '../../../assets/images/loginIcon.svg';
 import TeamIcon from '../../../assets/images/team.svg';
@@ -21,8 +21,7 @@ const CustomSidebar = ({ onClose }) => {
           <div className="mb-2 p-2">
             <Link to="/3dio/">
               <img
-                width="115px"
-                className="img-fluid logo"
+                className="sidebar-logo-icon platform-logo"
                 src={Logo}
                 style={{ marginLeft: '0.6rem' }}
                 alt="Logo"

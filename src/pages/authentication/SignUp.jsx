@@ -6,7 +6,7 @@ import axios from 'axios';
 import { baseURL } from '../../config';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import './SignUp.css';
-import Logo from '../../assets/images/Logo.png';
+import Logo from 'pages/images/logo.png';
 import Robot from '../../assets/images/robot-img.png';
 import { useSearchParams } from 'react-router-dom';
 

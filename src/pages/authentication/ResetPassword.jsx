@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Logo from '../../assets/images/Logo.png';
+import Logo from 'pages/images/logo.png';
 import './SignIn.css';
 import axios from 'axios';
 import { baseURL } from '../../config';
@@ -140,7 +140,7 @@ const ResetPassword = () => {
     <div className="container-fluid signin-form d-flex align-items-center justify-content-center" style={{ minHeight: '100vh', background: '#fff' }}>
       <div className="card p-4 shadow" style={{ maxWidth: 400, width: '100%', borderRadius: 16 }}>
         <div className="text-center mb-4">
-          <img src={Logo} alt="Logo" style={{ width: 120 }} />
+          <img src={Logo} alt="Logo" className="platform-logo" />
         </div>
         
         {step === 1 && (

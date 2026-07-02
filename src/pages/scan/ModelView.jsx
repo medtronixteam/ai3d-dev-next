@@ -219,7 +219,7 @@ const ModelView = () => {
       <header className="a3d-header">
         <div className="a3d-header-left mt-3 ms-2">
           <Link to="/3dio">
-            <img src={Logo} alt="A3D Logo" className="a3d-logo" style={{ cursor: 'pointer' }} />
+            <img src={Logo} alt="A3D Logo" className="platform-logo" style={{ cursor: 'pointer' }} />
           </Link>
         </div>
 

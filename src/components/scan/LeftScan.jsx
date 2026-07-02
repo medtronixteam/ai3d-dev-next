@@ -158,7 +158,7 @@ const LeftScan = ({
 
   return (
     <div className="col-lg-3 col-md-4 pe-md-3 negative-margin">
-      <img src={Logo} alt="logo" className="mb-2 mx-3" style={{ width: '90px' }} />
+      <img src={Logo} alt="logo" className="platform-logo mb-2 mx-3" />
       <div className="side-column p-3">
         <h5 className="fw-bold mb-2">
           New <span className="text-pink">Model</span>

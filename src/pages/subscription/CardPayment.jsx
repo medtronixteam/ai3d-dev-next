@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../subscription/Subscription.css';
-import logo from '../../assets/images/Logo.png';
+import logo from 'pages/images/logo.png';
 import './CardPayment.css';
 import {
   FiArrowLeft,
@@ -144,7 +144,7 @@ const CardPayment = () => {
                 <div className="col-12 col-md-6 summary-pane">
                   <div className="mb-4 d-flex align-items-center">
                     <div className="d-flex justify-content-center align-items-center">
-                      <img src={logo} alt="Logo" style={{ width: 130, marginTop: '5rem' }} />
+                      <img src={logo} alt="Logo" className="platform-logo" style={{ marginTop: '5rem' }} />
                     </div>
                   </div>
                   <div>

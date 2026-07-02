@@ -180,14 +180,28 @@ body {
   animation-play-state: running;
 }
 
-.ai_3d_landing .a3d-header img {
-  width: 70%;
-  transition: width 0.3s ease;
+.ai_3d_landing .a3d-header .a3d-header-logo-link {
+  display: inline-flex;
+  flex-shrink: 0;
+  line-height: 0;
 }
 
-/* .ai_3d_landing .a3d-header.a3d-header-scrolled img {
-  width: 50%;
-} */
+.ai_3d_landing .a3d-header img,
+.ai_3d_landing .a3d-header-logo,
+.ai_3d_landing .mobile-sidebar .sidebar-header img {
+  width: auto;
+  max-width: 9rem;
+  max-height: 3rem;
+  height: auto;
+  object-fit: contain;
+  transition: max-width 0.3s ease, max-height 0.3s ease;
+}
+
+.ai_3d_landing .a3d-header.a3d-header-scrolled img,
+.ai_3d_landing .a3d-header.a3d-header-scrolled .a3d-header-logo {
+  max-width: 7.5rem;
+  max-height: 2.625rem;
+}
 
 .ai_3d_landing .a3d-header-scrolled nav,
 .ai_3d_landing .a3d-header-scrolled .d-lg-flex.gap-4,
@@ -215,7 +229,7 @@ body {
 }
 
 .a3d-header img {
-  transition: width 0.3s ease;
+  transition: max-width 0.3s ease, max-height 0.3s ease;
 }
 
 .a3d-header-offset {
@@ -228,8 +242,13 @@ body {
   }
 }
 
-.ai_3d_landing .a3d-header img {
-  width: 4.375rem;
+@media (max-width: 61.9375rem) {
+  .ai_3d_landing .a3d-header img,
+  .ai_3d_landing .a3d-header-logo,
+  .ai_3d_landing .mobile-sidebar .sidebar-header img {
+    max-width: 7.5rem;
+    max-height: 2.625rem;
+  }
 }
 
 .ai_3d_landing .a3d-nav-link {

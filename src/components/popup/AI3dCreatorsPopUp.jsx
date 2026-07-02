@@ -10,7 +10,7 @@ import GameStudio from '../../pages/images/GameStudio.svg';
 import Protection from '../../pages/images/Protection.svg';
 import ArrowBack from '../../pages/images/ArrowBack.svg';
 import ExperienceLevel from '../../pages/images/ExperienceLevel.svg';
-import Logo from '../../assets/images/Logo.png';
+import Logo from 'pages/images/logo.png';
 import axios from 'axios';
 import { baseURL } from '../../config';
 import { toast } from 'react-toastify';
@@ -1054,7 +1054,7 @@ const AI3dCreatorsPopUp = ({ onClose }) => {
                 />
 
                 <div className="d-flex align-items-center flex-column">
-                  <img src={Logo} alt="" width="150px" />
+                  <img src={Logo} alt="Logo" className="platform-logo" />
                   <h2 className="creator-popup-h2 mt-4 text-center">
                     Welcome to Your 3D Marketplace
                   </h2>

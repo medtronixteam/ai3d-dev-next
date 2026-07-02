@@ -9,7 +9,11 @@
 }
 
 .signup-form .logo-animated {
-    max-width: 100px;
+    max-width: 9rem;
+    max-height: 3rem;
+    width: auto;
+    height: auto;
+    object-fit: contain;
     animation: fadeInLogo 1.2s ease-in-out;
 }
 

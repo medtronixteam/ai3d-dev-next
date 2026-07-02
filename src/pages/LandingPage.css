@@ -3256,6 +3256,14 @@ color: rgba(222, 57, 150, 1) !important;
   margin-bottom: 0.9375rem;
 }
 
+.aithreed .footer .logo img {
+  width: auto;
+  max-width: 8.75rem;
+  max-height: 2.875rem;
+  height: auto;
+  object-fit: contain;
+}
+
 .aithreed .footer .cards .icon-toggle-wrapper {
   display: inline-flex;
   justify-content: center;

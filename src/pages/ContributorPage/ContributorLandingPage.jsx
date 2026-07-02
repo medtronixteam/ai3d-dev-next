@@ -793,7 +793,7 @@ const ContributorLandingPage = () => {
 
               <div className="col-lg-4 col-md-6 col-12">
                 <div className="logo">
-                  <img width="120px" src={logo} alt="AI 3D Scanning Logo" />
+                  <img src={logo} alt="AI 3D Scanning Logo" />
                 </div>
 
                 <p className="desc">

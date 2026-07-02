@@ -1010,10 +1010,10 @@ select:-webkit-autofill:focus {
 }
 
 /* Stronger dark mode for profile card inputs */
-[data-theme='dark'] .profile-main-card input,
+[data-theme='dark'] .profile-main-card input:not(.profile-search-form-control),
 [data-theme='dark'] .profile-main-card .form-control,
 [data-theme='dark'] .profile-main-card .profile-input,
-.dark .profile-main-card input,
+.dark .profile-main-card input:not(.profile-search-form-control),
 .dark .profile-main-card .form-control,
 .dark .profile-main-card .profile-input {
   background: #110e20 !important;
@@ -1021,10 +1021,10 @@ select:-webkit-autofill:focus {
   border: 1px solid rgb(59, 58, 58) !important;
 }
 
-[data-theme='dark'] .profile-main-card input:disabled,
+[data-theme='dark'] .profile-main-card input:disabled:not(.profile-search-form-control),
 [data-theme='dark'] .profile-main-card .form-control:disabled,
 [data-theme='dark'] .profile-main-card .profile-input:disabled,
-.dark .profile-main-card input:disabled,
+.dark .profile-main-card input:disabled:not(.profile-search-form-control),
 .dark .profile-main-card .form-control:disabled,
 .dark .profile-main-card .profile-input:disabled {
   background: #110e20 !important;

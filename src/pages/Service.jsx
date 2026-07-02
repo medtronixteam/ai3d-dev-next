@@ -635,7 +635,7 @@ const Service = () => {
 
                 <div className="col-lg-4 col-md-6 col-12">
                   <div className="logo">
-                    <img width="120px" src={logo} alt="Logo" />
+                    <img src={logo} alt="Logo" />
                   </div>
 
                   <p className="desc">

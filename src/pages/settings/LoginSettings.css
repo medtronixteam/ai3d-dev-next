@@ -31,9 +31,18 @@
   border: none;
   background: transparent;
   outline: none;
+  box-shadow: none;
   font-size: 16px;
   color: #232334;
   width: 100%;
+}
+
+.profile-search-form-control:focus,
+.profile-search-form-control:focus-visible {
+  border: none;
+  outline: none;
+  box-shadow: none;
+  background: transparent;
 }
 
 [data-theme='dark'] .profile-search-containers {
@@ -42,6 +51,17 @@
 
 [data-theme='dark'] .profile-search-form-control {
   color: #fff;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+[data-theme='dark'] .profile-search-form-control:focus,
+[data-theme='dark'] .profile-search-form-control:focus-visible {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
 }
 
 @media (max-width : 500px) {

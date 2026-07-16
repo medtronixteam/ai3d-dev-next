@@ -19,20 +19,54 @@ import * as THREE from 'three';
 import { FiX, FiCheck } from 'react-icons/fi';
 import { Hourglass } from 'lucide-react';
 import { fetchPublicProject, isPublicProjectRoute } from '../../utils/publicProjectShare';
+import {
+  extractVideoFrames,
+  isProcessingLikeStatus,
+  isQueueLikeStatus,
+  pollFrameExtractionQueueUntilDone,
+} from '../../services/aiReconstructionApi';
+import {
+  generateVideoProject,
+  pollProjectFramesUntilReady,
+  submitVideoPublicUrl,
+} from '../../services/videoProjectApi';
 
 const hasProjectFeedback = (value) =>
   value === true || value === 1 || value === '1';
 
+const PROJECT_POLL_INTERVAL_MS = 5000;
+// Video models can take ~45–60+ minutes; keep polling without killing the queue UI.
+const PROJECT_POLL_SOFT_WARN_MS = 60 * 60 * 1000; // 1 hour — toast only
+const PROJECT_POLL_MAX_DURATION_MS = 6 * 60 * 60 * 1000; // 6 hours hard stop
+const PROJECT_TERMINAL_STATUSES = new Set([
+  'completed',
+  'failed',
+  'error',
+  'cancelled',
+  'canceled',
+]);
+const PROJECT_FAILED_STATUSES = new Set(['failed', 'error', 'cancelled', 'canceled']);
+
+const projectStatusStepMap = {
+  submitted: 1,
+  pending: 2,
+  in_queue: 2,
+  processing: 3,
+  completed: 4,
+};
+
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 const ModelGenerator = ({ isDarkMode = false }) => {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const { activeCreationWorkspaceId, assignProjectToWorkspace } = useWorkspace();
   const navigate = useNavigate();
   const location = useLocation();
   const { slug: publicSlug } = useParams();
   const isPublicView = isPublicProjectRoute(location.pathname) && Boolean(publicSlug);
   const isPublicGuestView = isPublicView && !token;
-  const { queue_system, frame_extraction, clearActiveQueueRegistration } = useSocket();
-  const { fcmToken, notifications } = useNotification();
+  const { queue_system, clearActiveQueueRegistration } = useSocket();
+  const { fcmToken } = useNotification();
 
   const [prompt, setPrompt] = useState('');
   const [images, setImages] = useState([]);
@@ -67,12 +101,13 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   const [currentStep, setCurrentStep] = useState(1);
 
   const [videoFileName, setVideoFileName] = useState('');
-  const [videoLoading, setVideoLoading] = useState(false);
+  const [aiExtractJobId, setAiExtractJobId] = useState(null);
+  const [aiVideoCloudinaryUrl, setAiVideoCloudinaryUrl] = useState(null);
+  const [videoFrameItems, setVideoFrameItems] = useState([]);
   const [videoFrames, setVideoFrames] = useState([]);
   const [showVideoFrames, setShowVideoFrames] = useState(false);
-  const [videoProjectToken, setVideoProjectToken] = useState(null);
   const [removedFrames, setRemovedFrames] = useState([]);
-  const [showCookingLoader, setShowCookingLoader] = useState(false);
+  const [isExtractingFrames, setIsExtractingFrames] = useState(false);
   const [isActuallyRendered, setIsActuallyRendered] = useState(false);
   const [comingSoonModalOpen, setComingSoonModalOpen] = useState(false);
   const [comingSoonFeature, setComingSoonFeature] = useState('');
@@ -80,6 +115,8 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   const socketRef = useRef(null);
   const shouldShowReviewRef = useRef(false);
   const openedFromRecentRef = useRef(false);
+  const activeProjectPollRef = useRef(null);
+  const projectPollGenerationRef = useRef(0);
 
   const [historyData, setHistoryData] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(false);
@@ -384,7 +421,13 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     });
   }, []);
 
-  const isProcessing = isGenerating || showSuccessUI || showQueueUI || showLoadingUI || isArrowLoading || videoLoading;
+  const isProcessing =
+    isGenerating ||
+    isExtractingFrames ||
+    showSuccessUI ||
+    showQueueUI ||
+    showLoadingUI ||
+    isArrowLoading;
   const isCancelled = projectStatus === 'canceled' || projectStatus === 'cancelled';
 
   // fetch recent projects model
@@ -403,7 +446,8 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       }
 
       setIsViewOnly(true);
-      setIsUserOwnedProject(false);
+      setIsUserOwnedProject(true);
+      setActiveTab('transform');
       setProjectToken(projectId);
       fetchInitialProject(projectId);
 
@@ -412,18 +456,51 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   }, [location]);
 
   const fetchInitialProject = async (projectId) => {
-    try {
-      console.log('Fetching project details:', projectId);
+    const pollGeneration = projectPollGenerationRef.current + 1;
+    projectPollGenerationRef.current = pollGeneration;
+    activeProjectPollRef.current = projectId;
 
+    const isStalePoll = () =>
+      projectPollGenerationRef.current !== pollGeneration || activeProjectPollRef.current !== projectId;
+
+    const applyProjectDetail = (proj) => {
+      setProjectStatus(proj.status);
+      setGeneratedPrompt(proj.prompt || proj.name || 'Project');
+      if (proj.type) {
+        setProjectType(proj.type);
+      }
+
+      setCurrentStep(projectStatusStepMap[proj.status] || 1);
+
+      if (proj.status === 'pending' || proj.status === 'in_queue' || proj.status === 'submitted') {
+        setShowQueueUI(true);
+        setShowLoadingUI(false);
+        setShowBlackOverlay(false);
+      } else if (proj.status === 'processing') {
+        setShowQueueUI(false);
+        setShowLoadingUI(true);
+        setShowBlackOverlay(true);
+      }
+    };
+
+    const pollProjectDetailOnce = async () => {
       const res = await axios.get(`${baseURL}/project/detail/${projectId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       const proj = res.data?.data;
-
       if (!proj) {
         throw new Error('Project not found');
       }
+
+      return proj;
+    };
+
+    try {
+      console.log('Fetching project details:', projectId);
+
+      let proj = await pollProjectDetailOnce();
+      if (isStalePoll()) return;
 
       console.log('Project data:', proj);
 
@@ -432,42 +509,78 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       }
       openedFromRecentRef.current = false;
 
-      setProjectStatus(proj.status);
-      setGeneratedPrompt(proj.prompt || proj.name || 'Project');
-      if (proj.type) {
-        setProjectType(proj.type);
-      }
-
-      const statusMap = {
-        submitted: 1,
-        pending: 2,
-        in_queue: 2,
-        processing: 3,
-        completed: 4,
-      };
-      setCurrentStep(statusMap[proj.status] || 1);
+      applyProjectDetail(proj);
 
       if (proj.status === 'completed') {
         await fetchModelUrl(projectId);
-      } else if (proj.status === 'pending' || proj.status === 'in_queue' || proj.status === 'submitted') {
-        setShowQueueUI(true);
-        queue_system(projectId, fcmToken);
-      } else if (proj.status === 'processing') {
-        setShowLoadingUI(true);
-        setShowBlackOverlay(true);
-        setProgress(0);
-        queue_system(projectId, fcmToken);
+        return;
       }
 
+      if (PROJECT_FAILED_STATUSES.has(proj.status)) {
+        throw new Error('Project generation failed');
+      }
+
+      queue_system(projectId, fcmToken);
+
+      let status = proj.status;
+      const pollStartedAt = Date.now();
+      let softWarnShown = false;
+
+      while (!PROJECT_TERMINAL_STATUSES.has(status)) {
+        const elapsed = Date.now() - pollStartedAt;
+
+        if (!softWarnShown && elapsed > PROJECT_POLL_SOFT_WARN_MS) {
+          softWarnShown = true;
+          toast.info(
+            'Still generating your model. This can take around 45–60 minutes — keep this tab open.',
+            { autoClose: 8000 },
+          );
+        }
+
+        if (elapsed > PROJECT_POLL_MAX_DURATION_MS) {
+          // Do not clear queue UI as a hard failure — model may still finish in History.
+          toast.warn(
+            'Still waiting after a long time. Keep checking History — generation may continue in the background.',
+            { autoClose: 10000 },
+          );
+          return;
+        }
+
+        await delay(PROJECT_POLL_INTERVAL_MS);
+        if (isStalePoll()) return;
+
+        try {
+          proj = await pollProjectDetailOnce();
+        } catch (pollErr) {
+          // Transient network errors should not stop a 45–60 min generation wait.
+          console.warn('Project detail poll failed, retrying...', pollErr);
+          continue;
+        }
+
+        if (isStalePoll()) return;
+
+        console.log('Project poll update:', proj.status);
+        applyProjectDetail(proj);
+        status = proj.status;
+      }
+
+      if (status === 'completed') {
+        await fetchModelUrl(projectId);
+      } else {
+        throw new Error('Project generation failed');
+      }
     } catch (err) {
       console.error('Failed to fetch project:', err);
-      toast.error('Failed to load project');
+      toast.error(err?.response?.data?.message || err.message || 'Failed to load project');
       setShowLoadingUI(false);
       setShowBlackOverlay(false);
+      setShowQueueUI(false);
       openedFromRecentRef.current = false;
     } finally {
-      setIsGenerating(false);
-      setIsArrowLoading(false);
+      if (!isStalePoll()) {
+        setIsGenerating(false);
+        setIsArrowLoading(false);
+      }
     }
   };
 
@@ -576,19 +689,6 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   }, [queueData, projectToken]);
 
   useEffect(() => {
-    if (!notifications || !videoProjectToken) return;
-
-    const extractionNotif = notifications.find(
-      (notif) => notif?.message?.toLowerCase().includes('extraction')
-    );
-
-    if (extractionNotif) {
-      setShowCookingLoader(true);
-      fetchFrames(videoProjectToken);
-    }
-  }, [notifications, videoProjectToken]);
-
-  useEffect(() => {
     const handleProjectCompleteNotification = (event) => {
       console.log('Project processing complete notification received:', event.detail);
       if (projectToken) {
@@ -603,15 +703,22 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   }, [projectToken]);
 
   const resetAllInputs = useCallback(() => {
+    projectPollGenerationRef.current += 1;
+    activeProjectPollRef.current = null;
     setPrompt('');
     setImages([]);
     setImageFiles([]);
     setSingleImageName('');
     setSingleImageFile(null);
     setVideo(null);
+    setVideoFileName('');
+    setAiExtractJobId(null);
+    setAiVideoCloudinaryUrl(null);
+    setVideoFrameItems([]);
     setVideoFrames([]);
     setRemovedFrames([]);
     setShowVideoFrames(false);
+    setIsExtractingFrames(false);
     setProjectToken(null);
     setProjectStatus('pending');
     setModelUrl(null);
@@ -697,15 +804,27 @@ const ModelGenerator = ({ isDarkMode = false }) => {
 
   const adjustUrlForLocalhost = (url) => {
     if (!url) return url;
-    if (
-      (window.location.hostname === 'localhost' ||
-        window.location.hostname === '127.0.0.1' ||
-        window.location.hostname === '0.0.0.0' ||
-        window.location.port === '3000') &&
-      url.includes('ai3dscanning-crm.s3.ap-south-1.amazonaws.com')
-    ) {
+
+    const isLocal =
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1' ||
+      window.location.hostname === '0.0.0.0' ||
+      window.location.port === '3000';
+
+    if (!isLocal) return url;
+
+    // Preserve signed host so AWS signature stays valid; proxy only to bypass CORS in local.
+    if (url.includes('ai3dscannning-crm.s3.ap-south-1.amazonaws.com')) {
+      return url.replace(
+        'https://ai3dscannning-crm.s3.ap-south-1.amazonaws.com',
+        '/s3-proxy-typo',
+      );
+    }
+
+    if (url.includes('ai3dscanning-crm.s3.ap-south-1.amazonaws.com')) {
       return url.replace('https://ai3dscanning-crm.s3.ap-south-1.amazonaws.com', '/s3-proxy');
     }
+
     return url;
   };
 
@@ -965,6 +1084,25 @@ const ModelGenerator = ({ isDarkMode = false }) => {
 
   const handleGenerate = async () => {
     if (isProcessing || isViewOnly) return;
+
+    if (showVideoFrames && videoFrames.length > 0) {
+      const activeFrameCount = videoFrames.length - removedFrames.length;
+      if (activeFrameCount < 2) {
+        toast.error('Please keep at least 2 frames');
+        return;
+      }
+
+      try {
+        setIsGenerating(true);
+        await handleGenerateFromFrames();
+      } catch (err) {
+        console.error(err);
+        toast.error(err?.response?.data?.message || err.message || 'Generation failed');
+        setIsGenerating(false);
+      }
+      return;
+    }
+
     if (!prompt.trim() && images.length === 0 && !video) return;
 
     scrollToModelViewport();
@@ -1023,6 +1161,11 @@ const ModelGenerator = ({ isDarkMode = false }) => {
         setGeneratedPrompt('Multiple Images');
         startGenerationFlow(token_id);
       }
+      /*
+      else if (video) {
+        await handleVideoFrameExtraction();
+      }
+      */
     } catch (err) {
       console.error(err);
       toast.error(err?.response?.data?.message || 'Generation failed');
@@ -1030,6 +1173,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     }
   };
 
+  /*
   const uploadToCloudinary = async (file) => {
     const formData = new FormData();
     formData.append('file', file);
@@ -1042,110 +1186,148 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       body: formData,
     });
 
-    const data = await response.json();
-    return data.secure_url;
-  };
-
-  const sendVideo = async (cloudinaryUrl) => {
-    try {
-      const res = await axios.post(
-        `${baseURL}/projects/video/url`,
-        { publicUrl: cloudinaryUrl },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      return {
-        success: true,
-        token: res.data.token,
-        publicUrl: cloudinaryUrl,
-      };
-    } catch (err) {
-      console.error(err);
-      toast.error('Video processing failed');
-      return { success: false };
+    if (!response.ok) {
+      throw new Error('Cloudinary upload failed');
     }
+
+    const data = await response.json();
+    // AI API swagger example uses Cloudinary `url` (http); fallback to secure_url.
+    return data.url || data.secure_url;
   };
 
-  const handleVideoSubmit = async () => {
+  const handleVideoFrameExtraction = async () => {
     if (!video) {
       toast.error('Please select a video');
+      setIsGenerating(false);
       return;
     }
 
-    setVideoLoading(true);
-    setShowCookingLoader(true);
+    const videoName = video.name;
 
-    const cloudinaryUrl = await uploadToCloudinary(video);
-    if (!cloudinaryUrl) {
-      setVideoLoading(false);
-      setShowCookingLoader(false);
-      return;
-    }
+    setIsExtractingFrames(true);
+    setProjectType('video_to_3d');
+    setGeneratedPrompt(videoName);
+    setShowQueueUI(true);
+    setShowLoadingUI(false);
+    setShowBlackOverlay(false);
+    setCurrentStep(2);
+    scrollToModelViewport();
 
-    const result = await sendVideo(cloudinaryUrl);
-
-    if (result.success) {
-      setVideoProjectToken(result.token);
-      if (fcmToken) {
-        frame_extraction(result.token, fcmToken);
-      }
-    }
-
-    setVideo(null);
-    setVideoFileName('');
-    setVideoLoading(false);
-  };
-
-  const fetchFrames = async (projectToken) => {
     try {
-      const response = await axios.post(
-        `${baseURL}/projects/frames`,
-        { token: projectToken },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      if (response.data.images?.length) {
-        const frameUrls = response.data.images.map(img => img.temp_url);
-        setVideoFrames(frameUrls);
-        setShowVideoFrames(true);
-        setShowCookingLoader(false);
-        toast.success('Frames extracted successfully!');
+      const cloudinaryUrl = await uploadToCloudinary(video);
+      if (!cloudinaryUrl) {
+        throw new Error('Video upload failed');
       }
+
+      const { token: sessionToken } = await submitVideoPublicUrl(cloudinaryUrl, token);
+      setAiExtractJobId(sessionToken);
+      setAiVideoCloudinaryUrl(cloudinaryUrl);
+
+      await extractVideoFrames({
+        link: cloudinaryUrl,
+        id: sessionToken,
+        is_production: 1,
+      });
+
+      await pollFrameExtractionQueueUntilDone(sessionToken, {
+        onProgress: (_match, status, queuePosition) => {
+          if (isQueueLikeStatus(status) || (queuePosition != null && queuePosition > 0)) {
+            setShowQueueUI(true);
+            setShowLoadingUI(false);
+            setShowBlackOverlay(false);
+            setCurrentStep(2);
+            if (queuePosition != null && queuePosition > 0) {
+              const queueProgress = Math.max(
+                5,
+                Math.min(35, Math.round(((60 - queuePosition) / 60) * 35)),
+              );
+              setProgress(queueProgress);
+            }
+            return;
+          }
+
+          if (isProcessingLikeStatus(status) || status === 'processing' || status === 'waiting') {
+            setShowQueueUI(false);
+            setShowLoadingUI(true);
+            setShowBlackOverlay(true);
+            setCurrentStep(3);
+          }
+        },
+      });
+
+      const frameItems = await pollProjectFramesUntilReady(sessionToken, token, {
+        onPending: (message) => {
+          const pendingMessage = String(message || '').toLowerCase();
+          if (
+            pendingMessage.includes('wait') ||
+            pendingMessage.includes('extract') ||
+            pendingMessage.includes('processing')
+          ) {
+            setShowQueueUI(false);
+            setShowLoadingUI(true);
+            setShowBlackOverlay(true);
+            setCurrentStep(3);
+          }
+        },
+        onFrameProgress: () => {
+          setShowQueueUI(false);
+          setShowLoadingUI(true);
+          setShowBlackOverlay(true);
+          setCurrentStep(3);
+        },
+      });
+
+      setVideoFrameItems(frameItems);
+      setVideoFrames(frameItems.map((frame) => frame.temp_url));
+      setRemovedFrames([]);
+      setShowVideoFrames(true);
+      setVideo(null);
+      setVideoFileName(videoName);
+      setShowQueueUI(false);
+      setShowLoadingUI(false);
+      setShowBlackOverlay(false);
+      toast.success('Frames extracted! Remove unwanted frames, then click Generate.');
     } catch (err) {
-      toast.error('Failed to fetch frames');
-      setShowCookingLoader(false);
+      console.error(err);
+      const errMsg =
+        err?.response?.data?.message || err.message || 'Failed to extract video frames';
+      toast.error(errMsg);
+      setShowQueueUI(false);
+      setShowLoadingUI(false);
+      setShowBlackOverlay(false);
+    } finally {
+      setIsExtractingFrames(false);
+      setIsGenerating(false);
     }
   };
 
   const handleGenerateFromFrames = async () => {
-    if (!videoProjectToken) {
-      toast.error('Project token missing');
-      return;
+    if (!aiExtractJobId) {
+      throw new Error('Video job id missing');
+    }
+
+    const activeFrameCount = videoFrameItems.length - removedFrames.length;
+    if (activeFrameCount < 2) {
+      throw new Error('Please keep at least 2 frames');
     }
 
     scrollToModelViewport();
+    shouldShowReviewRef.current = true;
+    setIsUserOwnedProject(true);
+    setProjectType('video_to_3d');
+    setCurrentStep(1);
 
-    try {
-      setIsGenerating(true);
-      const response = await axios.post(
-        `${baseURL}/projects/video/generate`,
-        { token: videoProjectToken, paths: removedFrames },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+    const newToken = await generateVideoProject(aiExtractJobId, [], token);
 
-      const newToken = response.data.token;
-      if (newToken) {
-        setProjectToken(newToken);
-        setProjectType('video_to_3d');
-        setGeneratedPrompt('Video Frames');
-        startGenerationFlow(newToken);
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error('Frame generation failed');
-      setIsGenerating(false);
-    }
+    setProjectToken(newToken);
+    setShowVideoFrames(false);
+    setVideoFrameItems([]);
+    setVideoFrames([]);
+    setRemovedFrames([]);
+    setIsGenerating(false);
+    startGenerationFlow(newToken);
   };
+  */
 
   const startGenerationFlow = (tokenId) => {
     shouldShowReviewRef.current = true;
@@ -1340,30 +1522,6 @@ const ModelGenerator = ({ isDarkMode = false }) => {
 
   return (
     <div className="main-wrapper">
-      {showCookingLoader && !showVideoFrames && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,0.8)',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 9999,
-          }}
-        >
-          <div
-            style={{
-              width: 'clamp(120px, 25vw, 200px)',
-              height: 'clamp(120px, 25vw, 200px)',
-            }}
-            ref={lottieRef}
-          ></div>
-          <p style={{ color: '#fff', marginTop: '20px' }}>Extracting frames...</p>
-        </div>
-      )}
-
       <div className="container-fluid pe-md-3 p-0">
         <div className={`row g-0 scan-layout-row${isPublicView ? ' scan-public-view' : ''}`}>
           {!isPublicView && (
@@ -1393,19 +1551,20 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             isEnhancing={isEnhancing}
             handleEnhancePrompt={handleEnhancePrompt}
             originalPrompt={originalPrompt}
-            videoFrames={videoFrames}
             showVideoFrames={showVideoFrames}
-            removedFrames={removedFrames}
             setRemovedFrames={setRemovedFrames}
-            handleGenerateFromFrames={handleGenerateFromFrames}
+            setShowVideoFrames={setShowVideoFrames}
+            setVideoFrames={setVideoFrames}
+            setAiExtractJobId={setAiExtractJobId}
+            setVideoFrameItems={setVideoFrameItems}
             videoFileName={videoFileName}
             setVideoFileName={setVideoFileName}
-            videoLoading={videoLoading}
-            handleVideoSubmit={handleVideoSubmit}
+            isExtractingFrames={isExtractingFrames}
             onShowComingSoon={(feature) => {
               setComingSoonFeature(feature);
               setComingSoonModalOpen(true);
             }}
+            userEmail={user?.email}
           />
           )}
 
@@ -1444,6 +1603,17 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             onViewportHelp={handleViewportHelp}
             onViewportScreenshot={handleViewportScreenshot}
             onResetTransform={handleResetTransform}
+            showVideoFrames={showVideoFrames}
+            videoFrames={videoFrames}
+            removedFrames={removedFrames}
+            setRemovedFrames={setRemovedFrames}
+            videoFileName={videoFileName}
+            handleGenerate={handleGenerate}
+            isProcessing={isProcessing}
+            isViewOnly={isViewOnly}
+            isExtractingFrames={isExtractingFrames}
+            isGenerating={isGenerating}
+            isArrowLoading={isArrowLoading}
           />
           <RightScan
             activeTab={activeTab}

@@ -1070,7 +1070,7 @@ const LandingPage = () => {
             >
               <div className="d-flex justify-content-between align-items-center">
                 <Link to="/" className="a3d-header-logo-link">
-                  <img src={logo} alt="AI 3D Scanning Logo" className="a3d-header-logo" />
+                  <img src={logo} alt="AI 3D Scanning Logo" className="a3d-header-logo" width="210" height="64" fetchpriority="high" decoding="async" />
                 </Link>
 
                 {/* Menu Button for Mobile */}
@@ -1079,8 +1079,11 @@ const LandingPage = () => {
                   className="navbar-toggler d-lg-none border-0"
                   type="button"
                   onClick={() => setIsOpen(true)}
+                  aria-label="Open navigation menu"
+                  aria-expanded={isOpen}
+                  aria-controls="mobile-sidebar-nav"
                 >
-                  <i className="fas fa-bars" />
+                  <i className="fas fa-bars" aria-hidden="true" />
                 </button>
 
                 {/* Desktop Nav */}
@@ -1136,8 +1139,8 @@ const LandingPage = () => {
                 </div> */}
 
                 <div className="d-none d-lg-flex gap-2 align-items-center">
-                  <Link to="/book-demo">
-                    <button className="a3d-book-demo-btn">Book a Demo</button>
+                  <Link to="/book-demo" className="a3d-book-demo-btn">
+                    Book a Demo
                   </Link>
                   <JoinPlatformCta onWaitlistOpen={() => setIsWaitlistOpen(true)} />
                 </div>
@@ -1150,7 +1153,7 @@ const LandingPage = () => {
             <div className={`mobile-sidebar ${isOpen ? 'open' : ''}`}>
               <div className="sidebar-header d-flex justify-content-between align-items-center px-3 py-2">
                 <Link to="/" className="a3d-header-logo-link">
-                  <img src={logo} alt="AI 3D Scanning Logo" className="a3d-header-logo" />
+                  <img src={logo} alt="AI 3D Scanning Logo" className="a3d-header-logo" width="210" height="64" loading="lazy" decoding="async" />
                 </Link>
 
                 <button
@@ -1161,7 +1164,7 @@ const LandingPage = () => {
                 />
               </div>
 
-              <nav className="d-flex flex-column gap-2 px-3 pb-3">
+              <nav id="mobile-sidebar-nav" className="d-flex flex-column gap-2 px-3 pb-3">
                 <Link
                   to="/"
                   className={`a3d-nav-link ${location.pathname === '/' ? 'active' : ''}`}
@@ -1211,8 +1214,8 @@ const LandingPage = () => {
                 </Link> */}
 
                 <div className="d-flex flex-column gap-2">
-                  <Link to="/book-demo">
-                    <button className="a3d-book-demo-btn">Book a Demo</button>
+                  <Link to="/book-demo" className="a3d-book-demo-btn">
+                    Book a Demo
                   </Link>
                   <JoinPlatformCta
                     onWaitlistOpen={() => setIsWaitlistOpen(true)}
@@ -1305,8 +1308,8 @@ const LandingPage = () => {
                   className="a3d-btn d-flex align-items-center gap-3 flex-wrap a3d-slide-up"
                   style={{ animationDelay: '0.2s' }}
                 >
-                  <Link to="/signin">
-                    <button className="a3d-join-btn">Log in for free</button>
+                  <Link to="/signin" className="a3d-join-btn">
+                    Log in for free
                   </Link>
                   {/* <Link to="/3dio/subscription"> */}
                   <Link to="/services">
@@ -1371,7 +1374,7 @@ const LandingPage = () => {
                       camera-orbit="0deg 90deg 9m"
                       field-of-view="29.68deg"
                       reveal="auto"
-                      loading="eager"
+                      loading="lazy"
                       style={{
                         width: '100%',
                         height: '100%',
@@ -1481,7 +1484,7 @@ const LandingPage = () => {
                       </p>
                       <div className="footer-wrapper">
                         <div className="service-footer">
-                          <Link to="/services" className="circle-btn" aria-label="arrow">
+                          <Link to="/services" className="circle-btn" aria-label="View all services">
                             <svg
                               viewBox="0 0 24 24"
                               width={18}
@@ -1505,7 +1508,7 @@ const LandingPage = () => {
                           </div>
                         </div>
                         <div className="card-icon" aria-hidden="true">
-                          <img src={design} alt="Service Icon" />
+                          <img src={design} alt="Service Icon" width="112" height="112" loading="lazy" decoding="async" />
                         </div>
                       </div>
                     </div>
@@ -1555,7 +1558,7 @@ const LandingPage = () => {
                           </div>
                         </div>
                         <div className="card-icon" aria-hidden="true">
-                          <img src={store} alt="Store Icon" />
+                          <img src={store} alt="Store Icon" width="112" height="112" loading="lazy" decoding="async" />
                         </div>
                       </div>
                     </div>
@@ -1579,7 +1582,7 @@ const LandingPage = () => {
                       </p>
                       <div className="footer-wrapper">
                         <div className="service-footer">
-                          <Link className="circle-btn" aria-label="arrow"  onClick={() => setIsWaitlistOpen(true)}>
+                          <Link className="circle-btn" aria-label="Join waitlist for 3D model generation" onClick={() => setIsWaitlistOpen(true)}>
                             <svg
                               viewBox="0 0 24 24"
                               width={18}
@@ -1603,7 +1606,7 @@ const LandingPage = () => {
                           </div>
                         </div>
                         <div className="card-icon" aria-hidden="true">
-                          <img src={Modling} alt="3D Modeling Icon" />
+                          <img src={Modling} alt="3D Modeling Icon" width="112" height="112" loading="lazy" decoding="async" />
                         </div>
                       </div>
                     </div>
@@ -1648,7 +1651,7 @@ const LandingPage = () => {
 
             <div className="business-section" id="aboutus">
               <div className="text-center mb-4">
-                <div className="business-title">Our Services for Businesses</div>
+                <h2 className="business-title">Our Services for Businesses</h2>
 
                 <h3 className="business-heading mb-1">Business to Business</h3>
 
@@ -1675,7 +1678,7 @@ const LandingPage = () => {
                     </div>
 
                     <div className="business-service-content">
-                      <h5>Gaming</h5>
+                      <h4>Gaming</h4>
 
                       <p>
                         Accelerate game development with instant AI powered 3D scanning - create
@@ -1698,7 +1701,7 @@ const LandingPage = () => {
                     </div>
 
                     <div className="business-service-content">
-                      <h5>Construction Rendering</h5>
+                      <h4>Construction Rendering</h4>
 
                       <p>
                         Streamline architectural visualization with AI generated, scalable 3D models
@@ -1721,7 +1724,7 @@ const LandingPage = () => {
                     </div>
 
                     <div className="business-service-content">
-                      <h5>Healthcare</h5>
+                      <h4>Healthcare</h4>
 
                       <p>
                         Enable precision healthcare with advanced 3D scanning - from custom
@@ -1744,7 +1747,7 @@ const LandingPage = () => {
                     </div>
 
                     <div className="business-service-content">
-                      <h5>E-commerce</h5>
+                      <h4>E-commerce</h4>
 
                       <p>
                         Increase online conversions with realistic 3D product displays and AR
@@ -1767,7 +1770,7 @@ const LandingPage = () => {
                     </div>
 
                     <div className="business-service-content">
-                      <h5>VR</h5>
+                      <h4>VR</h4>
 
                       <p>
                         Fuel next-gen VR experiences with AI-generated 3D environments, realistic
@@ -1789,7 +1792,7 @@ const LandingPage = () => {
                     </div>
 
                     <div className="business-service-content">
-                      <h5>Manufacturing</h5>
+                      <h4>Manufacturing</h4>
 
                       <p>
                         Optimize manufacturing workflows with instant 3D scanning for prototyping,
@@ -1824,6 +1827,10 @@ const LandingPage = () => {
                         src={mobile}
                         alt="Mobile Preview"
                         className="img leap-img me-md-4 mx-2"
+                        width="756"
+                        height="508"
+                        loading="lazy"
+                        decoding="async"
                       />
                       <div className="d-flex justify-content-center gap-0 mt-4 flex-wrap">
                         <button className="store-btn">
@@ -1989,13 +1996,13 @@ const LandingPage = () => {
                         <img src={scan} alt="" />
                       </div>
 
-                      <h5 className="scan_card_title">
+                      <h4 className="scan_card_title">
                         High-Precision
                         <span className="d-none d-lg-inline">
                           <br />
                         </span>
                         Scanning
-                      </h5>
+                      </h4>
 
                       <p className="scan_card_text">
                         Capture every detail with sub-millimeter accuracy. Our AI-driven scanning
@@ -2015,13 +2022,13 @@ const LandingPage = () => {
                         <img src={understand} alt="" />
                       </div>
 
-                      <h5 className="scan_card_title">
+                      <h4 className="scan_card_title">
                         AI Model
                         <span className="d-none d-lg-inline">
                           <br />
                         </span>
                         Processing
-                      </h5>
+                      </h4>
 
                       <p className="scan_card_text" style={{ padding: '0px 11px' }}>
                         Automatically optimize your 3D models with intelligent mesh generation,
@@ -2041,7 +2048,7 @@ const LandingPage = () => {
                         <img src={instant} alt="" />
                       </div>
 
-                      <h5 className="scan_card_title">Instant Results</h5>
+                      <h4 className="scan_card_title">Instant Results</h4>
 
                       <p className="scan_card_text" style={{ padding: '8px 0px 0px 1rem' }}>
                         No more waiting hours for rendering. Our scalable cloud infrastructure
@@ -2061,7 +2068,7 @@ const LandingPage = () => {
                         <img src={encripted} alt="" />
                       </div>
 
-                      <h5 className="scan_card_title">Enterprise Security</h5>
+                      <h4 className="scan_card_title">Enterprise Security</h4>
 
                       <p className="scan_card_text" style={{ padding: '8px 1.70rem 0px 0px' }}>
                         Your data is protected with bank-grade encryption, secure cloud storage, and
@@ -2099,11 +2106,15 @@ const LandingPage = () => {
             <p className="landing_subtitle">With top quality and high performance</p>
 
             <form onSubmit={(e) => e.preventDefault()} className="search_container mx-auto mt-2">
+              <label htmlFor="search-models" className="visually-hidden">
+                Search 3D models
+              </label>
               <div className="input_with_icon">
-                <img src={search} alt="Search" className="input_icon" />
+                <img src={search} alt="" aria-hidden="true" className="input_icon" />
 
                 <input
-                  type="text"
+                  id="search-models"
+                  type="search"
                   className="search_input"
                   placeholder="Search 3D Models"
                   value={searchQuery}
@@ -2111,8 +2122,8 @@ const LandingPage = () => {
                 />
               </div>
 
-              <button type="submit" className="search_button">
-                <FiArrowRight size={18} />
+              <button type="submit" className="search_button" aria-label="Search 3D models">
+                <FiArrowRight size={18} aria-hidden="true" />
               </button>
             </form>
           </div>
@@ -2168,6 +2179,10 @@ const LandingPage = () => {
                           src={imgUrl}
                           className="model_image"
                           alt={card.title}
+                          width="375"
+                          height="375"
+                          loading="lazy"
+                          decoding="async"
                           onError={(e) => (e.target.src = modelFallback)}
                         />
 
@@ -2177,8 +2192,12 @@ const LandingPage = () => {
                             {/* <span className="model_price">23K</span> */}
                           </div>
 
-                          <button className="model_card_button" onClick={(e) => { e.stopPropagation(); setSelectedModel(card); }}>
-                            <img src={modelButtonIcon} alt="Go" />
+                          <button
+                            className="model_card_button"
+                            aria-label={`View ${card.title} model`}
+                            onClick={(e) => { e.stopPropagation(); setSelectedModel(card); }}
+                          >
+                            <img src={modelButtonIcon} alt="" aria-hidden="true" />
                           </button>
                         </div>
                       </motion.div>
@@ -2189,12 +2208,16 @@ const LandingPage = () => {
 
               <div className="col-12 d-flex justify-content-end">
                 <button
+                  type="button"
                   className="toggle_arrow_btn1"
+                  aria-label={showAllModels ? 'Show fewer models' : 'Show more models'}
+                  aria-expanded={showAllModels}
                   onClick={() => setShowAllModels((prev) => !prev)}
                 >
                   <img
                     src={down}
                     alt=""
+                    aria-hidden="true"
                     style={{
                       width: 18,
                       marginTop: 6,
@@ -2221,7 +2244,7 @@ const LandingPage = () => {
                 <p className="api_subtitle">More than quality, we develop language API</p>
               </div>
 
-              <a href="#" className="api_button">
+              <a href="/services" className="api_button">
                 Connect API
               </a>
             </div>
@@ -2232,21 +2255,21 @@ const LandingPage = () => {
           <div className="logo_track">
             {[...Array(4)].map((_, i) => (
               <React.Fragment key={`logos-${i}`}>
-                <img src={googleStartups} alt="Google" />
+                <img src={googleStartups} alt="Google" loading="lazy" decoding="async" width="280" height="34" />
 
-                <img src={googleCloud} alt="Google Cloud" />
+                <img src={googleCloud} alt="Google Cloud" loading="lazy" decoding="async" width="280" height="71" />
 
-                <img src={pitb} alt="PITB" />
+                <img src={pitb} alt="PITB" loading="lazy" decoding="async" width="105" height="104" />
 
-                <img src={regionalPlan} alt="Regional Plan" />
+                <img src={regionalPlan} alt="Regional Plan" loading="lazy" decoding="async" width="165" height="57" />
 
-                <img src={consulting} alt="Consulting" />
+                <img src={consulting} alt="Consulting" loading="lazy" decoding="async" width="165" height="47" />
 
-                <img src={RR} alt="Vera AI" />
+                <img src={RR} alt="Vera AI" loading="lazy" decoding="async" width="105" height="104" />
 
-                <img src={nvidia} alt="NVIDIA" />
+                <img src={nvidia} alt="NVIDIA" loading="lazy" decoding="async" width="120" height="40" />
 
-                <img src={FW} alt="Frame wise" className='fram' />
+                <img src={FW} alt="Frame wise" className='fram' loading="lazy" decoding="async" width="105" height="104" />
               </React.Fragment>
             ))}
           </div>
@@ -2582,7 +2605,7 @@ const LandingPage = () => {
               <div className="accordion">
                 {faqs.map((faq, index) => (
                   <div className="accordion-item border-0 mb-3" key={index}>
-                    <h2 className="accordion-header justify">
+                    <h3 className="accordion-header justify">
                       <button
                         className={`accordion-button fw-semibold widthh ${openIndex === index ? '' : 'collapsed'
                           }`}
@@ -2615,7 +2638,7 @@ const LandingPage = () => {
                           ></i>
                         </span>
                       </button>
-                    </h2>
+                    </h3>
 
                     {openIndex === index && (
                       <div className="accordion-collapse show">
@@ -2674,7 +2697,7 @@ const LandingPage = () => {
               </div>
               {/* Image absolutely positioned, head outside card */}
               <div className="subscribe-img-wrapper">
-                <img src={manImage} alt="Newsletter illustration" className="subscribe-img" />
+                <img src={manImage} alt="Newsletter illustration" className="subscribe-img" width="393" height="390" loading="lazy" decoding="async" />
               </div>
             </div>
           </section>
@@ -2699,8 +2722,8 @@ const LandingPage = () => {
 
                   <div className="alldiv">
                     <div className="btn-wrapper">
-                      <Link to="/contributor/program">
-                        <button className="btn btn-custom Sell">Sell your 3D Models</button>
+                      <Link to="/contributor/program" className="btn btn-custom Sell">
+                        Sell your 3D Models
                       </Link>
                     </div>
 
@@ -2757,7 +2780,7 @@ const LandingPage = () => {
                   <ul className="mt-1">
                     {['Help Center', 'FAQ'].map((item) => (
                       <li key={item}>
-                        <a href={item === 'FAQ' ? '#FAQs' : '#help'}>
+                        <a href={item === 'FAQ' ? '#FAQs' : '/3dio/support'}>
                           <img
                             className="iconsize me-1"
                             src={arrow}
@@ -2834,10 +2857,8 @@ const LandingPage = () => {
                         <span className="colorc">Email: </span>
                         <br />
                         <a
-                          href="https://mail.google.com/mail/?view=cm&fs=1&to=contact@ai3dscanning.com"
-                          target="_blank"
+                          href="mailto:contact@ai3dscanning.com"
                           className="mt-1"
-                          rel="noopener noreferrer"
                         >
                           contact@ai3dscanning.com
                         </a>
@@ -2852,7 +2873,7 @@ const LandingPage = () => {
                       </li> */}
 
                       <li>
-                        <a href="#">
+                        <a href="tel:+923443228863">
                           <span className="colorc">Phone: </span>
                           <br />
                           <br />
@@ -2861,11 +2882,23 @@ const LandingPage = () => {
                       </li>
 
                       <li>
-                        <a href="#" className=" my-0">
+                        <address className="my-0">
                           <span className="colorc">Address: </span> <br />
-                          <br /> 3765 W Dublin Dr, Eagle, Idaho 83616, USA
-                        </a>
-                        <a href="#" className="mt-1">
+                          <br />
+                          <a
+                            href="https://maps.google.com/?q=3765+W+Dublin+Dr,+Eagle,+Idaho+83616,+USA"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            3765 W Dublin Dr, Eagle, Idaho 83616, USA
+                          </a>
+                        </address>
+                        <a
+                          href="https://maps.google.com/?q=H+167/B,+Gol+Chakar,+Sahiwal,+Pakistan+57000"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-1"
+                        >
                           H 167/B, Gol Chakar, Sahiwal, Pakistan 57000
                         </a>
                       </li>
@@ -2876,26 +2909,37 @@ const LandingPage = () => {
                     <a
                       href="https://www.facebook.com/share/1Bbvpcm4EU/?mibextid=wwXIfr"
                       target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Follow us on Facebook"
                     >
-                      <i className="bx bxl-facebook" />
+                      <i className="bx bxl-facebook" aria-hidden="true" />
                     </a>
 
-                    <a href="https://x.com/ai3dscanning" target="_blank">
-                      <i className="bx bxl-twitter" />
+                    <a
+                      href="https://x.com/ai3dscanning"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Follow us on X"
+                    >
+                      <i className="bx bxl-twitter" aria-hidden="true" />
                     </a>
 
                     <a
                       href="https://www.linkedin.com/company/ai3d-scanning-solutions-inc/"
                       target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Follow us on LinkedIn"
                     >
-                      <i className="bx bxl-linkedin" />
+                      <i className="bx bxl-linkedin" aria-hidden="true" />
                     </a>
 
                     <a
                       href="https://www.instagram.com/ai3d_scanning_solutions?igsh=MWd1bzRmaDBpcXcycg%3D%3D&utm_source=qr"
                       target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Follow us on Instagram"
                     >
-                      <i className="bx bxl-instagram" />
+                      <i className="bx bxl-instagram" aria-hidden="true" />
                     </a>
                   </div>
                 </div>
@@ -2905,26 +2949,37 @@ const LandingPage = () => {
                   <a
                     href="https://www.facebook.com/share/1Bbvpcm4EU/?mibextid=wwXIfr"
                     target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Follow us on Facebook"
                   >
-                    <i className="bx bxl-facebook" />
+                    <i className="bx bxl-facebook" aria-hidden="true" />
                   </a>
 
-                  <a href="https://x.com/ai3dscanning" target="_blank">
-                    <i className="bx bxl-twitter" />
+                  <a
+                    href="https://x.com/ai3dscanning"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Follow us on X"
+                  >
+                    <i className="bx bxl-twitter" aria-hidden="true" />
                   </a>
 
                   <a
                     href="https://www.linkedin.com/company/ai3d-scanning-solutions-inc/"
                     target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Follow us on LinkedIn"
                   >
-                    <i className="bx bxl-linkedin" />
+                    <i className="bx bxl-linkedin" aria-hidden="true" />
                   </a>
 
                   <a
                     href="https://www.instagram.com/ai3d_scanning_solutions?igsh=MWd1bzRmaDBpcXcycg%3D%3D&utm_source=qr"
                     target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Follow us on Instagram"
                   >
-                    <i className="bx bxl-instagram" />
+                    <i className="bx bxl-instagram" aria-hidden="true" />
                   </a>
                 </div>
               </div>
@@ -2939,8 +2994,10 @@ const LandingPage = () => {
 
       <AnimatePresence>
         {showScrollTop && (
-          <motion.div
+          <motion.button
+            type="button"
             className="scroll-to-top"
+            aria-label="Scroll to top"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
@@ -2964,8 +3021,8 @@ const LandingPage = () => {
               border: '2px solid white',
             }}
           >
-            <FaArrowUp color="white" size={20} />
-          </motion.div>
+            <FaArrowUp color="white" size={20} aria-hidden="true" />
+          </motion.button>
         )}
       </AnimatePresence>
 

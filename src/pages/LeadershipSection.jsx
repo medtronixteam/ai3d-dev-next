@@ -257,10 +257,10 @@ const LeadershipSection = () => {
 
         <div className="cc mt-4">
           <div className="icon-toggle-wrapper d-flex justify-content-center ">
-            <button type="button" id="prevBtn" className="icon-toggle-label btn btn-outline-primary">
+            <button type="button" id="prevBtn" className="icon-toggle-label btn btn-outline-primary" aria-label="Previous team member">
               <i className="fa fa-long-arrow-left" aria-hidden="true"></i>
             </button>
-            <button type="button" id="nextBtn" className="icon-toggle-label btn btn-outline-primary right">
+            <button type="button" id="nextBtn" className="icon-toggle-label btn btn-outline-primary right" aria-label="Next team member">
               <i className="fa fa-long-arrow-right" aria-hidden="true"></i>
             </button>
           </div>

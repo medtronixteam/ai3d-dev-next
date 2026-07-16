@@ -19,26 +19,26 @@ const CurrencyButton = () => (
 );
 
 const LangDropdownItem = () => (
-  <a className="dropdown-item black footer-dropdown-item" href="#">
+  <button type="button" className="dropdown-item black footer-dropdown-item">
     <img src={world} alt="World" className="footer-lang-icon" />
     <span className="footer-select-label">English</span>
     <span className="footer-select-chevron-spacer" aria-hidden="true" />
-  </a>
+  </button>
 );
 
 const CurrencyDropdownItem = () => (
-  <a className="dropdown-item black footer-dropdown-item" href="#">
+  <button type="button" className="dropdown-item black footer-dropdown-item">
     <span className="footer-currency-symbol">$</span>
     <span className="footer-select-label">USD</span>
     <span className="footer-select-chevron-spacer" aria-hidden="true" />
-  </a>
+  </button>
 );
 
 const FooterLangCurrency = () => (
   <>
     {/* Mobile Language Dropdown */}
     <div className="dropdown btn-wrapper footer-lang-dropdown d-lg-none d-md-none d-sm-none d-block">
-      <button className="btn english" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <button className="btn english" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Select language">
         <LangButton />
       </button>
       <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
@@ -50,7 +50,7 @@ const FooterLangCurrency = () => (
 
     {/* Mobile Currency Dropdown */}
     <div className="dropdown btn-wrapper footer-usd-dropdown d-lg-none d-md-none d-sm-none d-block">
-      <button className="btn usd" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <button className="btn usd" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Select currency">
         <CurrencyButton />
       </button>
       <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">
@@ -63,7 +63,7 @@ const FooterLangCurrency = () => (
     {/* Desktop Language + Currency */}
     <div className="d-flex gap-2 none footer-select-row">
       <div className="dropdown btn-wrapper none">
-        <button className="btn english" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <button className="btn english" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Select language">
           <LangButton />
         </button>
         <ul className="dropdown-menu menuo usd-tittle" data-bs-popper="static">
@@ -74,7 +74,7 @@ const FooterLangCurrency = () => (
       </div>
 
       <div className="dropdown btn-wrapper none">
-        <button className="btn usd" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <button className="btn usd" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Select currency">
           <CurrencyButton />
         </button>
         <ul className="dropdown-menu menu usd-tittle" data-bs-popper="static">

@@ -31,8 +31,31 @@ export default defineConfig({
         target: 'https://ai3dscanning-crm.s3.ap-south-1.amazonaws.com',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/s3-proxy/, ''),
-      }
+      },
+      // Backend sometimes returns triple-n bucket host; keep separate proxy for valid signatures.
+      '/s3-proxy-typo': {
+        target: 'https://ai3dscannning-crm.s3.ap-south-1.amazonaws.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/s3-proxy-typo/, ''),
+      },
+      '/ai-api': {
+        target: 'https://ai3d_api.ai3dscanning.com',
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/ai-api/, ''),
+      },
     }
+  },
+  build: {
+    cssCodeSplit: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'ui-vendor': ['framer-motion', 'react-toastify'],
+        },
+      },
+    },
   },
   preview: {
     port: 5000,

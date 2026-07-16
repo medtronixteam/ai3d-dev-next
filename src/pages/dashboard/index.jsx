@@ -41,6 +41,11 @@ import FavModels from '../../assets/icon/FavModels.svg';
 import axios from 'axios';
 import { FastAverageColor } from 'fast-average-color';
 import LoginPopup from '../../components/popup/LoginPopup';
+import ScanWelcomeModal from '../../components/popup/ScanWelcomeModal';
+import {
+  markScanWelcomeSeen,
+  shouldShowScanWelcome,
+} from '../../components/popup/scanWelcomeStorage';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { FiCamera, FiVideo, FiSquare } from 'react-icons/fi';
@@ -1350,7 +1355,7 @@ function ModernModal({
 }
 
 const Dashboard = () => {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const navigate = useNavigate();
   const [selectedType, setSelectedType] = useState(CATEGORIES[0].type);
   const [models, setModels] = useState([]);
@@ -1393,13 +1398,41 @@ const Dashboard = () => {
   const [cardBgColors, setCardBgColors] = useState({});
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [arSupported, setArSupported] = useState(false);
+  const [scanWelcomeOpen, setScanWelcomeOpen] = useState(false);
+  const exploreModelsRef = useRef(null);
   React.useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  useEffect(() => {
+    if (!token || !user?.email) return;
+    if (shouldShowScanWelcome(user.email)) {
+      setScanWelcomeOpen(true);
+    }
+  }, [token, user?.email]);
 
+  const handleWelcomeClose = () => {
+    markScanWelcomeSeen(user?.email);
+    setScanWelcomeOpen(false);
+  };
+
+  const handleWelcomeCreate = () => {
+    markScanWelcomeSeen(user?.email);
+    setScanWelcomeOpen(false);
+    navigate('/3dio/new/scan');
+  };
+
+  const handleWelcomeExplore = () => {
+    markScanWelcomeSeen(user?.email);
+    setScanWelcomeOpen(false);
+    setSelectedType('all');
+    setIsFavoriteModeActive(false);
+    window.setTimeout(() => {
+      exploreModelsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 150);
+  };
 
   useEffect(() => {
     // Add class to body
@@ -2048,7 +2081,7 @@ const Dashboard = () => {
       </section>
 
       {/* =================== Studio Section  ============= */}
-      <section className="studio-section" style={{ overflow: 'hidden' }}>
+      <section ref={exploreModelsRef} id="explore-models-section" className="studio-section" style={{ overflow: 'hidden' }}>
         <div className="container-section">
           {loading ? (
             <div className="dashboard-models-loader text-center my-5">
@@ -2578,6 +2611,13 @@ const Dashboard = () => {
           }}
         />
       )}
+
+      <ScanWelcomeModal
+        isOpen={scanWelcomeOpen}
+        onClose={handleWelcomeClose}
+        onCreateModel={handleWelcomeCreate}
+        onExploreModels={handleWelcomeExplore}
+      />
     </>
   );
 };

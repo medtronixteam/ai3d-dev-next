@@ -303,7 +303,6 @@ const routes = [
         ),
       },
       { path: '/reset-password', element: <ResetPassword /> },
-
       // 404 Page
       { path: '*', element: <Error404 /> },
     ],

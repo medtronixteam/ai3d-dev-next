@@ -135,12 +135,12 @@ const TestimonialSlider = () => {
         </div>
 
         <div className="testimonial-content-wrapper">
-          <button className="nav-btn" onClick={() => setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)}>❮</button>
+          <button type="button" className="nav-btn" aria-label="Previous testimonial" onClick={() => setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)}>❮</button>
           <div className="testimonial-text">
             <h4 style={{ color: '#df3c9c', marginBottom: '5px' }}>{testimonials[activeIndex].name}</h4>
             <p className="fade-in" key={activeIndex}>"{testimonials[activeIndex].text}"</p>
           </div>
-          <button className="nav-btn" onClick={() => setActiveIndex((prev) => (prev + 1) % testimonials.length)}>❯</button>
+          <button type="button" className="nav-btn" aria-label="Next testimonial" onClick={() => setActiveIndex((prev) => (prev + 1) % testimonials.length)}>❯</button>
         </div>
       </div>
     </section>

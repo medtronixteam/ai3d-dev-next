@@ -17,6 +17,11 @@ import ImgIcon from '../../pages/images/img-icon.svg';
 import Logo from '../../pages/images/logo.png';
 import SingleImgIcon from '../../pages/images/icons/single-img.svg';
 import WorkspaceSelect from '../workspace/WorkspaceSelect';
+import ImageUploadGuidelinesModal from '../popup/ImageUploadGuidelinesModal';
+import {
+  markImageGuidelinesDismissed,
+  shouldShowImageGuidelines,
+} from '../popup/imageGuidelinesStorage';
 
 const LeftScan = ({
   prompt,
@@ -44,22 +49,62 @@ const LeftScan = ({
   isEnhancing,
   handleEnhancePrompt,
   originalPrompt,
-  videoFrames,
   showVideoFrames,
-  removedFrames,
   setRemovedFrames,
-  handleGenerateFromFrames,
+  setShowVideoFrames,
+  setVideoFrames,
+  setAiExtractJobId,
+  setVideoFrameItems,
   videoFileName,
   setVideoFileName,
-  videoLoading,
-  handleVideoSubmit,
+  isExtractingFrames,
   onShowComingSoon,
+  userEmail,
 }) => {
   const singleImageInputRef = useRef(null);
   const imageInputRef = useRef(null);
   const videoInputRef = useRef(null);
   const scrollRef = useRef(null);
+  const pendingImagePickRef = useRef(false);
   const [singleImagePreview, setSingleImagePreview] = useState(null);
+  const [imageGuidelinesOpen, setImageGuidelinesOpen] = useState(false);
+
+  const openSingleImagePicker = () => {
+    singleImageInputRef.current?.click();
+  };
+
+  const handleSingleImageUploadClick = () => {
+    if (isProcessing || isViewOnly) return;
+    if (pendingImagePickRef.current) return;
+    if (shouldShowImageGuidelines(userEmail)) {
+      setImageGuidelinesOpen(true);
+      return;
+    }
+    openSingleImagePicker();
+  };
+
+  const handleImageGuidelinesClose = () => {
+    pendingImagePickRef.current = false;
+    setImageGuidelinesOpen(false);
+  };
+
+  const handleImageGuidelinesContinue = () => {
+    setImageGuidelinesOpen(false);
+    pendingImagePickRef.current = true;
+    requestAnimationFrame(() => {
+      openSingleImagePicker();
+    });
+  };
+
+  const handleImageGuidelinesDismissForever = () => {
+    markImageGuidelinesDismissed(userEmail);
+  };
+
+  useEffect(() => {
+    if (!singleImageFile) return;
+    pendingImagePickRef.current = false;
+    setImageGuidelinesOpen(false);
+  }, [singleImageFile]);
 
   useEffect(() => {
     if (!singleImageFile) {
@@ -94,6 +139,8 @@ const LeftScan = ({
   // url update
   const handleSingleImageChange = (e) => {
     if (isProcessing || isViewOnly) return;
+    pendingImagePickRef.current = false;
+    setImageGuidelinesOpen(false);
     const file = e.target.files?.[0];
     if (file) {
       setSingleImageName(file.name);
@@ -125,15 +172,40 @@ const LeftScan = ({
   };
 
   const handleVideoChange = (e) => {
+    /*
     if (isProcessing || isViewOnly) return;
     if (e.target.files && e.target.files[0]) {
+      setShowVideoFrames?.(false);
+      setVideoFrames?.([]);
+      setVideoFrameItems?.([]);
+      setRemovedFrames([]);
+      setAiExtractJobId?.(null);
       setVideo(e.target.files[0]);
+      setVideoFileName?.(e.target.files[0].name);
       setImages([]);
       setImageFiles([]);
       setSingleImageName('');
       setSingleImageFile(null);
     }
+    */
     e.target.value = '';
+  };
+
+  const handleRemoveVideo = (e) => {
+    e.stopPropagation();
+    /*
+    if (isProcessing || isViewOnly) return;
+    setVideo(null);
+    setVideoFileName?.('');
+    setShowVideoFrames?.(false);
+    setVideoFrames?.([]);
+    setVideoFrameItems?.([]);
+    setRemovedFrames([]);
+    setAiExtractJobId?.(null);
+    if (videoInputRef.current) {
+      videoInputRef.current.value = '';
+    }
+    */
   };
 
   const removeImage = (index) => {
@@ -184,7 +256,7 @@ const LeftScan = ({
           </div>
           <div
             className="banner-input rounded-pill d-flex align-items-center"
-            onClick={() => !(isProcessing || isViewOnly) && singleImageInputRef.current?.click()}
+            onClick={handleSingleImageUploadClick}
           >
             {singleImagePreview ? (
               <img
@@ -228,7 +300,7 @@ const LeftScan = ({
         </div>
 
         {/* PROMPT BOX */}
-        {!video && images.length === 0 && !singleImageName && (
+        {!video && images.length === 0 && !singleImageName && !showVideoFrames && (
           <div>
             <label className="fw-bold small mb-2">Prompt</label>
             {modelReady || (isViewOnly && generatedPrompt) ? (
@@ -271,7 +343,7 @@ const LeftScan = ({
           </div>
         )}
 
-        {!video && !prompt && !singleImageName && (
+        {!video && !prompt && !singleImageName && !showVideoFrames && (
           <>
             <label className="fw-bold small mb-2">
               Images <span className="text-muted">({images.length}/15)</span>
@@ -389,42 +461,63 @@ const LeftScan = ({
         )}
 
         {/* VIDEO SECTION */}
-        {!prompt && images.length === 0 && !singleImageName && (
+        {!prompt && images.length === 0 && !singleImageName && !showVideoFrames && (
           <>
             <label className="fw-bold small mb-2">Video</label>
             <div
-              className={`video-upload-zone border-dashed rounded-4 p-3 text-center mb-4 cursor-pointer ${isProcessing || isViewOnly ? 'pe-none opacity-50' : ''
+              className={`video-upload-zone border-dashed rounded-4 p-3 text-center mb-4 cursor-pointer position-relative ${isProcessing || isViewOnly ? 'pe-none opacity-50' : ''
                 }`}
               onClick={() => !(isProcessing || isViewOnly) && onShowComingSoon('Video to 3D')}
             >
+              {video && !isProcessing && !isViewOnly && (
+                <button
+                  type="button"
+                  className="video-upload-remove"
+                  onClick={handleRemoveVideo}
+                  aria-label="Remove video"
+                >
+                  <X size={12} />
+                </button>
+              )}
               <img
                 src={videoIcon}
                 alt="Video"
                 className="mb-2"
                 style={{ height: '28px', width: '28px' }}
               />
-              <p className="mb-0 fw-bold x-small">
+              <p
+                className="mb-0 fw-bold x-small video-upload-filename"
+                title={video ? video.name : undefined}
+              >
                 {video ? video.name : 'Click / Drag & Drop / Paste Video'}
               </p>
               <p className="text-muted xx-small mb-0">Supported: .mp4, .mov, .avi</p>
               <p className="text-muted xx-small">Max: 3 min</p>
-              <input
+              {/* <input
                 type="file"
                 hidden
                 ref={videoInputRef}
                 accept="video/*"
                 onChange={handleVideoChange}
-              />
+              /> */}
             </div>
           </>
         )}
 
+        {!showVideoFrames && (
         <button
           className="btn-generate w-100 py-2 shadow-sm fw-bold d-flex align-items-center justify-content-center"
-          onClick={() => singleImageName ? handleSingleImageGenerate() : handleGenerate()}
-          disabled={isProcessing || isViewOnly}
+          onClick={() => (singleImageName ? handleSingleImageGenerate() : handleGenerate())}
+          disabled={
+            isProcessing ||
+            isViewOnly
+          }
         >
-          {(isGenerating || isArrowLoading) ? (
+          {isExtractingFrames ? (
+            <>
+              <Loader2 size={16} className="me-2 animate-spin" /> Extracting frames...
+            </>
+          ) : (isGenerating || isArrowLoading) ? (
             <>
               <Loader2 size={16} className="me-2 animate-spin" /> Generating...
             </>
@@ -434,7 +527,15 @@ const LeftScan = ({
             </>
           )}
         </button>
+        )}
       </div>
+
+      <ImageUploadGuidelinesModal
+        isOpen={imageGuidelinesOpen}
+        onClose={handleImageGuidelinesClose}
+        onContinue={handleImageGuidelinesContinue}
+        onDismissForever={handleImageGuidelinesDismissForever}
+      />
     </div>
   );
 };

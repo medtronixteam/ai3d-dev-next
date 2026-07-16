@@ -26,6 +26,7 @@ import help from '../../pages/images/icons/help.png';
 import shadow from '../../pages/images/icons/shadow.png';
 import camera from '../../pages/images/icons/camera.png';
 import ModelViewer from './ModelViewer';
+import VideoFramesPanel from './VideoFramesPanel';
 
 const CenterScan = ({
   showLoadingUI,
@@ -61,6 +62,17 @@ const CenterScan = ({
   onResetTransform,
   expanded = false,
   hideContributorBanner = false,
+  showVideoFrames = false,
+  videoFrames = [],
+  removedFrames = [],
+  setRemovedFrames,
+  videoFileName = '',
+  handleGenerate,
+  isProcessing = false,
+  isViewOnly = false,
+  isExtractingFrames = false,
+  isGenerating = false,
+  isArrowLoading = false,
 }) => {
   const [isActuallyRendered, setIsActuallyRendered] = React.useState(false);
 
@@ -137,8 +149,9 @@ const CenterScan = ({
       >
         {showBlackOverlay && <div className="black-overlay fade-in"></div>}
         <div
-          className={`d-flex align-items-center justify-content-center px-3 center-card ${modelReady ? 'center-card--no-padding' : ''
-            }`}
+          className={`d-flex align-items-center justify-content-center px-3 center-card${
+            showVideoFrames && videoFrames.length > 0 ? ' center-card--frames' : ''
+          } ${modelReady ? 'center-card--no-padding' : ''}`}
         >
           {showLoadingUI ? (
             <div
@@ -226,6 +239,20 @@ const CenterScan = ({
                 <img src={sendCart} className="img-send-cart" alt="Icon" style={{ width: '160px' }} />
               </div>
             </div>
+          ) : showVideoFrames && videoFrames.length > 0 ? (
+            <VideoFramesPanel
+              videoFrames={videoFrames}
+              removedFrames={removedFrames}
+              setRemovedFrames={setRemovedFrames}
+              videoFileName={videoFileName}
+              handleGenerate={handleGenerate}
+              isProcessing={isProcessing}
+              isViewOnly={isViewOnly}
+              isExtractingFrames={isExtractingFrames}
+              isGenerating={isGenerating}
+              isArrowLoading={isArrowLoading}
+              variant="center"
+            />
           ) : modelReady && modelUrl ? (
             <div className="viewport-section w-100">
               <div className="viewport-content">

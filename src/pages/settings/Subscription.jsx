@@ -27,13 +27,19 @@ import CustomLoader from '../../components/loader/CustomLoader';
 import SubscriptionModal from '../../components/popup/SubscriptionModal';
 import { baseURL } from '../../config';
 import { toast } from 'react-toastify';
+import { loadStripe } from '@stripe/stripe-js';
 import {
+  Elements,
   useStripe,
   useElements,
   CardNumberElement,
   CardExpiryElement,
   CardCvcElement,
 } from '@stripe/react-stripe-js';
+
+const stripePromise = loadStripe(
+  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_51Ro0YlQ70PrIzDS75v3YwqGKLv5FOgPCS9zckYEyRKv8PMfEa21B6RWFbX1bdRIYXwhrcbaw88c6DOlKStzuMdVR00tP56C98S'
+);
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import SkeletonLoader from '../../components/loader/SkeletonLoader';
 import SubscriptionLoader from '../../components/loader/SubscriptionLoader';
@@ -512,7 +518,13 @@ const Subscription = () => {
   */
 };
 
-export default Subscription;
+const SubscriptionSettingsWithStripe = (props) => (
+  <Elements stripe={stripePromise}>
+    <Subscription {...props} />
+  </Elements>
+);
+
+export default SubscriptionSettingsWithStripe;
 
 export const CancelPlanPopup = ({ onClose, subscriptionId, onConfirm }) => {
   const { token } = useAuth();

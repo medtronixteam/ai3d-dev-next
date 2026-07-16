@@ -63,45 +63,47 @@ const WorkspaceSelect = ({ disabled = false, className = '' }) => {
         <span className="workspace-select-optional">Optional</span>
       </div>
 
-      <button
-        type="button"
-        className={`workspace-select-field${isDisabled ? ' is-disabled' : ''}${open ? ' is-open' : ''}`}
-        disabled={isDisabled}
-        aria-expanded={open}
-        aria-haspopup="listbox"
-        onClick={() => !isDisabled && setOpen((prev) => !prev)}
-      >
-        <span className="workspace-select-icon" aria-hidden="true">
-          <FiFolder size={15} />
-        </span>
+      <div className="workspace-select-control">
+        <button
+          type="button"
+          className={`workspace-select-field${isDisabled ? ' is-disabled' : ''}${open ? ' is-open' : ''}`}
+          disabled={isDisabled}
+          aria-expanded={open}
+          aria-haspopup="listbox"
+          onClick={() => !isDisabled && setOpen((prev) => !prev)}
+        >
+          <span className="workspace-select-icon" aria-hidden="true">
+            <FiFolder size={15} />
+          </span>
 
-        <span className="workspace-select-value">
-          {loading ? 'Loading...' : selectedLabel}
-        </span>
+          <span className="workspace-select-value">
+            {loading ? 'Loading...' : selectedLabel}
+          </span>
 
-        <FiChevronDown size={15} className="workspace-select-chevron" aria-hidden="true" />
-      </button>
+          <FiChevronDown size={15} className="workspace-select-chevron" aria-hidden="true" />
+        </button>
 
-      {open && !isDisabled && (
-        <div className="workspace-select-panel" role="listbox" aria-label="Save to workspace">
-          {options.map((option) => {
-            const isSelected = activeCreationWorkspaceId === option.value;
-            return (
-              <button
-                key={option.value || 'unassigned'}
-                type="button"
-                role="option"
-                aria-selected={isSelected}
-                className={`workspace-select-option${isSelected ? ' selected' : ''}`}
-                onClick={() => selectOption(option.value)}
-              >
-                <span className="workspace-select-option-label">{option.label}</span>
-                {isSelected && <FiCheck size={15} className="workspace-select-option-check" />}
-              </button>
-            );
-          })}
-        </div>
-      )}
+        {open && !isDisabled && (
+          <div className="workspace-select-panel" role="listbox" aria-label="Save to workspace">
+            {options.map((option) => {
+              const isSelected = activeCreationWorkspaceId === option.value;
+              return (
+                <button
+                  key={option.value || 'unassigned'}
+                  type="button"
+                  role="option"
+                  aria-selected={isSelected}
+                  className={`workspace-select-option${isSelected ? ' selected' : ''}`}
+                  onClick={() => selectOption(option.value)}
+                >
+                  <span className="workspace-select-option-label">{option.label}</span>
+                  {isSelected && <FiCheck size={15} className="workspace-select-option-check" />}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
 
       <p className="workspace-select-hint">
         {activeCreationWorkspaceId

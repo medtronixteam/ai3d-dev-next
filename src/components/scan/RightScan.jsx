@@ -8,7 +8,6 @@ import {
   Share2,
   Box,
   Clock,
-  Edit2,
   Image,
 } from 'lucide-react';
 import hugeiconsCrown from '../../pages/images/icons/hugeicons_crown-02.png';
@@ -833,14 +832,6 @@ const RightScan = ({
         <div className="library-card-tabs">
           {modelReady && isUserOwnedProject ? (
             <div className="export-button-bar">
-              <button
-                type="button"
-                className="export-action-btn small"
-                title="Edit"
-                aria-label="Edit"
-              >
-                <Edit2 size={14} className="action-icon" />
-              </button>
               <button
                 type="button"
                 className="export-action-btn small"

@@ -27,7 +27,7 @@ const JoinPlatformCta = ({
     if (token) {
       navigate(paths.dashboard);
     } else if (launched) {
-      navigate(paths.signup);
+      navigate(paths.dashboard);
     } else {
       onWaitlistOpen?.();
     }

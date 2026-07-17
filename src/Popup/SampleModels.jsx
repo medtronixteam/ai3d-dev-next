@@ -241,56 +241,55 @@ const SampleModels = ({ model, onClose }) => {
         </div>
 
         <div className="sm-viewer-area" style={{ background: VIEWER_BG }}>
-          {modelUrl && !loadError ? (
-            <>
-              {!modelLoaded && (
-                <div className="sm-viewer-loader">
-                  <div className="animated-loader">
-                    <div className="pan-container">
-                      <span
-                        className="loader-loader"
-                        style={{
-                          '--loader-image': imgUrl ? `url(${imgUrl})` : 'none',
-                        }}
-                      />
-                      <div className="fire">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                      </div>
-                    </div>
+          {!modelLoaded && !loadError && (
+            <div className="sm-viewer-loader">
+              <div className="animated-loader">
+                <div className="pan-container">
+                  <span
+                    className="loader-loader"
+                    style={{
+                      '--loader-image': imgUrl ? `url(${imgUrl})` : 'none',
+                    }}
+                  />
+                  <div className="fire">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
                   </div>
-                  <p className="sm-loader-caption">We are frying model for you 😋</p>
                 </div>
-              )}
+              </div>
+              <p className="sm-loader-caption">We are frying model for you 😋</p>
+            </div>
+          )}
 
-              <model-viewer
-                ref={viewerRefCallback}
-                key={modelUrl}
-                src={modelUrl}
-                ar
-                ar-modes="webxr scene-viewer quick-look"
-                camera-controls
-                auto-rotate
-                tone-mapping="commerce"
-                shadow-intensity="1"
-                shadow-softness="1"
-                exposure="1"
-                environment-image={MODEL_VIEWER_ENV}
-                autoplay
-                reveal="auto"
-                loading="eager"
-                interaction-prompt="none"
-                class="sm-model-viewer"
-                style={{
-                  opacity: modelLoaded ? 1 : 0,
-                  backgroundColor: VIEWER_BG,
-                }}
-              />
-            </>
-          ) : imgUrl ? (
+          {modelUrl && !loadError ? (
+            <model-viewer
+              ref={viewerRefCallback}
+              key={modelUrl}
+              src={modelUrl}
+              ar
+              ar-modes="webxr scene-viewer quick-look"
+              camera-controls
+              auto-rotate
+              tone-mapping="commerce"
+              shadow-intensity="1"
+              shadow-softness="1"
+              exposure="1"
+              environment-image={MODEL_VIEWER_ENV}
+              autoplay
+              reveal="auto"
+              loading="eager"
+              interaction-prompt="none"
+              class="sm-model-viewer"
+              style={{
+                opacity: modelLoaded ? 1 : 0,
+                backgroundColor: VIEWER_BG,
+                display: modelLoaded ? 'block' : 'none',
+              }}
+            />
+          ) : loadError && imgUrl ? (
             <div className="sm-img-fallback">
               {!imgLoaded && (
                 <div className="sm-img-loader-wrap">
@@ -304,7 +303,7 @@ const SampleModels = ({ model, onClose }) => {
                 style={{ display: imgLoaded ? 'block' : 'none' }}
               />
             </div>
-          ) : (
+          ) : loadError ? (
             <div className="sm-empty-state">
               <div className="sm-empty-icon">
                 <svg
@@ -322,9 +321,9 @@ const SampleModels = ({ model, onClose }) => {
                   <line x1="12" y1="22.08" x2="12" y2="12" />
                 </svg>
               </div>
-              <p>{loadError ? '3D preview could not be loaded' : 'No preview available'}</p>
+              <p>3D preview could not be loaded</p>
             </div>
-          )}
+          ) : null}
         </div>
 
         <div className="sm-reactions">

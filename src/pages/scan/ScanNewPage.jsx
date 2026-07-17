@@ -322,20 +322,15 @@ const ModelGenerator = ({ isDarkMode = false }) => {
         { headers: { Authorization: `Bearer ${token}` } },
       );
 
-      setShareMessage('Project shared successfully!');
-      setShareMessageType('success');
       toast.success('Project shared successfully!');
 
       setShareEmail('');
       setSelectedUser(null);
       setFoundUsers([]);
       setSearchPerformed(false);
-
-      setTimeout(() => {
-        setShareModalOpen(false);
-        setShareMessage('');
-        setShareMessageType('');
-      }, 1500);
+      setShareModalOpen(false);
+      setShareMessage('');
+      setShareMessageType('');
     } catch (error) {
       const errMsg = error.response?.data?.message || 'Failed to share project.';
       setShareMessage(errMsg);
@@ -459,6 +454,13 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     const pollGeneration = projectPollGenerationRef.current + 1;
     projectPollGenerationRef.current = pollGeneration;
     activeProjectPollRef.current = projectId;
+
+    // Reset UI states to loading for the new project fetch
+    setShowQueueUI(false);
+    setShowLoadingUI(true);
+    setShowBlackOverlay(true);
+    setModelReady(false);
+    setModelUrl(null);
 
     const isStalePoll = () =>
       projectPollGenerationRef.current !== pollGeneration || activeProjectPollRef.current !== projectId;

@@ -2,7 +2,8 @@
   display: flex;
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
+  height: 100vh !important;
+  overflow: hidden !important;
 }
 
 .main-layout > .main-content {
@@ -19,7 +20,7 @@
   padding:  0;
   overflow-x: hidden;
   overflow-y: auto;
-  height: 100vh;
+  height: 100%;
   position: relative;
   background-color: var(--body-bg);
   /* scrollbar-width: none; */

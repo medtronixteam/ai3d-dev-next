@@ -805,18 +805,15 @@ const RecentProjects = () => {
         { headers: { Authorization: `Bearer ${token}` } },
       );
 
-      setShareMessage('Project shared successfully!');
-      setShareMessageType('success');
+      toast.success('Project shared successfully!');
+      setShareModalOpen(false);
 
       setShareEmail('');
       setSelectedUser(null);
       setFoundUsers([]);
       setSearchPerformed(false);
-
-      setTimeout(() => {
-        setShareMessage('');
-        setShareMessageType('');
-      }, 2000);
+      setShareMessage('');
+      setShareMessageType('');
     } catch (error) {
       const errMsg = error.response?.data?.message || 'Failed to share project.';
       setShareMessage(errMsg);

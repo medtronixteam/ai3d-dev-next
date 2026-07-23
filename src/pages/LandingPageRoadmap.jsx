@@ -8,7 +8,7 @@ import Desktop from '../assets/images/desktop.png';
 import BetaRelease from '../assets/images/beta-release.png';
 import Public from '../assets/images/Public.png';
 
-let hasAnimatedGlobal = false;
+let hasAnimatedGlobal = true;
 
 const RoadmapSection = ({ elipse }) => {
     const roadmapData = [
@@ -46,13 +46,12 @@ const RoadmapSection = ({ elipse }) => {
         },
     ];
 
-    const sectionRef        = useRef(null);
-    const containerRef      = useRef(null);
-    const nodesRef          = useRef([]);
-    const autoAdvanceTimer  = useRef(null);
+    const sectionRef   = useRef(null);
+    const containerRef = useRef(null);
+    const nodesRef     = useRef([]);
 
-    const [activeIndex, setActiveIndex]         = useState(hasAnimatedGlobal ? 3 : -1);
-    const [isMobile, setIsMobile]               = useState(
+    const [activeIndex] = useState(3);
+    const [isMobile, setIsMobile] = useState(
         typeof window !== 'undefined' ? window.innerWidth <= 900 : false
     );
 
@@ -71,159 +70,48 @@ const RoadmapSection = ({ elipse }) => {
                         entry.target.classList.add('animate-in');
 
                         const snakePath = entry.target.querySelector('.snake-svg path');
-                        if (snakePath) setTimeout(() => { snakePath.style.strokeDashoffset = '0'; }, 300);
+                        if (snakePath) snakePath.style.strokeDashoffset = '0';
 
                         const startArrow = entry.target.querySelector('.start-arrow');
-                        if (startArrow) setTimeout(() => startArrow.classList.add('pulse'), 400);
+                        if (startArrow) startArrow.classList.add('pulse');
 
                         const endTarget = entry.target.querySelector('.end-target');
-                        if (endTarget) setTimeout(() => endTarget.classList.add('pulse-slow'), 500);
+                        if (endTarget) endTarget.classList.add('pulse-slow');
 
-                        if (isMobile) {
-                            nodesRef.current.forEach((node, i) => {
-                                if (node) setTimeout(() => node.classList.add('animate-in'), i * 100);
-                            });
-                        } else {
-                            if (!hasAnimatedGlobal) {
-                                entry.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                setTimeout(() => {
-                                    setActiveIndex(0);
-                                }, 300);
-                            }
-                        }
-                    } else {
-                        if (!isMobile && !hasAnimatedGlobal) {
-                            setActiveIndex(-1);
-                        }
+                        nodesRef.current.forEach((node) => {
+                            if (node) node.classList.add('animate-in');
+                        });
                     }
                 });
             },
-            { threshold: 0.2, rootMargin: '0px 0px -50px 0px' }
+            { threshold: 0.15 }
         );
 
         if (sectionRef.current) observer.observe(sectionRef.current);
         return () => {
             if (sectionRef.current) observer.unobserve(sectionRef.current);
         };
-    }, [isMobile]);
+    }, []);
 
-    // ─── SCROLL LOCK EFFECT ──────────────────────────────────────────────────
     useEffect(() => {
-        if (!isMobile && !hasAnimatedGlobal) {
-            if (activeIndex >= 0 && activeIndex < roadmapData.length - 1) {
-                document.body.style.overflow = 'hidden';
-            } else {
-                document.body.style.overflow = '';
-            }
-        }
-        return () => {
-            document.body.style.overflow = '';
-        };
-    }, [activeIndex, isMobile]);
-
-
-    // ─── DESKTOP SCROLL ───────────────────────────────────────────────────────
-    useEffect(() => {
-        if (!isMobile && !hasAnimatedGlobal) {
-            const getScrollParent = (node) => {
-                if (node == null) return null;
-                if (node.scrollHeight > node.clientHeight) {
-                    const overflowY = window.getComputedStyle(node).overflowY;
-                    if (overflowY === 'auto' || overflowY === 'scroll') return node;
-                }
-                return getScrollParent(node.parentNode);
-            };
-
-            const scrollContainer = getScrollParent(containerRef.current) || window;
-
-            const handleScroll = () => {
-                if (hasAnimatedGlobal) return;
-                if (!containerRef.current || !sectionRef.current) return;
-
-                const rect = containerRef.current.getBoundingClientRect();
-                const windowHeight = window.innerHeight;
-                const startOffset = windowHeight * 0.15;
-                const scrollableDistance = rect.height - windowHeight;
-
-                if (rect.top > startOffset + 50) {
-                    return;
-                }
-
-                let currentProgress = (startOffset - rect.top) / scrollableDistance;
-                currentProgress = Math.max(0, Math.min(1, currentProgress));
-
-                let scrollIndex = -1;
-                if (currentProgress >= 0)   scrollIndex = 0;
-                if (currentProgress > 0.20) scrollIndex = 1;
-                if (currentProgress > 0.45) scrollIndex = 2;
-                if (currentProgress > 0.70) scrollIndex = 3;
-
-                setActiveIndex((prev) => {
-                    const next = Math.max(prev, scrollIndex);
-                    if (next === 3) {
-                        hasAnimatedGlobal = true;
-                    }
-                    return next;
-                });
-            };
-
-            scrollContainer.addEventListener('scroll', handleScroll);
-            handleScroll();
-
-            return () => {
-                scrollContainer.removeEventListener('scroll', handleScroll);
-            };
-        }
-    }, [isMobile]);
-
-    // ─── AUTO-ADVANCE ─────────────────────────────────────────────────────────
-    useEffect(() => {
-        if (!isMobile && !hasAnimatedGlobal) {
-            if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
-
-            if (activeIndex >= 0 && activeIndex < roadmapData.length - 1) {
-                autoAdvanceTimer.current = setTimeout(() => {
-                    setActiveIndex((prev) => {
-                        const next = prev < roadmapData.length - 1 ? prev + 1 : prev;
-                        if (next === roadmapData.length - 1) {
-                            hasAnimatedGlobal = true;
-                        }
-                        return next;
-                    });
-                }, 1200);
-            }
-
-            return () => {
-                if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
-            };
-        }
-    }, [activeIndex, isMobile]);
-
-    // ─── activeIndex → node classes ───────────────────────────────────────────
-    useEffect(() => {
-        if (!isMobile) {
-            nodesRef.current.forEach((node, index) => {
-                if (node) {
-                    if (index <= activeIndex) node.classList.add('animate-in');
-                    else node.classList.remove('animate-in');
-                }
-            });
-        }
-    }, [activeIndex, isMobile]);
+        nodesRef.current.forEach((node) => {
+            if (node) node.classList.add('animate-in');
+        });
+    }, []);
 
     return (
         <div
             ref={containerRef}
             className="roadmap-sticky-wrapper"
-            style={{ height: isMobile || hasAnimatedGlobal ? 'auto' : '280vh', position: 'relative' }}
+            style={{ height: 'auto', position: 'relative' }}
         >
             <div
                 className="roadmap-sticky-content"
                 style={{
-                    position: isMobile || hasAnimatedGlobal ? 'relative' : 'sticky',
-                    top: isMobile || hasAnimatedGlobal ? 'auto' : '15vh',
-                    height: isMobile || hasAnimatedGlobal ? 'auto' : '70vh',
-                    padding: isMobile || hasAnimatedGlobal ? '80px 0' : '0',
+                    position: 'relative',
+                    top: 'auto',
+                    height: 'auto',
+                    padding: isMobile ? '60px 0' : '40px 0',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'center',

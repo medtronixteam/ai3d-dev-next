@@ -24,19 +24,13 @@ const JoinPlatformCta = ({
   }, []);
 
   const handleClick = (event) => {
-    if (token) {
-      navigate(paths.dashboard);
-    } else if (launched) {
-      navigate(paths.dashboard);
-    } else {
-      onWaitlistOpen?.();
-    }
+    navigate('/3dio/');
     onAfterClick?.(event);
   };
 
   return (
     <button type="button" className={className} onClick={handleClick} style={style} {...rest}>
-      {token || launched ? 'Join Platform' : 'Join Waitlist'}
+      Join Platform
     </button>
   );
 };

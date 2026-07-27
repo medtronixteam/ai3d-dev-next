@@ -1,0 +1,43 @@
+.public-project-page {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #f8f9fa;
+}
+
+.public-project-viewer-fullscreen {
+  width: 100%;
+  height: 100%;
+}
+
+.public-project-overlay {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  text-align: center;
+  color: #64748b;
+}
+
+.public-project-overlay--error p {
+  margin: 0;
+  max-width: 360px;
+  font-size: 0.9375rem;
+  color: #64748b;
+}
+
+.text-pink {
+  color: #de3996;
+}
+
+[data-theme='dark'] .public-project-page {
+  background: #110e20;
+}
+
+[data-theme='dark'] .public-project-overlay--error p {
+  color: #9a9ab0;
+}

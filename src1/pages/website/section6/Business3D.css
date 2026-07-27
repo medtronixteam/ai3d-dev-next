@@ -1,0 +1,73 @@
+.Business3D {
+padding: 30px;
+}
+.Business3D-box{
+  background-color: #c72f81;
+  color: white;
+  padding: 30px;
+  text-align: center;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  box-shadow: 0.5px 0px 5px rgb(255, 255, 255);
+}
+
+.Business3D h2 {
+  color: white;
+  font-size: 30px;
+}
+
+
+.Business3D button {
+  background-color: black;
+  color: white;
+  padding: 10px 25px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: none;
+  margin-top: 0.5rem;
+}
+
+.Business3D button:hover {
+  background-color: white;
+  color: black;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+  .Business3D {
+    padding: 15px;
+  }
+
+  .Business3D h2 {
+    font-size: 24px;
+  }
+
+
+  .Business3D button {
+    padding: 8px 20px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .Business3D {
+    padding: 10px;
+  }
+
+  .Business3D h2 {
+    font-size: 20px;
+  }
+  .Business3D h6 {
+    font-size: 12px;
+  }
+
+
+  .Business3D button {
+    padding: 6px 15px;
+    font-size: 12px;
+  }
+}

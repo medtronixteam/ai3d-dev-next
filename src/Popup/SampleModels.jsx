@@ -241,7 +241,7 @@ const SampleModels = ({ model, onClose }) => {
         </div>
 
         <div className="sm-viewer-area" style={{ background: VIEWER_BG }}>
-          {!modelLoaded && !loadError && (
+          {!modelLoaded && !loadError ? (
             <div className="sm-viewer-loader">
               <div className="animated-loader">
                 <div className="pan-container">
@@ -262,7 +262,7 @@ const SampleModels = ({ model, onClose }) => {
               </div>
               <p className="sm-loader-caption">We are frying model for you 😋</p>
             </div>
-          )}
+          ) : null}
 
           {modelUrl && !loadError ? (
             <model-viewer
@@ -286,7 +286,6 @@ const SampleModels = ({ model, onClose }) => {
               style={{
                 opacity: modelLoaded ? 1 : 0,
                 backgroundColor: VIEWER_BG,
-                display: modelLoaded ? 'block' : 'none',
               }}
             />
           ) : loadError && imgUrl ? (
@@ -303,7 +302,7 @@ const SampleModels = ({ model, onClose }) => {
                 style={{ display: imgLoaded ? 'block' : 'none' }}
               />
             </div>
-          ) : loadError ? (
+          ) : (
             <div className="sm-empty-state">
               <div className="sm-empty-icon">
                 <svg
@@ -321,9 +320,9 @@ const SampleModels = ({ model, onClose }) => {
                   <line x1="12" y1="22.08" x2="12" y2="12" />
                 </svg>
               </div>
-              <p>3D preview could not be loaded</p>
+              <p>{loadError ? '3D preview could not be loaded' : 'No preview available'}</p>
             </div>
-          ) : null}
+          )}
         </div>
 
         <div className="sm-reactions">

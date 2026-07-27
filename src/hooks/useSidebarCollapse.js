@@ -32,6 +32,7 @@ const useSidebarCollapse = () => {
   }, []);
 
   const toggleCollapse = () => {
+    // Only allow toggle on large screens
     if (isLargeScreen) {
       setIsCollapsed((prev) => {
         const newState = !prev;
@@ -41,14 +42,7 @@ const useSidebarCollapse = () => {
     }
   };
 
-  const setCollapse = (state) => {
-    if (isLargeScreen) {
-      setIsCollapsed(state);
-      localStorage.setItem('sidebar-collapsed', JSON.stringify(state));
-    }
-  };
-
-  return [isCollapsed, toggleCollapse, isLargeScreen, setCollapse];
+  return [isCollapsed, toggleCollapse, isLargeScreen];
 };
 
 export default useSidebarCollapse;

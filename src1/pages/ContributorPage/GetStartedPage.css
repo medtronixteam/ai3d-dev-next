@@ -1,0 +1,51 @@
+.get-started-contanier {
+    background-image: url('/public/assets/images/Get.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    height: 450px;
+}
+
+.get-started-p-tag {
+  margin-top: 8px !important;
+  font-size: 18px;
+  font-weight: 400;
+  margin-bottom: 0px !important;
+  color: #1A1A40CC;
+}
+
+.features-title {
+    font-weight: 800;
+    font-size: 2rem;
+    color: #000000;
+    margin: 0;
+}
+
+.features-subtext {
+    font-weight: 500;
+    font-size: 16px;
+    color: #1A1A40B2;
+    margin: 5px auto 0 auto;
+    max-width: 900px;
+}
+
+.features-btn-text{
+    font-weight: 700;
+    font-size: 2rem;
+    color: #DE3996;
+    margin: 0;
+}
+
+.features-btn-subtext{
+    font-weight: 500;
+    font-size: 16px;
+    color: #000000CC;
+    margin: 0;
+}
+
+@media (max-width : 600px) {
+    .get-started-contanier {
+        height: 550px;
+    }
+}

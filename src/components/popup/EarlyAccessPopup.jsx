@@ -23,13 +23,13 @@ const EarlyAccessPopup = ({ isOpen, onClose, onSignUp }) => {
       >
         <motion.div
           className="ea-popup-card"
+          style={{ backgroundImage: `url(${WishListBg})` }}
           initial={{ opacity: 0, scale: 0.94, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.94, y: 20 }}
           transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
           onClick={(e) => e.stopPropagation()}
         >
-          <img src={WishListBg} alt="" className="ea-popup-bg-img" fetchpriority="high" />
           <div className="ea-popup-surface" aria-hidden="true" />
           <div className="ea-popup-glow" aria-hidden="true" />
 

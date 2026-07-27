@@ -1,0 +1,233 @@
+
+.join-list-page {
+  padding: 20px;
+  text-align: center;
+  /* background: linear-gradient(135deg, #1e1e2f, #2a2a40); */
+  /* min-height: 100vh; */
+  color: white;
+}
+
+.join-list-page h1 {
+  font-size: 2.8rem;
+  margin-bottom: 10px;
+  color: white;
+}
+.pricing-toggle {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 50px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.toggle-button {
+  padding: 10px 30px;
+  margin: 0 5px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #666;
+  transition: all 0.3s ease;
+}
+
+.toggle-button.active {
+  background-color: #c33181;
+  color: white;
+  box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2);
+}
+
+.toggle-button:hover {
+  background-color: #e0e0e0;
+  color: #333;
+}
+.join-list-page .subtitle {
+  font-size: 1.2rem;
+  color: #b0b0b0;
+  margin-bottom: 60px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  padding: 30px;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Plans Section */
+.plans {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.plan {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  padding: 30px;
+  width: 350px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+}
+
+.plan.popular {
+  border: 2px solid #c73081;
+}
+
+.popular-badge {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #c73081;
+  color: white;
+  padding: 5px 20px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.plan h2 {
+  font-size: 2rem;
+  color: #ffffff;
+  margin-bottom: 15px;
+}
+
+.plan .price {
+  font-size: 2.5rem;
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+
+.plan .price span {
+  font-size: 1rem;
+  color: #b0b0b0;
+}
+
+.plan .features {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.plan .features li {
+  font-size: 1rem;
+  color: #b0b0b0;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.plan .features li::before {
+  /* content: "✔️"; */
+  margin-right: 10px;
+  color: #c73081;
+}
+
+.plan .features li:last-child {
+  margin-bottom: 0;
+}
+
+/* Buttons */
+.cta-button{
+  background-color: #c73081;
+  color: white;
+  border: 2px solid #c73081;
+  padding: 12px 24px;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  width: 100%;
+  margin:   0 auto;
+}
+.back-button {
+  background-color: transparent;
+  color: white;
+  border: 2px solid #c73081;
+  padding: 12px 24px;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  width: 100%;
+  margin: 0 auto;
+}
+.back-button-div{
+  display: flex;
+  justify-content: center;
+  width: 300px;
+  margin: 0 auto;
+}
+.cta-button:hover,
+.back-button:hover {
+  background-color: #b01e6c;
+  color: white;
+}
+
+.back-button {
+  margin-top: 20px;
+  
+}
+
+.form-section {
+  text-align: center;
+}
+
+.form-section input {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+/* Confirmation Section */
+.confirmation-section {
+  text-align: center;
+}
+
+.confirmation-section h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.confirmation-section p {
+  font-size: 1.2rem;
+  color: #b0b0b0;
+  margin-bottom: 10px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .plans {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .plan {
+    width: 100%;
+    max-width: 400px;
+  }
+}

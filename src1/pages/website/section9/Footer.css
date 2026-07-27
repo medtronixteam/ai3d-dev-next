@@ -1,0 +1,117 @@
+footer {
+  padding-bottom: 10px;
+}
+ul,
+li {
+  list-style: none;
+  padding: 0px;
+  margin-bottom: 5px;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+}
+
+/* subscribe input field ------------- */
+.subscribe-section {
+  display: flex;
+}
+
+.input-group {
+  align-items: center;
+  justify-content: right;
+}
+
+.input {
+  min-height: 50px;
+  max-width: 200px;
+  padding: 0 1rem;
+  color: #fff;
+  font-size: 15px;
+  border: 1px solid #c72f81;
+  border-radius: 6px 0 0 6px;
+  background-color: transparent;
+}
+
+.input:focus,
+.input:focus-visible {
+  border-color: transparent;
+  outline: none;
+  animation: rotateShadow 2s infinite linear;
+}
+
+@keyframes rotateShadow {
+  0% {
+    box-shadow: -2px -2px 8px 1px #ff46aa, 2px 2px 8px 1px #f687c2;
+  }
+  25% {
+    box-shadow: -2px -2px 8px 1px #ff46aa, 2px 2px 8px 1px #ff46aa;
+  }
+  50% {
+    box-shadow: -2px -2px 8px 1px #ff46aa, 2px 2px 8px 1px #ff46aa;
+  }
+  75% {
+    box-shadow: -2px -2px 8px 1px #ff46aa, 2px 2px 8px 1px #ff46aa;
+  }
+  100% {
+    box-shadow: -2px -2px 8px 1px #ff46aa, 2px 2px 8px 1px #ff46aa;
+  }
+}
+
+.button--submit {
+  min-height: 50px;
+  padding: 0.5em 1em;
+  border: none;
+  border-radius: 0 6px 6px 0;
+  background-color: #c72f81;
+  color: #ffffff;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.button--submit:hover {
+  background-color: #a73371;
+}
+#Email {
+  font-size: 11px;
+  font-weight: bolder;
+}
+.copy-right p {
+  font-size: 12px;
+  text-align: center;
+  color: #8b8c96;
+}
+.contact-box {
+  font-size: 14px;
+}
+.contact-box h6 {
+  color: #d15a9a;
+}
+.contact-box span:hover,
+a:hover {
+  color: #d15a9a;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .footer-text-box {
+    text-align: center;
+  }
+
+  .input-group {
+    justify-content: center;
+  }
+}
+@media (max-width: 350px) {
+  .input {
+    min-height: 50px;
+    max-width: 170px;
+    font-size: 12px;
+  }
+  .button--submit {
+    min-height: 50px;
+    padding: 10px;
+  }
+}

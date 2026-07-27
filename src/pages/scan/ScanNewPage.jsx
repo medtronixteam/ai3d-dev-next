@@ -31,13 +31,17 @@ import {
   submitVideoPublicUrl,
 } from '../../services/videoProjectApi';
 
+import {
+  createMultiImageProject,
+  uploadProjectFile,
+  completeMultiImageProject,
+} from '../../services/multipleImagesTo3dApi';
+
 const hasProjectFeedback = (value) =>
   value === true || value === 1 || value === '1';
 
 const PROJECT_POLL_INTERVAL_MS = 5000;
-// Video models can take ~45–60+ minutes; keep polling without killing the queue UI.
-const PROJECT_POLL_SOFT_WARN_MS = 60 * 60 * 1000; // 1 hour — toast only
-const PROJECT_POLL_MAX_DURATION_MS = 6 * 60 * 60 * 1000; // 6 hours hard stop
+const PROJECT_POLL_MAX_DURATION_MS = 2 * 60 * 60 * 1000; // 2 hours — covers ~1hr generation
 const PROJECT_TERMINAL_STATUSES = new Set([
   'completed',
   'failed',
@@ -87,6 +91,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   const [modelReady, setModelReady] = useState(false);
   const [generatedPrompt, setGeneratedPrompt] = useState('');
   const [isViewOnly, setIsViewOnly] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [originalPrompt, setOriginalPrompt] = useState('');
 
@@ -322,15 +327,20 @@ const ModelGenerator = ({ isDarkMode = false }) => {
         { headers: { Authorization: `Bearer ${token}` } },
       );
 
+      setShareMessage('Project shared successfully!');
+      setShareMessageType('success');
       toast.success('Project shared successfully!');
 
       setShareEmail('');
       setSelectedUser(null);
       setFoundUsers([]);
       setSearchPerformed(false);
-      setShareModalOpen(false);
-      setShareMessage('');
-      setShareMessageType('');
+
+      setTimeout(() => {
+        setShareModalOpen(false);
+        setShareMessage('');
+        setShareMessageType('');
+      }, 1500);
     } catch (error) {
       const errMsg = error.response?.data?.message || 'Failed to share project.';
       setShareMessage(errMsg);
@@ -417,12 +427,12 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   }, []);
 
   const isProcessing =
-    isGenerating ||
+    (isGenerating ||
     isExtractingFrames ||
     showSuccessUI ||
     showQueueUI ||
     showLoadingUI ||
-    isArrowLoading;
+    isArrowLoading) && !isRedirecting;
   const isCancelled = projectStatus === 'canceled' || projectStatus === 'cancelled';
 
   // fetch recent projects model
@@ -455,13 +465,6 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     projectPollGenerationRef.current = pollGeneration;
     activeProjectPollRef.current = projectId;
 
-    // Reset UI states to loading for the new project fetch
-    setShowQueueUI(false);
-    setShowLoadingUI(true);
-    setShowBlackOverlay(true);
-    setModelReady(false);
-    setModelUrl(null);
-
     const isStalePoll = () =>
       projectPollGenerationRef.current !== pollGeneration || activeProjectPollRef.current !== projectId;
 
@@ -482,6 +485,10 @@ const ModelGenerator = ({ isDarkMode = false }) => {
         setShowQueueUI(false);
         setShowLoadingUI(true);
         setShowBlackOverlay(true);
+      } else if (proj.status === 'completed') {
+        setShowQueueUI(false);
+        setShowLoadingUI(false);
+        setShowBlackOverlay(false);
       }
     };
 
@@ -514,7 +521,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       applyProjectDetail(proj);
 
       if (proj.status === 'completed') {
-        await fetchModelUrl(projectId);
+        await fetchModelUrl(projectId, proj.type);
         return;
       }
 
@@ -526,39 +533,17 @@ const ModelGenerator = ({ isDarkMode = false }) => {
 
       let status = proj.status;
       const pollStartedAt = Date.now();
-      let softWarnShown = false;
-
       while (!PROJECT_TERMINAL_STATUSES.has(status)) {
-        const elapsed = Date.now() - pollStartedAt;
-
-        if (!softWarnShown && elapsed > PROJECT_POLL_SOFT_WARN_MS) {
-          softWarnShown = true;
-          toast.info(
-            'Still generating your model. This can take around 45–60 minutes — keep this tab open.',
-            { autoClose: 8000 },
+        if (Date.now() - pollStartedAt > PROJECT_POLL_MAX_DURATION_MS) {
+          throw new Error(
+            'Model generation is taking longer than expected. Please check History — it may still complete in the background.',
           );
-        }
-
-        if (elapsed > PROJECT_POLL_MAX_DURATION_MS) {
-          // Do not clear queue UI as a hard failure — model may still finish in History.
-          toast.warn(
-            'Still waiting after a long time. Keep checking History — generation may continue in the background.',
-            { autoClose: 10000 },
-          );
-          return;
         }
 
         await delay(PROJECT_POLL_INTERVAL_MS);
         if (isStalePoll()) return;
 
-        try {
-          proj = await pollProjectDetailOnce();
-        } catch (pollErr) {
-          // Transient network errors should not stop a 45–60 min generation wait.
-          console.warn('Project detail poll failed, retrying...', pollErr);
-          continue;
-        }
-
+        proj = await pollProjectDetailOnce();
         if (isStalePoll()) return;
 
         console.log('Project poll update:', proj.status);
@@ -567,7 +552,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       }
 
       if (status === 'completed') {
-        await fetchModelUrl(projectId);
+        await fetchModelUrl(projectId, proj?.type);
       } else {
         throw new Error('Project generation failed');
       }
@@ -615,12 +600,12 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     }
   }, []);
 
-  useRouteLeave(isProcessing && !modelReady && !isCancelled, handleRouteLeave);
-
+  useRouteLeave(isProcessing && !modelReady && !isCancelled && !isRedirecting, handleRouteLeave);
 
   useEffect(() => {
     const handleBeforeUnload = (e) => {
-      if (isProcessing && !modelReady && !isCancelled) {
+      if (window.isRedirectingToEditor) return;
+      if (isProcessing && !modelReady && !isCancelled && !isRedirecting) {
         e.preventDefault();
         e.returnValue = '';
       }
@@ -628,7 +613,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
 
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [isProcessing]);
+  }, [isProcessing, modelReady, isCancelled, isRedirecting]);
 
   useEffect(() => {
     let anim = null;
@@ -682,7 +667,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       setShowQueueUI(false);
       setShowLoadingUI(true);
       setProjectStatus('completed');
-      fetchModelUrl(projectToken);
+      fetchModelUrl(projectToken, projectType);
     }
 
     if (queueData.progress) {
@@ -721,6 +706,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     setRemovedFrames([]);
     setShowVideoFrames(false);
     setIsExtractingFrames(false);
+    setIsRedirecting(false);
     setProjectToken(null);
     setProjectStatus('pending');
     setModelUrl(null);
@@ -806,27 +792,15 @@ const ModelGenerator = ({ isDarkMode = false }) => {
 
   const adjustUrlForLocalhost = (url) => {
     if (!url) return url;
-
-    const isLocal =
-      window.location.hostname === 'localhost' ||
-      window.location.hostname === '127.0.0.1' ||
-      window.location.hostname === '0.0.0.0' ||
-      window.location.port === '3000';
-
-    if (!isLocal) return url;
-
-    // Preserve signed host so AWS signature stays valid; proxy only to bypass CORS in local.
-    if (url.includes('ai3dscannning-crm.s3.ap-south-1.amazonaws.com')) {
-      return url.replace(
-        'https://ai3dscannning-crm.s3.ap-south-1.amazonaws.com',
-        '/s3-proxy-typo',
-      );
-    }
-
-    if (url.includes('ai3dscanning-crm.s3.ap-south-1.amazonaws.com')) {
+    if (
+      (window.location.hostname === 'localhost' ||
+        window.location.hostname === '127.0.0.1' ||
+        window.location.hostname === '0.0.0.0' ||
+        window.location.port === '3000') &&
+      url.includes('ai3dscanning-crm.s3.ap-south-1.amazonaws.com')
+    ) {
       return url.replace('https://ai3dscanning-crm.s3.ap-south-1.amazonaws.com', '/s3-proxy');
     }
-
     return url;
   };
 
@@ -888,10 +862,35 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     };
   }, [isPublicView, publicSlug]);
 
-  const fetchModelUrl = async (token_id) => {
+  const fetchModelUrl = async (token_id, type) => {
     try {
       setModelLoading(true);
       console.log(`Fetching temp model URL for project: ${token_id}`);
+
+      if (type === 'video_to_3d' || type === 'images_to_3d') {
+        const tempRes = await axios.get(`${baseURL}/project/temp/${token_id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const tempUrl =
+          tempRes.data?.temp_url ||
+          tempRes.data?.url ||
+          tempRes.data?.data?.temp_url ||
+          tempRes.data?.data?.url;
+
+        if (tempUrl) {
+          setShowQueueUI(false);
+          setShowLoadingUI(false);
+          setShowBlackOverlay(false);
+          setIsGenerating(false);
+          setIsRedirecting(true);
+          window.isRedirectingToEditor = true;
+          window.location.href = tempUrl;
+          return;
+        }
+
+        console.warn(`No temp_url returned for ${type} project, falling back to model URL`);
+      }
 
       const response = await axios.get(`${baseURL}/project/temp/url/${token_id}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -1129,53 +1128,57 @@ const ModelGenerator = ({ isDarkMode = false }) => {
         }
       }
       else if (images.length >= 2) {
-        const projectRes = await axios.post(
-          `${baseURL}/project`,
-          { name: projectName },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        const projectRes = await createMultiImageProject(token);
 
-        const token_id = projectRes.data?.token || projectRes.data?.data?.token;
+        const token_id = projectRes?.token || projectRes?.data?.token;
         if (!token_id) throw new Error('Project token not returned');
 
         setProjectToken(token_id);
 
         for (let i = 0; i < imageFiles.length; i++) {
-          const formData = new FormData();
-          formData.append('file', imageFiles[i], imageFiles[i].name);
-          formData.append('token', token_id);
-
-          await axios.post(`${baseURL}/project/file`, formData, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'multipart/form-data',
-            },
+          await uploadProjectFile({
+            projectToken: token_id,
+            file: imageFiles[i],
+            token,
           });
         }
 
-        await axios.post(
-          `${baseURL}/project/complete`,
-          { token: token_id },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        const completeRes = await completeMultiImageProject({
+          projectToken: token_id,
+          token,
+        });
 
-        setProjectType('image_to_3d');
+        const directUrl =
+          completeRes?.url ||
+          completeRes?.temp_url ||
+          completeRes?.data?.url ||
+          completeRes?.data?.temp_url;
+
+        if (directUrl) {
+          setShowQueueUI(false);
+          setShowLoadingUI(false);
+          setShowBlackOverlay(false);
+          setIsGenerating(false);
+          setIsRedirecting(true);
+          window.isRedirectingToEditor = true;
+          window.location.href = directUrl;
+          return;
+        }
+
+        setProjectType('images_to_3d');
         setGeneratedPrompt('Multiple Images');
         startGenerationFlow(token_id);
-      }
-      /*
-      else if (video) {
+      } else if (video) {
         await handleVideoFrameExtraction();
       }
-      */
     } catch (err) {
-      console.error(err);
-      toast.error(err?.response?.data?.message || 'Generation failed');
+      console.error('Generation error:', err);
+      const apiMessage = err?.response?.data?.message || err?.message || 'Generation failed';
+      toast.error(apiMessage);
       setIsGenerating(false);
     }
   };
 
-  /*
   const uploadToCloudinary = async (file) => {
     const formData = new FormData();
     formData.append('file', file);
@@ -1329,7 +1332,6 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     setIsGenerating(false);
     startGenerationFlow(newToken);
   };
-  */
 
   const startGenerationFlow = (tokenId) => {
     shouldShowReviewRef.current = true;
@@ -1616,6 +1618,12 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             isExtractingFrames={isExtractingFrames}
             isGenerating={isGenerating}
             isArrowLoading={isArrowLoading}
+            images={images}
+            onRemoveImage={(index) => {
+              if (isProcessing || isViewOnly) return;
+              setImages((prev) => prev.filter((_, i) => i !== index));
+              setImageFiles((prev) => prev.filter((_, i) => i !== index));
+            }}
           />
           <RightScan
             activeTab={activeTab}

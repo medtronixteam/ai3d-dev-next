@@ -1,0 +1,45 @@
+.logo-slider-container {
+  width: 100%;
+  padding: 20px 0 0 0;
+  overflow: hidden;
+  background-color: #001f3e;
+}
+
+.logo-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 1rem;
+  height: 100px;
+}
+
+.logo {
+  width: 200%;
+  height: 80px;
+  max-width: 240px;
+  object-fit: contain;
+  padding: 5px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.logo-slide:nth-child(odd) img.logo {
+  background-color: white;
+  margin: 0 auto;
+}
+
+.logo-slide:nth-child(even) img.logo {
+  background-color: #0073e6;
+}
+
+.logo:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+@media (max-width: 560px) {
+  .logo-slide {
+    margin: 0 auto;
+  }
+}

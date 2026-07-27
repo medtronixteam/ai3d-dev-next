@@ -1,0 +1,117 @@
+/* General Navbar Styling */
+.custom-navbar {
+  background-color: #131429;
+  color: white;
+  padding: 10px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+}
+
+.custom-navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+/* Logo and Beta Box */
+.custom-navbar-top {
+  display: flex;
+  align-items: center;
+}
+
+.custom-logo img {
+  max-height: 50px;
+  width: auto;
+}
+
+.custom-beta-box .custom-button {
+  position: relative;
+  display: inline-block;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 5px 15px;
+  background: linear-gradient(145deg, #c72f81, #e91e63);
+  border: none;
+  border-radius: 5px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.custom-nav-links {
+  display: flex;
+  gap: 40px;
+}
+
+.custom-nav-links ul {
+  list-style: none;
+  display: flex;
+  gap: 40px;
+  margin: 0;
+  padding: 0;
+}
+
+.custom-nav-links ul li {
+  font-size: 1rem;
+}
+
+.custom-nav-links ul li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+  transition: color 0.3s ease;
+}
+
+.custom-nav-links ul li a:hover {
+  color: #e91e63;
+}
+
+/* Hamburger Menu for Mobile */
+.custom-hamburger-menu {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.custom-hamburger-menu span {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .custom-hamburger-menu {
+    display: flex;
+  }
+
+  .custom-nav-links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #1b003b;
+    padding: 20px;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+    width: 100%;
+  }
+
+  .custom-nav-links.custom-nav-active {
+    display: flex;
+  }
+
+  .custom-nav-links ul {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

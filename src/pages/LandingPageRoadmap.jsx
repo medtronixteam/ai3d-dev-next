@@ -8,7 +8,7 @@ import Desktop from '../assets/images/desktop.png';
 import BetaRelease from '../assets/images/beta-release.png';
 import Public from '../assets/images/Public.png';
 
-let hasAnimatedGlobal = true;
+let hasAnimatedGlobal = false;
 
 const RoadmapSection = ({ elipse }) => {
     const roadmapData = [
@@ -46,12 +46,13 @@ const RoadmapSection = ({ elipse }) => {
         },
     ];
 
-    const sectionRef   = useRef(null);
-    const containerRef = useRef(null);
-    const nodesRef     = useRef([]);
+    const sectionRef        = useRef(null);
+    const containerRef      = useRef(null);
+    const nodesRef          = useRef([]);
+    const autoAdvanceTimer  = useRef(null);
 
-    const [activeIndex] = useState(3);
-    const [isMobile, setIsMobile] = useState(
+    const [activeIndex, setActiveIndex]         = useState(hasAnimatedGlobal ? 3 : -1);
+    const [isMobile, setIsMobile]               = useState(
         typeof window !== 'undefined' ? window.innerWidth <= 900 : false
     );
 
@@ -70,21 +71,24 @@ const RoadmapSection = ({ elipse }) => {
                         entry.target.classList.add('animate-in');
 
                         const snakePath = entry.target.querySelector('.snake-svg path');
-                        if (snakePath) snakePath.style.strokeDashoffset = '0';
+                        if (snakePath) setTimeout(() => { snakePath.style.strokeDashoffset = '0'; }, 300);
 
                         const startArrow = entry.target.querySelector('.start-arrow');
-                        if (startArrow) startArrow.classList.add('pulse');
+                        if (startArrow) setTimeout(() => startArrow.classList.add('pulse'), 400);
 
                         const endTarget = entry.target.querySelector('.end-target');
-                        if (endTarget) endTarget.classList.add('pulse-slow');
+                        if (endTarget) setTimeout(() => endTarget.classList.add('pulse-slow'), 500);
 
-                        nodesRef.current.forEach((node) => {
-                            if (node) node.classList.add('animate-in');
+                        setActiveIndex(3);
+                        hasAnimatedGlobal = true;
+
+                        nodesRef.current.forEach((node, i) => {
+                            if (node) setTimeout(() => node.classList.add('animate-in'), i * 150);
                         });
                     }
                 });
             },
-            { threshold: 0.15 }
+            { threshold: 0.2, rootMargin: '0px 0px -50px 0px' }
         );
 
         if (sectionRef.current) observer.observe(sectionRef.current);
@@ -93,11 +97,17 @@ const RoadmapSection = ({ elipse }) => {
         };
     }, []);
 
+    // ─── activeIndex → node classes ───────────────────────────────────────────
     useEffect(() => {
-        nodesRef.current.forEach((node) => {
-            if (node) node.classList.add('animate-in');
-        });
-    }, []);
+        if (!isMobile) {
+            nodesRef.current.forEach((node, index) => {
+                if (node) {
+                    if (index <= activeIndex) node.classList.add('animate-in');
+                    else node.classList.remove('animate-in');
+                }
+            });
+        }
+    }, [activeIndex, isMobile]);
 
     return (
         <div
@@ -111,7 +121,7 @@ const RoadmapSection = ({ elipse }) => {
                     position: 'relative',
                     top: 'auto',
                     height: 'auto',
-                    padding: isMobile ? '60px 0' : '40px 0',
+                    padding: '40px 0',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'center',

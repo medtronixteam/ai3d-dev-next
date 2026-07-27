@@ -102,6 +102,7 @@ import {
   markEarlyAccessPopupDismissed,
 } from '../components/early-access/earlyAccessStorage';
 import paths from '../routes/paths';
+import { isPreLaunchActive } from '../utils/platformLaunch';
 
 import FW from '../assets/service/FW.png'
 import RR from '../assets/service/rr.png'
@@ -122,7 +123,6 @@ const LandingPage = () => {
   const [subscribeLoading, setSubscribeLoading] = useState(false);
   const [subscribeMsg, setSubscribeMsg] = useState('');
   const [selectedModel, setSelectedModel] = useState(null);
-  const [hoveredPill, setHoveredPill] = useState(null);
 
   useEffect(() => {
     const section = landingRef.current;
@@ -306,46 +306,12 @@ const LandingPage = () => {
   // }, []);
 
   const pills = [
-    {
-      label: 'Construction',
-      icon: rightarrow,
-      target: '3d-Sample',
-      category: 'Construction',
-      desc: 'High-precision 3D scanning and BIM models for architectural & site management.',
-      modelImg: 'https://app.ai3dscanning.com/storage/models/thumbnails/default.png',
-    },
-    {
-      label: 'Gaming',
-      icon: rightarrow,
-      target: '3d-Sample',
-      category: 'Gaming',
-      desc: 'Low-poly and high-fidelity 3D game assets, characters, and props ready for Unity & Unreal.',
-      modelImg: 'https://app.ai3dscanning.com/storage/models/thumbnails/default.png',
-    },
-    {
-      label: 'VR',
-      icon: rightarrow,
-      target: '3d-Sample',
-      category: 'VR',
-      desc: 'Immersive 3D environments and VR-ready assets for spatial computing.',
-      modelImg: 'https://app.ai3dscanning.com/storage/models/thumbnails/default.png',
-    },
-    {
-      label: 'Retail',
-      icon: rightarrow,
-      target: '3d-Sample',
-      category: 'Retail',
-      desc: 'Photorealistic 3D product models for AR shopping and e-commerce catalogs.',
-      modelImg: 'https://app.ai3dscanning.com/storage/models/thumbnails/default.png',
-    },
-    {
-      label: 'Manufacturing',
-      icon: rightarrow,
-      target: '3d-Sample',
-      category: 'Manufacturing',
-      desc: 'Sub-millimeter accurate CAD & 3D meshes for reverse engineering and inspection.',
-      modelImg: 'https://app.ai3dscanning.com/storage/models/thumbnails/default.png',
-    },
+    { label: 'Construction', icon: rightarrow, target: '3d-Sample' },
+    { label: 'Gaming', icon: rightarrow, target: '3d-Sample' },
+    { label: 'VR', icon: rightarrow, target: '3d-Sample' },
+    { label: 'Retail', icon: rightarrow, target: '3d-Sample' },
+    { label: 'Manufacturing', icon: rightarrow, target: '3d-Sample' },
+    { label: 'Health', icon: rightarrow, target: '3d-Sample' },
   ];
 
   const pillsRef = useRef(null);
@@ -1105,7 +1071,7 @@ const LandingPage = () => {
             >
               <div className="d-flex justify-content-between align-items-center">
                 <Link to="/" className="a3d-header-logo-link">
-                  <img src={logo} alt="AI 3D Scanning Logo" className="a3d-header-logo" width="210" height="64" fetchpriority="high" decoding="async" />
+                  <img src={logo} alt="AI 3D Scanning Logo" className="a3d-header-logo" />
                 </Link>
 
                 {/* Menu Button for Mobile */}
@@ -1123,7 +1089,7 @@ const LandingPage = () => {
 
                 {/* Desktop Nav */}
 
-                <nav className="d-none d-lg-flex gap-lg-3 gap-xl-4 align-items-center">
+                <nav className="d-none d-lg-flex gap-lg-3 gap-xl-4">
                   <Link
                     to="/"
                     className={`a3d-nav-link ${location.pathname === '/' ? 'active' : ''}`}
@@ -1143,10 +1109,10 @@ const LandingPage = () => {
                   </Link>
 
                   <Link
-                    to="/3dio/new/scan"
-                    className={`a3d-nav-link ${location.pathname === '/3dio/new/scan' ? 'active' : ''}`}
+                    to="/3dio/api-sdk"
+                    className={`a3d-nav-link ${location.pathname === '/3dio/api-sdk' ? 'active' : ''}`}
                   >
-                    API &amp; Pricing
+                    API & Pricing
                   </Link>
 
                   <a href="/#3d-Sample" className="a3d-nav-link">
@@ -1156,13 +1122,35 @@ const LandingPage = () => {
                   <a href="/#Leadership" className="a3d-nav-link">
                     Leadership
                   </a>
+                  {/* <a
+                    href="/referral"
+                    className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`}
+                  >
+                    Referral
+                  </a> */}
+                  {/* <a
+                    href="#"
+                    className="a3d-nav-link"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsWaitlistOpen(true);
+                    }}
+                  >
+                    Wish List
+                  </a> */}
                 </nav>
 
+                {/* <div className="d-none d-lg-flex gap-3 align-items-center">
+                  <Link to="/3dio/">
+                    <button className="a3d-join-btn">Join Us</button>
+                  </Link>
+                </div> */}
+
                 <div className="d-none d-lg-flex gap-2 align-items-center">
-                  <Link to="/book-demo" className="a3d-book-demo-btn a3d-btn-sm">
+                  <Link to="/book-demo" className="a3d-book-demo-btn">
                     Book a Demo
                   </Link>
-                  <JoinPlatformCta onWaitlistOpen={() => setIsWaitlistOpen(true)} className="a3d-join-btn a3d-btn-sm" />
+                  <JoinPlatformCta onWaitlistOpen={() => setIsWaitlistOpen(true)} />
                 </div>
               </div>
             </header>
@@ -1173,7 +1161,7 @@ const LandingPage = () => {
             <div className={`mobile-sidebar ${isOpen ? 'open' : ''}`}>
               <div className="sidebar-header d-flex justify-content-between align-items-center px-3 py-2">
                 <Link to="/" className="a3d-header-logo-link">
-                  <img src={logo} alt="AI 3D Scanning Logo" className="a3d-header-logo" width="210" height="64" loading="lazy" decoding="async" />
+                  <img src={logo} alt="AI 3D Scanning Logo" className="a3d-header-logo" />
                 </Link>
 
                 <button
@@ -1204,10 +1192,10 @@ const LandingPage = () => {
                 </Link>
 
                 <Link
-                  to="/3dio/new/scan"
-                  className={`a3d-nav-link ${location.pathname === '/3dio/new/scan' ? 'active' : ''}`}
+                  to="/3dio/api-sdk"
+                  className={`a3d-nav-link ${location.pathname === '/3dio/api-sdk' ? 'active' : ''}`}
                 >
-                  API &amp; Pricing
+                  API & Pricing
                 </Link>
 
                 <a href="#3d-Sample" className="a3d-nav-link">
@@ -1303,7 +1291,14 @@ const LandingPage = () => {
                   className="a3d-btn d-flex align-items-center gap-3 flex-wrap a3d-slide-up mb-4"
                   style={{ animationDelay: '0.2s' }}
                 >
-                  <JoinPlatformCta onWaitlistOpen={() => setIsWaitlistOpen(true)} className="a3d-join-btn" />
+                  {token ? (
+                    <JoinPlatformCta onWaitlistOpen={() => setIsWaitlistOpen(true)} />
+                  ) : (
+                    <Link to="/signin" className="a3d-join-btn">
+                      Log in for free
+                    </Link>
+                  )}
+                  {/* <Link to="/3dio/subscription"> */}
                   <Link to="/services">
                     <button
                       className="btn btn-warning text-white"
@@ -1312,6 +1307,7 @@ const LandingPage = () => {
                       Services
                     </button>
                   </Link>
+                  {/* </Link> */}
 
                   <a href="#video">
                     <div className="a3d-play-circle">
@@ -1321,7 +1317,7 @@ const LandingPage = () => {
                 </div>
 
                 <div
-                  className="a3d-pills-scroll d-flex gap-3 my-3 a3d-slide-up"
+                  className="a3d-pills-scroll d-flex gap-3 my-4 a3d-slide-up"
                   id="pillSlider"
                   ref={pillsRef}
                   style={{
@@ -1336,63 +1332,22 @@ const LandingPage = () => {
                   {/* Duplicate pills to create infinite illusion only on mobile */}
                   {(isMobile ? [...pills, ...pills] : pills).map((pill, idx) => (
                     <div
-                      className="a3d-pill position-relative"
+                      className="a3d-pill"
                       key={`${pill.label}-${idx}`}
                       style={{ minWidth: 'auto', flexShrink: 0 }}
-                      onMouseEnter={() => setHoveredPill(pill)}
-                      onMouseLeave={() => setHoveredPill(null)}
-                      onClick={() => navigate('/services')}
+                      onClick={() => {
+                        const target = document.getElementById(pill.target);
+                        if (target) {
+                          target.scrollIntoView({ behavior: 'smooth' });
+                        }
+                      }}
                     >
                       <span>{pill.label}</span>
                       <img src={pill.icon} alt={`${pill.label} Icon`} style={{ paddingTop: 2 }} />
-
-                      {hoveredPill?.label === pill.label && (
-                        <div
-                          className="pill-hover-card shadow-lg p-2 px-3 text-start position-absolute"
-                          style={{
-                            bottom: '118%',
-                            left: '50%',
-                            transform: 'translateX(-50%)',
-                            width: '240px',
-                            backgroundColor: '#ffffff',
-                            color: '#1a1a40',
-                            borderRadius: '14px',
-                            zIndex: 1000,
-                            pointerEvents: 'none',
-                            boxShadow: '0 12px 32px rgba(222, 57, 150, 0.22)',
-                            border: '1px solid rgba(222, 57, 150, 0.3)',
-                          }}
-                        >
-                          <h4 style={{ fontSize: '1.02rem', fontWeight: '700', margin: '0 0 3px 0', color: '#1a1a40', fontFamily: 'DM Sans' }}>
-                            {pill.category}
-                          </h4>
-                          <p style={{ fontSize: '0.8rem', margin: 0, lineHeight: 1.35, color: '#555570' }}>
-                            {pill.desc}
-                          </p>
-                          <div className="mt-2 pt-1 pb-1" style={{ borderTop: '1px solid rgba(0,0,0,0.08)' }}>
-                            <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#de3996 !important', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                              View API & SDK Details →
-                            </span>
-                          </div>
-                          {/* Tooltip arrow pointer */}
-                          <div
-                            style={{
-                              position: 'absolute',
-                              bottom: '-6px',
-                              left: '50%',
-                              transform: 'translateX(-50%) rotate(45deg)',
-                              width: '10px',
-                              height: '10px',
-                              backgroundColor: '#ffffff',
-                              borderRight: '1px solid rgba(222, 57, 150, 0.25)',
-                              borderBottom: '1px solid rgba(222, 57, 150, 0.25)',
-                            }}
-                          />
-                        </div>
-                      )}
                     </div>
                   ))}
                 </div>
+
               </div>
 
               <div className="col-lg-5 p-lg-0">
@@ -1501,26 +1456,40 @@ const LandingPage = () => {
         {/* ========================= How it Work Section  ======================= */}
 
         <motion.section
-          className="service-cards mt-5 pt-md-0 pt-3"
+          className="service-cards mt-5 pt-md-4 pt-3"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
           <div className="container">
-            <div className="text-center mb-1 pt-3">
-              <h2 className="section-title mt-3" style={{ fontSize: isMobile ? '29px' : '38px', position: 'relative' }}>
+            <div className="text-center mb-4">
+              <h2 className="section-title" style={{ fontSize: isMobile ? '29px' : '38px' }}>
                 How it{' '}
                 <span className="perfect-heading">
+                  w
                   <span className="wr-wrapper" style={{ position: 'relative', display: 'inline-block' }}>
-                    wo
-                    <img src={elipse} alt="Ellipse" className="ellipse-img-work" />r
+                    o
+                    <img
+                      src={elipse}
+                      alt="Ellipse"
+                      style={{
+                        position: 'absolute',
+                        top: '-17px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        width: '2.5rem',
+                        height: 'auto',
+                        pointerEvents: 'none',
+                        zIndex: 2,
+                      }}
+                    />
                   </span>
-                  ks
+                  rks
                 </span>
               </h2>
 
-              <p className="section-subtitle mt-2">
+              <p className="section-subtitle">
                 Transform Any 2D data into a High-Precision 3D{' '}
                 <span className="d-none d-md-inline">
                   <br />
@@ -1529,9 +1498,10 @@ const LandingPage = () => {
               </p>
             </div>
 
-            <section className="py-2 py-lg-3 services-cards">
+            <section className="py-3 py-lg-4 services-cards mt-2">
               <div className="container">
-                <div className="row g-4 justify-content-center">
+                <div className="row g-4">
+                  {/* Step 01 */}
                   <motion.div
                     className="col-12 col-md-6 col-lg-4"
                     initial={{ opacity: 0, y: 50 }}
@@ -1539,33 +1509,61 @@ const LandingPage = () => {
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: 0.1 }}
                   >
-                    <div className="service-card h-100 pt-3 px-3 pb-3">
-                      <div className="d-flex align-items-center justify-content-between mb-2">
-                        <span className="badge bg-pink text-white px-2 py-1 rounded-pill" style={{ backgroundColor: '#de3996', fontSize: '0.72rem', fontWeight: 500 }}>Step 01</span>
+                    <div className="service-card d-flex flex-column justify-content-between h-100 position-relative" style={{ padding: '24px 24px 20px' }}>
+                      <div>
+                        <span
+                          className="badge rounded-pill mb-3"
+                          style={{
+                            backgroundColor: '#de3996',
+                            color: '#fff',
+                            fontSize: '0.75rem',
+                            padding: '6px 12px',
+                            fontWeight: 600,
+                          }}
+                        >
+                          Step 01
+                        </span>
+                        <h3 className="service-title">Upload or Capture 2D Data</h3>
+                        <p className="service-desc">
+                          Simply upload images, recorded video clips, or input descriptive text prompts
+                          directly into our platform from mobile or web.
+                        </p>
                       </div>
-                      <h3 className="service-title" style={{ fontSize: '1.25rem', marginTop: '0.2rem' }}>Upload or Capture 2D Data</h3>
-                      <p className="service-desc mt-2" style={{ fontSize: '0.92rem', lineHeight: '1.4' }}>
-                        Simply upload images, recorded video clips, or input descriptive text prompts directly into our platform from mobile or web.
-                      </p>
-                      <div className="footer-wrapper mt-auto pt-2">
+                      <div className="footer-wrapper mt-3">
                         <div className="service-footer">
-                          <Link to="/signin" className="circle-btn custom-arrow-btn" aria-label="Upload data">
-                            <svg viewBox="0 0 24 24" width={16} height={16} fill="none">
-                              <path d="M5 12h11" stroke="currentColor" strokeWidth="2" />
-                              <path d="M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" />
+                          <Link to="/3dio/new/scan" className="circle-btn" aria-label="Upload Now">
+                            <svg
+                              viewBox="0 0 24 24"
+                              width={18}
+                              height={18}
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                            >
+                              <path d="M5 12h11" />
+                              <path d="M13 6l6 6-6 6" />
                             </svg>
                           </Link>
-                          <div className="footer-text" style={{ fontFamily: 'DM Sans', fontWeight: 500 }}>
-                            Upload Now
-                          </div>
+                          <Link to="/3dio/new/scan" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <div
+                              className="footer-text"
+                              style={{
+                                fontFamily: 'DM Sans',
+                                fontWeight: 500,
+                                fontStyle: 'Medium',
+                              }}
+                            >
+                              Upload Now
+                            </div>
+                          </Link>
                         </div>
                         <div className="card-icon" aria-hidden="true">
-                          <img src={design} alt="Upload Icon" width="80" height="80" loading="lazy" />
+                          <img src={design} alt="Upload Icon" />
                         </div>
                       </div>
                     </div>
                   </motion.div>
 
+                  {/* Step 02 */}
                   <motion.div
                     className="col-12 col-md-6 col-lg-4"
                     initial={{ opacity: 0, y: 50 }}
@@ -1573,33 +1571,59 @@ const LandingPage = () => {
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: 0.3 }}
                   >
-                    <div className="service-card h-100 pt-3 px-3 pb-3">
-                      <div className="d-flex align-items-center justify-content-between mb-2">
-                        <span className="badge bg-pink text-white px-2 py-1 rounded-pill" style={{ backgroundColor: '#de3996', fontSize: '0.72rem', fontWeight: 500 }}>Step 02</span>
+                    <div className="service-card d-flex flex-column justify-content-between h-100 position-relative" style={{ padding: '24px 24px 20px' }}>
+                      <div>
+                        <span
+                          className="badge rounded-pill mb-3"
+                          style={{
+                            backgroundColor: '#de3996',
+                            color: '#fff',
+                            fontSize: '0.75rem',
+                            padding: '6px 12px',
+                            fontWeight: 600,
+                          }}
+                        >
+                          Step 02
+                        </span>
+                        <h3 className="service-title">Instant AI Reconstruction</h3>
+                        <p className="service-desc">
+                          Our proprietary AI algorithms turn your 2D inputs into high-precision 3D meshes,
+                          generating sub-millimeter textures automatically in seconds.
+                        </p>
                       </div>
-                      <h3 className="service-title" style={{ fontSize: '1.25rem', marginTop: '0.2rem' }}>Instant AI Reconstruction</h3>
-                      <p className="service-desc mt-2" style={{ fontSize: '0.92rem', lineHeight: '1.4' }}>
-                        Our proprietary AI algorithms turn your 2D inputs into high-precision 3D meshes, generating sub-millimeter textures automatically in seconds.
-                      </p>
-                      <div className="footer-wrapper mt-auto pt-2">
+                      <div className="footer-wrapper mt-3">
                         <div className="service-footer">
-                          <a href="#3d-Sample" className="circle-btn custom-arrow-btn" aria-label="See AI models">
-                            <svg viewBox="0 0 24 24" width={16} height={16} fill="none">
-                              <path d="M5 12h11" stroke="currentColor" strokeWidth="2" />
-                              <path d="M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" />
+                          <a href="#3d-Sample" className="circle-btn" aria-label="See Demo">
+                            <svg
+                              viewBox="0 0 24 24"
+                              width={18}
+                              height={18}
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                            >
+                              <path d="M5 12h11" />
+                              <path d="M13 6l6 6-6 6" />
                             </svg>
                           </a>
-                          <div className="footer-text" style={{ fontFamily: 'DM Sans', fontWeight: 500 }}>
+                          <div
+                            className="footer-text"
+                            style={{
+                              fontFamily: 'DM Sans',
+                              fontWeight: 500,
+                              fontStyle: 'Medium',
+                            }}
+                          >
                             See Demo
                           </div>
                         </div>
                         <div className="card-icon" aria-hidden="true">
-                          <img src={Modling} alt="AI Mesh Icon" width="80" height="80" loading="lazy" />
+                          <img src={Modling} alt="Reconstruction Icon" />
                         </div>
                       </div>
                     </div>
                   </motion.div>
 
+                  {/* Step 03 */}
                   <motion.div
                     className="col-12 col-md-6 col-lg-4"
                     initial={{ opacity: 0, y: 50 }}
@@ -1607,28 +1631,55 @@ const LandingPage = () => {
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: 0.5 }}
                   >
-                    <div className="service-card h-100 pt-3 px-3 pb-3">
-                      <div className="d-flex align-items-center justify-content-between mb-2">
-                        <span className="badge bg-pink text-white px-2 py-1 rounded-pill" style={{ backgroundColor: '#de3996', fontSize: '0.72rem', fontWeight: 500 }}>Step 03</span>
+                    <div className="service-card d-flex flex-column justify-content-between h-100 position-relative" style={{ padding: '24px 24px 20px' }}>
+                      <div>
+                        <span
+                          className="badge rounded-pill mb-3"
+                          style={{
+                            backgroundColor: '#de3996',
+                            color: '#fff',
+                            fontSize: '0.75rem',
+                            padding: '6px 12px',
+                            fontWeight: 600,
+                          }}
+                        >
+                          Step 03
+                        </span>
+                        <h3 className="service-title">Customize &amp; Export 3D Models</h3>
+                        <p className="service-desc">
+                          Fine-tune your 3D asset with instant web editing tools, then export directly to GLB,
+                          OBJ, or USDZ for Gaming, VR, and E-commerce.
+                        </p>
                       </div>
-                      <h3 className="service-title" style={{ fontSize: '1.25rem', marginTop: '0.2rem' }}>Customize &amp; Export 3D Models</h3>
-                      <p className="service-desc mt-2" style={{ fontSize: '0.92rem', lineHeight: '1.4' }}>
-                        Fine-tune your 3D asset with instant web editing tools, then export directly to GLB, OBJ, or USDZ for Gaming, VR, and E-commerce.
-                      </p>
-                      <div className="footer-wrapper mt-auto pt-2">
+                      <div className="footer-wrapper mt-3">
                         <div className="service-footer">
-                          <Link className="circle-btn custom-arrow-btn" aria-label="Start creating 3D models" onClick={() => setIsWaitlistOpen(true)}>
-                            <svg viewBox="0 0 24 24" width={16} height={16} fill="none">
-                              <path d="M5 12h11" stroke="currentColor" strokeWidth="2" />
-                              <path d="M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" />
+                          <Link to="/3dio/new/scan" className="circle-btn" aria-label="Start Creating">
+                            <svg
+                              viewBox="0 0 24 24"
+                              width={18}
+                              height={18}
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                            >
+                              <path d="M5 12h11" />
+                              <path d="M13 6l6 6-6 6" />
                             </svg>
                           </Link>
-                          <div className="footer-text" style={{ fontFamily: 'DM Sans', fontWeight: 500 }}>
-                            Start Creating
-                          </div>
+                          <Link to="/3dio/new/scan" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <div
+                              className="footer-text"
+                              style={{
+                                fontFamily: 'DM Sans',
+                                fontWeight: 500,
+                                fontStyle: 'Medium',
+                              }}
+                            >
+                              Start Creating
+                            </div>
+                          </Link>
                         </div>
                         <div className="card-icon" aria-hidden="true">
-                          <img src={store} alt="Export Icon" width="80" height="80" loading="lazy" />
+                          <img src={store} alt="Export Icon" />
                         </div>
                       </div>
                     </div>
@@ -1849,10 +1900,6 @@ const LandingPage = () => {
                         src={mobile}
                         alt="Mobile Preview"
                         className="img leap-img me-md-4 mx-2"
-                        width="756"
-                        height="508"
-                        loading="lazy"
-                        decoding="async"
                       />
                       <div className="d-flex justify-content-center gap-0 mt-4 flex-wrap">
                         <button className="store-btn">
@@ -2201,10 +2248,6 @@ const LandingPage = () => {
                           src={imgUrl}
                           className="model_image"
                           alt={card.title}
-                          width="375"
-                          height="375"
-                          loading="lazy"
-                          decoding="async"
                           onError={(e) => (e.target.src = modelFallback)}
                         />
 
@@ -2277,21 +2320,21 @@ const LandingPage = () => {
           <div className="logo_track">
             {[...Array(4)].map((_, i) => (
               <React.Fragment key={`logos-${i}`}>
-                <img src={googleStartups} alt="Google" loading="lazy" decoding="async" width="280" height="34" />
+                <img src={googleStartups} alt="Google" loading="lazy" decoding="async" />
 
-                <img src={googleCloud} alt="Google Cloud" loading="lazy" decoding="async" width="280" height="71" />
+                <img src={googleCloud} alt="Google Cloud" loading="lazy" decoding="async" />
 
-                <img src={pitb} alt="PITB" loading="lazy" decoding="async" width="105" height="104" />
+                <img src={pitb} alt="PITB" loading="lazy" decoding="async" />
 
-                <img src={regionalPlan} alt="Regional Plan" loading="lazy" decoding="async" width="165" height="57" />
+                <img src={regionalPlan} alt="Regional Plan" loading="lazy" decoding="async" />
 
-                <img src={consulting} alt="Consulting" loading="lazy" decoding="async" width="165" height="47" />
+                <img src={consulting} alt="Consulting" loading="lazy" decoding="async" />
 
-                <img src={RR} alt="Vera AI" loading="lazy" decoding="async" width="105" height="104" />
+                <img src={RR} alt="Vera AI" loading="lazy" decoding="async" />
 
-                <img src={nvidia} alt="NVIDIA" loading="lazy" decoding="async" width="120" height="40" />
+                <img src={nvidia} alt="NVIDIA" loading="lazy" decoding="async" />
 
-                <img src={FW} alt="Frame wise" className='fram' loading="lazy" decoding="async" width="105" height="104" />
+                <img src={FW} alt="Frame wise" className='fram' />
               </React.Fragment>
             ))}
           </div>
@@ -2500,7 +2543,7 @@ const LandingPage = () => {
                 </div>
               </div> */}
               <LeadershipSection />
-              <WaitingListSection />
+              {isPreLaunchActive() && <WaitingListSection />}
 
             </div>
           </section>
@@ -2719,7 +2762,7 @@ const LandingPage = () => {
               </div>
               {/* Image absolutely positioned, head outside card */}
               <div className="subscribe-img-wrapper">
-                <img src={manImage} alt="Newsletter illustration" className="subscribe-img" width="393" height="390" loading="lazy" decoding="async" />
+                <img src={manImage} alt="Newsletter illustration" className="subscribe-img" />
               </div>
             </div>
           </section>

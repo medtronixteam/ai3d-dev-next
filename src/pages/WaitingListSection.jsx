@@ -7,7 +7,6 @@ import { useAuth } from '../context/AuthContext';
 import paths from '../routes/paths';
 import buttonIcon from '../assets/images/buttonIcon.png';
 import WishListBg from '../assets/images/WishListBg.png';
-import { isPreLaunchActive } from '../utils/platformLaunch';
 import {
   EarlyAccessTitle,
   EarlyAccessDescriptions,
@@ -17,10 +16,6 @@ import {
 const WaitingListSection = () => {
   const navigate = useNavigate();
   const { token } = useAuth();
-
-  if (!isPreLaunchActive()) {
-    return null;
-  }
 
   const handleSignUp = () => {
     navigate(token ? paths.dashboard : paths.signup);

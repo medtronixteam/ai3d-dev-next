@@ -91,7 +91,7 @@
   width: 100%;
   min-width: 0;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: hidden;
   box-sizing: border-box;
 }
 
@@ -242,7 +242,7 @@
 }
 
 .rp-workspace-list-view {
-  margin-bottom: 120px;
+  margin-bottom: 90px;
 }
 
 .rp-workspace-list-item {
@@ -384,14 +384,6 @@
 }
 
 .rp-workspace-list-item:has(.rp-card-menu) {
-  z-index: 30;
-}
-
-.rp-card:has(.rp-card-menu) {
-  z-index: 30;
-}
-
-.rp-list-item:has(.rp-card-menu) {
   z-index: 30;
 }
 
@@ -818,11 +810,10 @@
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 24px;
   padding: 0 15px;
-  margin-bottom: 120px;
 }
 
 .rp-grid:last-child {
-  margin-bottom: 120px !important;
+  margin-bottom: 90px !important;
 }
 
 .rp-card {
@@ -1156,7 +1147,6 @@
   flex-direction: column;
   gap: 18px;
   padding: 0 15px;
-  margin-bottom: 120px;
 }
 
 .rp-list-group {
@@ -1566,7 +1556,7 @@
     width: 100%;
     max-width: 100%;
     padding-top: 24px;
-    overflow: visible;
+    overflow-x: hidden;
   }
 
   .rp-page-head {

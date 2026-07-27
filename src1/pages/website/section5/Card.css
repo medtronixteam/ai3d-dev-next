@@ -1,0 +1,78 @@
+.section-5 {
+  padding: 30px;
+}
+
+.section-5 .card {
+  margin-bottom: 20px;
+  background-color: #2b2c3f;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0.5px 0px 5px rgba(255, 255, 255, 0.847);
+  color: white;
+  height: 370px;
+}
+#card4{
+ 
+  width: 45% !important;
+}
+.section-5 .card:hover {
+  background-color: #3e2b3f69;
+}
+
+.section-5 .card:hover .card-title {
+  color: #c72f81;
+}
+
+.section-5 .card .card-body {
+  padding: 10px;
+}
+
+.section-5 .card img {
+  width: 80%;
+}
+
+.section-5 .card .card-text {
+  color: rgba(255, 255, 255, 0.652);
+  margin-bottom: 15px;
+}
+
+@media (max-width: 560px) {
+  .section-5 .card {
+    height: auto;
+  }
+  .section-5 {
+    padding: 3px;
+  }
+  .section-5 .card img {
+    width: 100%;
+  }
+
+  .section-5 .card .card-title {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .section-5 .card .card-text {
+    font-size: 12px;
+  }
+}
+
+/* =============================== */
+/* ======== Video Css ============ */
+.video-container {
+  position: relative;
+  padding-bottom: 53.25%;
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent; /* Ensure the background is transparent */
+  border: none; /* Remove any borders */
+}

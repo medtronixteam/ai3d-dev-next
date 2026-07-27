@@ -1,0 +1,223 @@
+.profile-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+  animation: overlay-fade-in 0.3s ease-out forwards;
+}
+
+.profile-popup {
+  background-color: var(--body-bg);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  width: 480px;
+  max-width: 90vw;
+  padding: 12px 15px;
+  animation: popup-scale-in 0.3s ease-out forwards;
+}
+
+@keyframes overlay-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes popup-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.popup-header h4 {
+  margin: 0 0 12px 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  /* padding-top: 12px;
+  padding-left: 12px; */
+}
+
+.close-popup-btn {
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: var(--icon-inactive);
+  cursor: pointer;
+  padding: 4px;
+}
+
+.user-info-section {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 12px;
+  transition: background-color 0.2s;
+  background-color: var(--body-bg);
+}
+/* .user-info-section:hover {
+    background-color: var(--search-bg);
+} */
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 16px;
+  color: var(--text-primary);
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  color: var(--text-primary);
+}
+
+.user-name {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.user-email {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.pro-badge {
+  background-color: #fceded;
+  color: var(--primary-color);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-right: 12px;
+}
+.arrow-icon {
+    color: var(--icon-inactive);
+    cursor: pointer;
+}
+
+.teams-section {
+  margin-top: 12px;
+  padding: 10px 15px;
+  border: 1px solid var(--divider-color);
+  border-radius: 7px;
+  background: var(--body-bg);
+}
+.teams-section h5 {
+    margin: 0 0 12px 0;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.create-team-btn {
+    width: 100%;
+    padding: 25px;
+    background-color: var(--search-bg);
+    border: 1px solid var(--divider-color);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 14px !important;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text-primary);
+}
+
+/* Increase the SVG icon size inside Create team button */
+.create-team-btn svg {
+  width: 22px;
+  height: 22px;
+}
+
+.popup-menu {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 15px;
+  gap: 16px;
+}
+
+.menu-item:hover {
+  color: var(--primary-color);
+}
+.menu-item svg {
+    font-size: 20px;
+}
+
+.logout-section .menu-item {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.free-badge {
+  max-width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 0 0px 6px #ef60acb0;
+}
+
+.email-wrap {
+  word-break: break-all;
+  white-space: normal;
+  display: block;
+  margin-top: 3px;
+}
+
+@media (max-width: 600px) {
+  .profile-popup {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    border-radius: 0 !important;
+    padding: 8px !important;
+    margin: 10px;
+    border-radius: 10px !important;
+  }
+  .free-badge {
+    position: static !important;
+    display: inline-block;
+    margin-left: 0px;
+    font-size: 13px;
+    padding: 2px 10px;
+    max-width: 50px;
+  }
+  .profile-header, .profile-info-row {
+    flex-wrap: wrap !important;
+    align-items: flex-start !important;
+  }
+  .email-wrap {
+    max-width: 90vw;
+    font-size: 13px;
+  }
+} 

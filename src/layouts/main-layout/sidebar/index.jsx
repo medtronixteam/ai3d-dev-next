@@ -162,6 +162,7 @@ const sidebarOptions = [
 ];
 
 const Sidebar = ({ open = false, onClose, disableExpand = false }) => {
+  const [isCollapsed, toggleCollapse] = useSidebarCollapse();
   const { user, token, tokens, activeTeam } = useAuth();
   const [isProfileOpen, setProfileOpen] = useState(false);
   const [profile, setProfile] = useState(null);
@@ -206,13 +207,18 @@ const Sidebar = ({ open = false, onClose, disableExpand = false }) => {
   const isScanNewPage = location.pathname === '/3dio/new/scan';
   const isPublicProjectPage = isPublicProjectRoute(location.pathname);
   const isFixedCollapsedPage = isScanNewPage || isPublicProjectPage;
-  const [isCollapsed, toggleCollapse, isLargeScreen, setCollapse] = useSidebarCollapse();
 
   useEffect(() => {
-    if (isSettingsPage || isFixedCollapsedPage) {
-      if (!isCollapsed) setCollapse(true);
+    if (isFixedCollapsedPage && !isCollapsed) {
+      toggleCollapse();
+    } else if (!isFixedCollapsedPage && isCollapsed) {
+      // Auto expand on normal platform pages if collapsed by default
+      const savedState = localStorage.getItem('sidebar-collapsed');
+      if (savedState === null || savedState === 'false') {
+        toggleCollapse();
+      }
     }
-  }, [isSettingsPage, isFixedCollapsedPage, isCollapsed, setCollapse]);
+  }, [isFixedCollapsedPage, isCollapsed, toggleCollapse]);
   const handleToggleClick = () => {
     if (!isSettingsPage && !isFixedCollapsedPage && !disableExpand) toggleCollapse();
   };

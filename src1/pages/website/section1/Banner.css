@@ -1,0 +1,143 @@
+/* Logo Css */
+
+.lo-go img {
+  width: 120px;
+  cursor: pointer;
+}
+
+/* --------------------------------- */
+.banner {
+  padding: 30px;
+}
+
+.banner h1 {
+  max-width: 70%;
+  font-size: 65px;
+  font-weight: bold;
+}
+
+.banner button {
+ 
+  background-color: #c72f81;
+ 
+  background-color: #dc3e96;
+ 
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: none;
+  margin-top: 10px;
+  margin-right: 20px;
+  font-size: 18px;
+}
+
+.banner button:hover {
+  background-color: #89004b;
+}
+
+@media (max-width: 992px) {
+  .banner h1 {
+    font-size: 45px;
+  }
+
+  #banner-img {
+    margin-top: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .top-box-logo {
+    margin-bottom: 20px;
+  }
+
+  .lo-go {
+    width: 100px;
+  }
+
+  .banner h1 {
+    font-size: 35px;
+  }
+
+  .banner button {
+    padding: 8px 25px;
+    font-size: 14px;
+  }
+
+
+}
+
+@media (max-width: 480px) {
+  .banner {
+    padding: 10px;
+  }
+
+  .banner h1 {
+    font-size: 25px;
+  }
+
+  .banner button {
+    padding: 6px 20px;
+    font-size: 12px;
+
+  }
+
+  .lo-go {
+    width: 70px;
+  }
+
+  .beta-box .button {
+    --fs-size: 1em !important;
+  }
+
+}
+
+/* ============ Beta Button ============ */
+/* === removing default button style ===*/
+.beta-box .button {
+  margin: 0;
+  height: auto;
+  background: transparent !important;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+}
+
+/* button styling */
+.beta-box .button {
+  --border-right: 6px;
+  --text-stroke-color: rgba(255, 255, 255, 0.692);
+  --animation-color: #c72f81;
+  --fs-size: 1.5em;
+  letter-spacing: 3px;
+  text-decoration: none;
+  font-size: var(--fs-size);
+  font-family: "Arial";
+  position: relative;
+  text-transform: uppercase;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--text-stroke-color);
+} 
+
+
+
+.hover-text {
+  position: absolute;
+  box-sizing: border-box;
+  content: attr(data-text);
+  color: var(--animation-color);
+  width: 0%;
+  inset: 0;
+  border-right: var(--border-right) solid var(--animation-color);
+  overflow: hidden;
+  transition: 0.5s;
+  -webkit-text-stroke: 1.5px var(--animation-color);
+}
+
+/* hover */
+.beta-box .button:hover .hover-text {
+  width: 100%;
+  filter: drop-shadow(0 0 23px var(--animation-color))
+}
+
+

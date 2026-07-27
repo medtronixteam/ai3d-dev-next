@@ -1,0 +1,86 @@
+.CardSection {
+  background-color: #37193b;
+  color: white;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+  height: auto;
+}
+
+.background-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+.card3D {
+  padding: 20px 0;
+  display: flex;
+  width: 100%;
+  max-width: 350px;
+  height: auto;
+  background-color: #2b2c3f;
+  color: white;
+  margin: 20px auto;
+  cursor: pointer;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.847);
+  transition: transform 0.6s ease-in-out, box-shadow 0.6s ease-in-out;
+  transform-style: preserve-3d;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: wrap;
+}
+
+.card3D h2 {
+  text-align: center;
+  padding-top: 10px;
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.card3D h3 {
+  text-align: center;
+  padding: 10px;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.card3D img {
+  height: auto;
+  border: none;
+  border-radius: 0px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .card3D {
+    width: 80%;
+  }
+
+  .card3D h2 {
+    font-size: 20px;
+  }
+
+  .card3D h3 {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card3D {
+    width: 100%;
+  }
+
+  .card3D h2 {
+    font-size: 18px;
+  }
+
+  .card3D h3 {
+    font-size: 16px;
+  }
+}

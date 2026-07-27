@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
 import {
   ArrowRight,
   Sparkles,
@@ -136,6 +137,15 @@ const LeftScan = ({
     }
   }, [images.length]);
 
+  const ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'svg'];
+  const ALLOWED_ACCEPT = '.png,.jpg,.jpeg,.svg,image/png,image/jpeg,image/svg+xml';
+
+  const isAllowedImage = (file) => {
+    if (!file) return false;
+    const ext = file.name.split('.').pop()?.toLowerCase();
+    return ALLOWED_EXTENSIONS.includes(ext);
+  };
+
   // url update
   const handleSingleImageChange = (e) => {
     if (isProcessing || isViewOnly) return;
@@ -143,6 +153,11 @@ const LeftScan = ({
     setImageGuidelinesOpen(false);
     const file = e.target.files?.[0];
     if (file) {
+      if (!isAllowedImage(file)) {
+        toast.error('Only PNG, JPG, JPEG, and SVG images are allowed!');
+        e.target.value = '';
+        return;
+      }
       setSingleImageName(file.name);
       setSingleImageFile(file);
       setImages([]);
@@ -157,14 +172,26 @@ const LeftScan = ({
     if (isProcessing || isViewOnly) return;
     const selectedFiles = Array.from(e.target.files);
 
-    if (images.length + selectedFiles.length > 15) {
-      alert('You can upload maximum 15 images');
+    const validFiles = selectedFiles.filter((file) => isAllowedImage(file));
+
+    if (validFiles.length < selectedFiles.length) {
+      toast.error('Only PNG, JPG, JPEG, and SVG images are allowed!');
+    }
+
+    if (validFiles.length === 0) {
+      e.target.value = '';
       return;
     }
 
-    const newPreviews = selectedFiles.map((file) => URL.createObjectURL(file));
+    if (images.length + validFiles.length > 15) {
+      toast.warning('You can upload maximum 15 images');
+      e.target.value = '';
+      return;
+    }
+
+    const newPreviews = validFiles.map((file) => URL.createObjectURL(file));
     setImages((prev) => [...prev, ...newPreviews]);
-    setImageFiles((prev) => [...prev, ...selectedFiles]);
+    setImageFiles((prev) => [...prev, ...validFiles]);
     setSingleImageName('');
     setSingleImageFile(null);
     setVideo(null);
@@ -172,7 +199,6 @@ const LeftScan = ({
   };
 
   const handleVideoChange = (e) => {
-    /*
     if (isProcessing || isViewOnly) return;
     if (e.target.files && e.target.files[0]) {
       setShowVideoFrames?.(false);
@@ -187,13 +213,11 @@ const LeftScan = ({
       setSingleImageName('');
       setSingleImageFile(null);
     }
-    */
     e.target.value = '';
   };
 
   const handleRemoveVideo = (e) => {
     e.stopPropagation();
-    /*
     if (isProcessing || isViewOnly) return;
     setVideo(null);
     setVideoFileName?.('');
@@ -205,7 +229,6 @@ const LeftScan = ({
     if (videoInputRef.current) {
       videoInputRef.current.value = '';
     }
-    */
   };
 
   const removeImage = (index) => {
@@ -271,7 +294,7 @@ const LeftScan = ({
               type="file"
               hidden
               ref={singleImageInputRef}
-              accept="image/*"
+              accept={ALLOWED_ACCEPT}
               onChange={handleSingleImageChange}
             />
             <input
@@ -348,113 +371,64 @@ const LeftScan = ({
             <label className="fw-bold small mb-2">
               Images <span className="text-muted">({images.length}/15)</span>
             </label>
-
-            {images.length === 0 && (
-              <div className="image-upload-zone border-dashed rounded-4 p-3 mb-3 position-relative">
-                <div className="text-center mb-3">
-                  <p className="mb-0 fw-bold x-small">
-                    {video ? video.name : 'Click / Drag & Drop / Paste Video'}
-                  </p>
-                  <p className="text-muted xx-small mb-0">Supported: .mp4, .mov, .avi</p>
-                  <p className="text-muted xx-small">Max: 3 min</p>
+            <div className="image-upload-zone border-dashed rounded-4 p-3 mb-3 position-relative">
+              <div className="text-center mb-3">
+                <p className="mb-0 fw-bold x-small">
+                  {video ? video.name : 'Click / Drag & Drop / Paste Video'}
+                </p>
+                <p className="text-muted xx-small mb-0">Supported: .mp4, .mov, .avi</p>
+                <p className="text-muted xx-small">Max: 3 min</p>
+              </div>
+              <div className="d-flex gap-2 justify-content-between">
+                <div
+                  className="upload-box d-flex flex-column align-items-center justify-content-center text-center"
+                  onClick={() => !(isProcessing || isViewOnly) && imageInputRef.current?.click()}
+                  style={{
+                    padding: '10px',
+                    cursor: isProcessing || isViewOnly ? 'not-allowed' : 'pointer',
+                    minHeight: '50px',
+                    width: 'calc(33.33% - 8px)',
+                  }}
+                >
+                  <img src={ImgIcon} alt="upload" width="20" height="20" />
                 </div>
-                <div className="d-flex gap-2 justify-content-between">
-                  <div
-                    className="upload-box d-flex flex-column align-items-center justify-content-center text-center"
-                    onClick={() => !(isProcessing || isViewOnly) && onShowComingSoon('Multiple Image to 3D')}
-                    style={{
-                      padding: '10px',
-                      cursor: isProcessing || isViewOnly ? 'not-allowed' : 'pointer',
-                      minHeight: '50px',
-                      width: 'calc(33.33% - 8px)',
-                    }}
-                  >
-                    <img src={ImgIcon} alt="upload" width="20" height="20" />
-                  </div>
 
-                  <div
-                    className="upload-box d-flex flex-column align-items-center justify-content-center text-center"
-                    onClick={() => !(isProcessing || isViewOnly) && onShowComingSoon('Multiple Image to 3D')}
-                    style={{
-                      padding: '10px',
-                      cursor: isProcessing || isViewOnly ? 'not-allowed' : 'pointer',
-                      minHeight: '50px',
-                      width: 'calc(33.33% - 8px)',
-                    }}
-                  >
-                    <img src={ImgIcon} alt="upload" width="20" height="20" />
-                  </div>
+                <div
+                  className="upload-box d-flex flex-column align-items-center justify-content-center text-center"
+                  onClick={() => !(isProcessing || isViewOnly) && imageInputRef.current?.click()}
+                  style={{
+                    padding: '10px',
+                    cursor: isProcessing || isViewOnly ? 'not-allowed' : 'pointer',
+                    minHeight: '50px',
+                    width: 'calc(33.33% - 8px)',
+                  }}
+                >
+                  <img src={ImgIcon} alt="upload" width="20" height="20" />
+                </div>
 
-                  <div
-                    className="upload-box d-flex flex-column align-items-center justify-content-center text-center"
-                    onClick={() => !(isProcessing || isViewOnly) && onShowComingSoon('Multiple Image to 3D')}
-                    style={{
-                      padding: '10px',
-                      cursor: isProcessing || isViewOnly ? 'not-allowed' : 'pointer',
-                      minHeight: '50px',
-                      width: 'calc(33.33% - 8px)',
-                      fontSize: '12px',
-                    }}
-                  >
-                    <span className="text-color">
-                      +10 <br /> Max
-                    </span>
-                  </div>
+                <div
+                  className="upload-box d-flex flex-column align-items-center justify-content-center text-center"
+                  onClick={() => !(isProcessing || isViewOnly) && imageInputRef.current?.click()}
+                  style={{
+                    padding: '10px',
+                    cursor: isProcessing || isViewOnly ? 'not-allowed' : 'pointer',
+                    minHeight: '50px',
+                    width: 'calc(33.33% - 8px)',
+                    fontSize: '12px',
+                  }}
+                >
+                  <span className="text-color">
+                    +10 <br /> Max
+                  </span>
                 </div>
               </div>
-            )}
-
-            {images.length > 0 && (
-              <div className="image-upload-zone border-dashed rounded-4 p-2 mb-3 position-relative">
-                <div className="thumb-scroll-wrapper position-relative">
-                  {images.length > 0 && (
-                    <button
-                      className="scroll-btn left-btn"
-                      onClick={scrollLeft}
-                      disabled={isProcessing || isViewOnly}
-                    >
-                      <ChevronLeft size={16} />
-                    </button>
-                  )}
-                  <div className="thumb-scroll" ref={scrollRef}>
-                    {images.map((img, idx) => (
-                      <div key={idx} className="thumb-box position-relative">
-                        <img src={img} alt="preview" />
-                        {!isViewOnly && (
-                          <div className="remove-icon" onClick={() => removeImage(idx)}>
-                            <X size={10} />
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                    {images.length < 15 && (
-                      <div
-                        className="thumb-box add"
-                        onClick={() => !(isProcessing || isViewOnly) && onShowComingSoon('Multiple Image to 3D')}
-                      >
-                        <Plus size={20} />
-                      </div>
-                    )}
-                  </div>
-                  {images.length > 0 && (
-                    <button
-                      className="scroll-btn right-btn"
-                      onClick={scrollRight}
-                      disabled={isProcessing || isViewOnly}
-                    >
-                      <ChevronRight size={16} />
-                    </button>
-                  )}
-                </div>
-              </div>
-            )}
-
+            </div>
             <input
               type="file"
               multiple
               hidden
               ref={imageInputRef}
-              accept="image/*,video/*"
+              accept={ALLOWED_ACCEPT}
               onChange={handleMultipleFileChange}
             />
           </>
@@ -467,7 +441,7 @@ const LeftScan = ({
             <div
               className={`video-upload-zone border-dashed rounded-4 p-3 text-center mb-4 cursor-pointer position-relative ${isProcessing || isViewOnly ? 'pe-none opacity-50' : ''
                 }`}
-              onClick={() => !(isProcessing || isViewOnly) && onShowComingSoon('Video to 3D')}
+              onClick={() => !(isProcessing || isViewOnly) && videoInputRef.current?.click()}
             >
               {video && !isProcessing && !isViewOnly && (
                 <button
@@ -493,13 +467,13 @@ const LeftScan = ({
               </p>
               <p className="text-muted xx-small mb-0">Supported: .mp4, .mov, .avi</p>
               <p className="text-muted xx-small">Max: 3 min</p>
-              {/* <input
+              <input
                 type="file"
                 hidden
                 ref={videoInputRef}
                 accept="video/*"
                 onChange={handleVideoChange}
-              /> */}
+              />
             </div>
           </>
         )}

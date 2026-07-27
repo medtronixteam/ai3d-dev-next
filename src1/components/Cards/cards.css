@@ -1,0 +1,349 @@
+.cards-wrapper-service {
+  position: absolute;
+  inset: 0;
+}
+
+.card-container-service {
+  position: absolute;
+  padding: 15px 10px;
+  width: 280px !important;
+  border-radius: 8px;
+  background: transparent;
+}
+
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* .card-container::before {
+  filter: blur(1rem);
+  opacity: 0.5;
+} */
+
+.card-container-service::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  background: linear-gradient(var(--angle), #de3996, #2e2e62);
+  border-radius: inherit;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  animation: border 6s linear infinite;
+}
+
+.card-icon-service {
+  position: absolute;
+  top: -15px;
+  left: 45%;
+  background-color: #de3996;
+  padding: 8px 14px;
+  border-radius: 50%;
+  color: white;
+  font-weight: bold;
+  z-index: 2;
+}
+
+.card-content-service {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.card-content-service h1 {
+  display: flex;
+  flex-direction: column;
+  font-size: 15px;
+  margin-top: 15px;
+  color: #de3996;
+  font-weight: 600;
+}
+
+.country {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.card-content-service p {
+  color: #2e2e62;
+  font-size: 15px;
+  font-weight: 500;
+  text-align: center;
+  margin-top: -5px;
+}
+
+.card-container-service.left-top {
+  margin-top: 5rem;
+  top: -170px;
+  left: 250px;
+  height: 215px;
+}
+
+.card-container-service.right-top {
+  margin-top: 5rem;
+  top: -170px;
+  right: 250px;
+  height: 125px;
+}
+
+.card-container-service.left-bottom {
+  bottom: -180px;
+  left: 100px;
+   height: 145px;
+}
+
+.card-container-service.right-bottom {
+  bottom: -180px;
+  right: 100px;
+   height: 240px;
+}
+
+@media (max-width: 620px) {
+  .card-container-service.left-top,
+  .card-container-service.right-top,
+  .card-container-service.left-bottom,
+  .card-container-service.right-bottom {
+    top: auto;
+    bottom: auto;
+    left: auto;
+    right: auto;
+  }
+  .cards-wrapper-service {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    /* margin-top: 20px; */
+  }
+
+  .card-container-service {
+    position: relative;
+    height: 250px !important;
+  }
+  .card-container-service.left-top {
+    margin-top: 2rem;
+  }
+  .card-container-service.right-top {
+    margin-top: 0;
+  }
+  .card-container-service.right-top p {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .card-container-service.left-bottom p {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+@media (min-width: 620px) and (max-width: 1022px) {
+  .cards-wrapper-service {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    place-items: center;
+  }
+
+  .card-content-service h1 {
+    font-size: 12px;
+  }
+
+  .country {
+    font-size: 11px;
+  }
+
+  .card-content-service p {
+    font-size: 12px;
+  }
+
+  .card-container-service {
+    position: relative;
+    height: 180px;
+  }
+
+  .card-container-service.left-top {
+    margin-top: 3rem;
+    height: 170px !important;
+  }
+
+  .card-container-service.right-top {
+    margin-top: 3rem;
+    height: 110px !important;
+  }
+  .card-container-service.left-bottom {
+    height:  115px !important;
+  }
+  .card-container-service.right-bottom {
+    height: 185px !important;
+  }
+
+  .card-container-service.right-top p {
+    padding-left: 10px;
+    padding-right: 10px;
+    
+  }
+
+  .card-container-service.left-bottom p {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .card-container-service.left-top,
+  .card-container-service.right-top,
+  .card-container-service.left-bottom,
+  .card-container-service.right-bottom {
+    top: auto;
+    bottom: auto;
+    left: auto;
+    right: auto;
+  }
+}
+
+@media (min-width: 1023px) and (max-width: 1159px) {
+  .card-content-service h1 {
+    font-size: 12px;
+  }
+
+  .country {
+    font-size: 11px;
+  }
+
+  .card-content-service p {
+    font-size: 12px;
+  }
+  .card-container-service {
+    width: 220px;
+  }
+  .card-container-service.left-top {
+    top: -230px;
+    left: 50px;
+    height: 170px !important;
+  }
+
+  .card-container-service.right-top {
+    top: -230px;
+    right: 50px;
+    height: 110px !important;
+  }
+
+  .card-container-service.left-bottom {
+    bottom: -200px;
+    left: 20px;
+    height: 115px !important;
+  }
+
+  .card-container-service.right-bottom {
+    bottom: -200px;
+    right: 20px;
+    height: 180px !important;
+  }
+}
+
+@media (min-width: 1160px) and (max-width: 1350px) {
+  .card-content-service h1 {
+    font-size: 12px;
+  }
+
+  .country {
+    font-size: 11px;
+  }
+
+  .card-content-service p {
+    font-size: 12px;
+  }
+  .card-container-service {
+    width: 220px;
+  }
+  .card-container-service.left-top {
+    top: -230px;
+    left: 130px;
+    height: 170px !important;
+  }
+
+  .card-container-service.right-top {
+    top: -230px;
+    right: 150px;
+    height: 110px !important;
+  }
+
+  .card-container-service.left-bottom {
+    bottom: -200px;
+    left: 50px;
+    height: 110px !important;
+  }
+
+  .card-container-service.right-bottom {
+    bottom: -200px;
+    right: 50px;
+    height: 180px !important;
+  }
+}
+
+@media (min-width: 1350px) and (max-width: 1440px) {
+  .card-container-service.left-top {
+    top: -230px;
+    left: 180px;
+  }
+
+  .card-container-service.right-top {
+    top: -230px;
+    right: 180px;
+  }
+
+  .card-container-service.left-bottom {
+    bottom: -230px;
+    left: 80px;
+  }
+
+  .card-container-service.right-bottom {
+    bottom: -280px;
+    right: 80px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .cards-wrapper-service {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .card-container-service.left-top {
+    top: -230px;
+    left: 80px;
+  }
+
+  .card-container-service.right-top {
+    top: -230px;
+    right: 80px;
+  }
+
+  .card-container-service.left-bottom {
+    bottom: -200px;
+    left: 10px;
+  }
+
+  .card-container-service.right-bottom {
+    bottom: -250px;
+    right: 10px;
+  }
+}
+
+/* border animation */
+@keyframes border {
+  from {
+    --angle: 0deg;
+  }
+  to {
+    --angle: 360deg;
+  }
+}

@@ -887,7 +887,6 @@ const Profile = () => {
                 placeholder="Search in profile..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="profile-search-form-control"
                 style={{
                   border: 'none',
                   background: 'transparent',

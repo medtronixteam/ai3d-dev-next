@@ -1,0 +1,141 @@
+.notification-container {
+
+  min-height: 100vh;
+  margin: 0;
+  background: #fff;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.notification-title {
+  font-size: 2.3rem;
+  font-weight: 700;
+  margin: 40px 0 24px 0;
+  color: #e6339a;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+.notification-list {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto 24px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: center;
+}
+
+.notification-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(230, 51, 154, 0.08);
+  padding: 22px 28px 16px 28px;
+  transition: box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1.5px solid #e6339a22;
+  width: 100%;
+  max-width: 650px;
+}
+
+.notification-card:last-child {
+  margin-bottom: 0;
+}
+
+.notification-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  /* justify-content: space-between; */
+}
+
+.notification-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e6339a 0%, #a259e6 100%);
+  margin-right: 10px;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px #e6339a44;
+}
+
+.notification-card-title {
+  font-weight: 600;
+  color: #e6339a;
+  flex: 1;
+  font-size: 1.15rem;
+  text-align: left;
+}
+
+.notification-date {
+  color: #a259e6;
+  font-size: 0.98rem;
+  margin-left: 16px;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.notification-message {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 4.5em;
+  line-height: 1.5em;
+}
+
+.notification-card.unread {
+  background: #f5f5fa;
+  border-left: 4px solid #E6339A;
+}
+
+.notification-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  margin-bottom: 32px;
+}
+
+.notification-pagination button {
+  background: linear-gradient(90deg, #e6339a 0%, #a259e6 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 24px;
+  font-size: 1.08rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px #e6339a22;
+}
+
+.notification-pagination button:disabled {
+  background: #f7e1ff;
+  color: #aaa;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+@media (max-width: 900px) {
+  .notification-list {
+    max-width: 98vw;
+  }
+  .notification-card {
+    padding: 14px 8px 10px 8px;
+    max-width: 98vw;
+  }
+  .notification-title {
+    font-size: 1.4rem;
+  }
+} 
+.ai_3d_landing .a3d-pills-scroll::-webkit-scrollbar {
+  display: none;
+}

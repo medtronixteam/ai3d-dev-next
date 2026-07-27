@@ -15,16 +15,7 @@ export const SocketProvider = ({ children }) => {
   const activeFcmTokenRef = useRef(null);
 
   useEffect(() => {
-    const socket = io('https://node.ai3dscanning.com', {
-      transports: ['websocket', 'polling'],
-      upgrade: true,
-      reconnection: true,
-      reconnectionAttempts: Infinity,
-      reconnectionDelay: 2000,
-      reconnectionDelayMax: 15000,
-      timeout: 20000,
-      withCredentials: false,
-    });
+    const socket = io('https://node.ai3dscanning.com');
     socketRef.current = socket;
 
     socket.on('connect', () => {
@@ -38,9 +29,9 @@ export const SocketProvider = ({ children }) => {
       }
       if (activeVideoTokenRef.current) {
         console.log(`Auto re-registering active projectToken: ${activeVideoTokenRef.current} on reconnect`);
-        socket.emit('register-device', {
-          projectToken: activeVideoTokenRef.current,
-          fcmToken: activeFcmTokenRef.current,
+        socket.emit('register-device', { 
+          projectToken: activeVideoTokenRef.current, 
+          fcmToken: activeFcmTokenRef.current 
         });
       }
     });
@@ -51,8 +42,7 @@ export const SocketProvider = ({ children }) => {
     });
 
     socket.on('connect_error', (error) => {
-      // Socket is optional — HTTP project/detail polling still drives video generation status.
-      console.warn(`Socket connection issue: ${error.message}`);
+      console.log(`Connection Error: ${error.message}`, 'error');
     });
 
     return () => {

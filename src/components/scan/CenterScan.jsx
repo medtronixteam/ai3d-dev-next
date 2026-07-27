@@ -1,5 +1,5 @@
 import React from 'react';
-import { Rocket, Zap, Palette, Download } from 'lucide-react';
+import { Rocket, Zap, Palette, Download, X } from 'lucide-react';
 import sendCart from '../../pages/images/send-cart.png';
 import SeamlessCart from '../../pages/images/Seamless-cart.png';
 import CenterBox from '../../pages/images/icons/center-box.svg';
@@ -73,6 +73,8 @@ const CenterScan = ({
   isExtractingFrames = false,
   isGenerating = false,
   isArrowLoading = false,
+  images = [],
+  onRemoveImage,
 }) => {
   const [isActuallyRendered, setIsActuallyRendered] = React.useState(false);
 
@@ -306,6 +308,93 @@ const CenterScan = ({
                   ))}
                 </div>
               </div>
+            </div>
+          ) : images.length > 0 ? (
+            <div className="text-center fade-in w-100 p-4" style={{ maxWidth: '100%' }}>
+              <h4 className="fw-bold mb-2">
+                Selected <span className="text-pink">Images</span> ({images.length})
+              </h4>
+              <p className="text-muted small mb-4">
+                Your multi-angle photos are ready for 3D model generation.
+              </p>
+              <div
+                className="d-flex flex-row align-items-center mb-4 hide-scrollbar"
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  flexWrap: 'nowrap',
+                  overflowX: 'auto',
+                  overflowY: 'hidden',
+                  padding: '10px 5px',
+                  gap: '12px',
+                  WebkitOverflowScrolling: 'touch',
+                  scrollbarWidth: 'none',
+                  msOverflowStyle: 'none',
+                }}
+              >
+                {images.map((img, index) => (
+                  <div
+                    key={index}
+                    className="position-relative rounded-3 shadow-sm"
+                    style={{
+                      width: '75px',
+                      height: '75px',
+                      minWidth: '75px',
+                      minHeight: '75px',
+                      flexShrink: 0,
+                      flexGrow: 0,
+                      border: '2px solid #de3996',
+                      backgroundColor: '#f8f9fa',
+                      borderRadius: '10px',
+                    }}
+                  >
+                    <img
+                      src={img}
+                      alt={`Selected ${index + 1}`}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
+                    />
+                    <span
+                      className="position-absolute top-0 start-0 badge text-white"
+                      style={{ fontSize: '9px', backgroundColor: '#de3996', borderRadius: '4px', margin: '2px', padding: '2px 4px' }}
+                    >
+                      #{index + 1}
+                    </span>
+                    {!isViewOnly && (
+                      <button
+                        type="button"
+                        className="position-absolute d-flex align-items-center justify-content-center border-0 text-white"
+                        style={{
+                          top: '-5px',
+                          right: '-5px',
+                          width: '18px',
+                          height: '18px',
+                          borderRadius: '50%',
+                          backgroundColor: '#de3996',
+                          cursor: 'pointer',
+                          boxShadow: '0 2px 5px rgba(0,0,0,0.25)',
+                          zIndex: 5,
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onRemoveImage?.(index);
+                        }}
+                        title="Remove Image"
+                      >
+                        <X size={11} strokeWidth={2.5} />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <button
+                className="btn text-white fw-bold px-4 py-2"
+                style={{ backgroundColor: '#de3996', borderRadius: '10px' }}
+                onClick={handleGenerate}
+                disabled={isProcessing}
+              >
+                {isGenerating ? 'Generating 3D Model...' : 'Generate 3D Model'}
+              </button>
             </div>
           ) : (
             <div className="text-center p-4 w-100">

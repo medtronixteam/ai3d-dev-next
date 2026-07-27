@@ -320,6 +320,7 @@ const ImagePreview = () => {
   useEffect(() => {
   const fetchInitialProject = async () => {
     try {
+     
       console.log(`[API] 📥 Fetching initial project data for ID: ${id}`);
       const res = await axios.get(`${baseURL}/project/detail/${id}`, {
         headers: { Authorization: `Bearer ${token}` },

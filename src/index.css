@@ -5,7 +5,7 @@
   padding: 0;
 }
 
-html, body, #root {
+html, body {
   overflow-x: hidden;
   height: 100%;
   border: none !important;
@@ -365,55 +365,4 @@ body.dashboard-active *::-webkit-scrollbar {
   max-height: 3rem;
   height: auto;
   object-fit: contain;
-}
-
-/* Hide html/body scrollbar when inside main-layout to prevent double scrollbars */
-html:has(.main-layout),
-html:has(.main-layout) body {
-  overflow: hidden !important;
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
-}
-
-html:has(.main-layout)::-webkit-scrollbar,
-html:has(.main-layout) body::-webkit-scrollbar {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
-}
-
-/* Prevent horizontal scrolling and force full height on settings pages */
-.profile-page-root,
-.settings-page-root,
-.settings-login-bg {
-  overflow-x: hidden !important;
-  min-height: 100% !important;
-  height: 100% !important;
-  display: flex !important;
-  flex-direction: column !important;
-  flex: 1 1 auto !important;
-}
-
-/* Prevent inputs and search containers from showing scrollbars */
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="search"],
-.profile-search-container,
-.profile-search-containers {
-  overflow: hidden !important;
-}
-
-.profile-search-form-control {
-  border: none !important;
-  background: transparent !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-.profile-search-container *,
-.profile-search-containers * {
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
 }

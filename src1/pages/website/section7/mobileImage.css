@@ -1,0 +1,9 @@
+.mobile3D h3{
+  text-align: center;
+}
+
+@media (max-width: 550px) {
+  .mobile3D h3{
+    font-size: 16px;
+  }
+}

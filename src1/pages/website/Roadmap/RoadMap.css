@@ -1,0 +1,318 @@
+/*********************************/
+/********** 2 columns ************/
+
+/********** 2 columns ************/
+/*********************************/
+/********** timeline *************/
+/* .col-md-12{
+  width: 70%;
+  margin: 0 auto;
+} */
+.tl-header h1 {
+  margin: 0 0 15px 0;
+  padding: 0;
+  font-weight: 600;
+  font-size: 33px;
+}
+
+.tl-header div {
+  font-weight: 300;
+  margin-bottom: 25px;
+}
+
+.tl-item {
+  margin: 0px 0 0px 50px;
+  position: relative;
+}
+
+.tl-circle {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: linear-gradient(to right, #c9428c, #670038);
+  margin: 11px 0;
+}
+
+.tl-year-back {
+  background: linear-gradient(to right, #c9428c, #670038);
+  width: 16px;
+  height: 50px;
+  border-top-left-radius: 17px;
+  border-top-right-radius: 17px;
+  display: block;
+}
+
+.tl-year-wrap {
+  margin-top: 5px;
+}
+
+.tl-year {
+  position: absolute;
+  top: 22px;
+  left: -7px;
+  transform: rotate(270deg);
+  color: white;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.tl-event {
+  position: relative;
+  padding-bottom: 10px;
+  margin-top: -1px;
+  /* IE EDGE bug */
+}
+
+.tl-event:before {
+  content: "";
+  position: absolute;
+  background: linear-gradient(to right, #c9428c, #670038);
+  width: 16px;
+  height: 100%;
+  display: block;
+}
+
+.tl-event h2 {
+  margin: 0;
+  padding: 15px 0px 10px 35px;
+  font-size: 20px;
+}
+
+.tl-event h6 {
+  font-size: 14px;
+  padding: 0px 0px 10px 35px;
+  font-weight: 400;
+  color: #ffffff82;
+}
+
+.tl-color {
+  color: #c72f81;
+}
+
+.tl-txt-color {
+  color: #ffffff82;
+}
+
+.tl-date {
+  position: absolute;
+  top: 18px;
+  padding-right: 15px;
+  z-index: 1000;
+  color: #65bfda;
+  font-weight: bold;
+  font-size: 14px;
+  transform: translateX(-100%);
+
+  position: absolute;
+  top: 18px;
+  padding-right: 15px;
+  z-index: 999;
+  color: #65bfda;
+  font-weight: bold;
+  font-size: 14px;
+  transform: translateX(-100%);
+}
+
+.tl-date:after {
+  position: absolute;
+  right: -13px;
+  top: 5px;
+  content: "";
+  background: linear-gradient(to right, #ffe15f, #f57c00);
+  width: 10px;
+  height: 10px;
+  display: block;
+  border-radius: 50%;
+}
+
+.tl-end {
+  background: linear-gradient(to right, #c9428c, #670038);
+  width: 16px;
+  height: 30px;
+  border-bottom-left-radius: 17px;
+  border-bottom-right-radius: 17px;
+  display: block;
+  margin-bottom: 5px;
+  margin-top: -1px;
+  /* IE EDGE bug */
+}
+.wl-input select {
+  width: 100%;
+  background-color: transparent;
+  color: white;
+  border: none;
+  border-bottom: 2px solid white;
+  font-size: 15px;
+  padding: 5px 0px 15px 0px;
+}
+.wl-input option {
+  background-color: black;
+  color: white;
+  border: none;
+  border-bottom: 2px solid white;
+  font-size: 15px;
+  padding: 5px 0px 5px 0px;
+}
+.api-message {
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.success-message {
+  background-color: white;
+  color: #155724;
+  border: 1px solid #8b8b8b;
+  border-radius: 5px;
+  box-shadow: 0 0 10px #8b8b8b;
+}
+
+.error-message {
+  background-color: white;
+  color: #721c24;
+  border: 1px solid #f9f9f9;
+  border-radius: 5px;
+  box-shadow: 0 0 10px #8b8b8b;
+}
+
+.waitlist-container {
+  border-radius: 10px;
+  background: linear-gradient(to right, #972965, #460067);
+  box-shadow: rgb(242 242 242 / 24%) 0px 4px 20px;
+  margin-top: 30px;
+
+  border-radius: 10px;
+  background: linear-gradient(to right, #972965, #460067);
+  /* box-shadow: rgb(242 242 242 / 24%) 0px 4px 20px; */
+  box-shadow: inset 0.5px 0px 25px rgb(0 0 0);
+  margin-top: 30px;
+}
+
+.waitlist-container form .descr {
+  font-size: 30px;
+  font-weight: 600;
+  color: #e8e8e8;
+  margin: 25px 0px 0px 10px;
+}
+
+.descr-text {
+  margin: 10px 8px 33px 12px;
+  color: #d0d0d0;
+}
+
+.waitlist-container .form {
+  display: flex;
+  flex-direction: column;
+}
+
+.waitlist-container .wl-input {
+  margin: 1em 0 1em 0;
+  position: relative;
+}
+
+.waitlist-container .wl-input input {
+  font-size: 100%;
+  padding: 0.7em;
+  outline: none;
+  margin-top: 8px;
+  color: #ffc8d6;
+  border: none;
+  border-bottom: 2px solid #e8e8e8;
+  background: transparent;
+  border-radius: none;
+  width: 100%;
+  resize: none;
+}
+
+.waitlist-container .wl-input label {
+  font-size: 100%;
+  position: absolute;
+  left: 0;
+  color: #e8e8e8;
+  padding: 0.7em;
+  margin-left: 0.1em;
+  pointer-events: none;
+  transition: all 0.5s ease;
+  text-transform: uppercase;
+}
+
+.waitlist-container .wl-input :is(input:focus, input:valid) ~ label {
+  transform: translateY(-50%) scale(0.9);
+  margin: 0em;
+  padding: 0.4em;
+  background: transparent;
+}
+
+.waitlist-container .wl-input textarea:focus ~ label,
+.waitlist-container .wl-input textarea:valid ~ label {
+  transform: translateY(-50%) scale(0.9);
+  margin: 0em;
+  padding: 0.4em;
+  background: transparent;
+}
+
+.waitlist-container.inputGroup :is(input:focus, input:valid) {
+  border-color: rgb(37, 37, 211);
+}
+
+.waitlist-container .form button {
+  color: #e8e8e8;
+  font-size: 15px;
+  padding: 0.6em;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 20px;
+  background: transparent;
+  transition: all 0.3s ease-in-out;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.waitlist-container .form button:before {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #e8e8e8;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.waitlist-container .form button:hover:before {
+  opacity: 0.2;
+}
+
+.waitlist-container .form button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* ======== Respnosive ======== */
+@media (max-width: 480px) {
+  .tl-header h1 {
+    font-size: 24px;
+  }
+  .tl-date {
+    top: 15px;
+    font-size: 13px;
+  }
+  .tl-event h2 {
+    font-size: 14px;
+  }
+  .tl-event h6 {
+    font-size: 13px;
+  }
+  .tl-date:after {
+    top: 5px;
+  }
+}

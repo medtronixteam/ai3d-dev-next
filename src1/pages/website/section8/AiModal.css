@@ -1,0 +1,84 @@
+.AiModal {
+padding: 30px;
+}
+.AiModal-box{
+  background-color: #2b2c3f;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0.5px 0px 5px white;
+}
+
+.AiModal h2 {
+  color: white;
+  font-size: 33px;
+  font-weight: 600;
+}
+
+.AiModal h5 {
+  padding: 10px 0;
+  color: #ceced2;
+}
+
+.AiModal button {
+  background-color: #c72f81;
+  color: white;
+  padding: 10px 30px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: none;
+  margin-top: 10px;
+}
+
+.AiModal button:hover {
+  background-color: white;
+  color: #c72f81;
+}
+
+@media (max-width: 768px) {
+  .AiModal {
+    padding: 20px;
+  }
+
+  .AiModal h2 {
+    font-size: 28px;
+  }
+
+  .AiModal h5 {
+    padding: 8px 0;
+    font-size: 14px;
+  }
+
+  .AiModal button { 
+    padding: 8px 25px; 
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .AiModal-box{
+    padding: 15px;
+  }
+  .AiModal {
+    padding: 15px;
+  }
+
+  .AiModal h2 {
+    font-size: 24px;
+  }
+
+  .AiModal h5 {
+    padding: 6px 0;
+    font-size: 12px;
+  }
+
+  .AiModal button {
+    padding: 6px 20px;
+    font-size: 12px;
+  }
+}

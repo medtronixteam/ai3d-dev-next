@@ -184,19 +184,8 @@ const CenterScan = ({
                 <h3 className="model-loading-title fw-bold mb-2">
                   Creating your <span className="text-pink">model</span>
                 </h3>
-                <p className="model-loading-subtitle small mb-4">We are working on it, give us a minute</p>
+                <p className="model-loading-subtitle small mb-0">We are working on it, give us a minute</p>
               </div>
-              <button
-                className="btn btn-outline-pink mt-2"
-                onClick={() => {
-                  setShowLoadingUI(false);
-                  setShowBlackOverlay(false);
-                  setProgress(0);
-                  resetAllInputs();
-                }}
-              >
-                Cancel
-              </button>
             </div>
           ) : showQueueUI ? (
             <div className="text-center queue-ui fade-in w-100" style={{ maxWidth: '450px' }}>
@@ -312,11 +301,16 @@ const CenterScan = ({
           ) : images.length > 0 ? (
             <div className="text-center fade-in w-100 p-4" style={{ maxWidth: '100%' }}>
               <h4 className="fw-bold mb-2">
-                Selected <span className="text-pink">Images</span> ({images.length})
+                Selected <span className="text-pink">Images</span> ({images.length}/100)
               </h4>
-              <p className="text-muted small mb-4">
+              <p className="text-muted small mb-2">
                 Your multi-angle photos are ready for 3D model generation.
               </p>
+              {images.length < 10 && (
+                <div className="alert alert-warning py-1 px-3 d-inline-block xx-small mb-3" style={{ borderRadius: '20px', fontSize: '12px' }}>
+                  Please select at least <strong>{10 - images.length} more image{10 - images.length > 1 ? 's' : ''}</strong> (Minimum 10 required).
+                </div>
+              )}
               <div
                 className="d-flex flex-row align-items-center mb-4 hide-scrollbar"
                 style={{
@@ -389,9 +383,9 @@ const CenterScan = ({
               </div>
               <button
                 className="btn text-white fw-bold px-4 py-2"
-                style={{ backgroundColor: '#de3996', borderRadius: '10px' }}
+                style={{ backgroundColor: '#de3996', borderRadius: '10px', opacity: images.length < 10 || isProcessing ? 0.7 : 1 }}
                 onClick={handleGenerate}
-                disabled={isProcessing}
+                disabled={isProcessing || images.length < 10}
               >
                 {isGenerating ? 'Generating 3D Model...' : 'Generate 3D Model'}
               </button>

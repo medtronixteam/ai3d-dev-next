@@ -183,8 +183,8 @@ const LeftScan = ({
       return;
     }
 
-    if (images.length + validFiles.length > 15) {
-      toast.warning('You can upload maximum 15 images');
+    if (images.length + validFiles.length > 100) {
+      toast.warning('You can upload maximum 100 images');
       e.target.value = '';
       return;
     }
@@ -369,15 +369,15 @@ const LeftScan = ({
         {!video && !prompt && !singleImageName && !showVideoFrames && (
           <>
             <label className="fw-bold small mb-2">
-              Images <span className="text-muted">({images.length}/15)</span>
+              Images <span className="text-muted">({images.length}/100)</span>
             </label>
             <div className="image-upload-zone border-dashed rounded-4 p-3 mb-3 position-relative">
               <div className="text-center mb-3">
                 <p className="mb-0 fw-bold x-small">
-                  {video ? video.name : 'Click / Drag & Drop / Paste Video'}
+                  {video ? video.name : 'Click / Drag & Drop Multi-angle Images'}
                 </p>
-                <p className="text-muted xx-small mb-0">Supported: .mp4, .mov, .avi</p>
-                <p className="text-muted xx-small">Max: 3 min</p>
+                <p className="text-muted xx-small mb-0">Supported: .png, .jpg, .jpeg, .svg</p>
+                <p className="text-muted xx-small">Min 10 - Max 100 images</p>
               </div>
               <div className="d-flex gap-2 justify-content-between">
                 <div
@@ -418,7 +418,7 @@ const LeftScan = ({
                   }}
                 >
                   <span className="text-color">
-                    +10 <br /> Max
+                    +100 <br /> Max
                   </span>
                 </div>
               </div>

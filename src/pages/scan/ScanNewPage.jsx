@@ -1127,7 +1127,23 @@ const ModelGenerator = ({ isDarkMode = false }) => {
           startGenerationFlow(token_id);
         }
       }
-      else if (images.length >= 2) {
+      else if (images.length > 0) {
+        if (images.length < 10) {
+          toast.warning('Minimum 10 images are required for 3D generation. Please upload at least 10 images.');
+          setIsGenerating(false);
+          return;
+        }
+
+        if (images.length > 100) {
+          toast.warning('Maximum 100 images are allowed. Please remove extra images.');
+          setIsGenerating(false);
+          return;
+        }
+
+        setShowLoadingUI(true);
+        setShowBlackOverlay(true);
+        setProgress(0);
+
         const projectRes = await createMultiImageProject(token);
 
         const token_id = projectRes?.token || projectRes?.data?.token;
@@ -1135,12 +1151,26 @@ const ModelGenerator = ({ isDarkMode = false }) => {
 
         setProjectToken(token_id);
 
-        for (let i = 0; i < imageFiles.length; i++) {
+        const totalFiles = imageFiles.length;
+        const fileProgresses = new Array(totalFiles).fill(0);
+
+        for (let i = 0; i < totalFiles; i++) {
           await uploadProjectFile({
             projectToken: token_id,
             file: imageFiles[i],
             token,
+            onUploadProgress: (progressEvent) => {
+              if (progressEvent.total) {
+                const currentPercent = progressEvent.loaded / progressEvent.total;
+                fileProgresses[i] = currentPercent;
+                const overallPercent = (fileProgresses.reduce((acc, curr) => acc + curr, 0) / totalFiles) * 100;
+                setProgress(Math.round(overallPercent));
+              }
+            },
           });
+          fileProgresses[i] = 1;
+          const overallPercent = ((i + 1) / totalFiles) * 100;
+          setProgress(Math.round(overallPercent));
         }
 
         const completeRes = await completeMultiImageProject({
@@ -1166,7 +1196,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
         }
 
         setProjectType('images_to_3d');
-        setGeneratedPrompt('Multiple Images');
+        setGeneratedPrompt(`${totalFiles} Images`);
         startGenerationFlow(token_id);
       } else if (video) {
         await handleVideoFrameExtraction();

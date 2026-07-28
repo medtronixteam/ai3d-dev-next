@@ -23,7 +23,7 @@ export const createMultiImageProject = async (token, name = `Project_${Date.now(
  * 2. Upload Individual Image File for Project
  * POST /api/project/file
  */
-export const uploadProjectFile = async ({ projectToken, file, token }) => {
+export const uploadProjectFile = async ({ projectToken, file, token, onUploadProgress }) => {
   const formData = new FormData();
   formData.append('token', projectToken);
   formData.append('file', file);
@@ -36,6 +36,7 @@ export const uploadProjectFile = async ({ projectToken, file, token }) => {
         ...authHeaders(token),
         'Content-Type': 'multipart/form-data',
       },
+      onUploadProgress,
     }
   );
 

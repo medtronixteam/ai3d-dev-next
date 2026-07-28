@@ -254,19 +254,54 @@
 }
 
 [data-theme='dark'] .model-loading-title {
-    color: #f3f3fa;
+    color: #f3f3fa !important;
 }
 
 [data-theme='dark'] .model-loading-subtitle {
-    color: #9a9ab0;
+    color: #9a9ab0 !important;
 }
 
 [data-theme='dark'] .progress-circle-track {
-    stroke: #3a3a4a;
+    stroke: #3a3a4a !important;
 }
 
-[data-theme='dark'] .btn-outline-pink {
-    background: transparent;
+[data-theme='dark'] .progress-percent {
+    color: #DE3996 !important;
+}
+
+/* Light Theme explicit styles for loading overlay */
+.model-loading-title {
+    color: #111827 !important;
+}
+
+.model-loading-subtitle {
+    color: #6b7280 !important;
+}
+
+.progress-circle-track {
+    stroke: #e5e7eb !important;
+}
+
+.progress-circle-fill {
+    stroke: #DE3996 !important;
+}
+
+.progress-percent {
+    color: #DE3996 !important;
+    font-weight: 700;
+}
+
+.black-overlay {
+    position: absolute;
+    inset: 0;
+    background: #ffffff !important;
+    border-radius: 15px;
+    z-index: 5;
+    transition: background 0.3s ease;
+}
+
+[data-theme='dark'] .black-overlay {
+    background: #000000 !important;
 }
 
 

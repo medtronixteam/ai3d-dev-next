@@ -6,7 +6,6 @@ import $hira from '../assets/images/leardership/hira.png';
 import $shehroz from '../assets/images/leardership/Shehroz.png';
 import $mudassar from '../assets/images/leardership/mudassar.png';
 import $samia from '../assets/images/leardership/samia.png';
-import $sajeel from '../assets/images/leardership/sajeel.png';
 import $ryan from '../assets/images/leardership/ryan.png';
 import $assam from '../assets/images/leardership/Assam.png';
 import CustomInfoModal from '../components/popup/CustomInfoModal';
@@ -38,6 +37,24 @@ const LeadershipSection = () => {
       ],
       linkedin: 'https://www.linkedin.com/in/arslan-ahmad-4b123a1b5/',
       philosophy: 'Build tech that is not just advanced but accessible, impactful, and scalable for the world',
+    },
+    {
+      name: 'Dr Joel',
+      lastName: 'Hillier',
+      img: $joel,
+      role: 'US Advisor & Partner',
+      desc: [
+        'Dr. Joel Hillier brings extensive expertise as a Strategic Advisor and Partner, guiding AI 3D Scanning Solutions in expanding its global reach, strategic vision, and innovation footprint.',
+        'He works closely with leadership to foster international growth and commercial success.',
+      ],
+      expertise: [
+        'Strategic Advisory',
+        'Global Business Development',
+        'Partnership Strategy',
+        'Innovation Leadership',
+      ],
+      linkedin: 'https://www.linkedin.com/in/joelhillier',
+      philosophy: 'Empowering technological innovation through strategic leadership and global collaboration.',
     },
     {
       name: 'Hira',
@@ -125,19 +142,6 @@ const LeadershipSection = () => {
       ],
       linkedin: 'https://www.linkedin.com/in/rayan-babur/',
       philosophy: 'Innovation is the result of persistent curiosity and rigorous experimentation.',
-    },
-    {
-      name: 'Sajeel',
-      lastName: 'Nisar',
-      img: $sajeel,
-      role: 'Ai Team Manager',
-      desc: [
-        'Specializes in designing and implementing intelligent systems that power 3D scanning.',
-        'Transforms complex datasets into actionable insights and automated solutions.',
-      ],
-      expertise: ['Artificial Intelligence', 'Computer Vision', 'Neural Networks', 'Data Modeling'],
-      linkedin: 'https://www.linkedin.com/in/msajeel/',
-      philosophy: 'The future belongs to intelligent systems building AI that makes technology more human.',
     },
     {
       name: 'Assam',

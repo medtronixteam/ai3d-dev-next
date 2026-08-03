@@ -1285,14 +1285,22 @@ body {
 }
 
 .ai_3d_landing .model_card {
-  background-color: #FF51B6;
-  border-radius: 0.3125rem;
+  background: linear-gradient(135deg, #ff51b6 0%, #ff79cd 50%, #ffa3e0 100%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 10px 25px rgba(255, 81, 182, 0.3);
+  border-radius: 1rem;
   padding: 3.25rem;
   text-align: center;
   position: relative;
   aspect-ratio: 1.2;
   overflow: hidden;
   margin: 0.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ai_3d_landing .model_card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 35px rgba(255, 81, 182, 0.45);
 }
 
 .ai_3d_landing .model_image {
@@ -2247,8 +2255,9 @@ li {
   }
 
   .ai_3d_landing .model_card {
-    background-color: #FF51B6;
-    border-radius: 0.3125rem;
+    background: linear-gradient(135deg, #ff51b6 0%, #ff79cd 50%, #ffa3e0 100%);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 1rem;
     padding: 2.25rem;
     text-align: center;
     position: relative;

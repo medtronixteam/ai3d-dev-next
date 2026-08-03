@@ -105,8 +105,6 @@ const B2B = () => {
   };
 
   useEffect(() => {
-    sessionStorage.removeItem("modalClosed");
-
     const modalClosed = sessionStorage.getItem("modalClosed");
     if (!modalClosed) {
       setShowPopup(true);
@@ -115,7 +113,7 @@ const B2B = () => {
 
   const handleClosePopup = () => {
     setShowPopup(false);
-    sessionStorage.setItem("popupShown", "true");
+    sessionStorage.setItem("modalClosed", "true");
   };
 
   const handleGoToWaitlist = () => {
@@ -282,16 +280,10 @@ const B2B = () => {
                     convenience. We look forward to connecting with you!
                   </p>
                   <button onClick={handleScheduleMeeting}>
-                    {/* <FaCalendarAlt />  */}
+                    <FaCalendarAlt style={{ marginRight: '8px' }} />
                     Schedule a Meeting
                   </button>
                 </div>
-
-               <Link to="/join-list"> <button
-                  className="show-waitlist-btn"
-                 >
-                  Join Our Waitlist
-                </button></Link>
               </div>
             ) : (
               <div className="container  ">

@@ -36,7 +36,6 @@ import Hira from '../assets/images/HiraMam.svg';
 import Samia from '../assets/images/SamiaMam.svg';
 import UsamaSir from '../assets/images/UsamaSir.jpeg';
 import MudassarSir from '../assets/images/mudassar.jpeg';
-import SajeelSir from '../assets/images/SajeelSir.jpeg';
 import TeamAI from '../assets/service/TeamAI.jpeg'
 import TeamAI2 from '../assets/service/TeanAI2.png'
 import AI4 from '../assets/service/AI4.png'
@@ -292,7 +291,6 @@ export const MEMBER_DATA = {
   fullstack: [
     { src: SehrozSir,   letter: 'S' },
     { src: Ali,   letter: 'A' },
-    { src: SajeelSir,   letter: 'S' },
     { src: AI5,   letter: 'S' },
     { src: TeamAI,   letter: 'S' },
     { src: TeamAI2,   letter: 'S' },

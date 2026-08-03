@@ -76,7 +76,6 @@ import UsamaSir from '../assets/images/UsamaSir.jpeg';
 import MudassarSir from '../assets/images/mudassar.jpeg';
 import WaitlistModal from '../components/popup/WaitlistModal';
 import JoinPlatformCta from '../components/landing/JoinPlatformCta';
-import SajeelSir from '../assets/images/SajeelSir.jpeg';
 import SehrozSir from '../assets/images/ShehrozSir.jpeg';
 
 import hiraImg from '../assets/images/HiraImg.svg';
@@ -913,26 +912,6 @@ const LandingPage = () => {
           linkedin: 'https://www.linkedin.com/in/usama-khan-793960337/',
           philosophy:
             '"A strong financial foundation is the backbone of innovation. My mission is to ensure every number tells a story that drives the company forward.”',
-        },
-        'Sajeel Nisar': {
-          Image: SajeelSir,
-          title: 'AI Lead',
-
-          desc: [
-            'As an AI Engineer at AI3D Scanning Solutions, Sajeel specializes in designing and implementing intelligent systems that power the company’s 3D scanning and automation technologies. With a deep understanding of machine learning, computer vision, and data modeling, he transforms complex datasets into actionable insights and automated solutions.',
-            ' His work ensures that AI3D Scanning Solutions remains at the forefront of innovation, delivering smarter, faster, and more accurate scanning experiences for clients across industries. Sajeel’s approach blends technical precision with creative problem-solving to push the boundaries of what AI can achieve.',
-          ],
-          expertise: [
-            'Artificial Intelligence & Machine Learning',
-            'Computer Vision & Image Processing',
-            'Neural Network Architecture',
-            'Data Analysis & Predictive Modeling',
-            'Automation Systems Development',
-            'AI-Driven 3D Scanning Solutions',
-          ],
-          linkedin: 'https://www.linkedin.com/in/msajeel/',
-          philosophy:
-            '"The future belongs to intelligent systems — and I believe in building AI that makes technology more human."',
         },
         'Mudassar Farooq': {
           Image: MudassarSir,
@@ -2504,12 +2483,6 @@ const LandingPage = () => {
                         name: 'Usama Ahmad',
                         role: 'Admin & Finance Manager',
                         desc: 'Manages company finances, budgeting, and administrative operations with precision and compliance.',
-                      },
-                      {
-                        img: SajeelSir,
-                        name: 'Sajeel Nisar',
-                        role: 'AI Lead',
-                        desc: 'Architecting and training core AI models driving 2D-to-3D transformation at AI3D.',
                       },
                     ].map((member, index) => (
                       <li className="splide__slide" key={index}>

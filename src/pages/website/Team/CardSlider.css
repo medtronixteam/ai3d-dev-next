@@ -34,6 +34,49 @@
   font-weight: bold;
 }
 
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.see-more-wrapper {
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+.see-more-btn {
+  background: linear-gradient(135deg, #c72f81 0%, #001f3e 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 12px 30px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(199, 47, 129, 0.3);
+}
+
+.see-more-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(199, 47, 129, 0.5);
+  background: linear-gradient(135deg, #d83b91 0%, #002d5a 100%);
+}
+
+@media screen and (max-width: 992px) {
+  .team-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .team-grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
 /* Media Queries for responsive design */
 @media screen and (max-width: 1024px) {
   .slider-container {

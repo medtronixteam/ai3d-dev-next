@@ -171,9 +171,20 @@ const ModelView = () => {
   const handleExport = async () => {
     if (!modelUrl) return;
     try {
+      let ext = 'glb';
+      if (modelUrl.includes('.splat')) {
+        ext = 'splat';
+      } else if (modelUrl.includes('.obj')) {
+        ext = 'obj';
+      } else if (modelUrl.includes('.ply')) {
+        ext = 'ply';
+      } else if (modelUrl.includes('.usdz')) {
+        ext = 'usdz';
+      }
+
       const link = document.createElement('a');
       link.href = modelUrl;
-      link.setAttribute('download', `model_${Date.now()}.glb`);
+      link.setAttribute('download', `model_${Date.now()}.${ext}`);
       document.body.appendChild(link);
       link.click();
       link.remove();

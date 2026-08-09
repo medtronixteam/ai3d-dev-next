@@ -386,7 +386,9 @@ const RecentProjects = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        pageProjects = res.data?.data?.data || [];
+        pageProjects = (res.data?.data?.data || []).filter(
+          (item) => item.status === 'completed'
+        );
 
         pageProjects.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
@@ -872,7 +874,13 @@ const RecentProjects = () => {
       const link = document.createElement('a');
       link.href = url;
       const contentDisposition = response.headers['content-disposition'];
-      let fileName = `${project.name || 'project'}.glb`;
+      let ext = 'glb';
+      if (project.splat_url?.endsWith('.splat')) {
+        ext = 'splat';
+      } else if (response.headers['content-type']?.includes('splat')) {
+        ext = 'splat';
+      }
+      let fileName = `${project.name || 'project'}.${ext}`;
 
       if (contentDisposition) {
         const fileNameMatch = contentDisposition.match(/filename="?(.+)"?/);

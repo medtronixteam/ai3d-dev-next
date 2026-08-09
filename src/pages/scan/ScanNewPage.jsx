@@ -160,7 +160,9 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       });
       const rawData = res.data?.data?.data || [];
 
-      const formattedData = rawData.map(item => {
+      const formattedData = rawData
+        .filter(item => item.status === 'completed')
+        .map(item => {
         const rawImg = item.screenshot || item.thumbnail;
         const imgUrl = getFullImageUrl(rawImg);
         return {
@@ -184,6 +186,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
           progress: item.progress || 0,
           thumbnail: imgUrl,
           favorite: !!item.favorite,
+          splat_url: item.splat_url,
         };
       });
 
@@ -207,7 +210,24 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `${project.name || 'model'}.glb`);
+
+      let ext = 'glb';
+      if (project.splat_url?.endsWith('.splat')) {
+        ext = 'splat';
+      } else if (response.headers['content-type']?.includes('splat')) {
+        ext = 'splat';
+      }
+
+      const contentDisposition = response.headers['content-disposition'];
+      let fileName = `${project.name || 'model'}.${ext}`;
+      if (contentDisposition) {
+        const fileNameMatch = contentDisposition.match(/filename="?(.+)"?/);
+        if (fileNameMatch?.[1]) {
+          fileName = fileNameMatch[1];
+        }
+      }
+
+      link.setAttribute('download', fileName);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -1518,7 +1538,11 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       link.href = url;
 
       const contentDisposition = response.headers['content-disposition'];
-      let fileName = `${generatedPrompt || 'model'}.glb`;
+      let ext = 'glb';
+      if (response.headers['content-type']?.includes('splat')) {
+        ext = 'splat';
+      }
+      let fileName = `${generatedPrompt || 'model'}.${ext}`;
 
       if (contentDisposition) {
         const fileNameMatch = contentDisposition.match(/filename="?(.+)"?/);

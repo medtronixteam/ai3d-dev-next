@@ -1710,7 +1710,7 @@
     width: 100%;
     cursor: pointer;
     flex-shrink: 0;
-    margin-top: auto;
+    margin-top: 12px;
 }
 
 .btn-generate:disabled {

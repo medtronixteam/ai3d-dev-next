@@ -21,6 +21,8 @@ export default {
   signup: '/signup',
   resetPassword: '/reset-password',
   404: `/${rootPaths.errorRoot}/404`,
+  enterprise: '/3dio/enterprise',
+  student: '/student-program',
   models: '/3dio/models',
   workspace: '/3dio/workspace',
   recentProjects: '/3dio/models',

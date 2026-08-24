@@ -455,9 +455,10 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .subscription-modal-content {
-    padding: 20px;
+    padding: 20px 20px 140px;
     max-height: 95vh;
     overflow-x: hidden;
+    overflow-y: auto;
   }
 
   [data-theme='dark'].personal-account-item {

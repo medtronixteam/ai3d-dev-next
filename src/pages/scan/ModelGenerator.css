@@ -1767,7 +1767,7 @@
     }
 
     .main-wrapper {
-        padding-bottom: 0 !important;
+        padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px)) !important;
     }
 
     .scan-layout-row {
@@ -2554,6 +2554,40 @@
     color: #DE3996;
     width: 14px;
     height: 14px;
+}
+
+@media (max-width: 991.98px) {
+    .library-card-tabs:has(.export-button-bar) {
+        flex: 0 0 auto !important;
+        height: auto !important;
+        min-height: 52px !important;
+        padding: 10px 16px 16px !important;
+        position: relative;
+        z-index: 1;
+    }
+
+    .export-button-bar {
+        position: relative !important;
+        bottom: auto !important;
+        left: auto !important;
+        right: auto !important;
+        z-index: 1 !important;
+        background: transparent;
+        padding: 0;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+    }
+
+    .btn-join-now {
+        position: static !important;
+        z-index: 1 !important;
+    }
+
+    .contributor-banner {
+        position: relative;
+        z-index: 1;
+    }
 }
 
 /* .main-wrapper .col-lg-3 {

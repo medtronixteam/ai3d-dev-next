@@ -326,6 +326,9 @@
 .user-details {
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
   transition: all 0.3s ease;
 }
 
@@ -334,9 +337,19 @@
   color: var(--text-secondary);
 }
 
-.user-name {
-  font-weight: 600;
-  color: var(--text-primary);
+.user-name-row {
+  min-width: 0;
+  max-width: 100%;
+  align-items: center;
+}
+
+.user-name-row .user-name {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-name-row .upgrade-coins-btn {
+  flex-shrink: 0;
 }
 
 .sidebar-collapse-arrow {
@@ -538,8 +551,21 @@
     width: 100%;
     left: 0;
     right: 0;
-    bottom: 0;
-    max-width: 100vw;
+    bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    max-width: 100%;
+    padding-right: 12px;
+    overflow: hidden;
+  }
+
+  .user-profile {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .user-details .d-flex {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
   }
 }
 

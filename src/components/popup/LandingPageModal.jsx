@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FiX } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { baseURL } from '../../config';
 import { useAuth } from '../../context/AuthContext';
@@ -15,6 +16,7 @@ import premiumTopIcon from '../../assets/icon/premiumTopIcon.png';
 import enterpriseTopIcon from '../../assets/icon/enterpriseTopIcon.png';
 
 const LandingPageModal = ({ open, onClose }) => {
+  const navigate = useNavigate();
   const [billingPeriod, setBillingPeriod] = useState('monthly');
   const [monthlyStarterPrice, setMonthlyStarterPrice] = useState(29);
   const [monthlyProPrice, setMonthlyProPrice] = useState(99);
@@ -44,7 +46,7 @@ const LandingPageModal = ({ open, onClose }) => {
     if (e) e.preventDefault();
 
     if (planName === 'Enterprise') {
-      window.open('https://ai3d.com/contact-sales', '_blank');
+      navigate('/3dio/enterprise');
       return;
     }
 
@@ -390,7 +392,13 @@ const LandingPageModal = ({ open, onClose }) => {
 
                   {/* Enterprise */}
                   <div className="col-md-4 d-flex">
-                    <div className="sub-card sub-card-center w-100 d-flex flex-column justify-content-between">
+                    <div
+                      className="sub-card sub-card-center w-100 d-flex flex-column justify-content-between"
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => navigate('/3dio/enterprise')}
+                      style={{ cursor: 'pointer' }}
+                    >
                       <div>
                         <div className="sub-top-icon">
                           <img src={enterpriseTopIcon} alt="Enterprise" />
@@ -424,7 +432,6 @@ const LandingPageModal = ({ open, onClose }) => {
                         <button
                           className="sub-btn"
                           onClick={(e) => handlePlanClick('Enterprise', e)}
-                          disabled={true}
                         >
                           Contact Sales
                         </button>

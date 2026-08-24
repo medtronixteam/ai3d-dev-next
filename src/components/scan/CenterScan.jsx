@@ -139,7 +139,7 @@ const CenterScan = ({
               </p>
             </div>
           </div>
-          <button className="btn-join-now flex-shrink-0 mt-2 mt-sm-0" style={{ cursor: "not-allowed", position: "relative", zIndex: 1000 }}>Join Now</button>
+          <button className="btn-join-now flex-shrink-0 mt-2 mt-sm-0" style={{ cursor: "not-allowed" }}>Join Now</button>
         </div>
       </div>
       )}

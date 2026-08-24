@@ -37,6 +37,10 @@ const Subscription = () => {
 
   const handlePlanClick = async (planInfo, e) => {
     if (e) e.preventDefault();
+    if (planInfo?.name === 'Enterprise') {
+      navigate('/3dio/enterprise');
+      return;
+    }
     if (activeTeam) return; 
     if (!token) {
       setShowLoginModal(true);

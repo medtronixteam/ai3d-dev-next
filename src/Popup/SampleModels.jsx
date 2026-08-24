@@ -288,7 +288,9 @@ const SampleModels = ({ model, onClose }) => {
                 backgroundColor: VIEWER_BG,
               }}
             />
-          ) : loadError && imgUrl ? (
+          ) : null}
+
+          {loadError && imgUrl ? (
             <div className="sm-img-fallback">
               {!imgLoaded && (
                 <div className="sm-img-loader-wrap">
@@ -302,7 +304,9 @@ const SampleModels = ({ model, onClose }) => {
                 style={{ display: imgLoaded ? 'block' : 'none' }}
               />
             </div>
-          ) : (
+          ) : null}
+
+          {loadError && !imgUrl ? (
             <div className="sm-empty-state">
               <div className="sm-empty-icon">
                 <svg
@@ -320,9 +324,9 @@ const SampleModels = ({ model, onClose }) => {
                   <line x1="12" y1="22.08" x2="12" y2="12" />
                 </svg>
               </div>
-              <p>{loadError ? '3D preview could not be loaded' : 'No preview available'}</p>
+              <p>3D preview could not be loaded</p>
             </div>
-          )}
+          ) : null}
         </div>
 
         <div className="sm-reactions">

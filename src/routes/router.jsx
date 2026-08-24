@@ -20,6 +20,8 @@ import NewModelErrorPage from '../pages/preview/NewModelErrorPage';
 import TrashProjects from '../pages/dashboard/TrashProjects';
 import OpenModelButton from '../pages/preview/OpenModelButton';
 import BookDemo from '../pages/Service/BookDemo';
+import EnterprisePage from '../pages/inquiry/EnterprisePage';
+import StudentPage from '../pages/inquiry/StudentPage';
 import TermsConditions from '../components/service/TermsConditions';
 
 // LAZY IMPORTS
@@ -56,7 +58,6 @@ const InviteAccept = lazy(() => import('pages/team/InviteAccept'));
 const Notification = lazy(() => import('pages/notification'));
 const PurchaseHistory = lazy(() => import('pages/settings/PurchaseHistory'));
 const SessionHistory = lazy(() => import('pages/settings/SessionHistory'));
-const ServicePage = lazy(() => import('pages/Service/ServicePage'))
 const CookiePolicy = lazy(() => import('../pages/CookiePolicy'));
 const PublicProjectPage = lazy(() => import('../pages/public/PublicProjectPage'));
 
@@ -94,6 +95,18 @@ const routes = [
         element: <BookDemo />,
       },
       {
+        path: '/enterprise',
+        element: <Navigate to="/3dio/enterprise" replace />,
+      },
+      {
+        path: '/student-program',
+        element: <StudentPage />,
+      },
+      {
+        path: '/student',
+        element: <Navigate to="/student-program" replace />,
+      },
+      {
         path: '/render/model/:id',
         element: <NewModel />,
       },
@@ -108,10 +121,6 @@ const routes = [
       {
         path: '/cookie-policy',
         element: <CookiePolicy />,
-      },
-      {
-        path: '/services',
-        element: <ServicePage />,
       },
       {
         path: '/model/error/page',
@@ -175,6 +184,7 @@ const routes = [
             ),
           },
           { path: 'subscription', element: <Subscription /> },
+          { path: 'enterprise', element: <EnterprisePage /> },
           {
             path: 'team',
             element: (

@@ -40,9 +40,8 @@ const Subscription = () => {
   const handlePlanClick = async (planName, e) => {
     if (e) e.preventDefault();
 
-    // Handle Enterprise separately
     if (planName === 'Enterprise') {
-      window.open('https://ai3d.com/contact-sales', '_blank');
+      navigate('/3dio/enterprise');
       return;
     }
 
@@ -165,7 +164,6 @@ const Subscription = () => {
           {billingPeriod === 'monthly' && (
             <div
               className="new-Subscription-container d-flex align-items-center justify-content-center"
-              style={{ minHeight: '100vh' }}
             >
               <div className="new-subscription container py-5">
                 <div className="row justify-content-center g-4 d-flex align-items-stretch">
@@ -348,7 +346,6 @@ const Subscription = () => {
           {billingPeriod === 'yearly' && (
             <div
               className="new-Subscription-container d-flex align-items-center justify-content-center"
-              style={{ minHeight: '100vh' }}
             >
               <div className="new-subscription container py-5">
                 <div className="row justify-content-center g-4 d-flex align-items-stretch">
@@ -475,7 +472,16 @@ const Subscription = () => {
 
                   {/* Enterprise */}
                   <div className="col-md-4 d-flex">
-                    <div className="sub-card sub-card-center w-100 d-flex flex-column justify-content-between">
+                    <div
+                      className="sub-card sub-card-center w-100 d-flex flex-column justify-content-between"
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => navigate('/3dio/enterprise')}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') navigate('/3dio/enterprise');
+                      }}
+                      style={{ cursor: 'pointer' }}
+                    >
                       <div>
                         <div className="sub-top-icon">
                           <img src={enterpriseTopIcon} alt="Enterprise" />
@@ -531,7 +537,6 @@ const Subscription = () => {
                         <button
                           className="sub-btn"
                           onClick={(e) => handlePlanClick('Enterprise', e)}
-                          disabled={true}
                         >
                           Contact Sales
                         </button>

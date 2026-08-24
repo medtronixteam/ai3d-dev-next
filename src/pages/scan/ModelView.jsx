@@ -245,7 +245,7 @@ const ModelView = () => {
                 Join thousands of 3D artists earning passive income from their creative work
               </span>
             </div>
-            <button className="a3d-join-btn" style={{ cursor: "not-allowed", position: "relative", zIndex: 1000 }}>Join Now</button>
+            <button className="a3d-join-btn" style={{ cursor: "not-allowed" }}>Join Now</button>
           </div>
         </div>
 

@@ -81,6 +81,6 @@
     max-width: 100% !important;
     flex: 1 1 100%;
     min-width: 0;
-    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
   }
 }

@@ -3,14 +3,38 @@
   left: 0;
   right: 0;
   bottom: 0;
-  height: 64px;
+  height: calc(64px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   background: #fff;
   box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
   display: flex;
   justify-content: space-around;
   align-items: center;
-  z-index: 5;
+  z-index: 2000;
   border-radius: 10px 10px 0 0 !important;
+  overflow: visible;
+}
+
+.bottom-nav-scan {
+  position: relative;
+  top: -22px;
+  z-index: 3;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scan-btn {
+  width: 56px;
+  height: 56px;
+  background: #E6339A;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(230, 51, 154, 0.35);
+  border: 4px solid #fff;
 }
 
 
@@ -49,25 +73,6 @@
 .bottom-nav-item.active .bottom-nav-label,
 .bottom-nav-item:active .bottom-nav-label {
   color: #E6339A;
-}
-
-.bottom-nav-scan {
-  position: relative;
-  top: -24px;
-  z-index: 2;
-  text-align: center;
-}
-
-.scan-btn {
-  width: 56px;
-  height: 56px;
-  background: #E6339A; /* Project primary color */
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  border: 4px solid #fff;
 }
 
 .scan-icon {

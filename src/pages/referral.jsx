@@ -222,13 +222,6 @@ const Referral = () => {
                   Schedule Meeting
                 </Link>
 
-                  <Link
-                    to="/services"
-                    className={`a3d-nav-link ${location.pathname === '/services' ? 'active' : ''}`}
-                  >
-                    Services
-                  </Link>
-
                   <a href="/#3d-Sample" className="a3d-nav-link">
                     3D Samples
                   </a>
@@ -281,13 +274,6 @@ const Referral = () => {
 
                 <Link to="https://calendly.com/arslan-medtronix/30min" className="a3d-nav-link">
                   Schedule Meeting
-                </Link>
-
-                <Link
-                  to="/services"
-                  className={`a3d-nav-link ${location.pathname === '/services' ? 'active' : ''}`}
-                >
-                  Services
                 </Link>
 
                 <Link to="/#3d-Sample" className="a3d-nav-link">
@@ -526,7 +512,7 @@ const Referral = () => {
                     <img src={dot} alt="Dot" className="posotion" />
                   </div>
                   <ul className="mt-1">
-                    {['Home', 'Services', 'Pricing'].map((item) => (
+                    {['Home', 'Services', 'Pricing', 'Student'].map((item) => (
                       <li key={item}>
                         <a
                           href={
@@ -534,7 +520,9 @@ const Referral = () => {
                               ? '/3dio/subscription'
                               : item === 'Services'
                                 ? '/services'
-                                : '/'
+                                : item === 'Student'
+                                  ? '/student-program'
+                                  : '/'
                           }
                         >
                           <img

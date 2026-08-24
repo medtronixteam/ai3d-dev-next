@@ -45,7 +45,7 @@ const BottomNavBar = () => {
         onClick={handleScanNavClick}
       >
         <div className="scan-btn">
-          <BiScan className="scan-icon" style={{ color: '#fff', fontSize: 32 }} />
+          <BiScan className="scan-icon" style={{ color: '#fff', fontSize: 28 }} />
         </div>
       </NavLink>
       <NavLink to="/3dio/models" className="bottom-nav-item">

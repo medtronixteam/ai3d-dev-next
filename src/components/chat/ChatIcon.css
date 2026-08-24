@@ -41,8 +41,16 @@
   }
 }
 
-@media (max-width: 900px) {
+.main-layout:has(.sidebar.open) .platform-chat-fab {
+  display: none;
+}
+
+@media (max-width: 992px) {
   .platform-chat-fab {
-    bottom: 70px !important;
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important;
+    right: 12px;
+    width: 52px;
+    height: 52px;
+    z-index: 1990;
   }
 }

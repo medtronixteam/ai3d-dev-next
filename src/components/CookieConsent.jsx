@@ -47,8 +47,8 @@ const CookieConsent = () => {
                     <div className="cookie-text">
                         <h3>Cookies & Privacy</h3>
                         <p>
-                            By continuing to use this website, you agree <strong>Ai 3d scanning</strong> can store cookies on your device and disclose information in accordance with our <Link to="/cookie-policy" className="cookie-link">Cookie Policy</Link>. 
-                            By exiting this window, default cookies will be accepted. To reject cookies, select an option from below.
+                            We use cookies to improve your experience. See our{' '}
+                            <Link to="/cookie-policy" className="cookie-link">Cookie Policy</Link>.
                         </p>
                     </div>
                 </div>

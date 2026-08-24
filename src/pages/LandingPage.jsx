@@ -5,7 +5,6 @@ import './LandingPage.css';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/splide/dist/css/splide.min.css';
 import logo from './images/logo.png';
-import vera from './images/vera-ai.png';
 import consulting from './images/consulting.png';
 import elipse from './images/heading_ellipse.png';
 import rightarrow from './images/mdi_arrow-right-thin.png';
@@ -21,9 +20,7 @@ import design from './images/provide.png';
 import mobile from '../assets/images/b2b.png';
 import machine from './images/machine.png';
 import e_commerce from './images/ecommerce.png';
-import construction from './images/construction.png';
 import vr from './images/vr.png';
-import health from './images/healthcare.png';
 import gaming from './images/gaming.png';
 import rightArrow1 from './images/basil_arrow-right-outline.png';
 import encripted from './images/encrypted.png';
@@ -45,11 +42,6 @@ import car2Img from './images/car2.png';
 import car3Img from './images/car3.png';
 import ninjaImg from './images/ninja.png';
 import modelButtonIcon from './images/model_button_icon.png';
-import googleStartups from './images/google-startups.png';
-import pitb from './images/PITB.png';
-import regionalPlan from './images/regional-plan.png';
-// import consulting from './images/consulting.png';
-import veraAi from './images/vera-ai.png';
 import nvidia from './images/nvdia.png';
 import videoSrc from './images/3dModal.mp4';
 import videoIcon from './images/video_icon.png';
@@ -103,8 +95,6 @@ import {
 import paths from '../routes/paths';
 import { isPreLaunchActive } from '../utils/platformLaunch';
 
-import FW from '../assets/service/FW.png'
-import RR from '../assets/service/rr.png'
 import { toast } from 'react-toastify';
 import SampleModels from '../Popup/SampleModels';
 
@@ -305,12 +295,10 @@ const LandingPage = () => {
   // }, []);
 
   const pills = [
-    { label: 'Construction', icon: rightarrow, target: '3d-Sample' },
     { label: 'Gaming', icon: rightarrow, target: '3d-Sample' },
-    { label: 'VR', icon: rightarrow, target: '3d-Sample' },
-    { label: 'Retail', icon: rightarrow, target: '3d-Sample' },
-    { label: 'Manufacturing', icon: rightarrow, target: '3d-Sample' },
-    { label: 'Health', icon: rightarrow, target: '3d-Sample' },
+    { label: 'AR/VR', icon: rightarrow, target: '3d-Sample' },
+    { label: 'E-commerce', icon: rightarrow, target: '3d-Sample' },
+    { label: 'Digital Twins', icon: rightarrow, target: '3d-Sample' },
   ];
 
   const pillsRef = useRef(null);
@@ -409,13 +397,12 @@ const LandingPage = () => {
   }, [isMobile]);
 
   const trustedLogos = [
-    { src: google, alt: 'Google', style: { width: 130, marginTop: 6, marginRight: 5 } },
-    { src: googleCloud, alt: 'Google Cloud', style: { width: 130, marginRight: 7 } },
-    { src: PITB, alt: 'PITB', style: { width: 37, marginRight: 10 } },
-    { src: reginalPlan, alt: 'regional-plan', style: { width: 66, marginRight: 10 } },
-    { src: consulting, alt: 'consulting', style: { width: 76, marginRight: 10 } },
-    { src: RR, alt: 'vera-ai', style: { width: 30 } },
-    { src: FW, alt: 'vera-ai', style: { width: 70, marginRight: 10  } },
+    { src: google, alt: 'Google for Startups', label: 'Program', style: { width: 130, marginTop: 6 } },
+    { src: googleCloud, alt: 'Google Cloud', label: 'Program', style: { width: 130 } },
+    { src: nvidia, alt: 'NVIDIA', label: 'Program', style: { width: 130 } },
+    { src: PITB, alt: 'PITB', label: 'Program', style: { width: 37 } },
+    { src: reginalPlan, alt: 'Regional Plan', label: 'Pilot', style: { width: 66 } },
+    { src: consulting, alt: 'Hiller Consulting', label: 'Advisor', style: { width: 76 } },
   ];
 
   const trustedLogosRef = useRef(null);
@@ -1081,13 +1068,6 @@ const LandingPage = () => {
                   </Link>
 
                   <Link
-                    to="/services"
-                    className={`a3d-nav-link ${location.pathname === '/services' ? 'active' : ''}`}
-                  >
-                    Services
-                  </Link>
-
-                  <Link
                     to="/3dio/api-sdk"
                     className={`a3d-nav-link ${location.pathname === '/3dio/api-sdk' ? 'active' : ''}`}
                   >
@@ -1164,13 +1144,6 @@ const LandingPage = () => {
                 </Link>
 
                 <Link
-                  to="/services"
-                  className={`a3d-nav-link ${location.pathname === '/services' ? 'active' : ''}`}
-                >
-                  Services
-                </Link>
-
-                <Link
                   to="/3dio/api-sdk"
                   className={`a3d-nav-link ${location.pathname === '/3dio/api-sdk' ? 'active' : ''}`}
                 >
@@ -1243,14 +1216,16 @@ const LandingPage = () => {
                   transition={{ duration: 0.8 }}
                 >
                   <span className="a3d-gradient-span-text">
-                    <img src={elipse} alt="Heading Decoration" className="ellipse-img-ec" />
-                    Perfect place where
-                    <br />
-                    <span>Innovation Meet 3D</span>
-                    <br />
-                    <span>Model Creation</span>
+                    Turn images, video, and text into
+                    <br className="a3d-title-break" />
+                    production-ready 3D assets
+                    <br className="a3d-title-break" />
+                    in about{' '}
+                    <span className="a3d-seconds-wrap">
+                      <img src={elipse} alt="" className="ellipse-img-seconds" />
+                      30 seconds.
+                    </span>
                   </span>
-                  <span></span>
                 </motion.h1>
 
                 <motion.p
@@ -1259,11 +1234,9 @@ const LandingPage = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
                 >
-                  Building the "Canva of 3D" an AI native end-to-end platform that turns images, video and text into 3D assets in minutes,
-                  {/* <span className="d-none d-lg-inline">
-                    <br />
-                  </span>{' '} */}
-                  with editing, asset management and developer APIs built in.
+                  Building the &quot;Canva of 3D&quot; — an AI native end-to-end platform that turns
+                  images, video, and text into 3D assets in approximately 30 seconds, with editing,
+                  asset management, and developer APIs built in.
                 </motion.p>
 
                 <div
@@ -1415,12 +1388,10 @@ const LandingPage = () => {
                   >
                     <div className="a3d-trusted-scroll-track">
                       {[...trustedLogos, ...trustedLogos].map((logo, idx) => (
-                        <img
-                          key={idx}
-                          src={logo.src}
-                          alt={logo.alt}
-                          style={{ ...logo.style, flexShrink: 0 }}
-                        />
+                        <span className="a3d-logo-item" key={`${logo.alt}-${idx}`}>
+                          <img src={logo.src} alt={logo.alt} style={{ ...logo.style, flexShrink: 0 }} />
+                          <span className="a3d-logo-label">{logo.label}</span>
+                        </span>
                       ))}
                     </div>
                   </div>
@@ -1473,7 +1444,7 @@ const LandingPage = () => {
                 <span className="d-none d-md-inline">
                   <br />
                 </span>
-                Model in minutes.
+                Model in approximately 30 seconds.
               </p>
             </div>
 
@@ -1627,7 +1598,7 @@ const LandingPage = () => {
                         <h3 className="service-title">Customize &amp; Export 3D Models</h3>
                         <p className="service-desc">
                           Fine-tune your 3D asset with instant web editing tools, then export directly to GLB,
-                          OBJ, or USDZ for Gaming, VR, and E-commerce.
+                          OBJ, or USDZ for Gaming, AR/VR, E-commerce, and Digital Twins.
                         </p>
                       </div>
                       <div className="footer-wrapper mt-3">
@@ -1709,10 +1680,10 @@ const LandingPage = () => {
 
                 <p className="business-description">
                   3DIO integrates seamlessly into your existing web, mobile, or desktop ecosystem
-                  through robust APIs. From e-commerce and gaming to construction, healthcare, and
-                  manufacturing - our AI converts 2D images, videos, and text into lifelike,
-                  interactive 3D models in seconds. Flexible licensing and deployment options ensure
-                  a perfect fit for your business goals.
+                  through robust APIs. Built for Gaming, AR/VR, E-commerce, and Digital Twins — our
+                  AI converts 2D images, videos, and text into lifelike, interactive 3D models in
+                  approximately 30 seconds. Flexible licensing and deployment options ensure a
+                  perfect fit for your business goals.
                 </p>
               </div>
 
@@ -1749,16 +1720,16 @@ const LandingPage = () => {
                 >
                   <div className="business-service">
                     <div className="business-service-icon">
-                      <img src={construction} alt="" />
+                      <img src={vr} alt="" />
                     </div>
 
                     <div className="business-service-content">
-                      <h4>Construction Rendering</h4>
+                      <h4>AR/VR</h4>
 
                       <p>
-                        Streamline architectural visualization with AI generated, scalable 3D models
-                        - perfect for planning, collaboration, and creating stunning client
-                        presentations that win projects.
+                        Fuel next-gen AR/VR experiences with AI-generated 3D environments, realistic
+                        avatars, and immersive assets - ideal for training, simulations, and
+                        interactive products.
                       </p>
                     </div>
                   </div>
@@ -1772,30 +1743,7 @@ const LandingPage = () => {
                 >
                   <div className="business-service">
                     <div className="business-service-icon">
-                      <img src={health} alt="" />
-                    </div>
-
-                    <div className="business-service-content">
-                      <h4>Healthcare</h4>
-
-                      <p>
-                        Enable precision healthcare with advanced 3D scanning - from custom
-                        prosthetics to surgical planning and patient specific anatomical modeling,
-                        ensuring accuracy and better outcomes.
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-                <motion.div
-                  className="col-lg-6 mt-4"
-                  initial={{ opacity: 0, x: 50 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                >
-                  <div className="business-service">
-                    <div className="business-service-icon">
-                      <img src={vr} alt="" />
+                      <img src={e_commerce} alt="" />
                     </div>
 
                     <div className="business-service-content">
@@ -1811,32 +1759,10 @@ const LandingPage = () => {
                 </motion.div>
                 <motion.div
                   className="col-lg-6 mt-4"
-                  initial={{ opacity: 0, x: -50 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.5 }}
-                >
-                  <div className="business-service">
-                    <div className="business-service-icon">
-                      <img src={e_commerce} alt="" />
-                    </div>
-
-                    <div className="business-service-content">
-                      <h4>VR</h4>
-
-                      <p>
-                        Fuel next-gen VR experiences with AI-generated 3D environments, realistic
-                        avatars, and immersive assets - ideal for gaming, training, and simulations.
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-                <motion.div
-                  className="col-lg-6 mt-4"
                   initial={{ opacity: 0, x: 50 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.6 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
                 >
                   <div className="business-service">
                     <div className="business-service-icon">
@@ -1844,17 +1770,20 @@ const LandingPage = () => {
                     </div>
 
                     <div className="business-service-content">
-                      <h4>Manufacturing</h4>
+                      <h4>Digital Twins</h4>
 
                       <p>
-                        Optimize manufacturing workflows with instant 3D scanning for prototyping,
-                        digital twins, and product visualization - reducing design cycles and
-                        speeding up time to market.
+                        Create accurate digital twins from images and video for products, spaces,
+                        and operations - enabling visualization, simulation, and faster
+                        decision-making.
                       </p>
                     </div>
                   </div>
                 </motion.div>
               </div>
+              <p className="business-ambition">
+                Expanding into construction, manufacturing, and healthcare visualization.
+              </p>
             </div>
 
             <section className="client-services" style={{ paddingBottom: 35 }}>
@@ -2299,21 +2228,18 @@ const LandingPage = () => {
           <div className="logo_track">
             {[...Array(4)].map((_, i) => (
               <React.Fragment key={`logos-${i}`}>
-                <img src={googleStartups} alt="Google" loading="lazy" decoding="async" />
-
-                <img src={googleCloud} alt="Google Cloud" loading="lazy" decoding="async" />
-
-                <img src={pitb} alt="PITB" loading="lazy" decoding="async" />
-
-                <img src={regionalPlan} alt="Regional Plan" loading="lazy" decoding="async" />
-
-                <img src={consulting} alt="Consulting" loading="lazy" decoding="async" />
-
-                <img src={RR} alt="Vera AI" loading="lazy" decoding="async" />
-
-                <img src={nvidia} alt="NVIDIA" loading="lazy" decoding="async" />
-
-                <img src={FW} alt="Frame wise" className='fram' />
+                {trustedLogos.map((logo) => (
+                  <span className="a3d-logo-item" key={`${logo.alt}-${i}`}>
+                    <img
+                      src={logo.src}
+                      alt={logo.alt}
+                      loading="lazy"
+                      decoding="async"
+                      style={logo.style}
+                    />
+                    <span className="a3d-logo-label">{logo.label}</span>
+                  </span>
+                ))}
               </React.Fragment>
             ))}
           </div>
@@ -2532,8 +2458,7 @@ const LandingPage = () => {
 
               <p className="texttwo d-lg-block">
                 <span className="d-lg-block">
-                  From gaming and e-commerce to healthcare, manufacturing, and construction, our
-                  clients trust
+                  From gaming, AR/VR, e-commerce, and digital twins, our clients trust
                   <br className="d-lg-block d-md-block d-sm-none d-none" />
                   AI3D Scanning Solutions to deliver high-precision 3D models, faster workflows, and
                   cost-efficient results.
@@ -2780,16 +2705,18 @@ const LandingPage = () => {
                     <img src={dot} alt="Dot" className="posotion" />
                   </div>
                   <ul className="mt-1">
-                    {['Home', 'Services', 'Pricing'].map((item) => (
-                      <li key={item}>
-                        <a
-                          href={
-                            item === 'Pricing'
-                              ? '/3dio/subscription'
-                              : item === 'Services'
-                                ? '/services'
+                  {['Home', 'Services', 'Pricing', 'Student'].map((item) => (
+                    <li key={item}>
+                      <a
+                        href={
+                          item === 'Pricing'
+                            ? '/3dio/subscription'
+                            : item === 'Services'
+                              ? '/services'
+                              : item === 'Student'
+                                ? '/student-program'
                                 : '/'
-                          }
+                        }
                         >
                           <img
                             className="iconsize me-1"

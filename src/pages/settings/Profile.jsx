@@ -434,6 +434,13 @@ const Profile = () => {
       <div style={{ padding: 40, color: 'red', textAlign: 'center' }}>Failed to load profile.</div>
     );
 
+  const rawName = (user.name || '').trim();
+  const isNameEmail = rawName.includes('@');
+  const displayName = !rawName || isNameEmail
+    ? (user.email || '').split('@')[0] || 'User'
+    : rawName;
+  const showEmailUnderName = Boolean(user.email && user.email !== displayName);
+
   // Profile image logic
   let profileImg = '';
   if (user.avatar) {
@@ -499,9 +506,7 @@ const Profile = () => {
           }
           
           .profile-welcome-section {
-            order: 2 !important;
-           
-            text-align: center !important;
+            display: none !important;
           }
           
           .profile-actions-section {
@@ -819,7 +824,7 @@ const Profile = () => {
         <div className="profile-header-section">
           {/* Welcome Section - Left side on large screens, bottom on mobile */}
           <div className="profile-welcome-section">
-            <h1 className="profile-welcome-text">Welcome, {user?.name || 'User'}</h1>
+            <h1 className="profile-welcome-text">Welcome, {displayName}</h1>
             <p className="profile-welcome-date">
               {user?.created_at
                 ? new Date(user.created_at).toLocaleDateString('en-US', {
@@ -1179,57 +1184,31 @@ const Profile = () => {
 
         {/* Top Profile */}
         <div className="profile-top-row">
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div className="profile-identity">
             {profileImg ? (
               <img
                 src={profileImg}
                 alt="Profile"
-                style={{
-                  width: 72,
-                  height: 72,
-                  borderRadius: '50%',
-                  objectFit: 'cover',
-                  marginRight: 24,
-                  border: '1px solid #e6339a',
-                }}
+                className="profile-avatar-img"
               />
             ) : (
-              <div
-                className="profile-placeholder-avatar"
-                style={{
-                  width: 72,
-                  height: 72,
-                  borderRadius: '50%',
-                  background: '#fceded',
-                  color: '#DE3996',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 700,
-                  fontSize: 28,
-                  marginRight: 24,
-                }}
-              >
-                {user.name
-                  ? user.name
-                      .split(' ')
-                      .map((w) => w[0])
-                      .join('')
-                      .slice(0, 2)
-                      .toUpperCase()
-                  : ''}
+              <div className="profile-placeholder-avatar">
+                {(displayName || 'U')
+                  .split(' ')
+                  .map((w) => w[0])
+                  .join('')
+                  .slice(0, 2)
+                  .toUpperCase()}
               </div>
             )}
-            <div>
-              <div className="profile-name" style={{ fontWeight: 700, fontSize: 22 }}>
-                {user.name || ''}
-              </div>
-              <div className="profile-email" style={{ color: '#888', fontSize: 16 }}>
-                {user.email || ''}
-              </div>
+            <div className="profile-identity-text">
+              <div className="profile-name">{displayName}</div>
+              {showEmailUnderName ? (
+                <div className="profile-email">{user.email}</div>
+              ) : null}
             </div>
           </div>
-          <div className="profile-actions" style={{ display: 'flex', gap: 12, marginTop: 18 }}>
+          <div className="profile-actions">
             <button
               className="profile-action-btn share-btn"
               style={{
@@ -1643,9 +1622,16 @@ const EditProfileModal = ({ onClose, user, setUser, onChangePassword, onSuccess 
   return (
     <>
       <style>{`
-        .edit-modal-backdrop { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(34,34,59,0.18); z-index: 1000; display: flex; align-items: center; justify-content: center; }
+        .edit-modal-backdrop { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(34,34,59,0.18); z-index: 4000; display: flex; align-items: center; justify-content: center; }
         .edit-modal { background: #fff; border-radius: 18px; padding: 28px 16px 24px 16px; min-width: 750px; max-width: 900px; min-height: 400px; max-height: 95vh; box-shadow: 0 8px 32px rgba(34,34,59,0.13); position: relative; animation: popIn 0.35s cubic-bezier(.68,-0.55,.27,1.55); overflow-y: auto; }
         @media (min-width: 600px) { .edit-modal {  padding: 36px 40px 32px 40px; } }
+        @media (max-width: 787px) {
+          .edit-modal-backdrop { align-items: stretch; justify-content: stretch; }
+          .edit-modal { min-width: 100%; width: 100%; max-width: 100%; height: 100%; max-height: 100%; min-height: 0; margin: 0; border-radius: 0; padding: 20px 16px 0; display: flex; flex-direction: column; overflow: hidden; }
+          .edit-modal .form-grid { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: 12px; }
+          .edit-modal .modal-actions { position: sticky; bottom: 0; margin-top: auto; padding: 12px 0 calc(16px + env(safe-area-inset-bottom, 0px)); background: #fff; box-shadow: 0 -8px 16px rgba(0,0,0,0.06); justify-content: stretch; gap: 8px; flex-wrap: nowrap; }
+          .edit-modal .modal-actions button { flex: 1; }
+        }
         .edit-modal::-webkit-scrollbar { width: 6px; background: #f3e6f0; }
         .edit-modal::-webkit-scrollbar-thumb { background: #DE3996; border-radius: 6px; }
         .select-wrapper { position: relative; width: 100%; }
@@ -1982,7 +1968,7 @@ const EditProfileModal = ({ onClose, user, setUser, onChangePassword, onSuccess 
               Cancel
             </button>
             <button className="save-btn" onClick={handleSave} disabled={saving}>
-              {saving ? 'Saving...' : 'Save'}
+              {saving ? 'Updating...' : 'Update'}
             </button>
           </div>
         </div>

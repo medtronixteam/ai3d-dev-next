@@ -164,17 +164,17 @@ const B2B = () => {
                 <div className="card-box">
                   <LazyLoadImage
                     src={Constrution}
-                    alt="IMAGE TO 3D"
+                    alt="AR/VR"
                     className="card-image"
                     effect="blur"
                     style={{ width: 90, border: "none", borderRadius: "0px" }}
                     placeholderSrc={loadingGif}
                   />
-                  <h5>Construction Rendering</h5>
+                  <h5>AR/VR</h5>
                   <p>
-                    Transform architectural visualization with scalable 3D
-                    models, helping construction firms streamline planning and
-                    enhance client presentations.
+                    Fuel AR/VR experiences with AI-generated 3D environments,
+                    realistic avatars, and immersive assets for training and
+                    interactive products.
                   </p>
                 </div>
               </div>
@@ -191,11 +191,11 @@ const B2B = () => {
                     style={{ width: 90, border: "none", borderRadius: "0px" }}
                     placeholderSrc={loadingGif}
                   />
-                  <h5>Healthcare</h5>
+                  <h5>Digital Twins</h5>
                   <p>
-                    Transform healthcare with advanced 3D scanning for
-                    prosthetics, surgical planning, and patient-specific
-                    modeling, enabling personalized care.
+                    Create accurate digital twins from images and video for
+                    products, spaces, and operations — enabling visualization
+                    and faster decision-making.
                   </p>
                 </div>
               </div>

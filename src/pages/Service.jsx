@@ -228,13 +228,6 @@ const Service = () => {
                       Home
                     </Link>
 
-                    <Link
-                      to="/service"
-                      className={`a3d-nav-link ${location.pathname === '/service' ? 'active' : ''}`}
-                    >
-                      Services
-                    </Link>
-
                     <a href="/#3d-Sample" className="a3d-nav-link">
                       3D Samples
                     </a>
@@ -290,13 +283,6 @@ const Service = () => {
                     className={`a3d-nav-link ${location.pathname === '/' ? 'active' : ''}`}
                   >
                     Home
-                  </Link>
-
-                  <Link
-                    to="/service"
-                    className={`a3d-nav-link ${location.pathname === '/service' ? 'active' : ''}`}
-                  >
-                    Services
                   </Link>
 
                   <Link to="/#3d-Sample" className="a3d-nav-link">
@@ -668,7 +654,7 @@ const Service = () => {
                     <img src={dot} alt="Dot" className="posotion" />
                   </div>
                   <ul className="mt-1">
-                    {['Home', 'About us', 'Pricing'].map((item) => (
+                    {['Home', 'About us', 'Pricing', 'Student'].map((item) => (
                       <li key={item}>
                         <a
                           href={
@@ -676,7 +662,9 @@ const Service = () => {
                               ? '/3dio/subscription'
                               : item === 'About us'
                                 ? '/#aboutus'
-                                : '/'
+                                : item === 'Student'
+                                  ? '/student-program'
+                                  : '/'
                           }
                         >
                           <img

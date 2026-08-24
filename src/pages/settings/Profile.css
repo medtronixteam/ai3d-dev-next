@@ -2029,8 +2029,26 @@ select:-webkit-autofill:focus {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
   margin-bottom: 32px;
   color: black !important;
+}
+
+.profile-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.profile-action-btn {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  width: auto;
 }
 
 .profile-btns {
@@ -2822,10 +2840,191 @@ select:-webkit-autofill:focus {
   }
 }
 
-@media (max-width: 528px) {
-  .schedule-header2-left {
-    width: 100%;
-    margin: 0;
-    padding: 0;
+.profile-identity {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  flex: 1;
+}
+
+.profile-avatar-img,
+.profile-placeholder-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 24px;
+  flex-shrink: 0;
+}
+
+.profile-placeholder-avatar {
+  background: #fceded;
+  color: #DE3996;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 28px;
+  border: 1px solid #e6339a;
+}
+
+.profile-avatar-img {
+  border: 1px solid #e6339a;
+}
+
+.profile-identity-text {
+  min-width: 0;
+}
+
+.profile-identity-text .profile-name {
+  font-weight: 700;
+  font-size: 22px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-identity-text .profile-email {
+  color: #888;
+  font-size: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 992px) {
+  .profile-page-root {
+    padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  .profile-welcome-section {
+    display: none !important;
+  }
+
+  .profile-header-section {
+    padding: 0 !important;
+    gap: 12px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .profile-main-card {
+    margin: 8px 8px 0 !important;
+    padding: 16px 12px 24px !important;
+  }
+
+  .profile-top-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .profile-avatar-img,
+  .profile-placeholder-avatar {
+    width: 56px !important;
+    height: 56px !important;
+    margin-right: 12px !important;
+    font-size: 20px !important;
+  }
+
+  .profile-identity-text .profile-name {
+    font-size: 16px !important;
+  }
+
+  .profile-identity-text .profile-email {
+    font-size: 13px !important;
+  }
+
+  .profile-actions {
+    display: flex !important;
+    justify-content: stretch !important;
+    width: 100% !important;
+    margin-top: 0 !important;
+    gap: 8px !important;
+  }
+
+  .profile-action-btn .btn-label {
+    display: inline !important;
+  }
+
+  .profile-action-btn {
+    flex: 1 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    height: 42px !important;
+    padding: 0 12px !important;
+    font-size: 13px !important;
+    gap: 6px !important;
+  }
+
+  .profile-grid {
+    margin-bottom: 16px !important;
+  }
+
+  .profile-logout-btn {
+    position: relative !important;
+    right: auto !important;
+    bottom: auto !important;
+    margin: 12px 0 0 !important;
+    z-index: 1 !important;
+  }
+
+  .edit-modal-backdrop {
+    z-index: 4000 !important;
+    align-items: stretch !important;
+    justify-content: stretch !important;
+  }
+
+  .edit-modal {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    padding: 20px 16px 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    box-shadow: none !important;
+    z-index: 4001 !important;
+  }
+
+  .edit-modal h2 {
+    font-size: 1.35rem !important;
+    margin-bottom: 16px !important;
+  }
+
+  .edit-modal .form-grid {
+    flex: 1 1 auto !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 8px !important;
+    min-height: 0 !important;
+  }
+
+  .edit-modal .modal-actions {
+    position: sticky !important;
+    bottom: 0 !important;
+    margin-top: auto !important;
+    padding: 12px 0 calc(16px + env(safe-area-inset-bottom, 0px)) !important;
+    background: #fff !important;
+    box-shadow: 0 -8px 16px rgba(0, 0, 0, 0.06);
+    justify-content: stretch !important;
+    gap: 8px !important;
+    flex-wrap: nowrap !important;
+    z-index: 5;
+  }
+
+  .edit-modal .modal-actions button {
+    flex: 1 !important;
+    margin: 0 !important;
+  }
+
+  [data-theme='dark'] .edit-modal .modal-actions,
+  .dark .edit-modal .modal-actions {
+    background: #232334 !important;
   }
 }

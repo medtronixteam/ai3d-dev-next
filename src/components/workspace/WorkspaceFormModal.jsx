@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { FiX } from 'react-icons/fi';
 import './WorkspaceFormModal.css';
 
@@ -26,7 +27,7 @@ const WorkspaceFormModal = ({
     onSubmit?.(name.trim());
   };
 
-  return (
+  return createPortal(
     <div className="workspace-form-overlay" onClick={onClose} role="presentation">
       <div
         className="workspace-form-modal"
@@ -73,7 +74,8 @@ const WorkspaceFormModal = ({
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };
 

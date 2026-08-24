@@ -234,7 +234,7 @@ const GetStartedPage = () => {
                     <img src={dot} alt="Dot" className="posotion" />
                   </div>
                   <ul className="mt-1">
-                    {['Home', 'Services', 'Pricing'].map((item) => (
+                    {['Home', 'Services', 'Pricing', 'Student'].map((item) => (
                       <li key={item}>
                         <a
                           href={
@@ -242,7 +242,9 @@ const GetStartedPage = () => {
                               ? '/3dio/subscription'
                               : item === 'Services'
                                 ? '/services'
-                                : '#'
+                                : item === 'Student'
+                                  ? '/student-program'
+                                  : '/'
                           }
                         >
                           <img

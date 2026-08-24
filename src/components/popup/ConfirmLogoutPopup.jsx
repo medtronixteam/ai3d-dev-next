@@ -1,10 +1,11 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import './ConfirmLogoutPopup.css';
 import { FiTrash2, FiCheckCircle, FiAlertTriangle, FiRefreshCw } from 'react-icons/fi';
 
 const ConfirmModal = ({ open, onClose, onConfirm, title, message, confirmText = 'Yes', cancelText = 'No', error, iconType }) => {
   if (!open) return null;
-  return (
+  return createPortal(
     <div className="confirm-logout-overlay" onClick={onClose}>
       <div className="confirm-logout-popup modern-confirm-modal" onClick={e => e.stopPropagation()}>
         {error && <div className="confirm-modal-error">{error}</div>}
@@ -30,7 +31,8 @@ const ConfirmModal = ({ open, onClose, onConfirm, title, message, confirmText = 
           <button className="btn btn-create confirm-btn btn-danger" onClick={onConfirm}>{confirmText}</button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };
 

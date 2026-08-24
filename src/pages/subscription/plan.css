@@ -9,6 +9,12 @@
     margin-top: -1.1875rem;
 }
 
+@media (max-width: 992px) {
+  .pricing-section {
+    min-height: 0 !important;
+  }
+}
+
 .subscription-hero-section h2 {
     font-size: 2rem;
     font-weight: 600;

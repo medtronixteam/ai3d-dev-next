@@ -1155,7 +1155,7 @@ const RecentProjects = () => {
                 </div>
                 <div className="rp-card-body">
                   <div className="rp-card-header-row">
-                    <div className="rp-card-title">{item.name}</div>
+                    <div className="rp-card-title" title={item.name}>{item.name}</div>
                     <div className="rp-workspace-card-menu-wrap">
                         <button
                           type="button"
@@ -1223,7 +1223,7 @@ const RecentProjects = () => {
                   <span>Workspace</span>
                 </div>
                 <div className="rp-list-info">
-                  <div className="rp-list-title">{item.name}</div>
+                  <div className="rp-list-title" title={item.name}>{item.name}</div>
                   <div className="rp-list-date">{getWorkspaceCountLabel(item.count)}</div>
                 </div>
                 <div className="rp-workspace-card-menu-wrap">
@@ -1328,29 +1328,19 @@ const RecentProjects = () => {
                   </div>
                   <div className="rp-card-body">
                     <div className="rp-card-header-row">
-                      <div className="rp-card-title">{project.name}</div>
-                      <button
-                        className="rp-card-menu-btn"
-                        onClick={() =>
-                          setDropdownOpen(dropdownOpen === project.id ? null : project.id)
-                        }
-                      >
-                        <FaEllipsisV />
-                      </button>
-                    </div>
-                    <div className="rp-card-meta">
-                      <div className="rp-card-date">
-                        {project.created_at
-                          ? new Date(project.created_at).toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric',
-                          })
-                          : ''}
-                      </div>
-                    </div>
-                    {dropdownOpen === project.id && (
-                      <div className="rp-card-menu">
+                      <div className="rp-card-title" title={project.name}>{project.name}</div>
+                      <div className="rp-workspace-card-menu-wrap">
+                        <button
+                          type="button"
+                          className="rp-card-menu-btn"
+                          onClick={() =>
+                            setDropdownOpen(dropdownOpen === project.id ? null : project.id)
+                          }
+                        >
+                          <FaEllipsisV />
+                        </button>
+                        {dropdownOpen === project.id && (
+                          <div className="rp-card-menu">
                         <button onClick={() => handleViewProject(project)}>
                           <TabletSmartphone size={16} /> View
                         </button>
@@ -1378,8 +1368,21 @@ const RecentProjects = () => {
                             </button>
                           </>
                         )}
+                          </div>
+                        )}
                       </div>
-                    )}
+                    </div>
+                    <div className="rp-card-meta">
+                      <div className="rp-card-date">
+                        {project.created_at
+                          ? new Date(project.created_at).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                          })
+                          : ''}
+                      </div>
+                    </div>
                   </div>
                 </div>
               );
@@ -1424,7 +1427,7 @@ const RecentProjects = () => {
                     <div className="rp-list-item" key={pKey}>
                       <ProjectPreview project={project} isListView />
                       <div className="rp-list-info">
-                        <div className="rp-list-title">{project.name}</div>
+                        <div className="rp-list-title" title={project.name}>{project.name}</div>
                         <div className="rp-list-date">
                           {project.created_at
                             ? new Date(project.created_at).toLocaleDateString('en-US', {
@@ -1435,16 +1438,18 @@ const RecentProjects = () => {
                             : ''}
                         </div>
                       </div>
-                      <button
-                        className="rp-card-menu-btn"
-                        onClick={() =>
-                          setDropdownOpen(dropdownOpen === project.id ? null : project.id)
-                        }
-                      >
-                        <FaEllipsisV size={16} />
-                      </button>
-                      {dropdownOpen === project.id && (
-                        <div className="rp-card-menu">
+                      <div className="rp-workspace-card-menu-wrap">
+                        <button
+                          type="button"
+                          className="rp-card-menu-btn"
+                          onClick={() =>
+                            setDropdownOpen(dropdownOpen === project.id ? null : project.id)
+                          }
+                        >
+                          <FaEllipsisV size={16} />
+                        </button>
+                        {dropdownOpen === project.id && (
+                          <div className="rp-card-menu">
                           <button onClick={() => handleViewProject(project)}>
                             <TabletSmartphone size={16} /> View
                           </button>
@@ -1477,6 +1482,7 @@ const RecentProjects = () => {
                           )}
                         </div>
                       )}
+                      </div>
                     </div>
                   );
                 })}

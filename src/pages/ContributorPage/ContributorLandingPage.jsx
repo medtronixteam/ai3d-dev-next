@@ -277,13 +277,6 @@ const ContributorLandingPage = () => {
                   Schedule Meeting
                 </Link>
 
-                <Link
-                  to="/services"
-                  className={`a3d-nav-link ${location.pathname === '/services' ? 'active' : ''}`}
-                >
-                  Services
-                </Link>
-
                 <a href="/#3d-Sample" className="a3d-nav-link">
                   3D Samples
                 </a>
@@ -334,13 +327,6 @@ const ContributorLandingPage = () => {
 
               <Link to="https://calendly.com/arslan-medtronix/30min" className="a3d-nav-link">
                 Schedule Meeting
-              </Link>
-
-              <Link
-                to="/services"
-                className={`a3d-nav-link ${location.pathname === '/services' ? 'active' : ''}`}
-              >
-                Services
               </Link>
 
               <a href="#3d-Sample" className="a3d-nav-link">
@@ -826,7 +812,7 @@ const ContributorLandingPage = () => {
                   <img src={dot} alt="Dot" className="posotion" />
                 </div>
                 <ul className="mt-1">
-                  {['Home', 'Services', 'Pricing'].map((item) => (
+                  {['Home', 'Services', 'Pricing', 'Student'].map((item) => (
                     <li key={item}>
                       <a
                         href={
@@ -834,7 +820,9 @@ const ContributorLandingPage = () => {
                             ? '/3dio/subscription'
                             : item === 'Services'
                               ? '/services'
-                              : '/'
+                              : item === 'Student'
+                                ? '/student-program'
+                                : '/'
                         }
                       >
                         <img

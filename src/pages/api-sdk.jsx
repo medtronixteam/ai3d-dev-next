@@ -1,12 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import axios from 'axios';
-import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import './ApiSdk.css';
-import { baseURL } from '../config';
-import { useAuth } from '../context/AuthContext';
-import NotifyMeEmailModal from '../components/popup/NotifyMeEmailModal';
 
-import launchingSoonIcon from '../assets/api-sdk/icons/launchingsoonicon.svg';
 import blurStarIcon from '../assets/api-sdk/icons/blurstar.svg';
 import textToPromptIcon from '../assets/api-sdk/icons/texttoprompticon.svg';
 import imgTo3dIcon from '../assets/api-sdk/icons/imgto3dicon.svg';
@@ -18,7 +13,6 @@ import pythonIcon from '../assets/api-sdk/icons/pythonicon.svg';
 import phpIcon from '../assets/api-sdk/icons/phpicon.svg';
 import iosIcon from '../assets/api-sdk/icons/iosicon.svg';
 import androidIcon from '../assets/api-sdk/icons/andriodicon.svg';
-import notificationIcon from '../assets/api-sdk/icons/notificationicon.png';
 
 const CODE_SAMPLES = [
   {
@@ -75,7 +69,6 @@ const API_FEATURES = [
     description:
       'Convert single or multiple images into stunning 3D models with our advanced AI algorithms',
     icon: imgTo3dIcon,
-    notifyType: 'images_to_3d',
   },
   {
     id: 'video',
@@ -83,7 +76,6 @@ const API_FEATURES = [
     description:
       'Transform videos into interactive 3D models with frame-by-frame analysis',
     icon: videoTo3dIcon,
-    notifyType: 'video_to_3d',
   },
   {
     id: 'editor',
@@ -107,64 +99,11 @@ const MOBILE_SLIDER_MQ = '(max-width: 640px)';
 const AUTO_SLIDE_MS = 4500;
 
 const ApiSdkPage = () => {
-  const { token, user } = useAuth();
+  const navigate = useNavigate();
   const featuresGridRef = useRef(null);
   const activeFeatureRef = useRef(0);
   const pauseAutoSlideRef = useRef(() => {});
   const [activeFeature, setActiveFeature] = useState(0);
-  const [notifyModalOpen, setNotifyModalOpen] = useState(false);
-  const [pendingNotifyType, setPendingNotifyType] = useState('api_sdk');
-  const [notifyLoading, setNotifyLoading] = useState(false);
-
-  const submitNotifyMe = useCallback(
-    async (type, email) => {
-      setNotifyLoading(true);
-      try {
-        const response = await axios.post(
-          `${baseURL}/notify-me`,
-          { email, type },
-          {
-            headers: {
-              ...(token && { Authorization: `Bearer ${token}` }),
-            },
-          },
-        );
-
-        toast.success(response.data?.message || "You're on the list! We'll notify you at launch.");
-        setNotifyModalOpen(false);
-      } catch (error) {
-        const message =
-          error.response?.data?.message ||
-          error.response?.data?.error ||
-          'Could not save your request. Please try again.';
-        toast.error(message);
-      } finally {
-        setNotifyLoading(false);
-      }
-    },
-    [token],
-  );
-
-  const handleNotifyMe = useCallback(
-    (type) => {
-      const loginEmail = user?.email?.trim();
-      if (loginEmail) {
-        submitNotifyMe(type, loginEmail);
-        return;
-      }
-      setPendingNotifyType(type);
-      setNotifyModalOpen(true);
-    },
-    [submitNotifyMe, user?.email],
-  );
-
-  const handleNotifyMeWithEmail = (email) => {
-    if (!email) {
-      toast.error('Please enter your email address.');
-      return;
-    }
-    submitNotifyMe(pendingNotifyType, email);
-  };
 
   const updateActiveFeature = useCallback(() => {
     const grid = featuresGridRef.current;
@@ -333,11 +272,6 @@ const ApiSdkPage = () => {
   return (
     <div className="apisdk-landing">
       <section className="apisdk-hero">
-        <div className="apisdk-soon-badge">
-          <img src={launchingSoonIcon} alt="" aria-hidden="true" />
-          Launching Soon
-        </div>
-
         <h1 className="apisdk-hero-title">
           Power Up with <span className="apisdk-accent">API &amp; SDK</span>
         </h1>
@@ -357,7 +291,7 @@ const ApiSdkPage = () => {
             aria-roledescription="carousel"
             aria-label="API feature cards"
           >
-            {API_FEATURES.map(({ id, title, description, icon, notifyType }, index) => (
+            {API_FEATURES.map(({ id, title, description, icon }, index) => (
               <article
                 key={id}
                 className="apisdk-feature-card"
@@ -381,16 +315,6 @@ const ApiSdkPage = () => {
                 <div className="apisdk-feature-content">
                   <h2 className="apisdk-feature-title">{title}</h2>
                   <p className="apisdk-feature-desc">{description}</p>
-                  {notifyType ? (
-                    <button
-                      type="button"
-                      className="apisdk-feature-notify-btn"
-                      onClick={() => handleNotifyMe(notifyType)}
-                      disabled={notifyLoading}
-                    >
-                      Notify Me
-                    </button>
-                  ) : null}
                 </div>
 
                 <div className="apisdk-feature-icon-wrap">
@@ -454,38 +378,34 @@ const ApiSdkPage = () => {
         </div>
       </section>
 
-      <section className="apisdk-updates" aria-label="Launch updates">
-        <div className="apisdk-updates-card">
-          <div className="apisdk-updates-icon-wrap" aria-hidden="true">
-            <img className="apisdk-updates-icon" src={notificationIcon} alt="" />
+      <section className="apisdk-contact" aria-label="Contact for API and SDK">
+        <div
+          className="apisdk-contact-card"
+          role="link"
+          tabIndex={0}
+          onClick={() => navigate('/3dio/enterprise')}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              navigate('/3dio/enterprise');
+            }
+          }}
+        >
+          <div className="apisdk-contact-icon-wrap" aria-hidden="true">
+            <img className="apisdk-contact-icon" src={restApiIcon} alt="" />
           </div>
 
-          <h2 className="apisdk-updates-title">
-            Want <span className="apisdk-accent">Launch</span> Updates?
+          <h2 className="apisdk-contact-title">
+            Need our <span className="apisdk-accent">API</span> or{' '}
+            <span className="apisdk-accent">SDK</span>?
           </h2>
-
-          <p className="apisdk-updates-desc">
-            Stay informed and be the first to know when our API and SDK are officially
-            released.
+          <p className="apisdk-contact-desc">
+            If you want access to our API or SDK for your product, platform, or enterprise
+            workflow, get in touch with our team. We&apos;ll help you with integration options,
+            pricing, and onboarding.
           </p>
-
-          <button
-            type="button"
-            className="apisdk-updates-btn"
-            onClick={() => handleNotifyMe('api_sdk')}
-            disabled={notifyLoading}
-          >
-            {notifyLoading ? 'Submitting...' : 'Notify Me'}
-          </button>
         </div>
       </section>
-
-      <NotifyMeEmailModal
-        isOpen={notifyModalOpen}
-        onClose={() => !notifyLoading && setNotifyModalOpen(false)}
-        onSubmit={handleNotifyMeWithEmail}
-        loading={notifyLoading}
-      />
     </div>
   );
 };

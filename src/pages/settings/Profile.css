@@ -2357,10 +2357,37 @@ select:-webkit-autofill:focus {
   border: 1px solid #474749 !important;
 }
 
+.profile-search-container input,
+[data-theme='dark'] .profile-search-container input,
+.dark .profile-search-container input {
+  color: inherit;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
 [data-theme='dark'] .profile-search-container input,
 .dark .profile-search-container input {
   color: #f3f3fa !important;
+}
+
+.profile-search-container input:focus,
+.profile-search-container input:active,
+.profile-search-container input:focus-visible,
+[data-theme='dark'] .profile-search-container input:focus,
+[data-theme='dark'] .profile-search-container input:active,
+[data-theme='dark'] .profile-search-container input:focus-visible {
   border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.profile-search-container input::placeholder {
+  color: #999;
 }
 
 [data-theme='dark'] .profile-search-container input::placeholder,
@@ -2971,8 +2998,18 @@ select:-webkit-autofill:focus {
 
   .edit-modal-backdrop {
     z-index: 4000 !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
     align-items: stretch !important;
     justify-content: stretch !important;
+    overflow: hidden !important;
   }
 
   .edit-modal {
@@ -2980,51 +3017,61 @@ select:-webkit-autofill:focus {
     min-width: 100% !important;
     max-width: 100% !important;
     height: 100% !important;
-    max-height: 100% !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
     min-height: 0 !important;
     margin: 0 !important;
     border-radius: 0 !important;
-    padding: 20px 16px 0 !important;
+    padding: 18px 16px calc(16px + env(safe-area-inset-bottom, 12px)) !important;
     display: flex !important;
     flex-direction: column !important;
     overflow: hidden !important;
     box-shadow: none !important;
+    box-sizing: border-box !important;
     z-index: 4001 !important;
   }
 
   .edit-modal h2 {
     font-size: 1.35rem !important;
+    margin-bottom: 14px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .edit-modal .profile-img-row {
     margin-bottom: 16px !important;
+    flex-shrink: 0 !important;
   }
 
   .edit-modal .form-grid {
     flex: 1 1 auto !important;
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 8px !important;
+    padding-bottom: 20px !important;
     min-height: 0 !important;
   }
 
   .edit-modal .modal-actions {
-    position: sticky !important;
-    bottom: 0 !important;
+    position: relative !important;
+    bottom: auto !important;
     margin-top: auto !important;
-    padding: 12px 0 calc(16px + env(safe-area-inset-bottom, 0px)) !important;
-    background: #fff !important;
-    box-shadow: 0 -8px 16px rgba(0, 0, 0, 0.06);
+    padding: 10px 0 4px !important;
+    background: transparent !important;
+    box-shadow: none !important;
     justify-content: stretch !important;
-    gap: 8px !important;
+    gap: 10px !important;
     flex-wrap: nowrap !important;
+    flex-shrink: 0 !important;
     z-index: 5;
   }
 
   .edit-modal .modal-actions button {
     flex: 1 !important;
+    min-height: 44px !important;
     margin: 0 !important;
   }
 
   [data-theme='dark'] .edit-modal .modal-actions,
   .dark .edit-modal .modal-actions {
-    background: #232334 !important;
+    background: transparent !important;
   }
 }

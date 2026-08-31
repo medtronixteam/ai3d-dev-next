@@ -896,6 +896,9 @@ const Profile = () => {
                   border: 'none',
                   background: 'transparent',
                   outline: 'none',
+                  boxShadow: 'none',
+                  WebkitAppearance: 'none',
+                  appearance: 'none',
                   fontSize: '16px',
                   color: '#232334',
                   width: '100%',
@@ -1622,15 +1625,17 @@ const EditProfileModal = ({ onClose, user, setUser, onChangePassword, onSuccess 
   return (
     <>
       <style>{`
-        .edit-modal-backdrop { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(34,34,59,0.18); z-index: 4000; display: flex; align-items: center; justify-content: center; }
-        .edit-modal { background: #fff; border-radius: 18px; padding: 28px 16px 24px 16px; min-width: 750px; max-width: 900px; min-height: 400px; max-height: 95vh; box-shadow: 0 8px 32px rgba(34,34,59,0.13); position: relative; animation: popIn 0.35s cubic-bezier(.68,-0.55,.27,1.55); overflow-y: auto; }
+        .edit-modal-backdrop { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; width: 100%; height: 100vh; height: 100dvh; background: rgba(34,34,59,0.18); z-index: 4000; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .edit-modal { background: #fff; border-radius: 18px; padding: 28px 16px 24px 16px; min-width: 750px; max-width: 900px; min-height: 400px; max-height: 95vh; max-height: 95dvh; box-shadow: 0 8px 32px rgba(34,34,59,0.13); position: relative; animation: popIn 0.35s cubic-bezier(.68,-0.55,.27,1.55); overflow-y: auto; box-sizing: border-box; }
         @media (min-width: 600px) { .edit-modal {  padding: 36px 40px 32px 40px; } }
         @media (max-width: 787px) {
-          .edit-modal-backdrop { align-items: stretch; justify-content: stretch; }
-          .edit-modal { min-width: 100%; width: 100%; max-width: 100%; height: 100%; max-height: 100%; min-height: 0; margin: 0; border-radius: 0; padding: 20px 16px 0; display: flex; flex-direction: column; overflow: hidden; }
-          .edit-modal .form-grid { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: 12px; }
-          .edit-modal .modal-actions { position: sticky; bottom: 0; margin-top: auto; padding: 12px 0 calc(16px + env(safe-area-inset-bottom, 0px)); background: #fff; box-shadow: 0 -8px 16px rgba(0,0,0,0.06); justify-content: stretch; gap: 8px; flex-wrap: nowrap; }
-          .edit-modal .modal-actions button { flex: 1; }
+          .edit-modal-backdrop { align-items: stretch; justify-content: stretch; position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; height: 100dvh; }
+          .edit-modal { min-width: 100% !important; width: 100% !important; max-width: 100% !important; height: 100% !important; height: 100dvh !important; max-height: 100dvh !important; min-height: 0 !important; margin: 0 !important; border-radius: 0 !important; padding: 18px 16px calc(16px + env(safe-area-inset-bottom, 12px)) 16px !important; display: flex !important; flex-direction: column !important; overflow: hidden !important; }
+          .edit-modal h2 { font-size: 1.35rem !important; margin-bottom: 14px !important; flex-shrink: 0 !important; }
+          .edit-modal .profile-img-row { margin-bottom: 16px !important; flex-shrink: 0 !important; }
+          .edit-modal .form-grid { flex: 1 1 auto !important; min-height: 0 !important; overflow-y: auto !important; -webkit-overflow-scrolling: touch !important; padding-bottom: 20px !important; margin-bottom: 8px !important; }
+          .edit-modal .modal-actions { position: relative !important; bottom: auto !important; margin-top: auto !important; padding: 10px 0 4px !important; background: transparent !important; box-shadow: none !important; display: flex !important; justify-content: stretch !important; gap: 10px !important; flex-wrap: nowrap !important; flex-shrink: 0 !important; z-index: 10 !important; }
+          .edit-modal .modal-actions button { flex: 1 !important; min-height: 44px !important; }
         }
         .edit-modal::-webkit-scrollbar { width: 6px; background: #f3e6f0; }
         .edit-modal::-webkit-scrollbar-thumb { background: #DE3996; border-radius: 6px; }
@@ -1655,7 +1660,7 @@ const EditProfileModal = ({ onClose, user, setUser, onChangePassword, onSuccess 
         .edit-modal label { font-weight: 500; margin-bottom: 4px; display: block; }
         .edit-modal .form-control { width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid #e0e0e0 !important; background-color: #F9F9F9 !important; font-size: 1rem; margin-bottom: 0; }
         // :required:invalid { border-color: #DE3996; }
-        .edit-modal .modal-actions { margin-top: 32px; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 3px; }
+        .edit-modal .modal-actions { margin-top: 32px; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
         .edit-modal .modal-actions button { border-radius: 6px; padding: 9px 22px; font-weight: 500; font-size: 1rem; border: none; cursor: pointer; }
         .edit-modal .modal-actions .cancel-btn { background: #eee; color: #22223b !important; }
         .edit-modal .modal-actions .save-btn { background: #DE3996; color: #fff; }

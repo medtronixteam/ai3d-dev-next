@@ -17,8 +17,10 @@
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
   width: 440px;
-  max-width: 90vw;
-  overflow: hidden;
+  max-width: min(440px, 92vw);
+  max-height: 90dvh;
+  overflow-y: auto;
+  box-sizing: border-box;
   animation: popup-scale-in 0.3s ease-out forwards;
 }
 
@@ -273,8 +275,7 @@ outline: 1px solid #DE3996 !important;
   }
 }
 
-.create-team-popup .popup-header .close-popup-btn,
-.profile-popup .popup-header .close-popup-btn {
+.create-team-popup .popup-header .close-popup-btn {
   position: absolute;
   top: 20px;
   right: 24px;

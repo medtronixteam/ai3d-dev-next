@@ -28,10 +28,12 @@
 }
 
 .profile-search-form-control {
-  border: none;
-  background: transparent;
-  outline: none;
-  box-shadow: none;
+  border: none !important;
+  background: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
   font-size: 16px;
   color: #232334;
   width: 100%;
@@ -39,10 +41,10 @@
 
 .profile-search-form-control:focus,
 .profile-search-form-control:focus-visible {
-  border: none;
-  outline: none;
-  box-shadow: none;
-  background: transparent;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
 }
 
 [data-theme='dark'] .profile-search-containers {
@@ -64,9 +66,22 @@
   background: transparent !important;
 }
 
-@media (max-width : 500px) {
+@media (max-width: 991px) {
+  .settings-login-bg {
+    padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
   .settings-login-container {
-    margin: 0rem;
+    padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
+
+@media (max-width: 500px) {
+  .settings-login-container {
+    margin: 0rem !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important;
   }
 }
 

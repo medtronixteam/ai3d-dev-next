@@ -9,6 +9,7 @@ import {
   Box,
   Clock,
   Image,
+  ExternalLink,
 } from 'lucide-react';
 import hugeiconsCrown from '../../pages/images/icons/hugeicons_crown-02.png';
 import Crown from '../../pages/images/icons/crown.png';
@@ -132,6 +133,7 @@ const RightScan = ({
   handleTransformChange,
   handleExport,
   onShareProject,
+  onOpenEditor,
   onHistoryExport,
   onHistoryFavorite,
   onHistoryShare,
@@ -843,9 +845,19 @@ const RightScan = ({
               </button>
               <button
                 type="button"
+                className="export-action-btn editor"
+                onClick={onOpenEditor}
+                title="Open in 3D Editor"
+                aria-label="Open in 3D Editor"
+              >
+                <ExternalLink size={13} className="me-1" />
+                Open in Editor
+              </button>
+              <button
+                type="button"
                 className="export-action-btn export"
                 onClick={handleExport}
-                title="Export GLB"
+                title="Export Model"
                 aria-label="Export model"
               >
                 <Download size={14} className="me-1" />

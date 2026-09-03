@@ -13,6 +13,7 @@ import LeftScan from '../../components/scan/LeftScan';
 import CenterScan from '../../components/scan/CenterScan';
 import RightScan from '../../components/scan/RightScan';
 import PublicShareLinkSection from '../../components/popup/PublicShareLinkSection';
+import OpenInEditorModal from '../../components/popup/OpenInEditorModal';
 import { useRouteLeave } from '../../hooks/useRouteLeave';
 import { useWorkspace } from '../../context/WorkspaceContext';
 import * as THREE from 'three';
@@ -50,6 +51,66 @@ const PROJECT_TERMINAL_STATUSES = new Set([
   'canceled',
 ]);
 const PROJECT_FAILED_STATUSES = new Set(['failed', 'error', 'cancelled', 'canceled']);
+
+const detectFileExtensionAndName = (response, defaultName = 'model', fallbackUrls = [], explicitType = '') => {
+  let fileName = null;
+  let extension = null;
+
+  const contentDisposition = response?.headers?.['content-disposition'];
+  if (contentDisposition) {
+    const fileNameMatch = contentDisposition.match(/filename\*?=(?:UTF-8'')?"?([^";]+)"?/i);
+    if (fileNameMatch?.[1]) {
+      fileName = fileNameMatch[1].trim();
+      const dotIndex = fileName.lastIndexOf('.');
+      if (dotIndex !== -1 && dotIndex < fileName.length - 1) {
+        extension = fileName.substring(dotIndex + 1).toLowerCase();
+      }
+    }
+  }
+
+  if (!extension && explicitType && typeof explicitType === 'string') {
+    const cleanType = explicitType.replace(/^\./, '').trim().toLowerCase();
+    if (cleanType && !cleanType.includes('_') && cleanType.length <= 6) {
+      extension = cleanType;
+    }
+  }
+
+  if (!extension) {
+    const urls = Array.isArray(fallbackUrls) ? fallbackUrls : [fallbackUrls];
+    for (const u of urls) {
+      if (u && typeof u === 'string') {
+        const cleanUrl = u.split('?')[0].split('#')[0];
+        const match = cleanUrl.match(/\.([a-zA-Z0-9]+)$/);
+        if (match?.[1]) {
+          const ext = match[1].toLowerCase();
+          if (['glb', 'gltf', 'splat', 'ply', 'blend', 'obj', 'fbx', 'usdz', 'stl'].includes(ext)) {
+            extension = ext;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  if (!extension) {
+    const contentType = (response?.headers?.['content-type'] || '').toLowerCase();
+    if (contentType.includes('splat')) extension = 'splat';
+    else if (contentType.includes('gltf-binary') || contentType.includes('glb')) extension = 'glb';
+    else if (contentType.includes('gltf')) extension = 'gltf';
+    else if (contentType.includes('blender') || contentType.includes('blend')) extension = 'blend';
+    else if (contentType.includes('ply')) extension = 'ply';
+    else if (contentType.includes('obj')) extension = 'obj';
+  }
+
+  if (!extension) extension = 'glb';
+
+  if (!fileName) {
+    const cleanDefault = (defaultName || 'model').replace(/\.[a-zA-Z0-9]+$/, '').trim();
+    fileName = `${cleanDefault || 'model'}.${extension}`;
+  }
+
+  return { fileName, extension };
+};
 
 const projectStatusStepMap = {
   submitted: 1,
@@ -117,6 +178,8 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   const [comingSoonModalOpen, setComingSoonModalOpen] = useState(false);
   const [comingSoonFeature, setComingSoonFeature] = useState('');
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const [showEditorModal, setShowEditorModal] = useState(false);
+  const [isOpeningEditor, setIsOpeningEditor] = useState(false);
   const socketRef = useRef(null);
   const shouldShowReviewRef = useRef(false);
   const openedFromRecentRef = useRef(false);
@@ -200,7 +263,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
 
   const handleHistoryExport = async (project) => {
     try {
-      const response = await axios.get(`${baseURL}/project/export/${project.token}`, {
+      const response = await axios.get(`${baseURL}/project/export/${project.token || project.id}`, {
         headers: { Authorization: `Bearer ${token}` },
         responseType: 'blob',
       });
@@ -211,21 +274,12 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       const link = document.createElement('a');
       link.href = url;
 
-      let ext = 'glb';
-      if (project.splat_url?.endsWith('.splat')) {
-        ext = 'splat';
-      } else if (response.headers['content-type']?.includes('splat')) {
-        ext = 'splat';
-      }
-
-      const contentDisposition = response.headers['content-disposition'];
-      let fileName = `${project.name || 'model'}.${ext}`;
-      if (contentDisposition) {
-        const fileNameMatch = contentDisposition.match(/filename="?(.+)"?/);
-        if (fileNameMatch?.[1]) {
-          fileName = fileNameMatch[1];
-        }
-      }
+      const { fileName } = detectFileExtensionAndName(
+        response,
+        project.name || project.title || 'model',
+        [project.splat_url, project.file_url, project.file_temp_url, project.thumbnail],
+        project.file_type || project.format
+      );
 
       link.setAttribute('download', fileName);
       document.body.appendChild(link);
@@ -744,6 +798,8 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     setActiveTab('library');
     setIsActuallyRendered(false);
     setShowReviewModal(false);
+    setShowEditorModal(false);
+    setIsOpeningEditor(false);
     shouldShowReviewRef.current = false;
     openedFromRecentRef.current = false;
     setTransformControls(defaultTransformControls);
@@ -1482,6 +1538,74 @@ const ModelGenerator = ({ isDarkMode = false }) => {
 
   const handleSelectViewportTool = (toolName) => {
     setActiveViewportTool(toolName);
+    setShowEditorModal(true);
+  };
+
+  const handleConfirmOpenEditor = async () => {
+    const pid = typeof projectToken === 'object' ? (projectToken?.token || projectToken?.id) : projectToken;
+
+    if (!pid) {
+      toast.error('Project ID not found for this model.');
+      setShowEditorModal(false);
+      return;
+    }
+
+    // Pre-open window to prevent browser popup blocker on async call
+    const editorWindow = window.open('about:blank', '_blank');
+
+    try {
+      setIsOpeningEditor(true);
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      };
+
+      const payload = {
+        pid: pid,
+        project_id: pid,
+      };
+
+      const response = await axios.post(`${baseURL}/editor/auth/code`, payload, {
+        headers,
+      });
+      const resData = response.data;
+
+      console.log('Editor auth code response:', resData);
+
+      let editorUrl = null;
+      if (typeof resData === 'string' && resData.startsWith('http')) {
+        editorUrl = resData;
+      } else if (resData?.url) {
+        editorUrl = resData.url;
+      } else if (resData?.editor_url) {
+        editorUrl = resData.editor_url;
+      } else if (resData?.data?.url) {
+        editorUrl = resData.data.url;
+      } else if (resData?.data?.editor_url) {
+        editorUrl = resData.data.editor_url;
+      } else if (resData?.code || resData?.data?.code) {
+        const code = resData?.code || resData?.data?.code;
+        editorUrl = `https://playground.ai3dscanning.com/editor/?code=${code}&pid=${pid}`;
+      }
+
+      if (editorUrl) {
+        if (editorWindow) {
+          editorWindow.location.href = editorUrl;
+        } else {
+          window.open(editorUrl, '_blank');
+        }
+        setShowEditorModal(false);
+      } else {
+        if (editorWindow) editorWindow.close();
+        toast.error('Editor URL not found in response');
+      }
+    } catch (err) {
+      if (editorWindow) editorWindow.close();
+      console.error('Failed to get editor auth code:', err);
+      toast.error(err?.response?.data?.message || err?.message || 'Failed to open editor');
+    } finally {
+      setIsOpeningEditor(false);
+    }
   };
 
   const copyPrompt = () => {
@@ -1537,19 +1661,12 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       const link = document.createElement('a');
       link.href = url;
 
-      const contentDisposition = response.headers['content-disposition'];
-      let ext = 'glb';
-      if (response.headers['content-type']?.includes('splat')) {
-        ext = 'splat';
-      }
-      let fileName = `${generatedPrompt || 'model'}.${ext}`;
-
-      if (contentDisposition) {
-        const fileNameMatch = contentDisposition.match(/filename="?(.+)"?/);
-        if (fileNameMatch?.[1]) {
-          fileName = fileNameMatch[1];
-        }
-      }
+      const { fileName } = detectFileExtensionAndName(
+        response,
+        generatedPrompt || 'model',
+        [modelUrl],
+        projectType
+      );
 
       link.setAttribute('download', fileName);
       document.body.appendChild(link);
@@ -1661,6 +1778,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             onViewportHelp={handleViewportHelp}
             onViewportScreenshot={handleViewportScreenshot}
             onResetTransform={handleResetTransform}
+            onOpenEditorModal={() => setShowEditorModal(true)}
             showVideoFrames={showVideoFrames}
             videoFrames={videoFrames}
             removedFrames={removedFrames}
@@ -1694,6 +1812,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             handleTransformChange={handleTransformChange}
             handleExport={handleExport}
             onShareProject={handleShareCurrentProject}
+            onOpenEditor={() => setShowEditorModal(true)}
             onHistoryExport={handleHistoryExport}
             onHistoryFavorite={handleHistoryFavorite}
             onHistoryShare={handleHistoryShare}
@@ -2041,6 +2160,17 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             </div>
           </div>
         )}
+
+        <OpenInEditorModal
+          isOpen={showEditorModal}
+          isLoading={isOpeningEditor}
+          onClose={() => {
+            if (!isOpeningEditor) setShowEditorModal(false);
+          }}
+          onConfirm={handleConfirmOpenEditor}
+          title="Open in 3D Editor"
+          message="Do you want to open this project in the 3D Editor?"
+        />
       </div>
     </div>
   );

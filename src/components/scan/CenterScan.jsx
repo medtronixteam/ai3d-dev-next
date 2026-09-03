@@ -60,6 +60,7 @@ const CenterScan = ({
   onViewportHelp,
   onViewportScreenshot,
   onResetTransform,
+  onOpenEditorModal,
   expanded = false,
   hideContributorBanner = false,
   showVideoFrames = false,
@@ -96,27 +97,33 @@ const CenterScan = ({
     setIsActuallyRendered(true);
   }, []);
 
+  const handleLeftToolClick = (toolName, additionalAction) => {
+    if (additionalAction) additionalAction();
+    onSelectViewportTool?.(toolName);
+    onOpenEditorModal?.();
+  };
+
   const leftToolbar = [
-    { name: 'Picker', img: PickerSelect, onClick: () => onSelectViewportTool?.('Picker') },
-    { name: 'Lasso', img: lassoTool, onClick: () => onSelectViewportTool?.('Lasso') },
-    { name: 'Polygon', img: polygon, onClick: () => onSelectViewportTool?.('Polygon') },
-    { name: 'Brush', img: brushSelect, onClick: () => onSelectViewportTool?.('Brush') },
-    { name: 'Flood', img: floodSelect, onClick: () => onSelectViewportTool?.('Flood') },
-    { name: 'Sphere', img: earthSphereLine, onClick: () => onSelectViewportTool?.('Sphere') },
-    { name: 'Square', img: squareSelect, onClick: () => onSelectViewportTool?.('Square') },
-    { name: 'Fly Through', img: flyThrough, onClick: () => { onSelectViewportTool?.('Fly Through'); onToggleAutoRotate?.(); } },
-    { name: 'Hotspot', img: hotspot, onClick: () => onSelectViewportTool?.('Hotspot') },
-    { name: 'Delete', img: trash, onClick: () => onResetTransform?.() },
+    { name: 'Picker', img: PickerSelect, onClick: () => handleLeftToolClick('Picker') },
+    { name: 'Lasso', img: lassoTool, onClick: () => handleLeftToolClick('Lasso') },
+    { name: 'Polygon', img: polygon, onClick: () => handleLeftToolClick('Polygon') },
+    { name: 'Brush', img: brushSelect, onClick: () => handleLeftToolClick('Brush') },
+    { name: 'Flood', img: floodSelect, onClick: () => handleLeftToolClick('Flood') },
+    { name: 'Sphere', img: earthSphereLine, onClick: () => handleLeftToolClick('Sphere') },
+    { name: 'Square', img: squareSelect, onClick: () => handleLeftToolClick('Square') },
+    { name: 'Fly Through', img: flyThrough, onClick: () => handleLeftToolClick('Fly Through', () => onToggleAutoRotate?.()) },
+    { name: 'Hotspot', img: hotspot, onClick: () => handleLeftToolClick('Hotspot') },
+    { name: 'Delete', img: trash, onClick: () => handleLeftToolClick('Delete', () => onResetTransform?.()) },
   ];
 
   const bottomActions = [
-    { name: 'Undo', img: undo, onClick: () => onViewportUndo?.() },
-    { name: 'Redo', img: redo, onClick: () => onViewportRedo?.() },
-    { name: 'Auto Rotate', img: selection, onClick: () => onToggleAutoRotate?.(), active: autoRotate },
-    { name: 'Grid', img: setting, onClick: () => onToggleGrid?.(), active: gridVisible },
-    { name: 'Help', img: help, onClick: () => onViewportHelp?.(), title: 'Drag to rotate | Right-click to pan | Scroll to zoom' },
-    { name: 'Shadows', img: shadow, onClick: () => onToggleShadows?.(), active: shadowsEnabled },
-    { name: 'Screenshot', img: camera, onClick: () => onViewportScreenshot?.() },
+    { name: 'Undo', img: undo, onClick: () => { onViewportUndo?.(); onOpenEditorModal?.(); } },
+    { name: 'Redo', img: redo, onClick: () => { onViewportRedo?.(); onOpenEditorModal?.(); } },
+    { name: 'Auto Rotate', img: selection, onClick: () => { onToggleAutoRotate?.(); onOpenEditorModal?.(); }, active: autoRotate },
+    { name: 'Grid', img: setting, onClick: () => { onToggleGrid?.(); onOpenEditorModal?.(); }, active: gridVisible },
+    { name: 'Help', img: help, onClick: () => { onViewportHelp?.(); onOpenEditorModal?.(); }, title: 'Drag to rotate | Right-click to pan | Scroll to zoom' },
+    { name: 'Shadows', img: shadow, onClick: () => { onToggleShadows?.(); onOpenEditorModal?.(); }, active: shadowsEnabled },
+    { name: 'Screenshot', img: camera, onClick: () => { onViewportScreenshot?.(); onOpenEditorModal?.(); } },
   ];
 
   return (

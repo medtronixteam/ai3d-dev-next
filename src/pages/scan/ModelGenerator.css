@@ -2527,6 +2527,35 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
+.export-button-bar .export-action-btn.editor {
+    height: 28px;
+    padding: 0 10px;
+    background: rgba(222, 57, 150, 0.12);
+    color: #DE3996;
+    border: 1px solid rgba(222, 57, 150, 0.3);
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s ease;
+}
+
+[data-theme='dark'] .export-button-bar .export-action-btn.editor {
+    background: rgba(222, 57, 150, 0.18);
+    color: #ff60b6;
+    border-color: rgba(222, 57, 150, 0.4);
+}
+
+.export-button-bar .export-action-btn.editor:hover {
+    background: #DE3996;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(222, 57, 150, 0.35);
+}
+
 .export-button-bar .export-action-btn.export {
     height: 28px;
     padding: 0 12px;

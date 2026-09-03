@@ -42,6 +42,7 @@ import axios from 'axios';
 import { FastAverageColor } from 'fast-average-color';
 import LoginPopup from '../../components/popup/LoginPopup';
 import ScanWelcomeModal from '../../components/popup/ScanWelcomeModal';
+import OpenInEditorModal from '../../components/popup/OpenInEditorModal';
 import {
   markScanWelcomeSeen,
   shouldShowScanWelcome,
@@ -498,6 +499,7 @@ function ModelCardVideoModal({
   modelData,
   platformIsDark,
 }) {
+  const { token } = useAuth();
   const [loading, setLoading] = React.useState(true);
   const [modalVisible, setModalVisible] = React.useState(false);
   const [mediaError, setMediaError] = React.useState(false);
@@ -510,6 +512,8 @@ function ModelCardVideoModal({
   const [mediaRecorder, setMediaRecorder] = React.useState(null);
   const [modalBgColor, setModalBgColor] = React.useState(null);
   const [triedFallback, setTriedFallback] = React.useState(false);
+  const [showEditorModal, setShowEditorModal] = useState(false);
+  const [isOpeningEditor, setIsOpeningEditor] = useState(false);
 
   const modelViewerRef = useRef(null);
   const mediaTimeoutRef = useRef(null);
@@ -888,14 +892,16 @@ function ModelCardVideoModal({
             </h3>
 
             <div style={{ display: 'flex', gap: '10px' }}>
-              {/* Edit Button (always visible) */}
+              {/* Edit Button */}
               <button
                 onClick={() => {
-                  // You can add edit logic here later
-                  toast.info('Edit feature coming soon.');
+                  if (!loading) {
+                    setShowEditorModal(true);
+                  }
                 }}
+                disabled={loading}
                 style={{
-                  background: '#fff',
+                  background: loading ? '#ddd' : '#fff',
                   border: 'none',
                   borderRadius: '50%',
                   width: 32,
@@ -903,7 +909,7 @@ function ModelCardVideoModal({
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  cursor: 'pointer',
+                  cursor: loading ? 'not-allowed' : 'pointer',
                 }}
                 aria-label="Edit model"
                 title="Edit model"
@@ -1251,6 +1257,83 @@ function ModelCardVideoModal({
           }
         `}</style>
       </div>
+
+      <OpenInEditorModal
+        isOpen={showEditorModal}
+        isLoading={isOpeningEditor}
+        onClose={() => {
+          if (!isOpeningEditor) setShowEditorModal(false);
+        }}
+        onConfirm={async () => {
+          const pid = modelData?.token || modelData?.id || modelId;
+
+          if (!pid) {
+            toast.error('Project ID not found for this model.');
+            setShowEditorModal(false);
+            return;
+          }
+
+          const editorWindow = window.open('about:blank', '_blank');
+
+          try {
+            setIsOpeningEditor(true);
+            const headers = {
+              'Content-Type': 'application/json',
+            };
+            if (token) {
+              headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            const payload = {
+              pid: pid,
+              project_id: pid,
+            };
+
+            const response = await axios.post(`${baseURL}/editor/auth/code`, payload, {
+              headers,
+            });
+            const resData = response.data;
+
+            console.log('Dashboard Editor auth code response:', resData);
+
+            let editorUrl = null;
+            if (typeof resData === 'string' && resData.startsWith('http')) {
+              editorUrl = resData;
+            } else if (resData?.url) {
+              editorUrl = resData.url;
+            } else if (resData?.editor_url) {
+              editorUrl = resData.editor_url;
+            } else if (resData?.data?.url) {
+              editorUrl = resData.data.url;
+            } else if (resData?.data?.editor_url) {
+              editorUrl = resData.data.editor_url;
+            } else if (resData?.code || resData?.data?.code) {
+              const code = resData?.code || resData?.data?.code;
+              editorUrl = `https://playground.ai3dscanning.com/editor/?code=${code}&pid=${pid}`;
+            }
+
+            if (editorUrl) {
+              if (editorWindow) {
+                editorWindow.location.href = editorUrl;
+              } else {
+                window.open(editorUrl, '_blank');
+              }
+              setShowEditorModal(false);
+            } else {
+              if (editorWindow) editorWindow.close();
+              toast.error('Editor URL not found in response');
+            }
+          } catch (err) {
+            if (editorWindow) editorWindow.close();
+            console.error('Failed to get editor auth code:', err);
+            toast.error(err?.response?.data?.message || err?.message || 'Failed to open editor');
+          } finally {
+            setIsOpeningEditor(false);
+          }
+        }}
+        title="Open in 3D Editor"
+        message="Do you want to open this project in the 3D Editor?"
+      />
     </>
   );
 }

@@ -873,20 +873,59 @@ const RecentProjects = () => {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      const contentDisposition = response.headers['content-disposition'];
-      let ext = 'glb';
-      if (project.splat_url?.endsWith('.splat')) {
-        ext = 'splat';
-      } else if (response.headers['content-type']?.includes('splat')) {
-        ext = 'splat';
-      }
-      let fileName = `${project.name || 'project'}.${ext}`;
+      let fileName = null;
+      let extension = null;
 
       if (contentDisposition) {
-        const fileNameMatch = contentDisposition.match(/filename="?(.+)"?/);
+        const fileNameMatch = contentDisposition.match(/filename\*?=(?:UTF-8'')?"?([^";]+)"?/i);
         if (fileNameMatch?.[1]) {
-          fileName = fileNameMatch[1];
+          fileName = fileNameMatch[1].trim();
+          const dotIndex = fileName.lastIndexOf('.');
+          if (dotIndex !== -1 && dotIndex < fileName.length - 1) {
+            extension = fileName.substring(dotIndex + 1).toLowerCase();
+          }
         }
+      }
+
+      if (!extension && project?.file_type && typeof project.file_type === 'string') {
+        const cleanType = project.file_type.replace(/^\./, '').trim().toLowerCase();
+        if (cleanType && !cleanType.includes('_') && cleanType.length <= 6) {
+          extension = cleanType;
+        }
+      }
+
+      if (!extension) {
+        const urls = [project?.splat_url, project?.file_url, project?.file_temp_url, project?.url, project?.thumbnail];
+        for (const u of urls) {
+          if (u && typeof u === 'string') {
+            const cleanUrl = u.split('?')[0].split('#')[0];
+            const match = cleanUrl.match(/\.([a-zA-Z0-9]+)$/);
+            if (match?.[1]) {
+              const extMatch = match[1].toLowerCase();
+              if (['glb', 'gltf', 'splat', 'ply', 'blend', 'obj', 'fbx', 'usdz', 'stl'].includes(extMatch)) {
+                extension = extMatch;
+                break;
+              }
+            }
+          }
+        }
+      }
+
+      if (!extension) {
+        const contentType = (response.headers['content-type'] || '').toLowerCase();
+        if (contentType.includes('splat')) extension = 'splat';
+        else if (contentType.includes('gltf-binary') || contentType.includes('glb')) extension = 'glb';
+        else if (contentType.includes('gltf')) extension = 'gltf';
+        else if (contentType.includes('blender') || contentType.includes('blend')) extension = 'blend';
+        else if (contentType.includes('ply')) extension = 'ply';
+        else if (contentType.includes('obj')) extension = 'obj';
+      }
+
+      if (!extension) extension = 'glb';
+
+      if (!fileName) {
+        const cleanName = (project.name || 'project').replace(/\.[a-zA-Z0-9]+$/, '').trim();
+        fileName = `${cleanName || 'project'}.${extension}`;
       }
 
       link.setAttribute('download', fileName);

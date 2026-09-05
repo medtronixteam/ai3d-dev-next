@@ -6,7 +6,7 @@ import $hira from '../assets/images/leardership/hira.png';
 import $shehroz from '../assets/images/leardership/Shehroz.png';
 import $mudassar from '../assets/images/leardership/mudassar.png';
 import $samia from '../assets/images/leardership/samia.png';
-import $ryan from '../assets/images/leardership/ryan.png';
+// import $ryan from '../assets/images/leardership/ryan.png';
 import $assam from '../assets/images/leardership/Assam.png';
 import CustomInfoModal from '../components/popup/CustomInfoModal';
 import HS from '../assets/service/HS.svg'
@@ -88,25 +88,25 @@ const LeadershipSection = () => {
       linkedin: 'https://www.linkedin.com/in/usama-khan-793960337/',
       philosophy: 'A strong financial foundation is the backbone of innovation.',
     },
-    {
-      name: 'Rayan',
-      lastName: 'Babur',
-      img: $ryan,
-      role: 'Ai Research lead',
-      desc: [
-        'Rayan leads the research initiatives at AI 3D Scanning, focusing on the latest advancements in computer vision and neural rendering. He explores new algorithms to enhance 3D reconstruction accuracy and processing speed.',
-        'His work ensures the platform stays at the forefront of AI technology by integrating state-of-the-art research into production.',
-      ],
-      expertise: [
-        'Neural Rendering',
-        'Computer Vision',
-        'Deep Learning',
-        'Algorithm Optimization',
-        'Research Strategy',
-      ],
-      linkedin: 'https://www.linkedin.com/in/rayan-babur/',
-      philosophy: 'Innovation is the result of persistent curiosity and rigorous experimentation.',
-    },
+    // {
+    //   name: 'Rayan',
+    //   lastName: 'Babur',
+    //   img: $ryan,
+    //   role: 'Ai Research lead',
+    //   desc: [
+    //     'Rayan leads the research initiatives at AI 3D Scanning, focusing on the latest advancements in computer vision and neural rendering. He explores new algorithms to enhance 3D reconstruction accuracy and processing speed.',
+    //     'His work ensures the platform stays at the forefront of AI technology by integrating state-of-the-art research into production.',
+    //   ],
+    //   expertise: [
+    //     'Neural Rendering',
+    //     'Computer Vision',
+    //     'Deep Learning',
+    //     'Algorithm Optimization',
+    //     'Research Strategy',
+    //   ],
+    //   linkedin: 'https://www.linkedin.com/in/rayan-babur/',
+    //   philosophy: 'Innovation is the result of persistent curiosity and rigorous experimentation.',
+    // },
     {
       name: 'Samia',
       lastName: 'Rasheed',

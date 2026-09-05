@@ -13,7 +13,7 @@ import hassnain from "../../../assets/images/ali hassnain.png";
 import zeeshan from "../../../assets/images/zeeshan.png";
 import Ibrahim from "../../../assets/images/Ibrahim.png";
 import usman from "../../../assets/images/usman.png";
-import ryan from "../../../assets/images/leardership/ryan.png";
+// import ryan from "../../../assets/images/leardership/ryan.png";
 import shewar from "../../../assets/images/shewar.png";
 import hira from "../../../assets/images/Hira.png";
 import junaid from "../../../assets/images/junaid.png";
@@ -60,11 +60,11 @@ const CardSlider = () => {
       description: "AI Engineer",
       image: hassnain,
     },
-    {
-      title: "Rayan Babur",
-      description: "Ai Research lead",
-      image: ryan,
-    },
+    // {
+    //   title: "Rayan Babur",
+    //   description: "Ai Research lead",
+    //   image: ryan,
+    // },
     {
       title: "Ikram Elahi Hashmi",
       description: "AI Engineer",

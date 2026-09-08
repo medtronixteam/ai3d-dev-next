@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Navbar.css";
-import logo from "../../Assets/logo2.png";
+import logo from "../../images/logo.png";
 import { Link } from "react-router-dom";
 
 const Header = () => {

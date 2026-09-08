@@ -366,6 +366,7 @@ const LeftScan = ({
           </div>
         )}
 
+        {/* MULTIPLE IMAGES SECTION - HIDDEN / COMMENTED OUT
         {!video && !prompt && !singleImageName && !showVideoFrames && (
           <>
             <label className="fw-bold small mb-2">
@@ -433,8 +434,9 @@ const LeftScan = ({
             />
           </>
         )}
+        */}
 
-        {/* VIDEO SECTION */}
+        {/* VIDEO SECTION - HIDDEN / COMMENTED OUT
         {!prompt && images.length === 0 && !singleImageName && !showVideoFrames && (
           <>
             <label className="fw-bold small mb-2">Video</label>
@@ -477,6 +479,7 @@ const LeftScan = ({
             </div>
           </>
         )}
+        */}
 
         {!showVideoFrames && (
         <button

@@ -20,6 +20,7 @@ import junaid from "../../../assets/images/junaid.png";
 import Ikram from "../../../assets/images/Ikram.png";
 import ilyas from "../../../assets/images/Ilyas.png";
 import samia from "../../../assets/images/samia.png";
+import ozain from "../../../assets/images/ozain.png";
 
 const CardSlider = () => {
   const [showMore, setShowMore] = useState(false);
@@ -119,6 +120,11 @@ const CardSlider = () => {
       title: "Ilyas Hussain",
       description: "AI Engineer",
       image: ilyas,
+    },
+    {
+      title: "Ozain Ahmad",
+      description: "Junior Business Developer",
+      image: ozain,
     },
   ];
 

@@ -8,6 +8,7 @@ import $mudassar from '../assets/images/leardership/mudassar.png';
 import $samia from '../assets/images/leardership/samia.png';
 // import $ryan from '../assets/images/leardership/ryan.png';
 import $assam from '../assets/images/leardership/Assam.png';
+import $ozain from '../assets/images/ozain.png';
 import CustomInfoModal from '../components/popup/CustomInfoModal';
 import HS from '../assets/service/HS.svg'
 import La from '../assets/service/La.svg'
@@ -161,6 +162,24 @@ const LeadershipSection = () => {
       linkedin: 'https://www.linkedin.com/in/joelhillier',
       philosophy: 'Empowering technological innovation through strategic leadership and global collaboration.',
     },
+    {
+      name: 'Ozain',
+      lastName: 'Ahmad',
+      img: $ozain,
+      imgClass: 'ai3d_ld_v3__img--scale',
+      role: 'Junior Business Developer',
+      desc: [
+        'Ozain contributes to business growth and strategic partnerships at AI 3D Scanning Solutions.',
+        'He focuses on identifying new opportunities and driving business expansion.',
+      ],
+      expertise: [
+        'Business Development',
+        'Client Outreach',
+        'Market Research',
+        'Strategic Partnerships',
+      ],
+      philosophy: 'Driving growth through meaningful connections and strategic opportunities.',
+    },
   ];
 
   useEffect(() => {
@@ -172,16 +191,15 @@ const LeadershipSection = () => {
       document.head.appendChild(link);
     }
 
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js';
-    script.async = true;
-    document.body.appendChild(script);
-
-    script.onload = () => {
+    const initSwiper = () => {
       if (window.Swiper) {
+        if (swiperRef.current && typeof swiperRef.current.destroy === 'function') {
+          swiperRef.current.destroy(true, true);
+        }
         swiperRef.current = new window.Swiper('.ai3d_ld_v3__swiper_container', {
           loop: true,
           spaceBetween: 30,
+          initialSlide: 0,
           autoplay: {
             delay: 3000,
             disableOnInteraction: false,
@@ -226,6 +244,22 @@ const LeadershipSection = () => {
         }
       }
     };
+
+    if (window.Swiper) {
+      initSwiper();
+    } else {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js';
+      script.async = true;
+      script.onload = initSwiper;
+      document.body.appendChild(script);
+    }
+
+    return () => {
+      if (swiperRef.current && typeof swiperRef.current.destroy === 'function') {
+        swiperRef.current.destroy(true, true);
+      }
+    };
   }, []);
 
   return (
@@ -238,7 +272,7 @@ const LeadershipSection = () => {
               <div className="swiper-slide ai3d_ld_v3__slide" key={index}>
                 <div className="ai3d_ld_v3__card">
                   <div className="ai3d_ld_v3__img_wrap">
-                    <img src={member.img} alt={member.name} className="ai3d_ld_v3__img" />
+                    <img src={member.img} alt={member.name} className={`ai3d_ld_v3__img ${member.imgClass || ''}`.trim()} />
                     {member.img2 && <img src={member.img2} alt={member.name} className="ai3d_ld_v3__badge" />}
                   </div>
                   <div className="ai3d_ld_v3__content">
@@ -322,6 +356,10 @@ const LeadershipSection = () => {
     transition: transform 0.4s ease;
   }
 
+  .ai3d_ld_v3__img--scale {
+    transform: scale(0.85);
+  }
+
   .ai3d_ld_v3__badge {
     position: absolute;
     bottom: 10px;
@@ -333,6 +371,10 @@ const LeadershipSection = () => {
 
   .ai3d_ld_v3__card:hover .ai3d_ld_v3__img {
     transform: scale(1.05);
+  }
+
+  .ai3d_ld_v3__card:hover .ai3d_ld_v3__img--scale {
+    transform: scale(0.9);
   }
 
   /* Content */

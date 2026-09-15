@@ -850,8 +850,8 @@ const RightScan = ({
                 title="Open in 3D Editor"
                 aria-label="Open in 3D Editor"
               >
-                <ExternalLink size={13} className="me-1" />
-                Open in Editor
+                <ExternalLink size={12} className="flex-shrink-0 me-1" />
+                <span>3D Editor</span>
               </button>
               <button
                 type="button"
@@ -860,8 +860,8 @@ const RightScan = ({
                 title="Export Model"
                 aria-label="Export model"
               >
-                <Download size={14} className="me-1" />
-                Export
+                <Download size={13} className="flex-shrink-0 me-1" />
+                <span>Export</span>
               </button>
             </div>
           ) : (

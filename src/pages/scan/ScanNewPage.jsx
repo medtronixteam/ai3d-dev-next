@@ -178,6 +178,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   const [comingSoonModalOpen, setComingSoonModalOpen] = useState(false);
   const [comingSoonFeature, setComingSoonFeature] = useState('');
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const loadedProjectTokenRef = useRef(null);
   const [showEditorModal, setShowEditorModal] = useState(false);
   const [isOpeningEditor, setIsOpeningEditor] = useState(false);
   const socketRef = useRef(null);
@@ -739,7 +740,9 @@ const ModelGenerator = ({ isDarkMode = false }) => {
 
     if (queueData.status === 'completed') {
       setShowQueueUI(false);
-      setShowLoadingUI(true);
+      if (!modelReady && !modelUrl) {
+        setShowLoadingUI(true);
+      }
       setProjectStatus('completed');
       fetchModelUrl(projectToken, projectType);
     }
@@ -747,12 +750,12 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     if (queueData.progress) {
       setProgress(queueData.progress);
     }
-  }, [queueData, projectToken]);
+  }, [queueData, projectToken, modelReady, modelUrl]);
 
   useEffect(() => {
     const handleProjectCompleteNotification = (event) => {
       console.log('Project processing complete notification received:', event.detail);
-      if (projectToken) {
+      if (projectToken && (!modelReady || !modelUrl || loadedProjectTokenRef.current !== projectToken)) {
         fetchInitialProject(projectToken);
       }
     };
@@ -761,7 +764,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     return () => {
       window.removeEventListener('projectProcessingComplete', handleProjectCompleteNotification);
     };
-  }, [projectToken]);
+  }, [projectToken, modelReady, modelUrl]);
 
   const resetAllInputs = useCallback(() => {
     projectPollGenerationRef.current += 1;
@@ -782,6 +785,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     setIsExtractingFrames(false);
     setIsRedirecting(false);
     setProjectToken(null);
+    loadedProjectTokenRef.current = null;
     setProjectStatus('pending');
     setModelUrl(null);
     setModelReady(false);
@@ -939,6 +943,11 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   }, [isPublicView, publicSlug]);
 
   const fetchModelUrl = async (token_id, type) => {
+    if (loadedProjectTokenRef.current === token_id && modelUrl && modelReady) {
+      console.log('Model already loaded for this project, skipping duplicate fetch:', token_id);
+      return;
+    }
+
     try {
       setModelLoading(true);
       console.log(`Fetching temp model URL for project: ${token_id}`);
@@ -982,8 +991,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
 
         console.log('URL loaded:', finalUrl);
 
-
-
+        loadedProjectTokenRef.current = token_id;
         setModelUrl(finalUrl);
         setProjectStatus('completed');
         setShowLoadingUI(false);

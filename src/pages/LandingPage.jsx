@@ -72,6 +72,7 @@ import SehrozSir from '../assets/images/ShehrozSir.jpeg';
 
 import hiraImg from '../assets/images/HiraImg.svg';
 import samiaImg from '../assets/images/samia.png';
+import ozainImg from '../assets/images/ozain_fixed.png';
 import FrameWiseImg from '../assets/images/FrameWise-Logo.png';
 import { useMediaQuery } from 'react-responsive';
 import SubscriptionModal from '../components/popup/SubscriptionModal';
@@ -87,6 +88,7 @@ import RoadmapSection from './LandingPageRoadmap';
 import TestimonialSection from './TestimonialSection';
 import LeadershipSection from './LeadershipSection';
 import WaitingListSection from './WaitingListSection';
+import InteractiveShowcaseSection from '../components/landing/InteractiveShowcaseSection';
 import EarlyAccessPopup from '../components/popup/EarlyAccessPopup';
 import {
   shouldShowEarlyAccessPopup,
@@ -112,6 +114,20 @@ const LandingPage = () => {
   const [subscribeLoading, setSubscribeLoading] = useState(false);
   const [subscribeMsg, setSubscribeMsg] = useState('');
   const [selectedModel, setSelectedModel] = useState(null);
+  const [isProductDropdownOpen, setIsProductDropdownOpen] = useState(false);
+  const [isMobileProductOpen, setIsMobileProductOpen] = useState(false);
+  const dropdownTimeoutRef = useRef(null);
+
+  const handleProductMouseEnter = () => {
+    if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
+    setIsProductDropdownOpen(true);
+  };
+
+  const handleProductMouseLeave = () => {
+    dropdownTimeoutRef.current = setTimeout(() => {
+      setIsProductDropdownOpen(false);
+    }, 180);
+  };
 
   useEffect(() => {
     const section = landingRef.current;
@@ -938,6 +954,24 @@ const LandingPage = () => {
           philosophy:
             '"A strong brand starts with inspired people — and inspired people create the stories worth sharing."',
         },
+        'Ozain Ahmad': {
+          Image: ozainImg,
+          title: 'Junior Business Developer',
+          desc: [
+            'Ozain contributes to business growth and strategic partnerships at AI 3D Scanning Solutions.',
+            'His focus is on strategic outreach, client communication, and supporting long-term business partnerships across industries.',
+          ],
+          expertise: [
+            'Business Development',
+            'Market Research',
+            'Client Relations',
+            'Lead Generation',
+            'Strategic Partnerships',
+          ],
+          linkedin: 'https://www.linkedin.com/',
+          philosophy:
+            '"Driven by curiosity and dedicated to creating meaningful business connections and growth."',
+        },
       };
 
       const detailed = fullDataMap[name] || {
@@ -1055,7 +1089,7 @@ const LandingPage = () => {
 
                 {/* Desktop Nav */}
 
-                <nav className="d-none d-lg-flex gap-lg-3 gap-xl-4">
+                <nav className="d-none d-lg-flex gap-lg-3 gap-xl-4 align-items-center">
                   <Link
                     to="/"
                     className={`a3d-nav-link ${location.pathname === '/' ? 'active' : ''}`}
@@ -1063,9 +1097,98 @@ const LandingPage = () => {
                     Home
                   </Link>
 
-                  <Link to="https://calendly.com/arslan-medtronix/30min" className="a3d-nav-link">
-                    Schedule Meeting
-                  </Link>
+                  {/* Product Mega Dropdown */}
+                  <div
+                    className="a3d-product-dropdown-container"
+                    onMouseEnter={handleProductMouseEnter}
+                    onMouseLeave={handleProductMouseLeave}
+                  >
+                    <button
+                      type="button"
+                      className="a3d-nav-link a3d-product-trigger"
+                      onClick={() => setIsProductDropdownOpen((prev) => !prev)}
+                      aria-expanded={isProductDropdownOpen}
+                    >
+                      Product
+                      <FaChevronDown
+                        className={`a3d-product-chevron ${isProductDropdownOpen ? 'open' : ''}`}
+                      />
+                    </button>
+
+                    {isProductDropdownOpen && (
+                      <div className="a3d-product-menu" role="menu">
+                        <div className="a3d-product-column">
+                          <Link
+                            to="/3dio/new/scan"
+                            className="a3d-product-item"
+                            onClick={() => setIsProductDropdownOpen(false)}
+                          >
+                            <span className="a3d-product-item-title">Text to 3D</span>
+                            <span className="a3d-product-item-desc">Prompt to finished asset</span>
+                          </Link>
+                          <Link
+                            to="/3dio/new/scan"
+                            className="a3d-product-item"
+                            onClick={() => setIsProductDropdownOpen(false)}
+                          >
+                            <span className="a3d-product-item-title">Multi-image to 3D</span>
+                            <span className="a3d-product-item-desc">Multiple views fused</span>
+                          </Link>
+                          <Link
+                            to="/3dio/new/scan"
+                            className="a3d-product-item"
+                            onClick={() => setIsProductDropdownOpen(false)}
+                          >
+                            <span className="a3d-product-item-title">Skeleton & rigging</span>
+                            <span className="a3d-product-item-desc">Auto-rig with motion presets</span>
+                          </Link>
+                          <Link
+                            to="/3dio/workspace"
+                            className="a3d-product-item"
+                            onClick={() => setIsProductDropdownOpen(false)}
+                          >
+                            <span className="a3d-product-item-title">Workspace</span>
+                            <span className="a3d-product-item-desc">Projects, versions, library</span>
+                          </Link>
+                        </div>
+
+                        <div className="a3d-product-column">
+                          <Link
+                            to="/3dio/new/scan"
+                            className="a3d-product-item"
+                            onClick={() => setIsProductDropdownOpen(false)}
+                          >
+                            <span className="a3d-product-item-title">Image to 3D</span>
+                            <span className="a3d-product-item-desc">One photo, one model</span>
+                          </Link>
+                          <Link
+                            to="/3dio/new/scan"
+                            className="a3d-product-item"
+                            onClick={() => setIsProductDropdownOpen(false)}
+                          >
+                            <span className="a3d-product-item-title">Video to 3D</span>
+                            <span className="a3d-product-item-desc">Turntable capture</span>
+                          </Link>
+                          <Link
+                            to="/3dio/"
+                            className="a3d-product-item"
+                            onClick={() => setIsProductDropdownOpen(false)}
+                          >
+                            <span className="a3d-product-item-title">Editor</span>
+                            <span className="a3d-product-item-desc">Remesh, clean, texture</span>
+                          </Link>
+                          <Link
+                            to="/3dio/settings/team"
+                            className="a3d-product-item"
+                            onClick={() => setIsProductDropdownOpen(false)}
+                          >
+                            <span className="a3d-product-item-title">Teams</span>
+                            <span className="a3d-product-item-desc">Roles, seats, SSO</span>
+                          </Link>
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
                   <Link
                     to="/3dio/api-sdk"
@@ -1081,33 +1204,11 @@ const LandingPage = () => {
                   <a href="/#Leadership" className="a3d-nav-link">
                     Leadership
                   </a>
-                  {/* <a
-                    href="/referral"
-                    className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`}
-                  >
-                    Referral
-                  </a> */}
-                  {/* <a
-                    href="#"
-                    className="a3d-nav-link"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setIsWaitlistOpen(true);
-                    }}
-                  >
-                    Wish List
-                  </a> */}
                 </nav>
 
-                {/* <div className="d-none d-lg-flex gap-3 align-items-center">
-                  <Link to="/3dio/">
-                    <button className="a3d-join-btn">Join Us</button>
-                  </Link>
-                </div> */}
-
                 <div className="d-none d-lg-flex gap-2 align-items-center">
-                  <Link to="/book-demo" className="a3d-book-demo-btn">
-                    Book a Demo
+                  <Link to="https://calendly.com/arslan-medtronix/30min" className="a3d-book-demo-btn">
+                    Schedule Meeting
                   </Link>
                   <JoinPlatformCta onWaitlistOpen={() => setIsWaitlistOpen(true)} />
                 </div>
@@ -1139,9 +1240,88 @@ const LandingPage = () => {
                   Home
                 </Link>
 
-                <Link to="https://calendly.com/arslan-medtronix/30min" className="a3d-nav-link">
-                    Schedule Meeting
-                </Link>
+                {/* Mobile Product Accordion */}
+                <div className="a3d-mobile-product-group">
+                  <button
+                    type="button"
+                    className="a3d-nav-link a3d-mobile-product-toggle"
+                    onClick={() => setIsMobileProductOpen((prev) => !prev)}
+                  >
+                    <span>Product</span>
+                    <FaChevronDown
+                      className={`a3d-product-chevron ${isMobileProductOpen ? 'open' : ''}`}
+                    />
+                  </button>
+
+                  {isMobileProductOpen && (
+                    <div className="a3d-mobile-product-menu">
+                      <Link
+                        to="/3dio/new/scan"
+                        className="a3d-mobile-product-item"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <span className="a3d-product-item-title">Text to 3D</span>
+                        <span className="a3d-product-item-desc">Prompt to finished asset</span>
+                      </Link>
+                      <Link
+                        to="/3dio/new/scan"
+                        className="a3d-mobile-product-item"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <span className="a3d-product-item-title">Image to 3D</span>
+                        <span className="a3d-product-item-desc">One photo, one model</span>
+                      </Link>
+                      <Link
+                        to="/3dio/new/scan"
+                        className="a3d-mobile-product-item"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <span className="a3d-product-item-title">Multi-image to 3D</span>
+                        <span className="a3d-product-item-desc">Multiple views fused</span>
+                      </Link>
+                      <Link
+                        to="/3dio/new/scan"
+                        className="a3d-mobile-product-item"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <span className="a3d-product-item-title">Video to 3D</span>
+                        <span className="a3d-product-item-desc">Turntable capture</span>
+                      </Link>
+                      <Link
+                        to="/3dio/new/scan"
+                        className="a3d-mobile-product-item"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <span className="a3d-product-item-title">Skeleton & rigging</span>
+                        <span className="a3d-product-item-desc">Auto-rig with motion presets</span>
+                      </Link>
+                      <Link
+                        to="/3dio/"
+                        className="a3d-mobile-product-item"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <span className="a3d-product-item-title">Editor</span>
+                        <span className="a3d-product-item-desc">Remesh, clean, texture</span>
+                      </Link>
+                      <Link
+                        to="/3dio/workspace"
+                        className="a3d-mobile-product-item"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <span className="a3d-product-item-title">Workspace</span>
+                        <span className="a3d-product-item-desc">Projects, versions, library</span>
+                      </Link>
+                      <Link
+                        to="/3dio/settings/team"
+                        className="a3d-mobile-product-item"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <span className="a3d-product-item-title">Teams</span>
+                        <span className="a3d-product-item-desc">Roles, seats, SSO</span>
+                      </Link>
+                    </div>
+                  )}
+                </div>
 
                 <Link
                   to="/3dio/api-sdk"
@@ -1157,32 +1337,10 @@ const LandingPage = () => {
                 <a href="#Leadership" className="a3d-nav-link">
                   Leadership
                 </a>
-                {/* <Link
-                  to="/referral"
-                  className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`}
-                >
-                  Referral
-                </Link> */}
-
-                {/* <a
-                  href="#"
-                  className="a3d-nav-link"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsWaitlistOpen(true);
-                    setIsOpen(false);
-                  }}
-                >
-                  Wish List
-                </a> */}
-
-                {/* <Link to="/signin" className="a3d-nav-link">
-                  Sign-In
-                </Link> */}
 
                 <div className="d-flex flex-column gap-2">
-                  <Link to="/book-demo" className="a3d-book-demo-btn">
-                    Book a Demo
+                  <Link to="https://calendly.com/arslan-medtronix/30min" className="a3d-book-demo-btn">
+                    Schedule Meeting
                   </Link>
                   <JoinPlatformCta
                     onWaitlistOpen={() => setIsWaitlistOpen(true)}
@@ -1250,16 +1408,14 @@ const LandingPage = () => {
                       Log in for free
                     </Link>
                   )}
-                  {/* <Link to="/3dio/subscription"> */}
-                  <Link to="/services">
+                  <Link to="/book-demo">
                     <button
                       className="btn btn-warning text-white"
                       style={{ backgroundColor: '#FF9C3E' }}
                     >
-                      Services
+                      Book a Demo
                     </button>
                   </Link>
-                  {/* </Link> */}
 
                   <a href="#video">
                     <div className="a3d-play-circle">
@@ -1403,8 +1559,11 @@ const LandingPage = () => {
           {/* ========================= Hero Section End ======================= */}
         </div>
 
-        {/* ========================= How it Work Section  ======================= */}
+        {/* ========================= Interactive Showcase Section (From pixels to worlds) ======================= */}
+        <InteractiveShowcaseSection />
 
+        {/* ========================= How it Work Section (Disabled / Commented Out) ======================= */}
+        {false && (
         <motion.section
           className="service-cards mt-5 pt-md-4 pt-3"
           initial={{ opacity: 0 }}
@@ -1639,6 +1798,7 @@ const LandingPage = () => {
             </section>
           </div>
         </motion.section>
+        )}
 
         {/* ========================= Services Section  ======================= */}
 
@@ -1903,6 +2063,8 @@ const LandingPage = () => {
             </section>
           </div>
         </motion.section>
+
+
 
         <section className="scan_section py-5">
           <div className="container scan_container">
@@ -2244,49 +2406,6 @@ const LandingPage = () => {
             ))}
           </div>
         </div>
-
-        <section className="video_section py-lg-4 py-1 mb-3" id="video">
-          <div className="container">
-            <div className="row justify-content-center g-0 px-0">
-              <motion.div className="col-12 col-lg-12 col-xxl-10" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.4 }}>
-                <div
-                  className="video-wrapper position-relative ratio ratio-16x9"
-                  id="videoWrapper"
-                  onClick={togglePlayPause}
-                >
-                  <video
-                    id="customVideo"
-                    ref={videoRef}
-                    style={{ borderRadius: 5, width: '100%', height: '100%' }}
-                    loop
-                  >
-                    <source src={videoSrc} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-
-                  {!isPlaying && (
-                    <img
-                      id="playButton"
-                      src={videoIcon}
-                      alt="Play"
-                      className="custom-play-btn position-absolute top-50 start-50 translate-middle"
-                      style={{ cursor: 'pointer', width: '80px' }}
-                    />
-                  )}
-
-                  {isPlaying && (
-                    <FontAwesomeIcon
-                      id="pauseButton"
-                      icon={faPauseCircle}
-                      className="pause-icon position-absolute top-50 start-50 translate-middle"
-                      style={{ cursor: 'pointer', fontSize: '3rem', color: 'white', opacity: 0.8 }}
-                    />
-                  )}
-                </div>
-              </motion.div>
-            </div>
-          </div>
-        </section>
 
         <div className="aithreed">
           <section className="cards pt" id="Leadership">
@@ -2705,29 +2824,25 @@ const LandingPage = () => {
                     <img src={dot} alt="Dot" className="posotion" />
                   </div>
                   <ul className="mt-1">
-                  {['Home', 'Services', 'Pricing', 'Student'].map((item) => (
-                    <li key={item}>
-                      <a
-                        href={
-                          item === 'Pricing'
-                            ? '/3dio/subscription'
-                            : item === 'Services'
-                              ? '/services'
-                              : item === 'Student'
-                                ? '/student-program'
-                                : '/'
-                        }
-                        >
-                          <img
-                            className="iconsize me-1"
-                            src={arrow}
-                            alt="Arrow"
-                            style={{ verticalAlign: 'middle', marginTop: '-3px' }}
-                          />
-                          {item}
-                        </a>
-                      </li>
-                    ))}
+                  {[
+                    { name: 'Home', url: '/' },
+                    { name: 'About Us', url: '/about-us' },
+                    { name: 'Services', url: '/services' },
+                    { name: 'Pricing', url: '/3dio/subscription' },
+                    { name: 'Student', url: '/student-program' },
+                  ].map((item) => (
+                    <li key={item.name}>
+                      <Link to={item.url}>
+                        <img
+                          className="iconsize me-1"
+                          src={arrow}
+                          alt="Arrow"
+                          style={{ verticalAlign: 'middle', marginTop: '-3px' }}
+                        />
+                        {item.name}
+                      </Link>
+                    </li>
+                  ))}
                   </ul>
                 </div>
 

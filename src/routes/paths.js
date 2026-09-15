@@ -31,6 +31,6 @@ export default {
   team: '/3dio/settings/team',
   referal: '/3dio/settings/referal',
   aimodal: '/3dio/settings/aimodal',
-  project: '/3dio/settings/project'
-  
+  project: '/3dio/settings/project',
+  about: '/about-us',
 };

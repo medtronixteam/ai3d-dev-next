@@ -78,9 +78,13 @@ const CenterScan = ({
   onRemoveImage,
 }) => {
   const [isActuallyRendered, setIsActuallyRendered] = React.useState(false);
+  const prevModelUrlRef = React.useRef(modelUrl);
 
   React.useEffect(() => {
-    setIsActuallyRendered(false);
+    if (prevModelUrlRef.current !== modelUrl) {
+      prevModelUrlRef.current = modelUrl;
+      setIsActuallyRendered(false);
+    }
   }, [modelUrl]);
 
   React.useEffect(() => {
@@ -167,31 +171,29 @@ const CenterScan = ({
               className={`model-loading-panel text-center fade-in w-100${showBlackOverlay ? ' model-loading-panel--overlay' : ''}`}
               style={{ maxWidth: '450px', position: 'relative', zIndex: 10 }}
             >
-              <div className="progress-circle-wrapper mb-4">
-                <svg className="progress-circle" width="120" height="120" viewBox="0 0 120 120">
-                  <circle className="progress-circle-track" cx="60" cy="60" r="54" fill="none" strokeWidth="8" />
-                  <circle
-                    className="progress-circle-fill"
-                    cx="60"
-                    cy="60"
-                    r="54"
-                    fill="none"
-                    strokeWidth="8"
-                    strokeLinecap="round"
-                    strokeDasharray="339.292"
-                    strokeDashoffset={339.292 - (339.292 * progress) / 100}
-                    transform="rotate(-90 60 60)"
-                  />
-                </svg>
-                <div className="progress-text">
-                  <span className="progress-percent">{Math.round(progress)}%</span>
+              <div className="d-flex justify-content-center align-items-center mb-4">
+                <div
+                  className="spinner-border text-pink"
+                  role="status"
+                  style={{
+                    width: '3.75rem',
+                    height: '3.75rem',
+                    borderWidth: '4px',
+                    borderColor: '#de3996',
+                    borderRightColor: 'transparent',
+                    animation: 'spinner-border 0.8s linear infinite',
+                  }}
+                >
+                  <span className="visually-hidden">Loading...</span>
                 </div>
               </div>
               <div className="model-loading-copy">
                 <h3 className="model-loading-title fw-bold mb-2">
-                  Creating your <span className="text-pink">model</span>
+                  Rendering 3D <span className="text-pink">Model</span>
                 </h3>
-                <p className="model-loading-subtitle small mb-0">We are working on it, give us a minute</p>
+                <p className="model-loading-subtitle small mb-0">
+                  Processing geometry &amp; materials, almost ready...
+                </p>
               </div>
             </div>
           ) : showQueueUI ? (

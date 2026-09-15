@@ -36,19 +36,17 @@ const CustomInfoModal = ({ modalData, onClose }) => {
                     {/* <img src={modalQuoteImg} className="quote-img" alt="Quote Icon" /> */}
                     <img src={modalData.img || modalQuoteImg} className="profile-img" alt={modalData.name} />
                   </div>
-                  {modalData.linkedin && (
-                    <div className="mt-3">
-                      <a
-                        href={modalData.linkedin}
-                        className="btn btn-linkedin w-100 d-inline-flex align-items-center justify-content-center gap-2"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{ backgroundColor: '#0077b5', color: 'white', borderRadius: '25px', padding: '10px' }}
-                      >
-                        <FaLinkedin size={18} /> LinkedIn Profile
-                      </a>
-                    </div>
-                  )}
+                  <div className="mt-3">
+                    <a
+                      href={modalData.linkedin || '#'}
+                      className="btn btn-linkedin w-100 d-inline-flex align-items-center justify-content-center gap-2"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ backgroundColor: '#0077b5', color: 'white', borderRadius: '25px', padding: '10px' }}
+                    >
+                      <FaLinkedin size={18} /> LinkedIn Profile
+                    </a>
+                  </div>
                 </div>
 
                 <div className="col-12 col-lg-8 text-start">

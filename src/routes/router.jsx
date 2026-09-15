@@ -60,6 +60,7 @@ const PurchaseHistory = lazy(() => import('pages/settings/PurchaseHistory'));
 const SessionHistory = lazy(() => import('pages/settings/SessionHistory'));
 const CookiePolicy = lazy(() => import('../pages/CookiePolicy'));
 const PublicProjectPage = lazy(() => import('../pages/public/PublicProjectPage'));
+const AboutUs = lazy(() => import('../pages/AboutUs'));
 
 const routes = [
   {
@@ -73,6 +74,14 @@ const routes = [
       {
         path: '/',
         element: <LandingPage />,
+      },
+      {
+        path: '/about-us',
+        element: <AboutUs />,
+      },
+      {
+        path: '/about',
+        element: <Navigate to="/about-us" replace />,
       },
       {
         path: '/contributor/program',

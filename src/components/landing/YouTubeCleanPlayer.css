@@ -1,0 +1,129 @@
+/* =========================================================================
+   YouTube Clean Player Styling
+   Hides default YouTube UI and provides sleek Play/Pause + Speaker controls
+   ========================================================================= */
+
+.yt-clean-player-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #000000;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+}
+
+.yt-clean-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+.yt-click-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  cursor: pointer;
+}
+
+/* Big Centered Play Button */
+.yt-center-play-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  pointer-events: auto;
+}
+
+.yt-big-play-btn {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(222, 57, 150, 0.9);
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 25px rgba(222, 57, 150, 0.6);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.yt-big-play-btn:hover {
+  transform: scale(1.1);
+  background: #de3996;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 35px rgba(222, 57, 150, 0.8);
+}
+
+/* Bottom Floating Controls Bar */
+.yt-custom-controls-bar {
+  position: absolute;
+  bottom: 18px;
+  left: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 6;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+.yt-custom-controls-bar.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.yt-control-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.yt-control-btn:hover {
+  background: #de3996;
+  border-color: #de3996;
+  transform: scale(1.08);
+}
+
+@media (max-width: 576px) {
+  .yt-big-play-btn {
+    width: 60px;
+    height: 60px;
+  }
+
+  .yt-big-play-btn svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  .yt-control-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .yt-control-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+}

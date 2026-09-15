@@ -6,9 +6,9 @@ import $hira from '../assets/images/leardership/hira.png';
 import $shehroz from '../assets/images/leardership/Shehroz.png';
 import $mudassar from '../assets/images/leardership/mudassar.png';
 import $samia from '../assets/images/leardership/samia.png';
+import $ozain from '../assets/images/ozain_fixed.png';
 // import $ryan from '../assets/images/leardership/ryan.png';
 import $assam from '../assets/images/leardership/Assam.png';
-import $ozain from '../assets/images/ozain.png';
 import CustomInfoModal from '../components/popup/CustomInfoModal';
 import HS from '../assets/service/HS.svg'
 import La from '../assets/service/La.svg'
@@ -166,23 +166,87 @@ const LeadershipSection = () => {
       name: 'Ozain',
       lastName: 'Ahmad',
       img: $ozain,
-      imgClass: 'ai3d_ld_v3__img--scale',
       role: 'Junior Business Developer',
       desc: [
         'Ozain contributes to business growth and strategic partnerships at AI 3D Scanning Solutions.',
-        'He focuses on identifying new opportunities and driving business expansion.',
+        'His focus is on strategic outreach, client communication, and supporting long-term business partnerships across industries.',
       ],
       expertise: [
         'Business Development',
-        'Client Outreach',
         'Market Research',
+        'Client Relations',
+        'Lead Generation',
         'Strategic Partnerships',
       ],
-      philosophy: 'Driving growth through meaningful connections and strategic opportunities.',
+      linkedin: 'https://www.linkedin.com/',
+      philosophy: 'Driven by curiosity and dedicated to creating meaningful business connections and growth.',
     },
   ];
 
   useEffect(() => {
+    let observer = null;
+
+    const initSwiper = () => {
+      if (!window.Swiper) return;
+
+      if (swiperRef.current) {
+        try {
+          swiperRef.current.destroy(true, true);
+        } catch (e) {
+          // ignore
+        }
+      }
+
+      swiperRef.current = new window.Swiper('.ai3d_ld_v3__swiper_container', {
+        loop: true,
+        spaceBetween: 30,
+        speed: 700,
+        autoplay: {
+          delay: 3000,
+          disableOnInteraction: false,
+          pauseOnMouseEnter: true,
+        },
+        navigation: {
+          nextEl: '#nextBtn',
+          prevEl: '#prevBtn',
+        },
+        breakpoints: {
+          320: { slidesPerView: 1, slidesPerGroup: 1 },
+          768: { slidesPerView: 2, slidesPerGroup: 1 },
+          1024: { slidesPerView: 3, slidesPerGroup: 1 },
+          1280: { slidesPerView: 4, slidesPerGroup: 1 },
+        },
+      });
+
+      // Initially stop autoplay
+      if (swiperRef.current.autoplay) {
+        swiperRef.current.autoplay.stop();
+      }
+
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setTimeout(() => {
+                if (swiperRef.current && swiperRef.current.autoplay) {
+                  swiperRef.current.autoplay.start();
+                }
+              }, 1000);
+            } else {
+              if (swiperRef.current && swiperRef.current.autoplay) {
+                swiperRef.current.autoplay.stop();
+              }
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+
+      if (sectionRef.current) {
+        observer.observe(sectionRef.current);
+      }
+    };
+
     if (!document.getElementById('swiper-bundle-css')) {
       const link = document.createElement('link');
       link.id = 'swiper-bundle-css';
@@ -191,73 +255,30 @@ const LeadershipSection = () => {
       document.head.appendChild(link);
     }
 
-    const initSwiper = () => {
-      if (window.Swiper) {
-        if (swiperRef.current && typeof swiperRef.current.destroy === 'function') {
-          swiperRef.current.destroy(true, true);
-        }
-        swiperRef.current = new window.Swiper('.ai3d_ld_v3__swiper_container', {
-          loop: true,
-          spaceBetween: 30,
-          initialSlide: 0,
-          autoplay: {
-            delay: 3000,
-            disableOnInteraction: false,
-          },
-          navigation: {
-            nextEl: '#nextBtn',
-            prevEl: '#prevBtn',
-          },
-          breakpoints: {
-            320: { slidesPerView: 1 },
-            768: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 },
-            1280: { slidesPerView: 4 },
-          },
-        });
-
-        // Initially stop autoplay
-        swiperRef.current.autoplay.stop();
-
-        const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                // Wait 2 seconds after entering view before starting autoplay
-                setTimeout(() => {
-                  if (swiperRef.current && swiperRef.current.autoplay) {
-                    swiperRef.current.autoplay.start();
-                  }
-                }, 2000);
-              } else {
-                if (swiperRef.current && swiperRef.current.autoplay) {
-                  swiperRef.current.autoplay.stop();
-                }
-              }
-            });
-          },
-          { threshold: 0.1 }
-        );
-
-        if (sectionRef.current) {
-          observer.observe(sectionRef.current);
-        }
-      }
-    };
-
     if (window.Swiper) {
       initSwiper();
     } else {
-      const script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js';
-      script.async = true;
-      script.onload = initSwiper;
-      document.body.appendChild(script);
+      let script = document.getElementById('swiper-bundle-js');
+      if (!script) {
+        script = document.createElement('script');
+        script.id = 'swiper-bundle-js';
+        script.src = 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js';
+        script.async = true;
+        document.body.appendChild(script);
+      }
+      script.addEventListener('load', initSwiper);
     }
 
     return () => {
-      if (swiperRef.current && typeof swiperRef.current.destroy === 'function') {
-        swiperRef.current.destroy(true, true);
+      if (observer && sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+      if (swiperRef.current) {
+        try {
+          swiperRef.current.destroy(true, true);
+        } catch (e) {
+          // ignore
+        }
       }
     };
   }, []);
@@ -268,11 +289,11 @@ const LeadershipSection = () => {
 
         <div className="swiper ai3d_ld_v3__swiper_container">
           <div className="swiper-wrapper">
-            {teamMembers.map((member, index) => (
+            {[...teamMembers, ...teamMembers].map((member, index) => (
               <div className="swiper-slide ai3d_ld_v3__slide" key={index}>
                 <div className="ai3d_ld_v3__card">
                   <div className="ai3d_ld_v3__img_wrap">
-                    <img src={member.img} alt={member.name} className={`ai3d_ld_v3__img ${member.imgClass || ''}`.trim()} />
+                    <img src={member.img} alt={member.name} className="ai3d_ld_v3__img" />
                     {member.img2 && <img src={member.img2} alt={member.name} className="ai3d_ld_v3__badge" />}
                   </div>
                   <div className="ai3d_ld_v3__content">
@@ -293,12 +314,12 @@ const LeadershipSection = () => {
           </div>
         </div>
 
-        <div className="cc mt-4">
-          <div className="icon-toggle-wrapper d-flex justify-content-center ">
-            <button type="button" id="prevBtn" className="icon-toggle-label btn btn-outline-primary" aria-label="Previous team member">
+        <div className="cc mt-4 d-flex justify-content-center">
+          <div className="icon-toggle-wrapper d-flex align-items-center justify-content-center">
+            <button type="button" id="prevBtn" className="icon-toggle-label left-btn" aria-label="Previous team member">
               <i className="fa fa-long-arrow-left" aria-hidden="true"></i>
             </button>
-            <button type="button" id="nextBtn" className="icon-toggle-label btn btn-outline-primary right" aria-label="Next team member">
+            <button type="button" id="nextBtn" className="icon-toggle-label right-btn right" aria-label="Next team member">
               <i className="fa fa-long-arrow-right" aria-hidden="true"></i>
             </button>
           </div>
@@ -309,6 +330,58 @@ const LeadershipSection = () => {
       {modalData && <CustomInfoModal modalData={modalData} onClose={() => setModalData(null)} />}
 
       <style>{`
+  .icon-toggle-wrapper {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 6px 10px;
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 40px;
+    background: #ffffff;
+    position: relative;
+    height: 52px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  }
+
+  .icon-toggle-label {
+    width: 38px;
+    height: 38px;
+    margin: 0 4px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    padding: 0;
+  }
+
+  .icon-toggle-label i {
+    font-size: 1.15rem;
+    color: #ff85ca;
+    transition: color 0.3s ease;
+  }
+
+  .icon-toggle-label.right,
+  .icon-toggle-label.right-btn {
+    background: linear-gradient(90deg, rgb(199, 48, 129) 0%, rgb(255, 133, 202) 100%) !important;
+    box-shadow: 0 2px 8px rgba(199, 48, 129, 0.3) !important;
+  }
+
+  .icon-toggle-label.right i,
+  .icon-toggle-label.right-btn i {
+    color: #ffffff !important;
+  }
+
+  .icon-toggle-label:hover {
+    transform: scale(1.05);
+  }
+
   .ai3d_ld_v3_main_wrapper {
     padding: 0 0 60px 0;
     background: transparent;
@@ -356,10 +429,6 @@ const LeadershipSection = () => {
     transition: transform 0.4s ease;
   }
 
-  .ai3d_ld_v3__img--scale {
-    transform: scale(0.85);
-  }
-
   .ai3d_ld_v3__badge {
     position: absolute;
     bottom: 10px;
@@ -371,10 +440,6 @@ const LeadershipSection = () => {
 
   .ai3d_ld_v3__card:hover .ai3d_ld_v3__img {
     transform: scale(1.05);
-  }
-
-  .ai3d_ld_v3__card:hover .ai3d_ld_v3__img--scale {
-    transform: scale(0.9);
   }
 
   /* Content */

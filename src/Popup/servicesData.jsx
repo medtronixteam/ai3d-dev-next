@@ -36,6 +36,7 @@ import Hira from '../assets/images/HiraMam.svg';
 import Samia from '../assets/images/SamiaMam.svg';
 import UsamaSir from '../assets/images/UsamaSir.jpeg';
 import MudassarSir from '../assets/images/mudassar.jpeg';
+import Ozain from '../assets/images/ozain.png';
 import TeamAI from '../assets/service/TeamAI.jpeg'
 import TeamAI2 from '../assets/service/TeanAI2.png'
 import AI4 from '../assets/service/AI4.png'
@@ -275,6 +276,7 @@ export const MEMBER_DATA = {
     { src: UsamaSir,   letter: 'O' },
     { src: MudassarSir,   letter: 'M' },
     { src: Samia,   letter: 'S' },
+    { src: Ozain,   letter: 'O' },
   ],
   creative: [
     { src: Hira, letter: 'H' },

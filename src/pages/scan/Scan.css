@@ -1,15 +1,19 @@
 .upload-container {
-
+  position: relative;
   overflow-x: hidden !important;
   width: 99.3%;
   margin: 3px auto;
   padding: 50px 20px;
-  /* background: white; */
   border-radius: 15px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
+  background-color: #ffffff;
+  isolation: isolate;
   /* margin-top: -45px !important; */
+}
 
+[data-theme='dark'] .upload-container {
+  background-color: #000000;
 }
 
 .prompt-box {

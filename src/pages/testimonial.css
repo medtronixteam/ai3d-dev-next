@@ -20,7 +20,7 @@
     /* margin-bottom: 20px; */
 }
 
-.user-avatar {
+.snake-container .user-avatar {
     position: absolute;
     border-radius: 50%;
     overflow: hidden;
@@ -42,7 +42,7 @@
     -o-transform: translateX(-50%) scale(0.90);
 }
 
-.user-avatar.active {
+.snake-container .user-avatar.active {
     border-color: #df3c9c;
     opacity: 1;
     transform: translateX(-50%) scale(1.25);
@@ -50,7 +50,7 @@
     box-shadow: 0 12px 35px rgba(223, 60, 156, 0.4);
 }
 
-.user-avatar img {
+.snake-container .user-avatar img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -160,7 +160,7 @@
         background-size: 95%;
     }
 
-    .user-avatar {
+    .snake-container .user-avatar {
         width: 60px !important;
         height: 60px !important;
         font-size: 16px !important;
@@ -180,7 +180,7 @@
         height: 160px;
     }
 
-    .user-avatar {
+    .snake-container .user-avatar {
         width: 45px !important;
         height: 45px !important;
         font-size: 12px !important;

@@ -585,7 +585,28 @@
   padding: 25px 18px;
   box-shadow: 0 10px 36px rgba(0, 0, 0, 0.18);
   position: relative;
-  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.18);
+}
+
+.share-modal-close-btn {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+  background: #DE3996;
+  color: #ffffff;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+  box-shadow: 0 2px 8px rgba(222, 57, 150, 0.35);
+}
+
+.share-modal-close-btn:hover {
+  background: #c2257d;
+  transform: scale(1.06);
 }
 
 .share-through-icons {

@@ -3,6 +3,8 @@ import { useAuth } from '../../context/AuthContext';
 import { baseURL } from '../../config';
 import axios from 'axios';
 
+import PageLoader from '../../components/loader/PageLoader';
+
 const SessionHistory = () => {
   const { token } = useAuth();
   const [sessions, setSessions] = useState([]);
@@ -27,7 +29,7 @@ const SessionHistory = () => {
         <div style={{ flex: 1,  borderRadius: 14, boxShadow: '0 2px 16px rgba(230,51,154,0.07)', padding: '2rem 1.5rem', minHeight: 400 }}>
           <h2 style={{ fontWeight: 700, fontSize: 22, marginBottom: 18 }}>Session History</h2>
           {loading ? (
-            <div style={{ color: '#e6339a', fontWeight: 500, fontSize: 16 }}>Loading...</div>
+            <PageLoader />
           ) : error ? (
             <div style={{ color: '#e6339a', fontWeight: 500, fontSize: 16 }}>{error}</div>
           ) : sessions.length === 0 ? (

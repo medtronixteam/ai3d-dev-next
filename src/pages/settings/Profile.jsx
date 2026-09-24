@@ -31,7 +31,7 @@ import './Profile.css';
 import shareProfile from '../../assets/images/shareProfile.svg';
 import { FaSlideshare, FaTelegram, FaTelegramPlane, FaWhatsapp } from 'react-icons/fa';
 import { AtSign, Share, Share2 } from 'lucide-react';
-import { useMediaQuery } from 'react-responsive';
+import PageLoader from '../../components/loader/PageLoader';
 const themeColor = '#DE3996';
 
 const modalBackdrop = {
@@ -428,7 +428,7 @@ const Profile = () => {
     }
   };
 
-  if (loading) return <div style={{ padding: 40, textAlign: 'center' }}>Loading profile...</div>;
+  if (loading) return <PageLoader />;
   if (!user)
     return (
       <div style={{ padding: 40, color: 'red', textAlign: 'center' }}>Failed to load profile.</div>
@@ -702,11 +702,16 @@ const Profile = () => {
       {showShareModal && (
         <div className="share-modal-backdrop" onClick={() => setShowShareModal(false)}>
           <div className="share-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="d-flex justify-content-between">
-              <h3 className="share-title">Share with</h3>
-              <span onClick={() => setShowShareModal(false)} aria-label="Close">
+            <div className="d-flex justify-content-between align-items-center mb-2">
+              <h3 className="share-title mb-0">Share with</h3>
+              <button
+                type="button"
+                className="share-modal-close-btn"
+                onClick={() => setShowShareModal(false)}
+                aria-label="Close"
+              >
                 <FiX size={16} />
-              </span>
+              </button>
             </div>
 
             <div className="share-through-icons d-flex justify-content-between"  style={{ overflowX: 'auto', scrollBehavior: 'smooth', gap: '10px' }}>

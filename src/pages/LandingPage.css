@@ -3309,6 +3309,14 @@ li {
 color: rgba(222, 57, 150, 1) !important; 
 }
 
+.aithreed .footer .dropdown-menu {
+  display: none;
+}
+
+.aithreed .footer .dropdown-menu.show {
+  display: block !important;
+}
+
 .aithreed .footer .menu {
   background: linear-gradient(180deg, #ffedf7, #f8f0ff ) !important;
   border: 1px solid #d870ab !important;

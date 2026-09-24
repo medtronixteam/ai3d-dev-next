@@ -10,6 +10,8 @@ import {
   ChevronRight,
   Copy,
   Share2,
+  Trash2,
+  Edit3,
 } from 'lucide-react';
 import SingleScan from '../../assets/images/SingleScan.svg';
 import videoIcon from '../../pages/images/video-icon.svg';
@@ -67,8 +69,13 @@ const LeftScan = ({
   const videoInputRef = useRef(null);
   const scrollRef = useRef(null);
   const pendingImagePickRef = useRef(false);
+  const uploadTimeoutRef = useRef(null);
+  const videoUploadTimeoutRef = useRef(null);
   const [singleImagePreview, setSingleImagePreview] = useState(null);
+  const [videoPreview, setVideoPreview] = useState(null);
   const [imageGuidelinesOpen, setImageGuidelinesOpen] = useState(false);
+  const [isSingleImageUploading, setIsSingleImageUploading] = useState(false);
+  const [isVideoUploading, setIsVideoUploading] = useState(false);
 
   const openSingleImagePicker = () => {
     singleImageInputRef.current?.click();
@@ -120,10 +127,33 @@ const LeftScan = ({
   }, [singleImageFile]);
 
   useEffect(() => {
+    if (!video) {
+      setVideoPreview(null);
+      return undefined;
+    }
+
+    const previewUrl = URL.createObjectURL(video);
+    setVideoPreview(previewUrl);
+
+    return () => URL.revokeObjectURL(previewUrl);
+  }, [video]);
+
+  useEffect(() => {
     if (!singleImageFile && singleImageInputRef.current) {
       singleImageInputRef.current.value = '';
     }
   }, [singleImageFile]);
+
+  useEffect(() => {
+    return () => {
+      if (uploadTimeoutRef.current) {
+        clearTimeout(uploadTimeoutRef.current);
+      }
+      if (videoUploadTimeoutRef.current) {
+        clearTimeout(videoUploadTimeoutRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!video && videoInputRef.current) {
@@ -158,14 +188,43 @@ const LeftScan = ({
         e.target.value = '';
         return;
       }
-      setSingleImageName(file.name);
-      setSingleImageFile(file);
-      setImages([]);
-      setImageFiles([]);
-      setVideo(null);
-      setPrompt('');
+
+      setIsSingleImageUploading(true);
+      if (uploadTimeoutRef.current) clearTimeout(uploadTimeoutRef.current);
+
+      uploadTimeoutRef.current = setTimeout(() => {
+        setSingleImageName(file.name);
+        setSingleImageFile(file);
+        setImages([]);
+        setImageFiles([]);
+        setVideo(null);
+        setPrompt('');
+        setIsSingleImageUploading(false);
+      }, 700);
     }
     e.target.value = '';
+  };
+
+  const handleCancelSingleImageUpload = (e) => {
+    e?.stopPropagation();
+    if (uploadTimeoutRef.current) clearTimeout(uploadTimeoutRef.current);
+    setIsSingleImageUploading(false);
+    if (singleImageInputRef.current) {
+      singleImageInputRef.current.value = '';
+    }
+  };
+
+  const handleRemoveSingleImage = (e) => {
+    e?.stopPropagation();
+    if (isProcessing || isViewOnly) return;
+    if (uploadTimeoutRef.current) clearTimeout(uploadTimeoutRef.current);
+    setSingleImageName('');
+    setSingleImageFile(null);
+    setSingleImagePreview(null);
+    setIsSingleImageUploading(false);
+    if (singleImageInputRef.current) {
+      singleImageInputRef.current.value = '';
+    }
   };
 
   const handleMultipleFileChange = (e) => {
@@ -200,27 +259,48 @@ const LeftScan = ({
 
   const handleVideoChange = (e) => {
     if (isProcessing || isViewOnly) return;
-    if (e.target.files && e.target.files[0]) {
+    const file = e.target.files?.[0];
+    if (file) {
       setShowVideoFrames?.(false);
       setVideoFrames?.([]);
       setVideoFrameItems?.([]);
       setRemovedFrames([]);
       setAiExtractJobId?.(null);
-      setVideo(e.target.files[0]);
-      setVideoFileName?.(e.target.files[0].name);
       setImages([]);
       setImageFiles([]);
       setSingleImageName('');
       setSingleImageFile(null);
+      setPrompt('');
+
+      setIsVideoUploading(true);
+      if (videoUploadTimeoutRef.current) clearTimeout(videoUploadTimeoutRef.current);
+
+      videoUploadTimeoutRef.current = setTimeout(() => {
+        setVideo(file);
+        setVideoFileName?.(file.name);
+        setIsVideoUploading(false);
+      }, 700);
     }
     e.target.value = '';
+  };
+
+  const handleCancelVideoUpload = (e) => {
+    e?.stopPropagation();
+    if (videoUploadTimeoutRef.current) clearTimeout(videoUploadTimeoutRef.current);
+    setIsVideoUploading(false);
+    if (videoInputRef.current) {
+      videoInputRef.current.value = '';
+    }
   };
 
   const handleRemoveVideo = (e) => {
     e.stopPropagation();
     if (isProcessing || isViewOnly) return;
+    if (videoUploadTimeoutRef.current) clearTimeout(videoUploadTimeoutRef.current);
     setVideo(null);
     setVideoFileName?.('');
+    setVideoPreview(null);
+    setIsVideoUploading(false);
     setShowVideoFrames?.(false);
     setVideoFrames?.([]);
     setVideoFrameItems?.([]);
@@ -251,6 +331,16 @@ const LeftScan = ({
     }
   };
 
+  const hasSingleImage = Boolean(isSingleImageUploading || singleImageFile || singleImageName);
+  const hasPrompt = Boolean(prompt.trim() || (isViewOnly && generatedPrompt) || modelReady);
+  const hasMultipleImages = Boolean(images.length > 0);
+  const hasVideo = Boolean(isVideoUploading || video || showVideoFrames);
+
+  const showSingleImageBox = hasSingleImage || (!hasPrompt && !hasMultipleImages && !hasVideo);
+  const showPromptBox = hasPrompt || (!hasSingleImage && !hasMultipleImages && !hasVideo);
+  const showMultipleImagesBox = hasMultipleImages || (!hasSingleImage && !hasPrompt && !hasVideo);
+  const showVideoBox = hasVideo || (!hasSingleImage && !hasPrompt && !hasMultipleImages);
+
   return (
     <div className="col-lg-3 col-md-4 pe-md-3 negative-margin">
       <img src={Logo} alt="logo" className="platform-logo mb-2 mx-3" />
@@ -261,69 +351,128 @@ const LeftScan = ({
 
         {!isViewOnly && <WorkspaceSelect disabled={isProcessing} />}
 
-        {/* TOP BANNER - SINGLE IMAGE UPLOAD */}
-        <div
-          className={`banner-pink p-3 rounded-4 mb-3 border ${isProcessing || isViewOnly ? 'pe-none opacity-75' : ''
-            }`}
-        >
-          <div className="d-flex align-items-center gap-2 mb-2">
-            <img src={SingleScan} alt="Scan" width={50} height={50} className="single-scan-icon" />
-            <div>
-              <span className="fw-bold small" style={{ color: '#DE3996', fontSize: '13px' }}>
-                Transform Photo into 3D
-              </span>
-              <p className="mb-0" style={{ fontSize: '10px', lineHeight: '1.2' }}>
-                Upload a single image and watch AI transform it into a detailed 3D model.
-              </p>
+        {/* TOP BANNER - SINGLE IMAGE UPLOAD / PREVIEW / LOADER */}
+        {showSingleImageBox && (
+          isSingleImageUploading ? (
+            <div className="single-image-uploading-box mb-3 rounded-4 p-4 d-flex flex-column align-items-center justify-content-center text-center">
+              <div className="single-upload-spinner mb-2">
+                <Loader2 size={30} className="animate-spin text-pink" />
+              </div>
+              <p className="fw-semibold mb-3 single-uploading-text">Uploading ...</p>
+              <button
+                type="button"
+                className="btn-cancel-upload rounded-pill px-4 py-1"
+                onClick={handleCancelSingleImageUpload}
+              >
+                Cancel
+              </button>
             </div>
-          </div>
-          <div
-            className="banner-input rounded-pill d-flex align-items-center"
-            onClick={handleSingleImageUploadClick}
-          >
-            {singleImagePreview ? (
+          ) : singleImagePreview && singleImageFile ? (
+            <div
+              className={`single-image-preview-card mb-3 rounded-4 position-relative overflow-hidden ${
+                isProcessing || isViewOnly ? 'pe-none opacity-75' : ''
+              }`}
+            >
               <img
                 src={singleImagePreview}
-                alt="Selected upload preview"
-                className="banner-input-preview"
+                alt="Uploaded Preview"
+                className="single-image-preview-img"
               />
-            ) : (
-              <img src={SingleImgIcon} alt="" className="banner-input-icon" />
-            )}
-            <input
-              type="file"
-              hidden
-              ref={singleImageInputRef}
-              accept={ALLOWED_ACCEPT}
-              onChange={handleSingleImageChange}
-            />
-            <input
-              type="text"
-              placeholder="Upload your photo"
-              className="form-control bg-transparent small py-1 ps-2"
-              value={singleImageName}
-              readOnly
-            />
-            <button
-              type="button"
-              className="btn-pink-circle"
-              disabled={isProcessing || !singleImageName || isViewOnly}
-              onClick={(event) => {
-                event.stopPropagation();
-                handleSingleImageGenerate();
-              }}
-            >
-              {isArrowLoading ? (
-                <Loader2 size={14} className="animate-spin" />
-              ) : (
-                <ArrowRight size={14} />
+              {!(isProcessing || isViewOnly) && (
+                <div
+                  className="single-image-overlay"
+                  onClick={handleSingleImageUploadClick}
+                >
+                  <div className="single-image-reupload-btn d-flex align-items-center gap-1">
+                    <span>Re-Upload</span>
+                  </div>
+                  <div
+                    className="single-image-actions"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <button
+                      type="button"
+                      className="single-image-action-btn"
+                      title="Re-upload photo"
+                      onClick={handleSingleImageUploadClick}
+                      aria-label="Re-upload photo"
+                    >
+                      <Edit3 size={15} />
+                    </button>
+                    <button
+                      type="button"
+                      className="single-image-action-btn delete-btn"
+                      title="Delete photo"
+                      onClick={handleRemoveSingleImage}
+                      aria-label="Delete photo"
+                    >
+                      <Trash2 size={15} />
+                    </button>
+                  </div>
+                </div>
               )}
-            </button>
-          </div>
-        </div>
+              <input
+                type="file"
+                hidden
+                ref={singleImageInputRef}
+                accept={ALLOWED_ACCEPT}
+                onChange={handleSingleImageChange}
+              />
+            </div>
+          ) : (
+            <div
+              className={`banner-pink p-3 rounded-4 mb-3 border ${
+                isProcessing || isViewOnly ? 'pe-none opacity-75' : ''
+              }`}
+            >
+              <div className="d-flex align-items-center gap-2 mb-2">
+                <img src={SingleScan} alt="Scan" width={50} height={50} className="single-scan-icon" />
+                <div>
+                  <span className="fw-bold small" style={{ color: '#DE3996', fontSize: '13px' }}>
+                    Transform Photo into 3D
+                  </span>
+                  <p className="mb-0" style={{ fontSize: '10px', lineHeight: '1.2' }}>
+                    Upload a single image and watch AI transform it into a detailed 3D model.
+                  </p>
+                </div>
+              </div>
+              <div
+                className="banner-input rounded-pill d-flex align-items-center"
+                onClick={handleSingleImageUploadClick}
+              >
+                <img src={SingleImgIcon} alt="" className="banner-input-icon" />
+                <input
+                  type="file"
+                  hidden
+                  ref={singleImageInputRef}
+                  accept={ALLOWED_ACCEPT}
+                  onChange={handleSingleImageChange}
+                />
+                <input
+                  type="text"
+                  placeholder="Upload your photo"
+                  className="form-control bg-transparent small py-1 ps-2"
+                  value=""
+                  readOnly
+                />
+                <button
+                  type="button"
+                  className="btn-pink-circle"
+                  disabled={isProcessing || isViewOnly}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    handleSingleImageUploadClick();
+                  }}
+                >
+                  <ArrowRight size={14} />
+                </button>
+              </div>
+            </div>
+          )
+        )}
 
         {/* PROMPT BOX */}
-        {!video && images.length === 0 && !singleImageName && !showVideoFrames && (
+        {showPromptBox && (
           <div>
             <label className="fw-bold small mb-2">Prompt</label>
             {modelReady || (isViewOnly && generatedPrompt) ? (
@@ -366,8 +515,8 @@ const LeftScan = ({
           </div>
         )}
 
-        {/* MULTIPLE IMAGES SECTION - HIDDEN / COMMENTED OUT
-        {!video && !prompt && !singleImageName && !showVideoFrames && (
+        {/* MULTIPLE IMAGES SECTION */}
+        {showMultipleImagesBox && (
           <>
             <label className="fw-bold small mb-2">
               Images <span className="text-muted">({images.length}/100)</span>
@@ -434,52 +583,110 @@ const LeftScan = ({
             />
           </>
         )}
-        */}
 
-        {/* VIDEO SECTION - HIDDEN / COMMENTED OUT
-        {!prompt && images.length === 0 && !singleImageName && !showVideoFrames && (
-          <>
+        {/* VIDEO SECTION */}
+        {showVideoBox && !showVideoFrames && (
+          <div>
             <label className="fw-bold small mb-2">Video</label>
-            <div
-              className={`video-upload-zone border-dashed rounded-4 p-3 text-center mb-4 cursor-pointer position-relative ${isProcessing || isViewOnly ? 'pe-none opacity-50' : ''
-                }`}
-              onClick={() => !(isProcessing || isViewOnly) && videoInputRef.current?.click()}
-            >
-              {video && !isProcessing && !isViewOnly && (
+            {isVideoUploading ? (
+              <div className="single-image-uploading-box mb-4 rounded-4 p-4 d-flex flex-column align-items-center justify-content-center text-center">
+                <div className="single-upload-spinner mb-2">
+                  <Loader2 size={30} className="animate-spin text-pink" />
+                </div>
+                <p className="fw-semibold mb-3 single-uploading-text">Uploading ...</p>
                 <button
                   type="button"
-                  className="video-upload-remove"
-                  onClick={handleRemoveVideo}
-                  aria-label="Remove video"
+                  className="btn-cancel-upload rounded-pill px-4 py-1"
+                  onClick={handleCancelVideoUpload}
                 >
-                  <X size={12} />
+                  Cancel
                 </button>
-              )}
-              <img
-                src={videoIcon}
-                alt="Video"
-                className="mb-2"
-                style={{ height: '28px', width: '28px' }}
-              />
-              <p
-                className="mb-0 fw-bold x-small video-upload-filename"
-                title={video ? video.name : undefined}
+              </div>
+            ) : video && videoPreview ? (
+              <div
+                className={`single-image-preview-card mb-4 rounded-4 position-relative overflow-hidden ${
+                  isProcessing || isViewOnly ? 'pe-none opacity-75' : ''
+                }`}
               >
-                {video ? video.name : 'Click / Drag & Drop / Paste Video'}
-              </p>
-              <p className="text-muted xx-small mb-0">Supported: .mp4, .mov, .avi</p>
-              <p className="text-muted xx-small">Max: 3 min</p>
-              <input
-                type="file"
-                hidden
-                ref={videoInputRef}
-                accept="video/*"
-                onChange={handleVideoChange}
-              />
-            </div>
-          </>
+                <video
+                  src={videoPreview}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="single-image-preview-img"
+                  style={{ objectFit: 'cover' }}
+                />
+                {!(isProcessing || isViewOnly) && (
+                  <div
+                    className="single-image-overlay"
+                    onClick={() => videoInputRef.current?.click()}
+                  >
+                    <div className="single-image-reupload-btn d-flex align-items-center gap-1">
+                      <span>Re-Upload</span>
+                    </div>
+                    <div
+                      className="single-image-actions"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <button
+                        type="button"
+                        className="single-image-action-btn"
+                        title="Re-upload video"
+                        onClick={() => videoInputRef.current?.click()}
+                        aria-label="Re-upload video"
+                      >
+                        <Edit3 size={15} />
+                      </button>
+                      <button
+                        type="button"
+                        className="single-image-action-btn delete-btn"
+                        title="Delete video"
+                        onClick={handleRemoveVideo}
+                        aria-label="Delete video"
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
+                  </div>
+                )}
+                <input
+                  type="file"
+                  hidden
+                  ref={videoInputRef}
+                  accept="video/*"
+                  onChange={handleVideoChange}
+                />
+              </div>
+            ) : (
+              <div
+                className={`video-upload-zone border-dashed rounded-4 p-3 text-center mb-4 cursor-pointer position-relative ${
+                  isProcessing || isViewOnly ? 'pe-none opacity-50' : ''
+                }`}
+                onClick={() => !(isProcessing || isViewOnly) && videoInputRef.current?.click()}
+              >
+                <img
+                  src={videoIcon}
+                  alt="Video"
+                  className="mb-2"
+                  style={{ height: '28px', width: '28px' }}
+                />
+                <p className="mb-0 fw-bold x-small video-upload-filename">
+                  Click / Drag & Drop / Paste Video
+                </p>
+                <p className="text-muted xx-small mb-0">Supported: .mp4, .mov, .avi</p>
+                <p className="text-muted xx-small">Max: 3 min</p>
+                <input
+                  type="file"
+                  hidden
+                  ref={videoInputRef}
+                  accept="video/*"
+                  onChange={handleVideoChange}
+                />
+              </div>
+            )}
+          </div>
         )}
-        */}
 
         {!showVideoFrames && (
         <button

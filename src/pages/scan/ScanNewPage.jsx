@@ -1341,24 +1341,17 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       }
 
       const frameItems = await pollProjectFramesUntilReady(sessionToken, token, {
-        onPending: (message) => {
-          const pendingMessage = String(message || '').toLowerCase();
-          if (
-            pendingMessage.includes('wait') ||
-            pendingMessage.includes('extract') ||
-            pendingMessage.includes('processing')
-          ) {
-            setShowQueueUI(false);
-            setShowLoadingUI(true);
-            setShowBlackOverlay(true);
-            setCurrentStep(3);
-          }
+        onPending: () => {
+          setShowQueueUI(true);
+          setShowLoadingUI(false);
+          setShowBlackOverlay(false);
+          setCurrentStep(2);
         },
         onFrameProgress: (attempt, maxAttempts) => {
-          setShowQueueUI(false);
-          setShowLoadingUI(true);
-          setShowBlackOverlay(true);
-          setCurrentStep(3);
+          setShowQueueUI(true);
+          setShowLoadingUI(false);
+          setShowBlackOverlay(false);
+          setCurrentStep(2);
           if (maxAttempts) {
             const calculatedProgress = Math.min(90, Math.round((attempt / maxAttempts) * 90));
             setProgress(calculatedProgress);

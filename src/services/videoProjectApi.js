@@ -194,16 +194,16 @@ export const pollProjectFramesUntilReady = async (
 };
 
 export const generateVideoProject = async (projectToken, paths = [], authToken) => {
-  const formData = new FormData();
-  formData.append('token', projectToken);
-  formData.append('paths', JSON.stringify(paths));
-
-  const response = await axios.post(`${baseURL}/projects/video/generate`, formData, {
-    headers: {
-      ...authHeaders(authToken),
-      'Content-Type': 'multipart/form-data',
+  const response = await axios.post(
+    `${baseURL}/projects/video/generate`,
+    {
+      token: projectToken,
+      paths: paths || [],
     },
-  });
+    {
+      headers: authHeaders(authToken),
+    },
+  );
 
   const newToken = response.data?.token;
   if (!newToken) {
@@ -212,3 +212,4 @@ export const generateVideoProject = async (projectToken, paths = [], authToken) 
 
   return newToken;
 };
+

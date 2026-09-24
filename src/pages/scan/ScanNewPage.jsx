@@ -21,12 +21,6 @@ import { FiX, FiCheck } from 'react-icons/fi';
 import { Hourglass } from 'lucide-react';
 import { fetchPublicProject, isPublicProjectRoute } from '../../utils/publicProjectShare';
 import {
-  extractVideoFrames,
-  isProcessingLikeStatus,
-  isQueueLikeStatus,
-  pollFrameExtractionQueueUntilDone,
-} from '../../services/aiReconstructionApi';
-import {
   generateVideoProject,
   pollProjectFramesUntilReady,
   submitVideoPublicUrl,
@@ -130,7 +124,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   const { slug: publicSlug } = useParams();
   const isPublicView = isPublicProjectRoute(location.pathname) && Boolean(publicSlug);
   const isPublicGuestView = isPublicView && !token;
-  const { queue_system, clearActiveQueueRegistration } = useSocket();
+  const { queue_system, clearActiveQueueRegistration, frame_extraction } = useSocket();
   const { fcmToken } = useNotification();
 
   const [prompt, setPrompt] = useState('');
@@ -1342,37 +1336,9 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       setAiExtractJobId(sessionToken);
       setAiVideoCloudinaryUrl(cloudinaryUrl);
 
-      await extractVideoFrames({
-        link: cloudinaryUrl,
-        id: sessionToken,
-        is_production: 1,
-      });
-
-      await pollFrameExtractionQueueUntilDone(sessionToken, {
-        onProgress: (_match, status, queuePosition) => {
-          if (isQueueLikeStatus(status) || (queuePosition != null && queuePosition > 0)) {
-            setShowQueueUI(true);
-            setShowLoadingUI(false);
-            setShowBlackOverlay(false);
-            setCurrentStep(2);
-            if (queuePosition != null && queuePosition > 0) {
-              const queueProgress = Math.max(
-                5,
-                Math.min(35, Math.round(((60 - queuePosition) / 60) * 35)),
-              );
-              setProgress(queueProgress);
-            }
-            return;
-          }
-
-          if (isProcessingLikeStatus(status) || status === 'processing' || status === 'waiting') {
-            setShowQueueUI(false);
-            setShowLoadingUI(true);
-            setShowBlackOverlay(true);
-            setCurrentStep(3);
-          }
-        },
-      });
+      if (fcmToken && frame_extraction) {
+        frame_extraction(sessionToken, fcmToken);
+      }
 
       const frameItems = await pollProjectFramesUntilReady(sessionToken, token, {
         onPending: (message) => {
@@ -1388,11 +1354,15 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             setCurrentStep(3);
           }
         },
-        onFrameProgress: () => {
+        onFrameProgress: (attempt, maxAttempts) => {
           setShowQueueUI(false);
           setShowLoadingUI(true);
           setShowBlackOverlay(true);
           setCurrentStep(3);
+          if (maxAttempts) {
+            const calculatedProgress = Math.min(90, Math.round((attempt / maxAttempts) * 90));
+            setProgress(calculatedProgress);
+          }
         },
       });
 
@@ -1436,7 +1406,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     setProjectType('video_to_3d');
     setCurrentStep(1);
 
-    const newToken = await generateVideoProject(aiExtractJobId, [], token);
+    const newToken = await generateVideoProject(aiExtractJobId, removedFrames, token);
 
     setProjectToken(newToken);
     setShowVideoFrames(false);

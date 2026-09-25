@@ -38,7 +38,7 @@ const CustomSidebar = ({ onClose }) => {
             <NavLink to="/3dio/settings/login" className="nav-link mb-2">
               <img src={LoginIcon} alt="" style={{ width: '19px' }} /> Login
             </NavLink>
-            <NavLink to="/3dio/settings/subscription" className="nav-link mb-2">
+            <NavLink to="/3dio/subscription" className="nav-link mb-2">
               <img src={SubscriptionIcon} alt="" style={{ width: '19px' }} /> Subscription
             </NavLink>
             <NavLink to="/3dio/settings/team" className="nav-link mb-2">

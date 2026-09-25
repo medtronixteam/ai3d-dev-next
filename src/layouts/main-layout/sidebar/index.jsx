@@ -157,7 +157,7 @@ const sidebarOptions = [
   { title: 'Team', icon: IconTeam, path: '/3dio/settings/team' },
   { title: 'Account', icon: IconAccount, path: '/3dio/settings/account' },
   { title: 'Login', icon: IconLogin, path: '/3dio/settings/login' },
-  { title: 'Subscription', icon: IconSubscription, path: '/3dio/settings/subscription' },
+  { title: 'Subscription', icon: IconSubscription, path: '/3dio/subscription' },
   { title: 'Referral', icon: IconReferal, path: '/3dio/settings/referal' },
 ];
 

@@ -185,7 +185,7 @@ const Subscription = () => {
                         <h4 className="sub-section-title">Features you'll get:</h4>
                         <div className="sub-feature-list">
                           <li>
-                            <img src={vectoImage} alt="" /> 50 AI scans (2D → 3D or prompt → 3D)
+                            <img src={vectoImage} alt="" /> 7 AI scans (2D → 3D or prompt → 3D)
                           </li>
                           <li>
                             <img src={vectoImage} alt="" /> Real-time preview and export
@@ -241,7 +241,7 @@ const Subscription = () => {
                         <h4 className="sub-section-title">Features you'll get:</h4>
                         <div className="sub-feature-list">
                           <li>
-                            <img src={vectoImage} alt="" /> 50 AI scans (2D → 3D or prompt → 3D)
+                            <img src={vectoImage} alt="" /> 30 AI scans (2D → 3D or prompt → 3D)
                           </li>
                           <li>
                             <img src={vectoImage} alt="" /> Real-time preview and export
@@ -300,7 +300,7 @@ const Subscription = () => {
                             <img src={vectoImage} alt="" /> Multi-user team access (up to 4 members)
                           </li>
                           <li>
-                            <img src={vectoImage} alt="" /> 500 AI scans/month
+                            <img src={vectoImage} alt="" /> 100 AI scans/month
                           </li>
                           <li>
                             <img src={vectoImage} alt="" /> Priority processing & rendering queue
@@ -368,7 +368,7 @@ const Subscription = () => {
                         <h4 className="sub-section-title">Features you'll get:</h4>
                         <div className="sub-feature-list">
                           <li>
-                            <img src={vectoImage} alt="" /> 50 AI scans (2D → 3D or prompt → 3D)
+                            <img src={vectoImage} alt="" /> 30 AI scans (2D → 3D or prompt → 3D)
                           </li>
                           <li>
                             <img src={vectoImage} alt="" /> Real-time preview and export
@@ -429,7 +429,7 @@ const Subscription = () => {
                             <img src={vectoImage} alt="" /> Multi-user team access (up to 4 members)
                           </li>
                           <li>
-                            <img src={vectoImage} alt="" /> 500 AI scans/month
+                            <img src={vectoImage} alt="" /> 100 AI scans/month
                           </li>
                           <li>
                             <img src={vectoImage} alt="" /> Priority processing & rendering queue

@@ -347,13 +347,11 @@ const Sidebar = ({ open = false, onClose, disableExpand = false }) => {
 
     const activeAccount = tokens?.find((acc) => acc.is_active === 1);
     if (!activeAccount) {
-      console.warn('No active account found');
       setProfile(null);
       setLoadingProfile(false);
       return;
     }
 
-    console.log('Fetching profile for active account:', activeAccount.email);
     setLoadingProfile(true);
 
     axios
@@ -361,11 +359,9 @@ const Sidebar = ({ open = false, onClose, disableExpand = false }) => {
         headers: { Authorization: `Bearer ${activeAccount.token}` },
       })
       .then((res) => {
-        console.log('Profile fetched successfully:', res.data);
         setProfile(res.data.user || res.data);
       })
       .catch((err) => {
-        console.error('Failed to fetch profile:', err);
         setProfile({
           name: activeAccount.name,
           email: activeAccount.email,

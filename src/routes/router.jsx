@@ -301,7 +301,19 @@ const routes = [
       { path: '/subscription/success', element: <SubscriptionSuccess /> },
       {
         path: '/subscription/cancelled',
-        element: <Navigate to="/3dio/settings/subscription" replace />,
+        element: <Navigate to="/3dio/subscription" replace />,
+      },
+      {
+        path: '/subscription/cancel',
+        element: <Navigate to="/3dio/subscription" replace />,
+      },
+      {
+        path: '/3dio/subscription/cancel',
+        element: <Navigate to="/3dio/subscription" replace />,
+      },
+      {
+        path: '/3dio/subscription/cancelled',
+        element: <Navigate to="/3dio/subscription" replace />,
       },
 
       // Auth Routes

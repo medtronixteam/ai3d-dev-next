@@ -840,6 +840,36 @@
     box-shadow: 0 4px 10px rgba(229, 57, 53, 0.35);
 }
 
+.single-image-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(26, 20, 39, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    z-index: 10;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.single-image-close-btn:hover {
+    background: #e53935;
+    border-color: #e53935;
+    color: #ffffff;
+    transform: scale(1.1);
+    box-shadow: 0 3px 12px rgba(229, 57, 53, 0.45);
+}
+
 .prompt-box {
     background: var(--bg-card);
     box-shadow: 0px 0px 11px 3px #DE39961F;

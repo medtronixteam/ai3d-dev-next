@@ -379,6 +379,17 @@ const LeftScan = ({
                 className="single-image-preview-img"
               />
               {!(isProcessing || isViewOnly) && (
+                <button
+                  type="button"
+                  className="single-image-close-btn"
+                  title="Remove photo"
+                  onClick={handleRemoveSingleImage}
+                  aria-label="Remove photo"
+                >
+                  <X size={14} />
+                </button>
+              )}
+              {!(isProcessing || isViewOnly) && (
                 <div
                   className="single-image-overlay"
                   onClick={handleSingleImageUploadClick}
@@ -617,6 +628,17 @@ const LeftScan = ({
                   className="single-image-preview-img"
                   style={{ objectFit: 'cover' }}
                 />
+                {!(isProcessing || isViewOnly) && (
+                  <button
+                    type="button"
+                    className="single-image-close-btn"
+                    title="Remove video"
+                    onClick={handleRemoveVideo}
+                    aria-label="Remove video"
+                  >
+                    <X size={14} />
+                  </button>
+                )}
                 {!(isProcessing || isViewOnly) && (
                   <div
                     className="single-image-overlay"

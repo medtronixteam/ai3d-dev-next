@@ -20,10 +20,10 @@ const ConfirmModal = ({ open, onClose, onConfirm, title, message, confirmText = 
             <FiTrash2 size={38} color="#e6339a" />
           )}
         </div>
-        <div className="popup-header">
+        <div className="popup-header confirm-modal-header">
           <h4 className="confirm-modal-title">{title || 'Are you sure?'}</h4>
         </div>
-        <div className="popup-body">
+        <div className="popup-body confirm-modal-body">
           <p className="confirm-modal-message">{message || 'Do you really want to proceed?'}</p>
         </div>
         <div className="popup-footer confirm-modal-footer">

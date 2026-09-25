@@ -81,31 +81,44 @@ const Subscription = () => {
       })
       .then((res) => {
         const data = res?.data || {};
-        const monthly = Array.isArray(data?.monthly)
-          ? data?.monthly
-          : Array.isArray(data?.plans?.monthly)
-            ? data?.plans?.monthly
-            : [];
-        const annually = Array.isArray(data?.annually)
-          ? data?.annually
-          : Array.isArray(data?.plans?.annually)
-            ? data?.plans?.annually
-            : Array.isArray(data?.yearly)
-              ? data?.yearly
-              : Array.isArray(data?.plans?.yearly)
-                ? data?.plans?.yearly
-                : [];
+        const plansList = Array.isArray(data?.plans)
+          ? data.plans
+          : Array.isArray(data)
+          ? data
+          : [];
 
-        const getPrice = (arr, planName, fallback) => {
-          const found = arr.find((p) => (p?.name || '').toLowerCase().includes(planName));
-          const price = found?.price ?? found?.amount ?? found?.unit_amount;
-          return Number(price) || fallback;
-        };
+        const starterPlan = plansList.find(
+          (p) => (p?.name || '').toLowerCase() === 'starter'
+        );
+        const premiumPlan = plansList.find(
+          (p) =>
+            (p?.name || '').toLowerCase() === 'premium' ||
+            (p?.name || '').toLowerCase() === 'pro'
+        );
 
-        setMonthlyStarterPrice(getPrice(monthly, 'starter', 29));
-        setMonthlyProPrice(getPrice(monthly, 'pro', 99));
-        setYearlyStarterPrice(getPrice(annually, 'starter', 290));
-        setYearlyProPrice(getPrice(annually, 'pro', 990));
+        if (starterPlan) {
+          if (starterPlan.monthly_price != null)
+            setMonthlyStarterPrice(Number(starterPlan.monthly_price));
+          else if (starterPlan.price != null)
+            setMonthlyStarterPrice(Number(starterPlan.price));
+
+          if (starterPlan.annual_price != null)
+            setYearlyStarterPrice(Number(starterPlan.annual_price));
+          else if (starterPlan.yearly_price != null)
+            setYearlyStarterPrice(Number(starterPlan.yearly_price));
+        }
+
+        if (premiumPlan) {
+          if (premiumPlan.monthly_price != null)
+            setMonthlyProPrice(Number(premiumPlan.monthly_price));
+          else if (premiumPlan.price != null)
+            setMonthlyProPrice(Number(premiumPlan.price));
+
+          if (premiumPlan.annual_price != null)
+            setYearlyProPrice(Number(premiumPlan.annual_price));
+          else if (premiumPlan.yearly_price != null)
+            setYearlyProPrice(Number(premiumPlan.yearly_price));
+        }
       })
       .catch(() => {
         // Fallbacks already set in useState — no action needed

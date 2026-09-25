@@ -167,61 +167,6 @@ const Subscription = () => {
             >
               <div className="new-subscription container py-5">
                 <div className="row justify-content-center g-4 d-flex align-items-stretch">
-                  {/* Freemium */}
-                  <div className="col-md-4 d-flex align-items-center">
-                    <div className="sub-card sub-card-small w-100 d-flex flex-column justify-content-between">
-                      <div>
-                        <div className="sub-top-icon">
-                          <img src={freemiumTopIcon} alt="Freemium" />
-                        </div>
-                        <h2 className="sub-title">Freemium</h2>
-                        <h3 className="sub-price">
-                          Free <span>/14 days</span>
-                        </h3>
-                        <p className="sub-description">
-                          Perfect for testing, personal projects and learning 3D creation with AI.
-                        </p>
-                        <div className="sub-divider"></div>
-                        <h4 className="sub-section-title">Features you'll get:</h4>
-                        <div className="sub-feature-list">
-                          <li>
-                            <img src={vectoImage} alt="" /> 7 AI scans (2D → 3D or prompt → 3D)
-                          </li>
-                          <li>
-                            <img src={vectoImage} alt="" /> Real-time preview and export
-                          </li>
-                          <li>
-                            <img src={vectoImage} alt="" /> Access to all base design tools and APIs
-                          </li>
-                          <li>
-                            <img src={vectoImage} alt="" /> Community access and learning hub
-                          </li>
-                          <li>
-                            <img src={vectoImage} alt="" /> Cloud storage (2GB limit), Email support
-                          </li>
-                          <li>
-                            <img src={vectoImage} alt="" /> Access to public 3D model library
-                          </li>
-                        </div>
-                      </div>
-                      <div>
-                        <p className="sub-bestfor">
-                          <b>Best for:</b> Individual creators, freelancers, and small-scale
-                          designers who want to explore AI powered 3D creation.
-                        </p>
-                        <button
-                          className="sub-btn"
-                          onClick={(e) => handlePlanClick('Freemium', e)}
-                          disabled={true}
-                        >
-                          {subscribingPlan === `Freemium-monthly`
-                            ? 'Processing…'
-                            : 'Choose Freemium'}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
                   {/* Starter */}
                   <div className="col-md-4 d-flex">
                     <div className="sub-card sub-card-center w-100 d-flex flex-column justify-content-between">
@@ -267,7 +212,7 @@ const Subscription = () => {
                         </p>
                         <button
                           className="sub-btn"
-                          disabled={true}
+                          disabled={subscribingPlan !== null}
                           onClick={(e) => handlePlanClick('Starter', e)}
                         >
                           {subscribingPlan === `Starter-monthly` ? 'Processing…' : 'Choose Starter'}
@@ -330,7 +275,7 @@ const Subscription = () => {
                         </p>
                         <button
                           className="sub-btn"
-                          disabled={true}
+                          disabled={subscribingPlan !== null}
                           onClick={(e) => handlePlanClick('Premium', e)}
                         >
                           {subscribingPlan === `Premium-monthly` ? 'Processing…' : 'Choose Premium'}
@@ -394,7 +339,7 @@ const Subscription = () => {
                         </p>
                         <button
                           className="sub-btn"
-                          disabled={true}
+                          disabled={subscribingPlan !== null}
                           onClick={(e) => handlePlanClick('Starter', e)}
                         >
                           {subscribingPlan === `Starter-annually`
@@ -459,7 +404,7 @@ const Subscription = () => {
                         </p>
                         <button
                           className="sub-btn"
-                          disabled={true}
+                          disabled={subscribingPlan !== null}
                           onClick={(e) => handlePlanClick('Premium', e)}
                         >
                           {subscribingPlan === `Premium-annually`

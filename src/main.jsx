@@ -81,7 +81,8 @@ class ErrorBoundary extends React.Component {
 // Stripe Configuration
 // =============================
 const stripePromise = loadStripe(
-  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_YourPublishableKeyHere',
+  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY ||
+    'pk_live_51TvzB97QrDvHQjE0SWoiXc7NbgssynHx3okHicqJjyCrVtT4is9LXruQxAcZrcpWradpsF3cZc29oGa8h6XWSqAa008Rlpu4ce',
 );
 
 // =============================

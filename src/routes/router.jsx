@@ -147,7 +147,13 @@ const routes = [
           </MainLayout>
         ),
         children: [
-          { index: true, element: <Dashboard /> },
+          {
+            element: <Dashboard />,
+            children: [
+              { index: true, element: null },
+              { path: 'model/:slug', element: null },
+            ],
+          },
           {
             path: 'models',
             element: (

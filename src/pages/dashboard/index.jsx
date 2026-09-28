@@ -2,9 +2,10 @@ import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import './SimplePage.css';
 import { FiSearch, FiArrowRight, FiX, FiMaximize2, FiEdit2, FiArrowUp, FiEye, FiDownload, FiSun, FiMoon } from 'react-icons/fi';
 import search from '../../assets/images/search.svg';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate, useParams, Outlet } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { baseURL } from '../../config';
+import { createModelSlug, parseModelSlug, getModelStats } from '../../utils/modelSlug';
 import model1 from '../../assets/images/model-1.png';
 import model2 from '../../assets/images/model-2.png';
 import model3 from '../../assets/images/model-3.png';
@@ -17,7 +18,6 @@ import characterImg from '../../assets/images/products/iPhone.png';
 import carImg from '../../assets/images/products/Nike.png';
 import droneImg from '../../assets/images/products/drone.png';
 import headphoneImg from '../../assets/images/products/parfum.png';
-import { useNavigate } from 'react-router-dom';
 import { FaCross, FaHeart, FaReact, FaRegHeart } from 'react-icons/fa';
 import scanImg from '../../assets/images/scan.svg';
 import CustomLoader from '../../components/loader/CustomLoader';
@@ -1214,7 +1214,11 @@ function ModelCardVideoModal({
             </>
           )}
 
-          {/* Views & Downloads Stats Badge */}
+          {/* Views & Downloads Stats Badge — only if API sends fields */}
+          {(() => {
+            const stats = getModelStats(modelData);
+            if (!stats.hasViews && !stats.hasDownloads) return null;
+            return (
           <div
             style={{
               position: 'absolute',
@@ -1237,16 +1241,24 @@ function ModelCardVideoModal({
               pointerEvents: 'none',
             }}
           >
-            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }} title="Views">
-              <FiEye size={15} style={{ color: '#DE3996' }} />
-              <span>{modelData?.views ?? 0}</span>
-            </span>
-            <div style={{ width: '1px', height: '12px', background: viewerIsDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.15)' }} />
-            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }} title="Downloads">
-              <FiDownload size={15} style={{ color: '#DE3996' }} />
-              <span>{modelData?.downloads ?? 0}</span>
-            </span>
+            {stats.hasViews && (
+              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }} title="Views">
+                <FiEye size={15} style={{ color: '#DE3996' }} />
+                <span>{stats.views}</span>
+              </span>
+            )}
+            {stats.hasViews && stats.hasDownloads && (
+              <div style={{ width: '1px', height: '12px', background: viewerIsDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.15)' }} />
+            )}
+            {stats.hasDownloads && (
+              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }} title="Downloads">
+                <FiDownload size={15} style={{ color: '#DE3996' }} />
+                <span>{stats.downloads}</span>
+              </span>
+            )}
           </div>
+            );
+          })()}
         </div>
 
         <style>{`
@@ -1440,6 +1452,7 @@ function ModernModal({
 const Dashboard = () => {
   const { token, user } = useAuth();
   const navigate = useNavigate();
+  const { slug: modelSlugParam } = useParams();
   const [selectedType, setSelectedType] = useState(CATEGORIES[0].type);
   const [models, setModels] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -1695,13 +1708,117 @@ const Dashboard = () => {
     }
   };
 
+  const openModelFromCard = useCallback(
+    (model, { syncUrl = true } = {}) => {
+      if (!model) return;
+
+      const rawUrl =
+        model.file_temp_url ||
+        model.file_url ||
+        model.video_url ||
+        model.url ||
+        (model.data && (model.data.video_url || model.data.url));
+
+      const hasImage = Boolean(model.image || model.thumbnail);
+      if (!rawUrl && !hasImage && !model.id) {
+        toast.error('No video or image found');
+        return;
+      }
+
+      const finalUrl = rawUrl ? getFullVideoUrl(rawUrl) : null;
+      setModelFileUrl(finalUrl);
+      setSelectedModelData(model);
+      setModelVideoModalOpen(true);
+
+      if (syncUrl) {
+        const slug = createModelSlug(model);
+        if (slug && location.pathname !== `/3dio/model/${slug}`) {
+          navigate(`/3dio/model/${slug}`, { replace: false });
+        }
+      }
+    },
+    [navigate, location.pathname],
+  );
+
+  const closeModelModal = useCallback(() => {
+    setModelVideoModalOpen(false);
+    setSelectedModelData(null);
+    setModelFileUrl(null);
+    if (location.pathname.startsWith('/3dio/model/')) {
+      navigate('/3dio', { replace: true });
+    }
+  }, [navigate, location.pathname]);
+
+  // Open model from slug URL: /3dio/model/ring--01kpayzc...
+  useEffect(() => {
+    if (!modelSlugParam) return;
+
+    const { id } = parseModelSlug(modelSlugParam);
+    if (!id) return;
+
+    if (selectedModelData?.id === id && modelVideoModalOpen) return;
+
+    const match =
+      models.find((m) => m.id === id) ||
+      favoriteModels.find((m) => m.id === id);
+
+    if (match) {
+      openModelFromCard(match, { syncUrl: false });
+      return;
+    }
+
+    // If not in current list yet, try search by id / wait for load
+    if (loading || isLoadingMore) return;
+
+    let cancelled = false;
+    const resolveFromApi = async () => {
+      try {
+        const headers = { 'Content-Type': 'application/json' };
+        if (token) headers.Authorization = `Bearer ${token}`;
+
+        // Search across categories by paging all? Use models/search with title from slug
+        const { titleSlug } = parseModelSlug(modelSlugParam);
+        const titleGuess = titleSlug.replace(/-/g, ' ');
+        const res = await fetch(`${baseURL}/models/search`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ title: titleGuess, category: 'all' }),
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        const list = data.models || data.data || [];
+        const found = list.find((m) => m.id === id);
+        if (!cancelled && found) {
+          openModelFromCard(found, { syncUrl: false });
+        }
+      } catch (err) {
+        console.error('Failed to resolve model from slug:', err);
+      }
+    };
+
+    resolveFromApi();
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    modelSlugParam,
+    models,
+    favoriteModels,
+    loading,
+    isLoadingMore,
+    token,
+    openModelFromCard,
+    selectedModelData?.id,
+    modelVideoModalOpen,
+  ]);
+
   useEffect(() => {
     if (isSearching || isFavoriteModeActive) return;
 
     setPage(1);
     setHasMore(true);
     fetchModels(selectedType, 1, false);
-  }, [selectedType, token, location.key, isSearching, isFavoriteModeActive, fetchModels]);
+  }, [selectedType, token, isSearching, isFavoriteModeActive, fetchModels]);
 
   // Current models to display (either regular or favorites)
   const currentModels = useMemo(() => {
@@ -2226,26 +2343,7 @@ const Dashboard = () => {
                     key={model.id}
                     className="model-card"
                     onClick={() => {
-                      const rawUrl =
-                        model.file_temp_url ||
-                        model.file_url ||
-                        model.video_url ||
-                        model.url ||
-                        (model.data && (model.data.video_url || model.data.url));
-
-                      const imgUrl = model.image
-                        ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
-                        : null;
-
-                      if (rawUrl || imgUrl) {
-                        const finalUrl = rawUrl ? getFullVideoUrl(rawUrl) : null;
-
-                        setModelFileUrl(finalUrl);
-                        setSelectedModelData(model);
-                        setModelVideoModalOpen(true);
-                      } else {
-                        toast.error('No video or image found');
-                      }
+                      openModelFromCard(model);
                     }}
                     style={{
                       position: 'relative',
@@ -2683,7 +2781,7 @@ const Dashboard = () => {
         modelTitle={selectedModelData?.title || selectedModelData?.name || 'Model Preview'}
         modelData={selectedModelData}
         platformIsDark={isDark}
-        onClose={() => setModelVideoModalOpen(false)}
+        onClose={closeModelModal}
       />
 
       {showLoginModal && (
@@ -2701,6 +2799,8 @@ const Dashboard = () => {
         onCreateModel={handleWelcomeCreate}
         onExploreModels={handleWelcomeExplore}
       />
+      {/* Keeps /3dio/model/:slug layout route mounted without remounting Dashboard */}
+      <Outlet />
     </>
   );
 };

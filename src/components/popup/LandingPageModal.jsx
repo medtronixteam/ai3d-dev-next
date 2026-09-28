@@ -266,6 +266,56 @@ const LandingPageModal = ({ open, onClose }) => {
                       </div>
                     </div>
                   </div>
+
+                  {/* Enterprise */}
+                  <div className="col-md-4 d-flex">
+                    <div
+                      className="sub-card sub-card-center w-100 d-flex flex-column justify-content-between"
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => navigate('/3dio/enterprise')}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <div>
+                        <div className="sub-top-icon">
+                          <img src={enterpriseTopIcon} alt="Enterprise" />
+                        </div>
+                        <h2 className="sub-title">Enterprise</h2>
+                        <h3 className="sub-price">
+                          Custom <span>Billing</span>
+                        </h3>
+                        <p className="sub-description mt-3">
+                          Ideal for enterprises and platforms scaling 3D asset production,
+                          integrating AI3D tech within their systems.
+                        </p>
+                        <div className="sub-divider"></div>
+                        <h4 className="sub-section-title">Features you'll get:</h4>
+                        <div className="sub-feature-list">
+                          <li><img src={vectoImage} alt="" /> Unlimited AI scans and conversions</li>
+                          <li><img src={vectoImage} alt="" /> Full API + SDK integration</li>
+                          <li><img src={vectoImage} alt="" /> White-label platform deployment</li>
+                          <li><img src={vectoImage} alt="" /> Advanced analytics dashboard</li>
+                          <li><img src={vectoImage} alt="" /> On-premise or private cloud hosting</li>
+                          <li><img src={vectoImage} alt="" /> Team & department-level user management</li>
+                          <li><img src={vectoImage} alt="" /> Priority GPU access</li>
+                          <li><img src={vectoImage} alt="" /> Legal & data compliance</li>
+                          <li><img src={vectoImage} alt="" /> Custom AI model training</li>
+                          <li><img src={vectoImage} alt="" /> 24/7 premium support</li>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="sub-bestfor">
+                          <b>Best for:</b> Large enterprises, agencies, or marketplaces needing high volume API integrations.
+                        </p>
+                        <button
+                          className="sub-btn"
+                          onClick={(e) => handlePlanClick('Enterprise', e)}
+                        >
+                          Contact Sales
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

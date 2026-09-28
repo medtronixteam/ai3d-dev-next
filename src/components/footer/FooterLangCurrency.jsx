@@ -42,6 +42,11 @@ const FooterLangCurrency = () => {
           display: flex !important;
           gap: 8px !important;
         }
+        @media (max-width: 575px) {
+          .footer-select-row {
+            max-width: none !important;
+          }
+        }
         .footer-select-row .footer-lang-dropdown {
           flex: 1.15 1 0 !important;
           min-width: 0 !important;

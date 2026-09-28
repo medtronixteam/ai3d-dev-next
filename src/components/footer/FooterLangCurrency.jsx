@@ -102,6 +102,29 @@ const FooterLangCurrency = () => {
           align-items: center !important;
           gap: 6px !important;
         }
+        .footer-select-row .dropdown-menu.menuo,
+        .footer-select-row .dropdown-menu.menu {
+          left: 0 !important;
+          right: 0 !important;
+          width: 100% !important;
+          min-width: 100% !important;
+          max-width: 100% !important;
+          margin: 0 !important;
+          padding: 4px 0 !important;
+          border: 1px solid rgba(222, 57, 150, 1) !important;
+          border-radius: 4px !important;
+          background: rgba(255, 237, 247, 0.55) !important;
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          box-shadow: 0 6px 16px rgba(222, 57, 150, 0.12) !important;
+          inset: auto !important;
+          transform: none !important;
+        }
+        .footer-select-row .footer-lang-dropdown,
+        .footer-select-row .footer-usd-dropdown {
+          position: relative !important;
+          overflow: visible !important;
+        }
       `}</style>
       {/* Language Dropdown */}
       <div className="dropdown btn-wrapper footer-lang-dropdown position-relative" ref={langRef}>

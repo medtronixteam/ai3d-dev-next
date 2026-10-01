@@ -367,6 +367,7 @@ const RecentProjects = () => {
           created_at: item.shared_at,
           type: item.type,
           prompt: item.text,
+          slug: item.slug || item.public_slug || null,
           isShared: true,
         }));
 
@@ -722,16 +723,21 @@ const RecentProjects = () => {
   const handleViewProject = (project) => {
     setDropdownOpen(null);
     const targetToken = project.token || project.id;
+    const slug = (project.slug || project.public_slug || '').toString().trim();
     console.log('[Recent Projects] 🚀 Navigating to view project:', targetToken);
     console.log('[Recent Projects] 📦 Project data:', project);
 
-    navigate('/3dio/new/scan', {
-      state: {
-        projectId: targetToken,
-        viewMode: true,
-        feedbackGiven: project.feedback_given,
-      },
-    });
+    const state = {
+      projectId: targetToken,
+      viewMode: true,
+      feedbackGiven: project.feedback_given,
+    };
+
+    if (slug) {
+      navigate(`/3dio/new/scan/${encodeURIComponent(slug)}`, { state });
+    } else {
+      navigate('/3dio/new/scan', { state });
+    }
   };
 
   const handleShareClick = (project) => {

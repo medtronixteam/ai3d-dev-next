@@ -151,7 +151,7 @@ const routes = [
             element: <Dashboard />,
             children: [
               { index: true, element: null },
-              { path: 'model/:slug', element: null },
+              { path: 'asset/:slug', element: null },
             ],
           },
           {
@@ -239,7 +239,14 @@ const routes = [
             ],
           },
           { path: 'scan', element: <ScanPage /> },
-          { path: 'new/scan', element: <ScanNewPage /> },
+          {
+            path: 'new/scan',
+            element: <ScanNewPage />,
+            children: [
+              { index: true, element: null },
+              { path: ':slug', element: null },
+            ],
+          },
           { path: 'model/view', element: <ModelView /> },
           {
             path: 'preview/:id',

@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import './SimplePage.css';
-import { FiSearch, FiArrowRight, FiX, FiMaximize2, FiEdit2, FiArrowUp, FiEye, FiDownload, FiSun, FiMoon } from 'react-icons/fi';
+import { FiSearch, FiArrowRight, FiX, FiMaximize2, FiEdit2, FiArrowUp, FiEye, FiDownload, FiSun, FiMoon, FiShare2 } from 'react-icons/fi';
 import search from '../../assets/images/search.svg';
 import { useLocation, useNavigate, useParams, Outlet } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { baseURL } from '../../config';
-import { createModelSlug, parseModelSlug, getModelStats } from '../../utils/modelSlug';
+import { getModelSlug, getModelStats } from '../../utils/modelSlug';
 import model1 from '../../assets/images/model-1.png';
 import model2 from '../../assets/images/model-2.png';
 import model3 from '../../assets/images/model-3.png';
@@ -514,6 +514,7 @@ function ModelCardVideoModal({
   const [triedFallback, setTriedFallback] = React.useState(false);
   const [showEditorModal, setShowEditorModal] = useState(false);
   const [isOpeningEditor, setIsOpeningEditor] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
 
   const modelViewerRef = useRef(null);
   const mediaTimeoutRef = useRef(null);
@@ -887,11 +888,61 @@ function ModelCardVideoModal({
               zIndex: 10000,
             }}
           >
-            <h3 style={{ color: '#fff', fontSize: '18px', fontWeight: '600', margin: 0 }}>
+            <h3
+              style={{
+                color: '#fff',
+                fontSize: '18px',
+                fontWeight: '600',
+                margin: 0,
+                flex: 1,
+                minWidth: 0,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                paddingRight: 12,
+              }}
+            >
               {modelTitle || 'Untitled Model'}
             </h3>
 
-            <div style={{ display: 'flex', gap: '10px' }}>
+            <div style={{ display: 'flex', gap: '10px', flexShrink: 0 }}>
+              {/* Public share — copies outside public link */}
+              <button
+                onClick={async (e) => {
+                  e.stopPropagation();
+                  const slug = getModelSlug(modelData);
+                  if (!slug) {
+                    toast.error('Public share link is not available for this model.');
+                    return;
+                  }
+                  const publicUrl = `${window.location.origin}/3dio/asset/${encodeURIComponent(slug)}`;
+                  try {
+                    await navigator.clipboard.writeText(publicUrl);
+                    setShareCopied(true);
+                    toast.success('Public link copied!');
+                    setTimeout(() => setShareCopied(false), 2000);
+                  } catch {
+                    // Fallback for older browsers
+                    window.prompt('Copy public link:', publicUrl);
+                  }
+                }}
+                style={{
+                  background: '#fff',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: 32,
+                  height: 32,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                }}
+                aria-label="Share public link"
+                title={shareCopied ? 'Copied!' : 'Share public link'}
+              >
+                <FiShare2 size={16} color="#DE3996" />
+              </button>
+
               {/* Edit Button */}
               <button
                 onClick={() => {
@@ -1731,9 +1782,9 @@ const Dashboard = () => {
       setModelVideoModalOpen(true);
 
       if (syncUrl) {
-        const slug = createModelSlug(model);
-        if (slug && location.pathname !== `/3dio/model/${slug}`) {
-          navigate(`/3dio/model/${slug}`, { replace: false });
+        const slug = getModelSlug(model);
+        if (slug && location.pathname !== `/3dio/asset/${slug}`) {
+          navigate(`/3dio/asset/${encodeURIComponent(slug)}`, { replace: false });
         }
       }
     },
@@ -1744,30 +1795,31 @@ const Dashboard = () => {
     setModelVideoModalOpen(false);
     setSelectedModelData(null);
     setModelFileUrl(null);
-    if (location.pathname.startsWith('/3dio/model/')) {
+    if (location.pathname.startsWith('/3dio/asset/')) {
       navigate('/3dio', { replace: true });
     }
   }, [navigate, location.pathname]);
 
-  // Open model from slug URL: /3dio/model/ring--01kpayzc...
+  // Open model from backend slug URL: /3dio/asset/nike-shoe
   useEffect(() => {
     if (!modelSlugParam) return;
 
-    const { id } = parseModelSlug(modelSlugParam);
-    if (!id) return;
+    const slug = decodeURIComponent(modelSlugParam);
 
-    if (selectedModelData?.id === id && modelVideoModalOpen) return;
+    if (selectedModelData && getModelSlug(selectedModelData) === slug && modelVideoModalOpen) {
+      return;
+    }
 
-    const match =
-      models.find((m) => m.id === id) ||
-      favoriteModels.find((m) => m.id === id);
+    const matchBySlug = (list) =>
+      (list || []).find((m) => getModelSlug(m) === slug || m.slug === slug);
+
+    const match = matchBySlug(models) || matchBySlug(favoriteModels);
 
     if (match) {
       openModelFromCard(match, { syncUrl: false });
       return;
     }
 
-    // If not in current list yet, try search by id / wait for load
     if (loading || isLoadingMore) return;
 
     let cancelled = false;
@@ -1776,9 +1828,7 @@ const Dashboard = () => {
         const headers = { 'Content-Type': 'application/json' };
         if (token) headers.Authorization = `Bearer ${token}`;
 
-        // Search across categories by paging all? Use models/search with title from slug
-        const { titleSlug } = parseModelSlug(modelSlugParam);
-        const titleGuess = titleSlug.replace(/-/g, ' ');
+        const titleGuess = slug.replace(/-\d+$/, '').replace(/-/g, ' ');
         const res = await fetch(`${baseURL}/models/search`, {
           method: 'POST',
           headers,
@@ -1787,7 +1837,7 @@ const Dashboard = () => {
         if (!res.ok) return;
         const data = await res.json();
         const list = data.models || data.data || [];
-        const found = list.find((m) => m.id === id);
+        const found = matchBySlug(list) || list.find((m) => m.id === slug);
         if (!cancelled && found) {
           openModelFromCard(found, { syncUrl: false });
         }
@@ -1808,7 +1858,7 @@ const Dashboard = () => {
     isLoadingMore,
     token,
     openModelFromCard,
-    selectedModelData?.id,
+    selectedModelData,
     modelVideoModalOpen,
   ]);
 
@@ -2799,7 +2849,7 @@ const Dashboard = () => {
         onCreateModel={handleWelcomeCreate}
         onExploreModels={handleWelcomeExplore}
       />
-      {/* Keeps /3dio/model/:slug layout route mounted without remounting Dashboard */}
+      {/* Keeps /3dio/asset/:slug layout route mounted without remounting Dashboard */}
       <Outlet />
     </>
   );

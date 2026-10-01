@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useNavigate, useLocation, useParams, Outlet } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import lottie from 'lottie-web';
@@ -121,8 +121,10 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   const { activeCreationWorkspaceId, assignProjectToWorkspace } = useWorkspace();
   const navigate = useNavigate();
   const location = useLocation();
-  const { slug: publicSlug } = useParams();
-  const isPublicView = isPublicProjectRoute(location.pathname) && Boolean(publicSlug);
+  const { slug: routeSlug } = useParams();
+  const isPublicView = isPublicProjectRoute(location.pathname) && Boolean(routeSlug);
+  const ownedScanSlug =
+    !isPublicView && routeSlug ? decodeURIComponent(String(routeSlug)) : null;
   const isPublicGuestView = isPublicView && !token;
   const { queue_system, clearActiveQueueRegistration, frame_extraction } = useSocket();
   const { fcmToken } = useNotification();
@@ -180,6 +182,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   const openedFromRecentRef = useRef(false);
   const activeProjectPollRef = useRef(null);
   const projectPollGenerationRef = useRef(0);
+  const slugResolveRef = useRef(null);
 
   const [historyData, setHistoryData] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(false);
@@ -523,11 +526,109 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       setIsUserOwnedProject(true);
       setActiveTab('transform');
       setProjectToken(projectId);
+      if (ownedScanSlug) {
+        slugResolveRef.current = ownedScanSlug;
+      }
       fetchInitialProject(projectId);
 
+      // Keep slug URL if present; only clear navigation state
       navigate(location.pathname, { replace: true, state: {} });
     }
   }, [location]);
+
+  // Open owned project from backend slug URL: /3dio/new/scan/{slug}
+  useEffect(() => {
+    if (isPublicView || !ownedScanSlug || !token) return;
+    if (location.state?.projectId) return; // handled by state effect
+    if (slugResolveRef.current === ownedScanSlug) return;
+
+    slugResolveRef.current = ownedScanSlug;
+    let cancelled = false;
+
+    const resolveOwnedProjectBySlug = async () => {
+      try {
+        setShowLoadingUI(true);
+        setShowBlackOverlay(true);
+        setIsViewOnly(true);
+        setIsUserOwnedProject(true);
+        setActiveTab('transform');
+
+        // Prefer public slug endpoint — returns project for slug from backend
+        try {
+          const result = await fetchPublicProject(ownedScanSlug);
+          if (cancelled) return;
+          const proj = result.project || {};
+          const tokenId = proj.token || proj.id || proj.project_token || proj.project_id;
+          if (tokenId) {
+            setProjectToken(tokenId);
+            await fetchInitialProject(tokenId);
+            return;
+          }
+        } catch {
+          // fall through to list search
+        }
+
+        // Fallback: find in user's project list by slug
+        const res = await axios.get(`${baseURL}/project?page=1`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (cancelled) return;
+
+        const first = res.data?.data;
+        const list = first?.data || [];
+
+        let found = list.find(
+          (p) => p.slug === ownedScanSlug || p.public_slug === ownedScanSlug,
+        );
+
+        // Light paginate a few pages if needed
+        let nextUrl = first?.next_page_url;
+        let guard = 0;
+        while (!found && nextUrl && guard < 5) {
+          guard += 1;
+          const safeNext = String(nextUrl).replace('http://', 'https://');
+          const nextRes = await axios.get(safeNext, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (cancelled) return;
+          const pageData = nextRes.data?.data;
+          const pageList = pageData?.data || [];
+          found = pageList.find(
+            (p) => p.slug === ownedScanSlug || p.public_slug === ownedScanSlug,
+          );
+          nextUrl = pageData?.next_page_url;
+        }
+
+        if (!found) {
+          throw new Error('Project not found for this slug.');
+        }
+
+        const tokenId = found.token || found.id;
+        setProjectToken(tokenId);
+        if (!hasProjectFeedback(found.feedback_given)) {
+          shouldShowReviewRef.current = true;
+        }
+        await fetchInitialProject(tokenId);
+      } catch (err) {
+        if (cancelled) return;
+        slugResolveRef.current = null;
+        console.error('Failed to resolve project slug:', err);
+        toast.error(
+          err?.response?.data?.message ||
+            err?.message ||
+            'Could not open this project.',
+        );
+        setShowLoadingUI(false);
+        setShowBlackOverlay(false);
+      }
+    };
+
+    resolveOwnedProjectBySlug();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isPublicView, ownedScanSlug, token, location.state?.projectId]);
 
   const fetchInitialProject = async (projectId) => {
     const pollGeneration = projectPollGenerationRef.current + 1;
@@ -588,6 +689,19 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       openedFromRecentRef.current = false;
 
       applyProjectDetail(proj);
+
+      // If backend returned a slug, keep Scan New URL in sync
+      const projectSlug = (proj.slug || proj.public_slug || '').toString().trim();
+      if (
+        projectSlug &&
+        location.pathname.startsWith('/3dio/new/scan') &&
+        !isPublicView
+      ) {
+        const targetPath = `/3dio/new/scan/${encodeURIComponent(projectSlug)}`;
+        if (location.pathname !== targetPath) {
+          navigate(targetPath, { replace: true });
+        }
+      }
 
       if (proj.status === 'completed') {
         await fetchModelUrl(projectId, proj.type);
@@ -879,7 +993,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   };
 
   useEffect(() => {
-    if (!isPublicView || !publicSlug) return;
+    if (!isPublicView || !routeSlug) return;
 
     let cancelled = false;
 
@@ -894,7 +1008,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
         setCurrentStep(4);
         setProjectStatus('completed');
 
-        const result = await fetchPublicProject(publicSlug);
+        const result = await fetchPublicProject(routeSlug);
         if (cancelled) return;
 
         const { project, modelUrl: fetchedModelUrl } = result;
@@ -934,7 +1048,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     return () => {
       cancelled = true;
     };
-  }, [isPublicView, publicSlug]);
+  }, [isPublicView, routeSlug]);
 
   const fetchModelUrl = async (token_id, type) => {
     if (loadedProjectTokenRef.current === token_id && modelUrl && modelReady) {
@@ -2143,6 +2257,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
           message="Do you want to open this project in the 3D Editor?"
         />
       </div>
+      <Outlet />
     </div>
   );
 };

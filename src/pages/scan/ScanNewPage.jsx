@@ -35,6 +35,30 @@ import {
 const hasProjectFeedback = (value) =>
   value === true || value === 1 || value === '1';
 
+const getApiErrorMessage = (errorOrData, fallback = 'Something went wrong. Please try again.') => {
+  const data = errorOrData?.response?.data ?? errorOrData;
+  const raw =
+    data?.message ??
+    data?.error ??
+    data?.errors ??
+    errorOrData?.message;
+
+  if (!raw) return fallback;
+  if (typeof raw === 'string') return raw;
+  if (Array.isArray(raw)) return raw.filter(Boolean).join(', ') || fallback;
+  if (typeof raw === 'object') {
+    const parts = Object.values(raw).flat().filter((v) => typeof v === 'string');
+    if (parts.length) return parts.join(', ');
+  }
+  return fallback;
+};
+
+const isApiErrorPayload = (data) => {
+  if (!data || typeof data !== 'object') return false;
+  const status = String(data.status || '').toLowerCase();
+  return status === 'error' || status === 'failed' || data.success === false;
+};
+
 const PROJECT_POLL_INTERVAL_MS = 5000;
 const PROJECT_POLL_MAX_DURATION_MS = 2 * 60 * 60 * 1000; // 2 hours — covers ~1hr generation
 const PROJECT_TERMINAL_STATUSES = new Set([
@@ -1270,7 +1294,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       }
     } catch (err) {
       console.error(err);
-      toast.error(err?.response?.data?.message || 'Upload failed');
+      toast.error(getApiErrorMessage(err, 'Upload failed'));
       setIsArrowLoading(false);
     }
   };
@@ -1290,36 +1314,55 @@ const ModelGenerator = ({ isDarkMode = false }) => {
         await handleGenerateFromFrames();
       } catch (err) {
         console.error(err);
-        toast.error(err?.response?.data?.message || err.message || 'Generation failed');
+        toast.error(getApiErrorMessage(err, 'Generation failed'));
         setIsGenerating(false);
       }
       return;
     }
 
-    if (!prompt.trim() && images.length === 0 && !video) return;
+    const trimmedPrompt = (prompt || '').trim();
+    if (!trimmedPrompt && images.length === 0 && !video) {
+      toast.error('Please enter a prompt or upload images/video.');
+      return;
+    }
 
     scrollToModelViewport();
+
+    let generationStarted = false;
 
     try {
       setIsGenerating(true);
       const projectName = Date.now().toString();
 
-      if (prompt.trim() && images.length === 0 && !video) {
+      if (trimmedPrompt && images.length === 0 && !video) {
         const res = await axios.post(
           `${baseURL}/project/prompt`,
-          { name: projectName, prompt },
-          { headers: { Authorization: `Bearer ${token}` } }
+          { name: projectName, prompt: trimmedPrompt },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
+            },
+          },
         );
 
-        const token_id = res.data?.token || res.data?.data?.token;
-        if (token_id) {
-          setProjectToken(token_id);
-          setProjectType('text_to_3d');
-          setGeneratedPrompt(prompt);
-          startGenerationFlow(token_id);
+        const data = res.data;
+        if (isApiErrorPayload(data)) {
+          throw new Error(getApiErrorMessage(data, 'Generation failed'));
         }
-      }
-      else if (images.length > 0) {
+
+        const token_id = data?.token || data?.data?.token;
+        if (!token_id) {
+          throw new Error(getApiErrorMessage(data, 'Project token not returned'));
+        }
+
+        setProjectToken(token_id);
+        setProjectType('text_to_3d');
+        setGeneratedPrompt(trimmedPrompt);
+        generationStarted = true;
+        startGenerationFlow(token_id);
+      } else if (images.length > 0) {
         if (images.length < 10) {
           toast.warning('Minimum 10 images are required for 3D generation. Please upload at least 10 images.');
           setIsGenerating(false);
@@ -1389,15 +1432,25 @@ const ModelGenerator = ({ isDarkMode = false }) => {
 
         setProjectType('images_to_3d');
         setGeneratedPrompt(`${totalFiles} Images`);
+        generationStarted = true;
         startGenerationFlow(token_id);
       } else if (video) {
+        generationStarted = true;
         await handleVideoFrameExtraction();
       }
     } catch (err) {
       console.error('Generation error:', err);
-      const apiMessage = err?.response?.data?.message || err?.message || 'Generation failed';
-      toast.error(apiMessage);
+      toast.error(getApiErrorMessage(err, 'Generation failed'));
+      setShowLoadingUI(false);
+      setShowBlackOverlay(false);
+      setShowQueueUI(false);
       setIsGenerating(false);
+      setIsArrowLoading(false);
+    } finally {
+      // Soft-fail safety: if flow never started, never leave the button spinning
+      if (!generationStarted) {
+        setIsGenerating(false);
+      }
     }
   };
 

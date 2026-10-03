@@ -14,6 +14,37 @@ import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 
 // =============================
+// Stale chunk recovery (after deploy)
+// =============================
+const CHUNK_RELOAD_KEY = 'vite:chunk-reload';
+
+const isChunkLoadError = (error) => {
+  const message = String(error?.message || error || '');
+  return (
+    message.includes('Failed to fetch dynamically imported module') ||
+    message.includes('Importing a module script failed') ||
+    message.includes('error loading dynamically imported module') ||
+    error?.name === 'ChunkLoadError'
+  );
+};
+
+const reloadOnceForStaleChunk = () => {
+  try {
+    if (sessionStorage.getItem(CHUNK_RELOAD_KEY) === '1') return false;
+    sessionStorage.setItem(CHUNK_RELOAD_KEY, '1');
+  } catch {
+    // sessionStorage may be blocked; still attempt a single reload
+  }
+  window.location.reload();
+  return true;
+};
+
+window.addEventListener('vite:preloadError', (event) => {
+  event.preventDefault();
+  reloadOnceForStaleChunk();
+});
+
+// =============================
 // iOS Error Boundary
 // =============================
 class ErrorBoundary extends React.Component {
@@ -28,7 +59,9 @@ class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, errorInfo) {
     console.error('🔴 React Error Boundary Caught:', error, errorInfo);
-    // Log to external service if needed
+    if (isChunkLoadError(error)) {
+      reloadOnceForStaleChunk();
+    }
   }
 
   render() {
@@ -159,6 +192,15 @@ try {
   );
 
   console.log('✅ React App Mounted Successfully');
+
+  // Clear reload guard after app stays up (avoids loop if a lazy chunk fails on boot)
+  setTimeout(() => {
+    try {
+      sessionStorage.removeItem(CHUNK_RELOAD_KEY);
+    } catch {
+      /* ignore */
+    }
+  }, 3000);
   
   // Signal to Flutter WebView that React is ready
   if (window.FlutterLog) {

@@ -100,8 +100,8 @@ export const WorkspaceProvider = ({ children }) => {
       reconcileStoredWorkspaceIds(list);
       return list;
     } catch (err) {
+      // Load failures are common/transient — fail silently (empty list), no toast
       console.error('Failed to fetch workspaces:', err);
-      toast.error(err?.response?.data?.message || 'Failed to load workspaces.');
       setWorkspaces([]);
       return [];
     } finally {
@@ -124,6 +124,7 @@ export const WorkspaceProvider = ({ children }) => {
         setWorkspaceProjects(projects);
         return projects;
       } catch (err) {
+        // Load failures are common/transient — fail silently, no toast
         console.error('Failed to fetch workspace detail:', err);
         if (isWorkspaceMissingError(err)) {
           setSelectedFilterState((current) => {
@@ -133,8 +134,6 @@ export const WorkspaceProvider = ({ children }) => {
             }
             return current;
           });
-        } else {
-          toast.error(err?.response?.data?.message || 'Failed to load workspace projects.');
         }
         setWorkspaceProjects([]);
         return [];

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import './SimplePage.css';
-import { FiSearch, FiArrowRight, FiX, FiMaximize2, FiEdit2, FiArrowUp, FiEye, FiDownload, FiSun, FiMoon, FiShare2 } from 'react-icons/fi';
+import { FiSearch, FiArrowRight, FiX, FiMaximize2, FiEdit2, FiArrowUp, FiEye, FiDownload, FiSun, FiMoon, FiShare2, FiRefreshCw, FiBox } from 'react-icons/fi';
 import search from '../../assets/images/search.svg';
 import { useLocation, useNavigate, useParams, Outlet } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -2338,46 +2338,97 @@ const Dashboard = () => {
               <CustomLoader />
             </div>
           ) : error ? (
-            <div className="text-center my-5 text-danger">{error}</div>
+            <div className="models-empty-state">
+              <div className="models-empty-state__glow" aria-hidden="true" />
+              <div className="models-empty-state__icon">
+                {error === 'No results found.' ? (
+                  <FiSearch size={32} />
+                ) : (
+                  <FiBox size={32} />
+                )}
+              </div>
+              <h3 className="models-empty-state__title">
+                {error === 'No results found.'
+                  ? 'No matches found'
+                  : error === 'Search failed.'
+                    ? 'Search unavailable'
+                    : 'Models unavailable'}
+              </h3>
+              <p className="models-empty-state__text">
+                {error === 'No results found.'
+                  ? 'We couldn’t find any 3D models for that search. Try another keyword or browse a category.'
+                  : 'We couldn’t load the 3D models right now. Please try again in a moment.'}
+              </p>
+              <div className="models-empty-state__actions">
+                {error === 'No results found.' ? (
+                  <button
+                    type="button"
+                    className="models-empty-state__btn models-empty-state__btn--primary"
+                    onClick={() => {
+                      setError('');
+                      setSearchText('');
+                      setIsSearching(false);
+                      setPage(1);
+                      setHasMore(true);
+                      fetchModels(selectedType, 1, false);
+                    }}
+                  >
+                    Browse all models
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="models-empty-state__btn models-empty-state__btn--primary"
+                    onClick={() => {
+                      if (isSearching && searchText.trim()) {
+                        searchModels();
+                      } else {
+                        fetchModels(selectedType, page || 1, false);
+                      }
+                    }}
+                  >
+                    <FiRefreshCw size={16} />
+                    Try again
+                  </button>
+                )}
+              </div>
+            </div>
           ) : currentModels.length === 0 ? (
-            // Check if we're on favorites tab or general models
             isFavoriteModeActive ? (
-              <div style={{ textAlign: 'center', padding: 60, color: '#888', fontSize: 20 }}>
-                <div style={{ fontSize: 48, marginBottom: 12 }}>
-                  <FaHeart size={35} style={{ color: 'rgba(222, 57, 150, 1)' }} />
+              <div className="models-empty-state">
+                <div className="models-empty-state__glow" aria-hidden="true" />
+                <div className="models-empty-state__icon">
+                  <FaHeart size={28} />
                 </div>
-                No Favorite's found
+                <h3 className="models-empty-state__title">No favorites yet</h3>
+                <p className="models-empty-state__text">
+                  Tap the heart on any model to save it here for quick access later.
+                </p>
+                <div className="models-empty-state__actions">
+                  <button
+                    type="button"
+                    className="models-empty-state__btn models-empty-state__btn--primary"
+                    onClick={() => {
+                      setIsFavoriteModeActive(false);
+                      setPage(1);
+                      setHasMore(true);
+                      fetchModels(selectedType, 1, false);
+                    }}
+                  >
+                    Explore models
+                  </button>
+                </div>
               </div>
             ) : (
-              <div
-                className="no-models-found-card"
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '60px 20px',
-                  borderRadius: 16,
-                  margin: '40px auto',
-                  maxWidth: 420,
-                  minHeight: 220,
-                  animation: 'fadeIn 0.7s',
-                }}
-              >
-                <div style={{ fontWeight: 700, fontSize: 26, color: '#22223b', marginBottom: 8 }}>
-                  No Models Found
+              <div className="models-empty-state">
+                <div className="models-empty-state__glow" aria-hidden="true" />
+                <div className="models-empty-state__icon">
+                  <FiBox size={32} />
                 </div>
-                <div style={{ color: '#888', fontSize: 17, textAlign: 'center', maxWidth: 340 }}>
-                  We couldn't find any 3D models for your search or category.
-                  <br />
-                  Try adjusting your search or check back later!
-                </div>
-                <style>{`
-            @keyframes fadeIn {
-              from { opacity: 0; transform: translateY(30px); }
-              to { opacity: 1; transform: translateY(0); }
-            }
-          `}</style>
+                <h3 className="models-empty-state__title">No models found</h3>
+                <p className="models-empty-state__text">
+                  We couldn’t find any 3D models for this category. Try another category or check back later.
+                </p>
               </div>
             )
           ) : (

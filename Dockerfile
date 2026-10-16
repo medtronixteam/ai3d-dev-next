@@ -1,21 +1,25 @@
-FROM node:18-alpine AS build
+# Build stage
+FROM node:20-alpine AS build
+
 WORKDIR /app
+
 COPY package*.json ./
-RUN npm install --legacy-peer-depsRUN npm install @rollup/rollup-linux-x64-musl
+RUN npm install --legacy-peer-deps
+
 COPY . .
 RUN npm run build
 
-# Step 2: Serve with Nginx
-FROM nginx:alpine
+# Production stage
+FROM node:20-alpine AS production
 
-# Remove default config
-RUN rm /etc/nginx/conf.d/default.conf
+WORKDIR /app
 
-# Add custom config (you must have nginx.conf in project root)
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+ENV NODE_ENV=production
 
-# ✅ Correct this line for Vite (dist folder)
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/public ./public
+COPY --from=build /app/.next/standalone ./
+COPY --from=build /app/.next/static ./.next/static
 
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 3000
+
+CMD ["node", "server.js"]

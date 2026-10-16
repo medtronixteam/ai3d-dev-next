@@ -21,12 +21,12 @@ jobs:
         echo "$SSH_KEY" > /tmp/deploy_key
         chmod 600 /tmp/deploy_key
         ssh -i /tmp/deploy_key -o StrictHostKeyChecking=no ubuntu@$SERVER_IP <<EOF
-          cd /home/ubuntu/3Dio-project/AI_3d_scanning
+          cd /home/ubuntu/3Dio-project/ai3d-dev-next
           
           git pull origin main
           cd ..
-          sudo docker compose build ai-3d-scanning
-          sudo docker compose up ai-3d-scanning -d
+          sudo docker compose build ai3d-dev-next
+          sudo docker compose up ai3d-dev-next -d
          
          
           exit

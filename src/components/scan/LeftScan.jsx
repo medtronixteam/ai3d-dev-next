@@ -41,6 +41,7 @@ const LeftScan = ({
   setVideo,
   isProcessing,
   isViewOnly,
+  showQueueUI,
   isArrowLoading,
   handleSingleImageGenerate,
   handleGenerate,
@@ -459,13 +460,7 @@ const LeftScan = ({
                   accept={ALLOWED_ACCEPT}
                   onChange={handleSingleImageChange}
                 />
-                <input
-                  type="text"
-                  placeholder="Upload your photo"
-                  className="form-control bg-transparent small py-1 ps-2"
-                  value=""
-                  readOnly
-                />
+                <span className="banner-input-label">Upload your photo</span>
                 <button
                   type="button"
                   className="btn-pink-circle"
@@ -719,7 +714,11 @@ const LeftScan = ({
             isViewOnly
           }
         >
-          {isExtractingFrames ? (
+          {showQueueUI ? (
+            <>
+              <Sparkles size={16} className="me-2" /> Generate
+            </>
+          ) : isExtractingFrames ? (
             <>
               <Loader2 size={16} className="me-2 animate-spin" /> Extracting frames...
             </>

@@ -1,0 +1,2 @@
+This folder exists so Next.js uses the App Router in /app.
+The React screens stay in src/pages and are not treated as Pages Router routes.

@@ -41,6 +41,14 @@
     background-color: #0d0d14;
 }
 
+[data-theme='dark'] .main-wrapper .text-muted {
+    color: #c9c9d4 !important;
+}
+
+[data-theme='dark'] .contributor-banner .text-muted {
+    color: #d5d5df !important;
+}
+
 [data-theme='dark'] .banner-pink {
     background: linear-gradient(to right, #1d1733, #6e1c4a) !important;
     border-color: #6e1c4a !important;
@@ -365,7 +373,8 @@
 
 .prompt-box textarea,
 .prompt-box input,
-.banner-input input {
+.banner-input input,
+.banner-input-label {
     color: var(--text-main) !important;
 }
 
@@ -619,7 +628,8 @@
     background: #fff;
 }
 
-.banner-input input {
+.banner-input input,
+.banner-input-label {
     background: transparent;
     border: none;
     color: var(--text-main);
@@ -627,9 +637,11 @@
     flex: 1 1 auto;
     min-width: 0;
     padding-right: 4px !important;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    line-height: 1.25;
+    font-size: 13px;
 }
 
 .banner-input input::placeholder {
@@ -930,10 +942,11 @@
     display: block;
     width: 100%;
     max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    padding: 0 6px;
+    overflow: visible;
+    text-overflow: unset;
+    white-space: normal;
+    line-height: 1.35;
+    padding: 0 8px;
     box-sizing: border-box;
 }
 

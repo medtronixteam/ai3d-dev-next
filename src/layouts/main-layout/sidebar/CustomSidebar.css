@@ -214,6 +214,10 @@
   background-color: #ffffff !important;
 }
 
+[data-theme='dark'] .settings-page-root {
+  background-color: #000000 !important;
+}
+
 @media (min-width: 1200px) {
   .custom-sidebar-desktop {
     width: 200px;

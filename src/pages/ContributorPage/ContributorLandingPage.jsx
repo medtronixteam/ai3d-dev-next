@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useRef, useState } from 'react';
 import '../LandingPage.css';
 import './ContributorLandingPage.css';
@@ -819,7 +821,7 @@ const ContributorLandingPage = () => {
                           item === 'Pricing'
                             ? '/3dio/subscription'
                             : item === 'Services'
-                              ? '/services'
+                              ? '/service'
                               : item === 'Student'
                                 ? '/student-program'
                                 : '/'

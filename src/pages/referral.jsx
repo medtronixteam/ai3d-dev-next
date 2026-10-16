@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Service.css';
@@ -519,7 +521,7 @@ const Referral = () => {
                             item === 'Pricing'
                               ? '/3dio/subscription'
                               : item === 'Services'
-                                ? '/services'
+                                ? '/service'
                                 : item === 'Student'
                                   ? '/student-program'
                                   : '/'

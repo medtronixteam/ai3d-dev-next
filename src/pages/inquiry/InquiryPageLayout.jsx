@@ -7,6 +7,7 @@ import '../LandingPage.css';
 import '../Service/bookDemo.css';
 import './inquiry.css';
 import './studentProgram.css';
+import './inquiryMotion.css';
 import Fb from '../../assets/icon/Fb.svg';
 import Ln from '../../assets/service/LN.svg';
 import elipse from '../../pages/images/heading_ellipse.png';
@@ -79,17 +80,6 @@ const InquiryPageLayout = ({ variant, children }) => {
 
   return (
     <div ref={landingRef} className={`landing-page-section ai_3d_landing inq-page ${variant === 'student' ? 'stu-program' : ''}`}>
-      <style>{`
-        @keyframes bd-dot-float {
-          0%,100% { transform: translateY(0px) scale(1); opacity: 0.22; }
-          50% { transform: translateY(-8px) scale(1.2); opacity: 0.45; }
-        }
-        @keyframes bd-dot-twinkle {
-          0%,100% { opacity: 0.15; transform: scale(0.85); }
-          50% { opacity: 0.5; transform: scale(1.3); }
-        }
-      `}</style>
-
       <AnimatePresence>
         {showScrollTop && (
           <motion.div
@@ -382,7 +372,7 @@ const InquiryPageLayout = ({ variant, children }) => {
                           item === 'Pricing'
                             ? '/3dio/subscription'
                             : item === 'Services'
-                              ? '/services'
+                              ? '/service'
                               : item === 'Student'
                                 ? '/student-program'
                                 : '/'

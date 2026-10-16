@@ -282,7 +282,9 @@
 .user-profile {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
   /* margin-top: 30px !important;
     margin-bottom: 16px; */
   /* margin-left: -4px !important; */
@@ -330,26 +332,28 @@
   flex: 1;
   overflow: hidden;
   transition: all 0.3s ease;
+  gap: 2px;
+}
+
+.user-greeting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+  width: 100%;
 }
 
 .user-greeting {
   font-size: 12px;
   color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
-.user-name-row {
-  display: flex !important;
-  min-width: 0;
-  max-width: 100%;
-  width: 100%;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
-}
-
-.user-name-row .user-name {
-  flex: 1 1 auto;
-  min-width: 0;
+.user-details .user-name {
   font-size: 14px;
   font-weight: 600;
   color: var(--text-primary);
@@ -357,19 +361,23 @@
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
+  max-width: 100%;
+  line-height: 1.25;
 }
 
-.user-name-row .upgrade-coins-btn {
+.user-greeting-row .upgrade-coins-btn {
   flex-shrink: 0;
-  margin-left: auto;
-  padding: 3px 6px;
-  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
   gap: 5px;
-  border-radius: 4px;
+  padding: 2px 7px;
+  font-size: 12px;
+  border-radius: 999px;
   white-space: nowrap;
+  line-height: 1.2;
 }
 
-.user-name-row .upgrade-coins-btn img {
+.user-greeting-row .upgrade-coins-btn img {
   width: 14px;
   height: 14px;
 }
@@ -428,9 +436,16 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .user-profile .profile-img {
+  margin: 0 !important;
+  flex-shrink: 0;
+}
+
+.sidebar.collapsed .user-profile .profile-img {
   margin: 0 auto !important;
 }
 
@@ -496,19 +511,12 @@
   background: linear-gradient(to right, #de3996, #ffc800);
   border-radius: 5px;
   padding: 4px 6px;
-  /* min-width: 120px; */
   color: #333743;
   font-size: 14px;
   cursor: pointer;
-  display: none;
+  display: inline-flex;
   gap: 8px;
   align-items: center;
-}
-
-@media(max-width : 800px) {
-  .upgrade-coins-btn {
-    display: flex;
-  }
 }
 
 

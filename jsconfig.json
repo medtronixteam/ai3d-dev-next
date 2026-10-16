@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "components/*": ["src/components/*"],
+      "data/*": ["src/data/*"],
+      "helpers/*": ["src/helpers/*"],
+      "layouts/*": ["src/layouts/*"],
+      "pages/*": ["src/pages/*"],
+      "routes/*": ["src/routes/*"],
+      "theme/*": ["src/theme/*"],
+      "assets/*": ["src/assets/*"],
+      "lib/*": ["src/lib/*"]
+    }
+  },
+  "exclude": ["node_modules", ".next", "dist"]
+}

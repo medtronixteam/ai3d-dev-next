@@ -647,29 +647,34 @@ const Sidebar = ({ open = false, onClose, disableExpand = false }) => {
               </div>
             )}
             <div className="user-details">
-              <span className="user-greeting">{getGreeting()}</span>
               {showSignIn ? (
-                <span
-                  className="user-name"
-                  style={{ fontWeight: 700, cursor: 'pointer', textDecoration: 'none' }}
-                  onClick={() => (window.location.href = '/signin')}
-                >
-                  Sign in
-                </span>
+                <>
+                  <span className="user-greeting">{getGreeting()}</span>
+                  <span
+                    className="user-name"
+                    style={{ fontWeight: 700, cursor: 'pointer', textDecoration: 'none' }}
+                    onClick={() => (window.location.href = '/signin')}
+                  >
+                    Sign in
+                  </span>
+                </>
               ) : (
-                <div className="d-flex gap-2 user-name-row">
+                <>
+                  <div className="user-greeting-row">
+                    <span className="user-greeting">{getGreeting()}</span>
+                    <div className="upgrade-coins-btn" title={`${coins.toLocaleString()} coins`}>
+                      <img
+                        src={UpgradeCoin}
+                        alt=""
+                        className={loadingCoinSpinner ? 'coin-spin' : ''}
+                      />
+                      <span>{coins.toLocaleString()}</span>
+                    </div>
+                  </div>
                   <span className="user-name" title={displayName}>
                     {displayName}
                   </span>
-                  <div className="upgrade-coins-btn">
-                    <img
-                      src={UpgradeCoin}
-                      alt=""
-                      className={loadingCoinSpinner ? 'coin-spin' : ''}
-                    />{' '}
-                    <span>{coins.toLocaleString()}</span>
-                  </div>
-                </div>
+                </>
               )}
             </div>
           </div>

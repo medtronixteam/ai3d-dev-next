@@ -1,3 +1,5 @@
+'use client';
+
 import { useLocation } from 'react-router-dom';
 import Stack from '@mui/material/Stack';
 

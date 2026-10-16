@@ -1853,6 +1853,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             setVideo={setVideo}
             isProcessing={isProcessing}
             isViewOnly={isViewOnly}
+            showQueueUI={showQueueUI}
             isArrowLoading={isArrowLoading}
             handleSingleImageGenerate={handleSingleImageGenerate}
             handleGenerate={handleGenerate}

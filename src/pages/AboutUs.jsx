@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
@@ -490,7 +492,7 @@ const AboutUs = () => {
                   <Link to="/3dio/new/scan" className="btn about-btn-primary">
                     Start Creating Free <FiArrowRight className="ms-1" />
                   </Link>
-                  <Link to="/services" className="btn about-btn-outline">
+                  <Link to="/service" className="btn about-btn-outline">
                     Explore Enterprise Services
                   </Link>
                 </div>
@@ -540,7 +542,7 @@ const AboutUs = () => {
                     {[
                       { name: 'Home', url: '/' },
                       { name: 'About Us', url: '/about-us' },
-                      { name: 'Services', url: '/services' },
+                      { name: 'Services', url: '/service' },
                       { name: 'Pricing', url: '/3dio/subscription' },
                       { name: 'Student', url: '/student-program' },
                     ].map((item) => (

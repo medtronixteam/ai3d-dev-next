@@ -1,4 +1,5 @@
-// GetStartedPage.jsx
+'use client';
+
 import React from 'react';
 import '../LandingPage.css';
 import './GetStartedPage.css';
@@ -241,7 +242,7 @@ const GetStartedPage = () => {
                             item === 'Pricing'
                               ? '/3dio/subscription'
                               : item === 'Services'
-                                ? '/services'
+                                ? '/service'
                                 : item === 'Student'
                                   ? '/student-program'
                                   : '/'

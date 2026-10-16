@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -11,6 +13,7 @@ import Tk from '../../assets/icon/Tk.svg';
 import Ln from '../../assets/service/LN.svg';
 import elipse from '../../pages/images/heading_ellipse.png';
 import './bookDemo.css';
+import './bookDemoMotion.css';
 import { Mail, Phone } from 'lucide-react';
 import logo from '../../pages/images/logo.png';
 import world from '../../pages/images/worl.png';
@@ -231,17 +234,6 @@ const BookDemo = ({ scrollContainerRef }) => {
 
   return (
     <div ref={landingRef} className="landing-page-section ai_3d_landing">
-      <style>{`
-        @keyframes bd-dot-float {
-          0%,100% { transform: translateY(0px) scale(1);     opacity: 0.22; }
-          50%      { transform: translateY(-8px) scale(1.2);  opacity: 0.45; }
-        }
-        @keyframes bd-dot-twinkle {
-          0%,100% { opacity: 0.15; transform: scale(0.85); }
-          50%      { opacity: 0.5;  transform: scale(1.3);  }
-        }
-      `}</style>
-
       <AnimatePresence>
         {showScrollTop && (
           <motion.div
@@ -682,7 +674,7 @@ const BookDemo = ({ scrollContainerRef }) => {
                           item === 'Pricing'
                             ? '/3dio/subscription'
                             : item === 'Services'
-                              ? '/services'
+                              ? '/service'
                               : item === 'Student'
                                 ? '/student-program'
                                 : '/'

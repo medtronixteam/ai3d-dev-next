@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import { baseURL } from '../../config';
-import { getPostLoginPath, startGoogleLogin } from '../../utils/authRedirect';
+import { goToPostLogin, startGoogleLogin } from '../../utils/authRedirect';
 
 const OAuthSuccess = () => {
-  const navigate = useNavigate();
   const { login } = useAuth();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -39,14 +37,14 @@ const OAuthSuccess = () => {
         }
 
         login(token, userData);
-        navigate(getPostLoginPath(), { replace: true });
+        goToPostLogin();
       })
       .catch((err) => {
         console.error('OAuth success handling failed:', err);
         setError(err?.response?.data?.message || 'Login failed, please try again.');
         setLoading(false);
       });
-  }, [login, navigate]);
+  }, [login]);
 
   return (
     <div

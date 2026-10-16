@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
@@ -10,7 +12,7 @@ import Logo from 'pages/images/logo.png';
 import Robot from '../../assets/images/robot-img.png';
 import Google from '../../assets/images/google.png';
 import Facebook from '../../assets/images/facebook.png';
-import { getPostLoginPath, startFacebookLogin, startGoogleLogin } from '../../utils/authRedirect';
+import { goToPostLogin, startFacebookLogin, startGoogleLogin, warmPostLoginRoute } from '../../utils/authRedirect';
 // import Apple from "../../assets/images/apple-img.png";
 
 const SignIn = () => {
@@ -32,14 +34,7 @@ const SignIn = () => {
         login('demo-token', demoUser);
 
         // Login ke baad wait karte hain ke state update ho jaye
-        setTimeout(() => {
-          const inviteToken = localStorage.getItem('invite_token');
-          if (inviteToken) {
-            navigate(`/3dio/team/invite/accept/${inviteToken}`);
-          } else {
-            navigate('/3dio/');
-          }
-        }, 100);
+        goToPostLogin();
 
         setLoading(false);
         return;
@@ -76,11 +71,7 @@ const SignIn = () => {
 
       // Login function call karte hain
       login(res.data.token, userData);
-
-      // Login ke baad wait karte hain ke state update ho jaye
-      setTimeout(() => {
-        navigate(getPostLoginPath(), { replace: true });
-      }, 100);
+      goToPostLogin();
 
     } catch (err) {
       toast.error(err?.response?.data?.message || 'Login failed');
@@ -88,6 +79,10 @@ const SignIn = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    warmPostLoginRoute();
+  }, []);
 
   useEffect(() => {
     // Sirf tab navigate karte hain jab user already logged in ho

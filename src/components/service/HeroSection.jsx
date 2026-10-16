@@ -1,3 +1,4 @@
+import './HeroSection.css';
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../../pages/images/logo.png';
@@ -88,21 +89,6 @@ const HeroSection = ({ scrollContainerRef }) => {
 
   return (
     <>
-      <style>{`
-        @keyframes ssp-dot-float {
-          0%,100% { transform: translateY(0px) scale(1);    opacity: 0.22; }
-          50%      { transform: translateY(-8px) scale(1.2); opacity: 0.45; }
-        }
-        @keyframes ssp-dot-twinkle {
-          0%,100% { opacity: 0.15; transform: scale(0.85); }
-          50%      { opacity: 0.5;  transform: scale(1.3);  }
-        }
-        @keyframes ssp-marquee {
-          0%   { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-      `}</style>
-
       <section className="service-section-page-hero container-fluid">
 
         <div className="service-section-page-bg">

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { baseURL } from '../../config';
 import { FiEye, FiEyeOff, FiX } from 'react-icons/fi';
 import './LoginPopup.css';
 import Google from "../../assets/images/google.png";
 import Facebook from "../../assets/images/facebook.png";
-import { getPostLoginPath, startFacebookLogin, startGoogleLogin } from '../../utils/authRedirect';
+import { goToPostLogin, startFacebookLogin, startGoogleLogin } from '../../utils/authRedirect';
 
 const LoginPopup = ({ onClose, onLoginSuccess }) => {
   const [email, setEmail] = useState('');
@@ -17,7 +17,6 @@ const LoginPopup = ({ onClose, onLoginSuccess }) => {
   const [rememberMe, setRememberMe] = useState(false);
   const { login, tokens, user } = useAuth();
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -73,7 +72,7 @@ const LoginPopup = ({ onClose, onLoginSuccess }) => {
         onLoginSuccess();
       }
 
-      navigate(getPostLoginPath(), { replace: true });
+      goToPostLogin();
     } catch (err) {
       toast.error(err?.response?.data?.message || 'Login failed. Please check your credentials.');
     } finally {

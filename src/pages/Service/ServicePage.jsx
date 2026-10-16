@@ -141,7 +141,7 @@ const ServicePage = () => {
                           item === 'Pricing'
                             ? '/3dio/subscription'
                             : item === 'Services'
-                              ? '/services'
+                              ? '/service'
                               : item === 'Student'
                                 ? '/student-program'
                                 : '/'

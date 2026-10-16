@@ -12,6 +12,11 @@ const YouTubeCleanPlayer = ({
   const [isPlaying, setIsPlaying] = useState(autoPlay);
   const [isMuted, setIsMuted] = useState(startMuted);
   const [isHovered, setIsHovered] = useState(false);
+  const [origin, setOrigin] = useState('https://ai3dscanning.com');
+
+  useEffect(() => {
+    setOrigin(window.location.origin);
+  }, []);
 
   // Send message to YouTube iframe via JS API
   const sendCommand = (func, args = []) => {
@@ -46,7 +51,7 @@ const YouTubeCleanPlayer = ({
   };
 
   // Construct iframe embed URL
-  const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?enablejsapi=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&origin=${typeof window !== 'undefined' ? window.location.origin : ''}${autoPlay ? '&autoplay=1' : ''}${startMuted ? '&mute=1' : ''}`;
+  const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?enablejsapi=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&origin=${encodeURIComponent(origin)}${autoPlay ? '&autoplay=1' : ''}${startMuted ? '&mute=1' : ''}`;
 
   return (
     <div

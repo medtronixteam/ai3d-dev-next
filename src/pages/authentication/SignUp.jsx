@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
@@ -8,7 +10,6 @@ import { FiEye, FiEyeOff } from 'react-icons/fi';
 import './SignUp.css';
 import Logo from 'pages/images/logo.png';
 import Robot from '../../assets/images/robot-img.png';
-import { useSearchParams } from 'react-router-dom';
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
@@ -17,10 +18,14 @@ const SignUp = () => {
   const [cPassword, setCPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showCPassword, setShowCPassword] = useState(false);
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [searchParams] = useSearchParams();
-  const referral = searchParams.get("referral");
+  const [referral, setReferral] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setReferral(params.get('referral'));
+  }, []);
   
 
   const handleSubmit = async (e) => {

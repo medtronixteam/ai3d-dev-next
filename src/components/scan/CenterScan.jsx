@@ -248,6 +248,7 @@ const CenterScan = ({
               handleGenerate={handleGenerate}
               isProcessing={isProcessing}
               isViewOnly={isViewOnly}
+              showQueueUI={showQueueUI}
               isExtractingFrames={isExtractingFrames}
               isGenerating={isGenerating}
               isArrowLoading={isArrowLoading}

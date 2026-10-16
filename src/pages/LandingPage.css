@@ -734,8 +734,14 @@ body {
 }
 
 .ai_3d_landing .a3d-trusted {
-  margin-top: 1rem;
-  flex-wrap: wrap;
+  margin-top: 40px;
+  flex-wrap: nowrap;
+}
+
+@media (max-width: 767px) {
+  .ai_3d_landing .a3d-trusted {
+    margin-top: 0;
+  }
 }
 
 .ai_3d_landing .a3d-trusted span {

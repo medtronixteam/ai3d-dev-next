@@ -7,17 +7,15 @@ const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children, ssrSafe = false }) => {
   // const [user, setUser] = useState(null);
   // const [token, setToken] = useState(localStorage.getItem('token'));
 
   const [tokens, setTokens] = useState(() => {
+    if (ssrSafe || typeof window === 'undefined') return [];
     try {
       const saved = localStorage.getItem('tokens');
-      // console.log('Loading tokens from localStorage:', saved);
-      const parsedTokens = saved ? JSON.parse(saved) : [];
-      // console.log('Parsed tokens:', parsedTokens);
-      return parsedTokens;
+      return saved ? JSON.parse(saved) : [];
     } catch (error) {
       console.error('Error loading tokens from localStorage:', error);
       return [];
@@ -26,6 +24,7 @@ export const AuthProvider = ({ children }) => {
 
   // Active team selection (persisted)
   const [activeTeam, setActiveTeamState] = useState(() => {
+    if (ssrSafe || typeof window === 'undefined') return null;
     try {
       const saved = localStorage.getItem('activeTeam');
       return saved ? JSON.parse(saved) : null;
@@ -34,6 +33,10 @@ export const AuthProvider = ({ children }) => {
       return null;
     }
   });
+
+  // Public pages render on the server with an empty session, then load the
+  // saved login after hydration so the HTML stays stable for crawlers.
+  const [authReady, setAuthReady] = useState(!ssrSafe);
 
   // active account hamesha tokens se nikaalo
   const activeAccount = tokens.find((acc) => acc.is_active === 1) || null;
@@ -68,6 +71,26 @@ export const AuthProvider = ({ children }) => {
   // }, [tokens]);
 
   useEffect(() => {
+    if (!ssrSafe) return;
+    try {
+      const saved = localStorage.getItem('tokens');
+      setTokens(saved ? JSON.parse(saved) : []);
+    } catch (error) {
+      console.error('Error loading tokens from localStorage:', error);
+      setTokens([]);
+    }
+    try {
+      const savedTeam = localStorage.getItem('activeTeam');
+      setActiveTeamState(savedTeam ? JSON.parse(savedTeam) : null);
+    } catch (e) {
+      console.error('Error loading activeTeam from localStorage:', e);
+      setActiveTeamState(null);
+    }
+    setAuthReady(true);
+  }, [ssrSafe]);
+
+  useEffect(() => {
+    if (ssrSafe && !authReady) return;
     try {
       const tokensJson = JSON.stringify(tokens);
       // console.log('Saving tokens to localStorage:', tokensJson);
@@ -81,10 +104,11 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error('Error saving tokens to localStorage:', error);
     }
-  }, [tokens]);
+  }, [tokens, ssrSafe, authReady]);
 
   // Persist activeTeam
   useEffect(() => {
+    if (ssrSafe && !authReady) return;
     try {
       if (activeTeam) {
         localStorage.setItem('activeTeam', JSON.stringify(activeTeam));
@@ -94,7 +118,7 @@ export const AuthProvider = ({ children }) => {
     } catch (e) {
       console.error('Error saving activeTeam to localStorage:', e);
     }
-  }, [activeTeam]);
+  }, [activeTeam, ssrSafe, authReady]);
 
   // useEffect(() => {
   //   if (token) {
@@ -158,17 +182,15 @@ const login = (newToken, userData) => {
       // console.log('Added new account:', userData.email);
     }
 
-    // console.log('Updated tokens array:', updated);
+    try {
+      localStorage.setItem('tokens', JSON.stringify(updated));
+    } catch (error) {
+      console.error('Error saving tokens to localStorage:', error);
+    }
     return updated;
   });
 
-  // Force axios header update
-  setTimeout(() => {
-    if (newToken) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
-      console.log('Authorization header updated');
-    }
-  }, 50);
+  axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
 };
 
   // signup

@@ -178,7 +178,7 @@ const SimplePage = () => {
                     ? `https://app.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
                     : model.image
                       ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
-                      : require('../../assets/images/dashboard-page/shoes.jpg');
+                      : '';
                   return (
                     <div key={model.id} className="card mb-4 shadow-sm border-0" style={{ maxWidth: 540, borderRadius: 18, margin: '0 auto', overflow: 'hidden', boxShadow: '0 4px 24px rgba(230,51,154,0.07)' }}>
                       <div className="row g-0 align-items-center">
@@ -213,7 +213,7 @@ const SimplePage = () => {
               <div className="card mb-3" style={{ maxWidth: 540, margin: '40px auto 0 auto' }}>
                 <div className="row g-0">
                   <div className="col-md-4">
-                    <img src={modalModel.image || require('../../assets/images/dashboard-page/shoes.jpg')} className="img-fluid rounded-start" alt={modalModel.title} />
+                    <img src={modalModel.image || ''} className="img-fluid rounded-start" alt={modalModel.title} />
                   </div>
                   <div className="col-md-8">
                     <div className="card-body">

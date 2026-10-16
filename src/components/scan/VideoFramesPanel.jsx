@@ -9,6 +9,7 @@ const VideoFramesPanel = ({
   handleGenerate,
   isProcessing,
   isViewOnly,
+  showQueueUI,
   isExtractingFrames,
   isGenerating,
   isArrowLoading,
@@ -153,7 +154,12 @@ const VideoFramesPanel = ({
         onClick={handleGenerate}
         disabled={isProcessing || isViewOnly || activeFrameCount < 2}
       >
-        {isExtractingFrames ? (
+        {showQueueUI ? (
+          <>
+            <Sparkles size={16} className="video-frames-generate-icon" />
+            <span>Generate</span>
+          </>
+        ) : isExtractingFrames ? (
           <>
             <Loader2 size={16} className="video-frames-generate-icon animate-spin" />
             <span>Extracting frames...</span>

@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -1523,7 +1525,7 @@ const LandingPage = () => {
               <div className="col-12 col-md-8">
                 <div
                   className="a3d-trusted d-flex align-items-center gap-1 a3d-slide-up"
-                  style={{ animationDelay: '0.2s', marginTop: window.innerWidth < 768 ? 0 : 40, flexWrap: 'nowrap' }}
+                  style={{ animationDelay: '0.2s', flexWrap: 'nowrap' }}
                 >
                   <span className="trusted-label" style={{ fontSize: 14, marginRight: 10, whiteSpace: 'nowrap', flexShrink: 0 }}>
                     Trusted by:
@@ -2379,7 +2381,7 @@ const LandingPage = () => {
                 <p className="api_subtitle">More than quality, we develop language API</p>
               </div>
 
-              <a href="/services" className="api_button">
+              <a href="/service" className="api_button">
                 Connect API
               </a>
             </div>
@@ -2827,7 +2829,7 @@ const LandingPage = () => {
                   {[
                     { name: 'Home', url: '/' },
                     { name: 'About Us', url: '/about-us' },
-                    { name: 'Services', url: '/services' },
+                    { name: 'Services', url: '/service' },
                     { name: 'Pricing', url: '/3dio/subscription' },
                     { name: 'Student', url: '/student-program' },
                   ].map((item) => (

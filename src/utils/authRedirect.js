@@ -17,7 +17,17 @@ export const getPostLoginPath = () => {
     return stored;
   }
 
-  return '/3dio/';
+  return '/3dio';
+};
+
+export const goToPostLogin = () => {
+  const path = getPostLoginPath();
+  window.location.replace(path === '/3dio/' ? '/3dio' : path);
+};
+
+export const warmPostLoginRoute = () => {
+  if (typeof window === 'undefined') return;
+  fetch('/3dio', { credentials: 'same-origin' }).catch(() => {});
 };
 
 export const markSocialLoginRedirect = (path = '/3dio/') => {

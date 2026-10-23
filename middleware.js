@@ -61,27 +61,119 @@ function maintenanceResponse() {
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #fff7fb;
+      padding: 24px;
       color: #1a1a1a;
       font-family: "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(222, 57, 150, 0.16), transparent 32%),
+        radial-gradient(circle at 80% 80%, rgba(222, 57, 150, 0.12), transparent 28%),
+        #fff7fb;
+      overflow: hidden;
     }
+    .glow {
+      position: fixed;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: rgba(222, 57, 150, 0.16);
+      filter: blur(20px);
+      animation: drift 8s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .glow-a { top: 8%; left: 12%; }
+    .glow-b { right: 8%; bottom: 10%; animation-delay: -4s; }
     main {
-      width: min(440px, calc(100% - 32px));
+      position: relative;
+      width: min(460px, 100%);
       text-align: center;
       background: #fff;
-      border: 1px solid rgba(222, 57, 150, 0.18);
-      border-radius: 20px;
-      padding: 36px 28px;
-      box-shadow: 0 16px 40px rgba(222, 57, 150, 0.12);
+      border: 1px solid rgba(222, 57, 150, 0.16);
+      border-radius: 28px;
+      padding: 42px 32px 36px;
+      box-shadow: 0 24px 60px rgba(222, 57, 150, 0.14);
+      animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1);
     }
-    h1 { margin: 0 0 10px; font-size: 28px; }
-    p { margin: 0; color: #5c5c66; line-height: 1.5; }
+    .badge {
+      position: relative;
+      width: 92px;
+      height: 92px;
+      margin: 0 auto 22px;
+    }
+    .ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px dashed rgba(222, 57, 150, 0.45);
+      animation: spin 12s linear infinite;
+    }
+    .icon {
+      position: absolute;
+      inset: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #ff5eae 0%, #de3996 100%);
+      color: #fff;
+      box-shadow: 0 12px 24px rgba(222, 57, 150, 0.32);
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+    .icon svg { width: 36px; height: 36px; }
+    h1 { margin: 0 0 10px; font-size: 30px; letter-spacing: -0.4px; }
+    p { margin: 0 auto; max-width: 320px; color: #5c5c66; line-height: 1.55; }
+    .dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 22px;
+    }
+    .dots span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #de3996;
+      animation: bounce 1.2s ease-in-out infinite;
+    }
+    .dots span:nth-child(2) { animation-delay: 0.15s; }
+    .dots span:nth-child(3) { animation-delay: 0.3s; }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(16px) scale(0.98); }
+      to { opacity: 1; transform: none; }
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+    @keyframes bounce {
+      0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+      40% { transform: translateY(-6px); opacity: 1; }
+    }
+    @keyframes drift {
+      0%, 100% { transform: translate3d(0, 0, 0); }
+      50% { transform: translate3d(18px, -16px, 0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .glow, .ring, .icon, .dots span, main { animation: none; }
+    }
   </style>
 </head>
 <body>
+  <div class="glow glow-a"></div>
+  <div class="glow glow-b"></div>
   <main>
+    <div class="badge" aria-hidden="true">
+      <span class="ring"></span>
+      <span class="icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.1 2.1-2.3-2.3 2.1-2.1z"/>
+          <path d="M16 8l2 2"/>
+        </svg>
+      </span>
+    </div>
     <h1>Under maintenance</h1>
     <p>This site is temporarily unavailable. Please check back later.</p>
+    <div class="dots" aria-hidden="true"><span></span><span></span><span></span></div>
   </main>
 </body>
 </html>`;

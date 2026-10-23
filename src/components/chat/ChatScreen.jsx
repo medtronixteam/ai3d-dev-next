@@ -25,7 +25,7 @@ const ChatScreen = ({ onClose }) => {
   // Fetch user profile when chat opens and set avatar image
   useEffect(() => {
     let cancelled = false;
-    const toStorageUrl = (path) => `https://app.ai3dscanning.com/storage/${String(path || '').replace(/^\/+/, '')}`;
+    const toStorageUrl = (path) => `https://dev-backend.ai3dscanning.com/storage/${String(path || '').replace(/^\/+/, '')}`;
     async function fetchProfile() {
       if (!token) return;
       try {

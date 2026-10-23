@@ -1,6 +1,6 @@
 export const POST_LOGIN_REDIRECT_KEY = 'postLoginRedirect';
 
-const API_ORIGIN = 'https://app.ai3dscanning.com';
+const API_ORIGIN = 'https://dev-backend.ai3dscanning.com';
 
 export const GOOGLE_AUTH_URL = `${API_ORIGIN}/auth/google`;
 export const FACEBOOK_AUTH_URL = `${API_ORIGIN}/auth/facebook`;

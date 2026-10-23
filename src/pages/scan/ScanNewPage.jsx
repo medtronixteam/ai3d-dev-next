@@ -233,9 +233,9 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     }
     const cleanPath = path.replace(/^\/+/, '');
     if (cleanPath.startsWith('storage/')) {
-      return `https://app.ai3dscanning.com/${cleanPath}`;
+      return `https://dev-backend.ai3dscanning.com/${cleanPath}`;
     }
-    return `https://app.ai3dscanning.com/storage/${cleanPath}`;
+    return `https://dev-backend.ai3dscanning.com/storage/${cleanPath}`;
   };
 
   const fetchHistory = useCallback(async () => {

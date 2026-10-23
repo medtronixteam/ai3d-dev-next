@@ -62,7 +62,7 @@ const CATEGORIES = [
 const getModelImageUrl = (image) => {
   if (!image) return model1;
   if (image.startsWith('http')) return image;
-  return `https://app.ai3dscanning.com/storage/${image.replace(/^\//, '')}`;
+  return `https://dev-backend.ai3dscanning.com/storage/${image.replace(/^\//, '')}`;
 };
 
 const getFullVideoUrl = (url) => {
@@ -70,9 +70,9 @@ const getFullVideoUrl = (url) => {
   if (url.startsWith('http')) return url;
   const cleanUrl = url.replace(/^\/+/, '');
   if (cleanUrl.startsWith('storage/')) {
-    return `https://app.ai3dscanning.com/${cleanUrl}`;
+    return `https://dev-backend.ai3dscanning.com/${cleanUrl}`;
   }
-  return `https://app.ai3dscanning.com/storage/${cleanUrl}`;
+  return `https://dev-backend.ai3dscanning.com/storage/${cleanUrl}`;
 };
 
 const makeColorLighter = (hexColor, percent = 40) => {
@@ -1897,9 +1897,9 @@ const Dashboard = () => {
         }
 
         const imgUrl = model.thumbnail
-          ? `https://app.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
+          ? `https://dev-backend.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
           : model.image
-            ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
+            ? `https://dev-backend.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
             : null;
 
         if (imgUrl) {
@@ -2058,7 +2058,7 @@ const Dashboard = () => {
     if (models.length === 0) return;
     let cancelled = false;
     const toStorageUrl = (path) =>
-      `https://app.ai3dscanning.com/storage/${String(path || '').replace(/^\/+/, '')}`;
+      `https://dev-backend.ai3dscanning.com/storage/${String(path || '').replace(/^\/+/, '')}`;
     models.forEach((model, idx) => {
       const url = model?.thumbnail
         ? toStorageUrl(model.thumbnail)
@@ -2435,9 +2435,9 @@ const Dashboard = () => {
             <div className="model-list-row">
               {currentModels.map((model, idx) => {
                 const imgUrl = model.thumbnail
-                  ? `https://app.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
+                  ? `https://dev-backend.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
                   : model.image
-                    ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
+                    ? `https://dev-backend.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
                     : model1;
                 return (
                   <div
@@ -2873,9 +2873,9 @@ const Dashboard = () => {
         fileUrl={modelFileUrl}
         imageUrl={
           selectedModelData?.thumbnail
-            ? `https://app.ai3dscanning.com/storage/${selectedModelData.thumbnail.replace(/^\/+/, '')}`
+            ? `https://dev-backend.ai3dscanning.com/storage/${selectedModelData.thumbnail.replace(/^\/+/, '')}`
             : selectedModelData?.image
-              ? `https://app.ai3dscanning.com/storage/${selectedModelData.image.replace(/^\/+/, '')}`
+              ? `https://dev-backend.ai3dscanning.com/storage/${selectedModelData.image.replace(/^\/+/, '')}`
               : model1
         }
         modelId={selectedModelData?.id}

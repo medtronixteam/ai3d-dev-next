@@ -179,9 +179,9 @@ const RightScan = ({
       const promises = libraryModels.map(async (model) => {
         const fallback = getDeterministicHexColor(model.id, model.title || model.name);
         const imgUrl = model.thumbnail
-          ? `https://app.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
+          ? `https://dev-backend.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
           : model.image
-            ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
+            ? `https://dev-backend.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
             : null;
 
         if (imgUrl) {
@@ -344,9 +344,9 @@ const RightScan = ({
       if (!url.startsWith('http') && !url.startsWith('blob:')) {
         const cleanName = url.replace(/^\/+/, '');
         if (cleanName.startsWith('storage/')) {
-          url = `https://app.ai3dscanning.com/${cleanName}`;
+          url = `https://dev-backend.ai3dscanning.com/${cleanName}`;
         } else {
-          url = `https://app.ai3dscanning.com/storage/models/${cleanName}`;
+          url = `https://dev-backend.ai3dscanning.com/storage/models/${cleanName}`;
         }
       }
       if (onSelectModel) {
@@ -509,9 +509,9 @@ const RightScan = ({
                   <>
                     {libraryModels.map((model) => {
                       const imgUrl = model.thumbnail
-                        ? `https://app.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
+                        ? `https://dev-backend.ai3dscanning.com/storage/${model.thumbnail.replace(/^\/+/, '')}`
                         : model.image
-                          ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
+                          ? `https://dev-backend.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
                           : 'https://picsum.photos/200/200?random=' + model.id;
 
                       const isImgLoaded = loadedImages[model.id];

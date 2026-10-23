@@ -2299,7 +2299,7 @@ const LandingPage = () => {
               ) : (
                 (showAllModels ? filteredModels : filteredModels.slice(0, 6)).map((card, idx) => {
                   const imgUrl = card.image
-                    ? `https://app.ai3dscanning.com/storage/${card.image.replace(/^\/+/, '')}`
+                    ? `https://dev-backend.ai3dscanning.com/storage/${card.image.replace(/^\/+/, '')}`
                     : modelFallback;
 
                   return (

@@ -293,7 +293,7 @@ const Profile = () => {
 
   useEffect(() => {
     const origin =
-      typeof window !== 'undefined' ? window.location.origin : 'https://app.ai3dscanning.com';
+      typeof window !== 'undefined' ? window.location.origin : 'https://dev-backend.ai3dscanning.com';
     setShareUrl(`${origin}/profile/share-demo`);
   }, []);
 

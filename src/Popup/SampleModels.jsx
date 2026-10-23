@@ -32,13 +32,13 @@ const getDirectModelUrl = (model) => {
       return path;
     }
     const cleanPath = path.startsWith('/') ? path : `/${path}`;
-    return `https://app.ai3dscanning.com${cleanPath}`;
+    return `https://dev-backend.ai3dscanning.com${cleanPath}`;
   }
   if (model.image) {
     const filename = model.image.split('/').pop();
     const match = filename.match(/^(\d+)/);
     if (match) {
-      return `https://app.ai3dscanning.com/storage/models/${match[1]}.glb`;
+      return `https://dev-backend.ai3dscanning.com/storage/models/${match[1]}.glb`;
     }
   }
   return null;
@@ -58,7 +58,7 @@ const SampleModels = ({ model, onClose }) => {
   const [viewCount] = useState(model?.views_count || 0);
 
   const imgUrl = model?.image
-    ? `https://app.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
+    ? `https://dev-backend.ai3dscanning.com/storage/${model.image.replace(/^\/+/, '')}`
     : null;
 
   const [imgLoaded, setImgLoaded] = useState(false);

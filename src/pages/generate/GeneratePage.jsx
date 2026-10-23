@@ -381,7 +381,7 @@ export default function GeneratePage() {
   };
 
   const handleGenerate = (event) => {
-    if (imageFile) {
+    if (imageMode) {
       event?.preventDefault();
       handleImageGenerate();
       return;
@@ -672,56 +672,6 @@ export default function GeneratePage() {
                 <span className="hero-prompt-spark hero-prompt-spark--a" aria-hidden="true" />
                 <span className="hero-prompt-spark hero-prompt-spark--b" aria-hidden="true" />
                 <span className="hero-prompt-spark hero-prompt-spark--c" aria-hidden="true" />
-                <textarea
-                  ref={promptRef}
-                  className="hero-prompt-input"
-                  placeholder="Write a prompt to generate a 3D model"
-                  value={prompt}
-                  maxLength={HERO_PROMPT_LIMIT}
-                  rows={1}
-                  onChange={(event) => setPrompt(event.target.value.slice(0, HERO_PROMPT_LIMIT))}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter' && !event.shiftKey) {
-                      event.preventDefault();
-                      handleGenerate(event);
-                    }
-                  }}
-                />
-                {prompt ? (
-                  <button
-                    type="button"
-                    className="hero-prompt-clear"
-                    aria-label="Clear prompt"
-                    onClick={clearPrompt}
-                  >
-                    <FiX size={16} />
-                  </button>
-                ) : null}
-                <div className="hero-prompt-toolbar">
-                  <button
-                    type="button"
-                    className="hero-prompt-chip hero-prompt-chip--guide"
-                    onClick={handleGuide}
-                  >
-                    <FiFileText size={14} />
-                    Guide
-                  </button>
-                  <button type="button" className="hero-prompt-chip" onClick={handleRandom}>
-                    <Sparkles size={14} />
-                    Random
-                  </button>
-                  <button
-                    type="button"
-                    className={`hero-prompt-chip hero-prompt-chip--image${imageMode ? ' is-active' : ''}`}
-                    onClick={() => setImageMode((open) => !open)}
-                  >
-                    <ImageIcon size={14} />
-                    Image to 3D
-                  </button>
-                  <span className={`hero-prompt-count${prompt.length > 400 ? ' is-hot' : ''}`}>
-                    {prompt.length}/{HERO_PROMPT_LIMIT}
-                  </span>
-                </div>
                 {imageMode ? (
                   <div
                     className={`generate-drop${isDraggingImage ? ' is-over' : ''}`}
@@ -763,7 +713,71 @@ export default function GeneratePage() {
                       </>
                     )}
                   </div>
+                ) : (
+                  <textarea
+                    ref={promptRef}
+                    className="hero-prompt-input"
+                    placeholder="Write a prompt to generate a 3D model"
+                    value={prompt}
+                    maxLength={HERO_PROMPT_LIMIT}
+                    rows={1}
+                    onChange={(event) => setPrompt(event.target.value.slice(0, HERO_PROMPT_LIMIT))}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' && !event.shiftKey) {
+                        event.preventDefault();
+                        handleGenerate(event);
+                      }
+                    }}
+                  />
+                )}
+                {!imageMode && prompt ? (
+                  <button
+                    type="button"
+                    className="hero-prompt-clear"
+                    aria-label="Clear prompt"
+                    onClick={clearPrompt}
+                  >
+                    <FiX size={16} />
+                  </button>
                 ) : null}
+                <div className="hero-prompt-toolbar">
+                  {imageMode ? (
+                    <button
+                      type="button"
+                      className="hero-prompt-chip hero-prompt-chip--image is-active"
+                      onClick={() => setImageMode(false)}
+                    >
+                      <FiFileText size={14} />
+                      Text to 3D
+                    </button>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        className="hero-prompt-chip hero-prompt-chip--guide"
+                        onClick={handleGuide}
+                      >
+                        <FiFileText size={14} />
+                        Guide
+                      </button>
+                      <button type="button" className="hero-prompt-chip" onClick={handleRandom}>
+                        <Sparkles size={14} />
+                        Random
+                      </button>
+                      <button
+                        type="button"
+                        className="hero-prompt-chip hero-prompt-chip--image"
+                        onClick={() => setImageMode(true)}
+                      >
+                        <ImageIcon size={14} />
+                        Image to 3D
+                      </button>
+                      <span className={`hero-prompt-count${prompt.length > 400 ? ' is-hot' : ''}`}>
+                        {prompt.length}/{HERO_PROMPT_LIMIT}
+                      </span>
+                    </>
+                  )}
+                </div>
                 <input
                   ref={imageInputRef}
                   type="file"

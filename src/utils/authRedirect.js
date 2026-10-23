@@ -34,8 +34,8 @@ export const markSocialLoginRedirect = (path = '/3dio/') => {
   sessionStorage.setItem(POST_LOGIN_REDIRECT_KEY, path);
 };
 
-export const startGoogleLogin = () => {
-  markSocialLoginRedirect('/3dio/');
+export const startGoogleLogin = (redirectPath = '/3dio/') => {
+  markSocialLoginRedirect(redirectPath);
   window.location.href = GOOGLE_AUTH_URL;
 };
 

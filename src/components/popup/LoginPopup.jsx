@@ -7,10 +7,9 @@ import { baseURL } from '../../config';
 import { FiEye, FiEyeOff, FiX } from 'react-icons/fi';
 import './LoginPopup.css';
 import Google from "../../assets/images/google.png";
-import Facebook from "../../assets/images/facebook.png";
-import { goToPostLogin, startFacebookLogin, startGoogleLogin } from '../../utils/authRedirect';
+import { goToPostLogin, startGoogleLogin } from '../../utils/authRedirect';
 
-const LoginPopup = ({ onClose, onLoginSuccess }) => {
+const LoginPopup = ({ onClose, onLoginSuccess, stayOnPage = false, onBeforeSocialLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -72,7 +71,9 @@ const LoginPopup = ({ onClose, onLoginSuccess }) => {
         onLoginSuccess();
       }
 
-      goToPostLogin();
+      if (!stayOnPage) {
+        goToPostLogin();
+      }
     } catch (err) {
       toast.error(err?.response?.data?.message || 'Login failed. Please check your credentials.');
     } finally {
@@ -151,17 +152,18 @@ const LoginPopup = ({ onClose, onLoginSuccess }) => {
             </div>
             <div className="or-divider">OR</div>
             <div className="social-buttons-container mt-3">
-              <button type="button" className="btn social-btn" onClick={startGoogleLogin}>
+              <button
+                type="button"
+                className="btn social-btn"
+                onClick={() => {
+                  onBeforeSocialLogin?.();
+                  startGoogleLogin(stayOnPage ? `${window.location.pathname}${window.location.search}` : '/3dio/');
+                }}
+              >
                 <span className="social-icon">
                   <img src={Google} alt="Google" />
                 </span>
                 <span className="social-text">Continue with Google</span>
-              </button>
-              <button type="button" className="btn social-btn" onClick={startFacebookLogin}>
-                <span className="social-icon">
-                  <img src={Facebook} alt="Facebook" />
-                </span>
-                <span className="social-text">Continue with Facebook</span>
               </button>
             </div>
           </form>

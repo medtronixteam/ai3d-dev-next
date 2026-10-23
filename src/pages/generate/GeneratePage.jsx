@@ -4,15 +4,17 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FaChevronDown, FaHeart, FaRegHeart } from 'react-icons/fa';
-import { FiBox, FiFileText, FiRefreshCw, FiX } from 'react-icons/fi';
-import { Sparkles } from 'lucide-react';
+import { FiBox, FiFileText, FiLock, FiRefreshCw, FiX } from 'react-icons/fi';
+import { Image as ImageIcon, Sparkles } from 'lucide-react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import { useAuth } from '../../context/AuthContext';
 import { baseURL } from '../../config';
 import paths from '../../routes/paths';
 import JoinPlatformCta from '../../components/landing/JoinPlatformCta';
 import FooterLangCurrency from '../../components/footer/FooterLangCurrency';
 import WaitlistModal from '../../components/popup/WaitlistModal';
+import LoginPopup from '../../components/popup/LoginPopup';
 import CustomLoader from '../../components/loader/CustomLoader';
 import logo from '../images/logo.png';
 import line from '../images/line.png';
@@ -26,6 +28,7 @@ import icon4 from '../../assets/images/icon4.svg';
 import icon5 from '../../assets/images/icon5.svg';
 import icon6 from '../../assets/images/icon6.svg';
 import Paid from '../../assets/icon/Paid.svg';
+import videoGif from '../../assets/images/video.gif';
 import '../LandingPage.css';
 import '../dashboard/SimplePage.css';
 import './GeneratePage.css';
@@ -51,7 +54,9 @@ const modelFileUrl = (model) => {
 };
 
 const CARDS_PER_VIEW = 24;
-const HERO_PROMPT_LIMIT = 150;
+const HERO_PROMPT_LIMIT = 500;
+const PENDING_PROMPT_KEY = 'generatePendingPrompt';
+const FAILED_STATUSES = new Set(['failed', 'error', 'cancelled', 'canceled']);
 const HERO_PROMPTS = [
   "Retrofuturistic payphone with neon 'VIDEOPHONE' sign, CRT monitor, black casing with pink and blue accents, 80s aesthetic",
   'Matte black wireless headphones on a clean studio background',
@@ -111,6 +116,17 @@ export default function GeneratePage() {
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
   const [wordIndex, setWordIndex] = useState(0);
   const [prompt, setPrompt] = useState('');
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [imageMode, setImageMode] = useState(false);
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
+  const [isDraggingImage, setIsDraggingImage] = useState(false);
+  const imageInputRef = useRef(null);
+  const imagePreviewRef = useRef('');
+  const pendingJobRef = useRef(null);
+  const buildIdRef = useRef(0);
+  const [buildLabel, setBuildLabel] = useState('');
   const [selectedType, setSelectedType] = useState('all');
   const [models, setModels] = useState([]);
   const [visibleCount, setVisibleCount] = useState(CARDS_PER_VIEW);
@@ -146,6 +162,38 @@ export default function GeneratePage() {
     field.style.height = 'auto';
     field.style.height = `${field.scrollHeight}px`;
   }, [prompt]);
+
+  useEffect(() => {
+    return () => {
+      if (imagePreviewRef.current) URL.revokeObjectURL(imagePreviewRef.current);
+    };
+  }, []);
+
+  const setImagePreviewUrl = (url) => {
+    if (imagePreviewRef.current) URL.revokeObjectURL(imagePreviewRef.current);
+    imagePreviewRef.current = url;
+    setImagePreview(url);
+  };
+
+  const acceptImage = (file) => {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please choose an image.');
+      return;
+    }
+    if (file.size > 3 * 1024 * 1024) {
+      toast.error('Image is too large (max 3MB).');
+      return;
+    }
+    setImageFile(file);
+    setImagePreviewUrl(URL.createObjectURL(file));
+    setImageMode(true);
+  };
+
+  const clearImage = () => {
+    setImageFile(null);
+    setImagePreviewUrl('');
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -233,43 +281,131 @@ export default function GeneratePage() {
     loadBatch(selectedType, CARDS_PER_VIEW, true);
   }, [selectedType, token, isSearching, loadBatch]);
 
-  const searchModels = async (query) => {
-    const title = (query ?? prompt).trim();
-    if (!title) return;
-    setIsSearching(true);
-    setLoading(true);
-    setError('');
-    setHasMore(false);
+  const createAndWatch = async (authToken, startRequest) => {
+    const buildId = buildIdRef.current + 1;
+    buildIdRef.current = buildId;
+    setIsGenerating(true);
+    setBuildLabel('Starting your 3D model');
     try {
-      const headers = { 'Content-Type': 'application/json' };
-      if (token) headers.Authorization = `Bearer ${token}`;
-      const res = await fetch(`${baseURL}/models/search`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({ title, category: selectedType }),
-      });
-      const data = await res.json();
-      const list = Array.isArray(data.models)
-        ? data.models
-        : data.models?.data || data.data || [];
-      setModels(list);
-      if (list.length === 0) setError('No results found.');
+      const projectId = await startRequest();
+      if (buildIdRef.current !== buildId) return;
+      if (!projectId) {
+        throw new Error('Could not start generation.');
+      }
+      setBuildLabel('Your model is in the queue');
+      const started = Date.now();
+      while (buildIdRef.current === buildId) {
+        if (Date.now() - started > 2 * 60 * 60 * 1000) {
+          throw new Error('This is taking longer than expected. You can open it from your projects.');
+        }
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+        if (buildIdRef.current !== buildId) return;
+        let detail;
+        try {
+          detail = await axios.get(`${baseURL}/project/detail/${projectId}`, {
+            headers: { Authorization: `Bearer ${authToken}` },
+          });
+        } catch (err) {
+          if (err?.response?.status === 404 && Date.now() - started < 30000) {
+            setBuildLabel('Your model is in the queue');
+            continue;
+          }
+          throw err;
+        }
+        if (buildIdRef.current !== buildId) return;
+        const proj = detail.data?.data || detail.data;
+        const status = String(proj?.status || '').toLowerCase();
+        if (status === 'completed') {
+          navigate('/3dio/new/scan', { state: { projectId, viewMode: true } });
+          return;
+        }
+        if (FAILED_STATUSES.has(status)) {
+          throw new Error('Model generation failed. Please try again.');
+        }
+        setBuildLabel(status === 'processing' ? 'Shaping your 3D model' : 'Your model is in the queue');
+      }
     } catch (err) {
-      setError('Search failed.');
-      setModels([]);
+      if (buildIdRef.current !== buildId) return;
+      toast.error(err?.response?.data?.message || err?.message || 'Something went wrong. Please try again.');
+      setBuildLabel('');
     } finally {
-      setLoading(false);
+      if (buildIdRef.current === buildId) setIsGenerating(false);
     }
   };
 
-  const handleSearch = (event) => {
+  const handleGeneratePrompt = async (event, authToken = token, textOverride) => {
     event?.preventDefault();
-    if (!prompt.trim()) {
-      setIsSearching(false);
+    const text = (textOverride ?? prompt).trim();
+    if (!text) {
+      toast.error('Write a prompt first.');
       return;
     }
-    searchModels(prompt);
+    if (!authToken) {
+      pendingJobRef.current = { type: 'prompt', text };
+      setShowLoginModal(true);
+      return;
+    }
+    await createAndWatch(authToken, async () => {
+      const res = await axios.post(
+        `${baseURL}/project/prompt`,
+        { name: Date.now().toString(), prompt: text },
+        { headers: { Authorization: `Bearer ${authToken}` } },
+      );
+      return res.data?.token || res.data?.data?.token || res.data?.id || res.data?.data?.id;
+    });
   };
+
+  const handleImageGenerate = async (authToken = token, fileOverride) => {
+    const file = fileOverride || imageFile;
+    if (!file) {
+      toast.error('Drop an image first.');
+      return;
+    }
+    if (!authToken) {
+      pendingJobRef.current = { type: 'image', file };
+      setShowLoginModal(true);
+      return;
+    }
+    await createAndWatch(authToken, async () => {
+      const formData = new FormData();
+      formData.append('name', Date.now().toString());
+      formData.append('file', file, file.name);
+      const response = await axios.post(`${baseURL}/project/imageTo3d`, formData, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data?.token || response.data?.data?.token;
+    });
+  };
+
+  const handleGenerate = (event) => {
+    if (imageFile) {
+      event?.preventDefault();
+      handleImageGenerate();
+      return;
+    }
+    handleGeneratePrompt(event);
+  };
+
+  const jobRunnerRef = useRef(null);
+  jobRunnerRef.current = { handleGeneratePrompt, handleImageGenerate };
+
+  useEffect(() => {
+    if (!token) return;
+    const savedPrompt = sessionStorage.getItem(PENDING_PROMPT_KEY);
+    const job = pendingJobRef.current;
+    if (!job && !savedPrompt) return;
+    pendingJobRef.current = null;
+    sessionStorage.removeItem(PENDING_PROMPT_KEY);
+    if (job?.type === 'image' && job.file) {
+      jobRunnerRef.current.handleImageGenerate(token, job.file);
+      return;
+    }
+    const text = job?.text || savedPrompt;
+    if (text) jobRunnerRef.current.handleGeneratePrompt(null, token, text);
+  }, [token]);
 
   const clearPrompt = () => {
     setPrompt('');
@@ -277,17 +413,23 @@ export default function GeneratePage() {
     setHasMore(true);
   };
 
+  const closeImageMode = () => {
+    setImageMode(false);
+    clearImage();
+  };
+
   const handleGuide = () => {
+    closeImageMode();
     setPrompt(HERO_PROMPTS[0].slice(0, HERO_PROMPT_LIMIT));
   };
 
   const handleRandom = () => {
+    closeImageMode();
     const next = HERO_PROMPTS[Math.floor(Math.random() * HERO_PROMPTS.length)].slice(
       0,
       HERO_PROMPT_LIMIT,
     );
     setPrompt(next);
-    searchModels(next);
   };
 
   const handleCategory = (type) => {
@@ -340,6 +482,8 @@ export default function GeneratePage() {
 
   return (
     <div className="generate-page landing-page-section ai_3d_landing" ref={pageRef}>
+      <img src={videoGif} alt="" className="generate-page-motion" />
+      <div className="generate-page-fade" aria-hidden="true" />
       <div className="main_head">
         <main className="container py-sm-4 pt-4">
           <header
@@ -523,7 +667,7 @@ export default function GeneratePage() {
               </div>
             </div>
             <div className="generate-search-wrap">
-              <form className="hero-prompt" onSubmit={handleSearch}>
+              <form className="hero-prompt" onSubmit={handleGenerate}>
                 <span className="hero-prompt-shine" aria-hidden="true" />
                 <span className="hero-prompt-spark hero-prompt-spark--a" aria-hidden="true" />
                 <span className="hero-prompt-spark hero-prompt-spark--b" aria-hidden="true" />
@@ -531,7 +675,7 @@ export default function GeneratePage() {
                 <textarea
                   ref={promptRef}
                   className="hero-prompt-input"
-                  placeholder="Search 3D Models"
+                  placeholder="Write a prompt to generate a 3D model"
                   value={prompt}
                   maxLength={HERO_PROMPT_LIMIT}
                   rows={1}
@@ -539,7 +683,7 @@ export default function GeneratePage() {
                   onKeyDown={(event) => {
                     if (event.key === 'Enter' && !event.shiftKey) {
                       event.preventDefault();
-                      handleSearch(event);
+                      handleGenerate(event);
                     }
                   }}
                 />
@@ -547,7 +691,7 @@ export default function GeneratePage() {
                   <button
                     type="button"
                     className="hero-prompt-clear"
-                    aria-label="Clear search"
+                    aria-label="Clear prompt"
                     onClick={clearPrompt}
                   >
                     <FiX size={16} />
@@ -566,11 +710,101 @@ export default function GeneratePage() {
                     <Sparkles size={14} />
                     Random
                   </button>
-                  <span className={`hero-prompt-count${prompt.length > 100 ? ' is-hot' : ''}`}>
+                  <button
+                    type="button"
+                    className={`hero-prompt-chip hero-prompt-chip--image${imageMode ? ' is-active' : ''}`}
+                    onClick={() => setImageMode((open) => !open)}
+                  >
+                    <ImageIcon size={14} />
+                    Image to 3D
+                  </button>
+                  <span className={`hero-prompt-count${prompt.length > 400 ? ' is-hot' : ''}`}>
                     {prompt.length}/{HERO_PROMPT_LIMIT}
                   </span>
                 </div>
+                {imageMode ? (
+                  <div
+                    className={`generate-drop${isDraggingImage ? ' is-over' : ''}`}
+                    onDragOver={(event) => {
+                      event.preventDefault();
+                      setIsDraggingImage(true);
+                    }}
+                    onDragLeave={() => setIsDraggingImage(false)}
+                    onDrop={(event) => {
+                      event.preventDefault();
+                      setIsDraggingImage(false);
+                      acceptImage(event.dataTransfer.files?.[0]);
+                    }}
+                    onClick={() => imageInputRef.current?.click()}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        imageInputRef.current?.click();
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                  >
+                    {imagePreview ? (
+                      <div className="generate-drop-preview" onClick={(event) => event.stopPropagation()}>
+                        <img src={imagePreview} alt="" />
+                        <span>{imageFile?.name}</span>
+                        <button type="button" aria-label="Remove image" onClick={clearImage}>
+                          <FiX size={14} />
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        <span className="generate-drop-icon">
+                          <ImageIcon size={22} />
+                        </span>
+                        <strong>Drag and drop an image</strong>
+                        <small>or click to browse · JPG, PNG</small>
+                      </>
+                    )}
+                  </div>
+                ) : null}
+                <input
+                  ref={imageInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  hidden
+                  onChange={(event) => {
+                    acceptImage(event.target.files?.[0]);
+                    event.target.value = '';
+                  }}
+                />
               </form>
+              <div className="generate-actions">
+                {!token ? (
+                  <button
+                    type="button"
+                    className="generate-login-chip"
+                    onClick={() => setShowLoginModal(true)}
+                  >
+                    <FiLock size={14} />
+                    Login for more options
+                  </button>
+                ) : null}
+                <button
+                  type="button"
+                  className="generate-go-btn"
+                  onClick={handleGenerate}
+                  disabled={isGenerating}
+                >
+                  <Sparkles size={16} />
+                  {isGenerating ? 'Generating...' : 'Generate'}
+                </button>
+              </div>
+              {buildLabel ? (
+                <div className="generate-build" role="status">
+                  <span className="generate-build-dot" aria-hidden="true" />
+                  <div>
+                    <strong>{buildLabel}</strong>
+                    <p>Stay on this page. Your model will open as soon as it is ready.</p>
+                  </div>
+                </div>
+              ) : null}
             </div>
 
             <div className="category-row" style={{ justifyContent: 'center', marginBottom: 12 }}>
@@ -879,6 +1113,18 @@ export default function GeneratePage() {
         onClose={() => setSelectedModel(null)}
       />
       <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
+      {showLoginModal ? (
+        <LoginPopup
+          stayOnPage
+          onClose={() => setShowLoginModal(false)}
+          onLoginSuccess={() => setShowLoginModal(false)}
+          onBeforeSocialLogin={() => {
+            const job = pendingJobRef.current;
+            const text = job?.type === 'prompt' ? job.text : prompt.trim();
+            if (text) sessionStorage.setItem(PENDING_PROMPT_KEY, text);
+          }}
+        />
+      ) : null}
     </div>
   );
 }

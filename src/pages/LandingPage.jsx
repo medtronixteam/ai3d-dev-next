@@ -102,6 +102,7 @@ import { isPreLaunchActive } from '../utils/platformLaunch';
 import { toast } from 'react-toastify';
 import SampleModels from '../Popup/SampleModels';
 
+const modelFallback = scan;
 
 const LandingPage = () => {
   const { pathname, hash, key } = useLocation();

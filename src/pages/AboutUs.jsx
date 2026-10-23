@@ -157,15 +157,18 @@ const AboutUs = () => {
                   </Link>
 
                   <Link
+                    to="/generate"
+                    className={`a3d-nav-link ${location.pathname.startsWith('/generate') ? 'active' : ''}`}
+                  >
+                    Generate
+                  </Link>
+
+                  <Link
                     to="/3dio/api-sdk"
                     className={`a3d-nav-link ${location.pathname === '/3dio/api-sdk' ? 'active' : ''}`}
                   >
                     API &amp; Pricing
                   </Link>
-
-                  <a href="/#3d-Sample" className="a3d-nav-link">
-                    3D Samples
-                  </a>
 
                   <a href="/#Leadership" className="a3d-nav-link">
                     Leadership
@@ -205,12 +208,16 @@ const AboutUs = () => {
                 <Link to="https://calendly.com/arslan-medtronix/30min" target="_blank" rel="noopener noreferrer" className="a3d-nav-link">
                   Schedule Meeting
                 </Link>
+                <Link
+                  to="/generate"
+                  className={`a3d-nav-link ${location.pathname.startsWith('/generate') ? 'active' : ''}`}
+                  onClick={() => setIsOpen(false)}
+                >
+                  Generate
+                </Link>
                 <Link to="/3dio/api-sdk" className="a3d-nav-link" onClick={() => setIsOpen(false)}>
                   API &amp; Pricing
                 </Link>
-                <a href="/#3d-Sample" className="a3d-nav-link" onClick={() => setIsOpen(false)}>
-                  3D Samples
-                </a>
                 <a href="/#Leadership" className="a3d-nav-link" onClick={() => setIsOpen(false)}>
                   Leadership
                 </a>

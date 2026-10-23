@@ -489,7 +489,7 @@ const VideoModal = ({ open, videoUrl, onClose }) => {
 const MODEL_VIEWER_ENV =
   'https://modelviewer.dev/shared-assets/environments/neutral.hdr';
 
-function ModelCardVideoModal({
+export function ModelCardVideoModal({
   open,
   fileUrl,
   imageUrl,
@@ -2053,6 +2053,7 @@ const Dashboard = () => {
   };
 
   const [imgLoadedArr, setImgLoadedArr] = React.useState([]);
+  const [failedThumbs, setFailedThumbs] = React.useState({});
   React.useEffect(() => {
     setImgLoadedArr(Array(models.length).fill(false));
     if (models.length === 0) return;
@@ -2477,7 +2478,7 @@ const Dashboard = () => {
                         borderRadius: 12,
                       }}
                     >
-                      {!imgLoadedArr[idx] && (
+                      {!imgLoadedArr[idx] && !failedThumbs[model.id] && (
                         <div
                           style={{
                             position: 'absolute',
@@ -2499,9 +2500,15 @@ const Dashboard = () => {
                         </div>
                       )}
 
+                      {failedThumbs[model.id] ? (
+                        <div className="model-card-fallback">
+                          <FiBox size={28} />
+                          <span>No preview</span>
+                        </div>
+                      ) : (
                       <img
                         src={imgUrl}
-                        alt={model.title || model.name}
+                        alt=""
                         className="model-card-img"
                         style={{
                           opacity: imgLoadedArr[idx] ? 1 : 0,
@@ -2515,7 +2522,11 @@ const Dashboard = () => {
                             return newArr;
                           });
                         }}
+                        onError={() => {
+                          setFailedThumbs((prev) => (prev[model.id] ? prev : { ...prev, [model.id]: true }));
+                        }}
                       />
+                      )}
 
                       <button
                         className="rp-fav-btn"

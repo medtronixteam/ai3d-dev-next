@@ -1,0 +1,540 @@
+.generate-page .generate-hero {
+  padding: 12px 0 8px;
+}
+
+.generate-page,
+.generate-page .main_head,
+.generate-page .generate-hero {
+  background: #ffffff;
+}
+
+.generate-page .generate-hero h2 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  line-height: 1.25;
+  letter-spacing: -1px;
+  color: #111111;
+}
+
+.generate-page .generate-accent {
+  color: var(--primary-color, #de3996);
+}
+
+.generate-page .a3d-nav-link,
+.generate-page .a3d-book-demo-btn,
+.generate-page .a3d-join-btn {
+  white-space: nowrap;
+}
+
+.generate-page .generate-hero p {
+  margin-bottom: 1.25rem;
+}
+
+.generate-page .generate-search-wrap {
+  max-width: 760px;
+  margin: 0 auto 1.5rem;
+}
+
+.generate-page .hero-prompt {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: 100%;
+  margin: 0;
+  text-align: left;
+  background: transparent;
+  border: 1px solid rgba(222, 57, 150, 0.16);
+  border-radius: 16px;
+  padding: 10px 14px 8px;
+  box-shadow: 0 8px 24px rgba(222, 57, 150, 0.08);
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.55s ease, border-color 0.35s ease;
+}
+
+.generate-page .hero-prompt::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 180%;
+  aspect-ratio: 1;
+  background: conic-gradient(from 0deg, #de3996, #8b5cf6, #38bdf8, #de3996 70%, #ff8ac4);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  z-index: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.generate-page .hero-prompt::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: 14px;
+  background: #ffffff;
+  z-index: 0;
+  pointer-events: none;
+  transition: background 0.35s ease;
+}
+
+.generate-page .hero-prompt > * {
+  position: relative;
+  z-index: 1;
+}
+
+.generate-page .hero-prompt:focus-within {
+  transform: translateY(-4px);
+  border-color: transparent;
+  box-shadow:
+    0 18px 36px rgba(222, 57, 150, 0.16),
+    0 0 24px rgba(139, 92, 246, 0.18);
+}
+
+.generate-page .hero-prompt:focus-within::before {
+  opacity: 1;
+  animation: hero-prompt-orbit 2.8s linear infinite;
+}
+
+@keyframes hero-prompt-orbit {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.generate-page .hero-prompt-shine {
+  position: absolute;
+  inset: 2px;
+  border-radius: 14px;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.72) 48%,
+    transparent 64%
+  );
+  transform: translateX(-130%);
+  opacity: 0;
+}
+
+.generate-page .hero-prompt:focus-within .hero-prompt-shine {
+  animation: hero-prompt-shine 1.15s ease;
+}
+
+.generate-page .hero-prompt-spark {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #de3996;
+  box-shadow: 0 0 8px #de3996;
+  opacity: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.generate-page .hero-prompt-spark--a {
+  left: 14%;
+  top: 22%;
+}
+
+.generate-page .hero-prompt-spark--b {
+  right: 16%;
+  top: 34%;
+  background: #8b5cf6;
+  box-shadow: 0 0 8px #8b5cf6;
+}
+
+.generate-page .hero-prompt-spark--c {
+  left: 48%;
+  bottom: 18%;
+  background: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8;
+}
+
+.generate-page .hero-prompt:focus-within .hero-prompt-spark {
+  animation: hero-prompt-spark 1.5s ease-out;
+}
+
+.generate-page .hero-prompt:focus-within .hero-prompt-spark--b {
+  animation-delay: 0.12s;
+}
+
+.generate-page .hero-prompt:focus-within .hero-prompt-spark--c {
+  animation-delay: 0.24s;
+}
+
+@keyframes hero-prompt-shine {
+  0% {
+    transform: translateX(-130%);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(130%);
+    opacity: 0;
+  }
+}
+
+@keyframes hero-prompt-spark {
+  0% {
+    transform: translateY(8px) scale(0.3);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-16px) scale(1);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .generate-page .hero-prompt,
+  .generate-page .hero-prompt::before,
+  .generate-page .hero-prompt-shine,
+  .generate-page .hero-prompt-spark {
+    transition: none;
+    animation: none;
+  }
+
+  .generate-page .hero-prompt:focus-within {
+    transform: none;
+  }
+}
+
+.generate-page .hero-prompt-input {
+  display: block;
+  width: 100%;
+  min-height: 40px;
+  max-height: 160px;
+  resize: none;
+  overflow: hidden;
+  scrollbar-width: none;
+  border: none;
+  outline: none;
+  background: transparent !important;
+  color: #2b2b33;
+  font-size: 14px;
+  line-height: 1.4;
+  padding: 2px 28px 0 0;
+  box-shadow: none;
+}
+
+.generate-page .hero-prompt-input::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.generate-page .hero-prompt-input::placeholder {
+  color: #9a9aa8;
+}
+
+.generate-page .hero-prompt-clear {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #6b6b78;
+  cursor: pointer;
+}
+
+.generate-page .hero-prompt-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.generate-page .hero-prompt-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 8px;
+  border: 1px solid #e6e6ee;
+  background: #ffffff;
+  color: #3a3a44;
+  padding: 5px 10px;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.generate-page .hero-prompt-chip--guide {
+  background: #e8f7ef;
+  border-color: #b7e4c7;
+  color: #1b7a45;
+}
+
+.generate-page .hero-prompt-count {
+  margin-left: auto;
+  color: #8a8a96;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.generate-page .hero-prompt-count.is-hot {
+  color: #e07a00;
+}
+
+/* Keep this page light when the dashboard theme is dark. */
+
+.generate-page .generate-models {
+  width: calc(100vw - 32px);
+  max-width: calc(100vw - 32px);
+  margin-left: calc(50% - 50vw + 16px);
+  padding: 8px 0 0;
+  box-sizing: border-box;
+}
+
+.generate-page .generate-models .container-section,
+.generate-page .container-section:last-child {
+  margin: 0 auto !important;
+  max-width: none;
+  width: 100%;
+}
+
+.generate-page .model-list-row {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px !important;
+  justify-content: stretch;
+}
+
+.generate-page .model-card {
+  width: 100% !important;
+  min-width: 0;
+  height: 9.5rem;
+}
+
+.generate-page .model-card-content {
+  min-width: 0;
+}
+
+.generate-page .model-card-desc {
+  width: 100%;
+}
+
+@media (max-width: 1120px) {
+  .generate-page .model-list-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 991px) {
+  .generate-page .model-list-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 575px) {
+  .generate-page .model-list-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.generate-page .aithreed .footer {
+  margin-top: 1.25rem;
+}
+
+.generate-page .generate-load-more {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 22px auto 0;
+  padding: 8px 8px 8px 22px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #de3996 0%, #b5177a 100%);
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff;
+  color-scheme: light;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  box-shadow: 0 10px 24px rgba(222, 57, 150, 0.28);
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+}
+
+.generate-page .generate-load-more > span:not(.generate-load-more__icon) {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff;
+}
+
+.generate-page .generate-load-more__icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff !important;
+  color: #de3996 !important;
+  -webkit-text-fill-color: #de3996;
+  transition: transform 0.25s ease;
+}
+
+.generate-page .generate-load-more:hover:not(:disabled) {
+  color: #ffffff;
+  filter: brightness(1.05);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px rgba(222, 57, 150, 0.36);
+}
+
+.generate-page .generate-load-more:hover:not(:disabled) .generate-load-more__icon {
+  transform: translateY(2px);
+}
+
+.generate-page .generate-load-more:disabled {
+  opacity: 0.75;
+  cursor: wait;
+}
+
+.generate-page .generate-load-more__icon.is-loading {
+  animation: generate-load-spin 0.8s linear infinite;
+}
+
+@keyframes generate-load-spin {
+  to {
+    transform: rotate(180deg);
+  }
+}
+
+.generate-page .generate-mobile-products {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 0 8px 8px;
+}
+
+[data-theme='dark'] .generate-page,
+[data-theme='dark'] .generate-page .main_head,
+[data-theme='dark'] .generate-page .generate-hero,
+[data-theme='dark'] .generate-page .studio-section {
+  background: #ffffff !important;
+  color: #111111 !important;
+}
+
+[data-theme='dark'] .generate-page .studio-section *:not(.loader):not(.loader *):not(.generate-load-more):not(.generate-load-more *) {
+  color: #111111 !important;
+}
+
+[data-theme='dark'] .generate-page .generate-hero h2,
+[data-theme='dark'] .generate-page .generate-hero p,
+[data-theme='dark'] .generate-page .model-card-title {
+  color: #111111 !important;
+}
+
+[data-theme='dark'] .generate-page .studio-section .container-section .generate-load-more,
+[data-theme='dark'] .generate-page .generate-load-more {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background: linear-gradient(135deg, #de3996 0%, #b5177a 100%) !important;
+}
+
+[data-theme='dark'] .generate-page .studio-section .container-section .generate-load-more > span:not(.generate-load-more__icon),
+[data-theme='dark'] .generate-page .generate-load-more > span:not(.generate-load-more__icon) {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background: transparent !important;
+}
+
+[data-theme='dark'] .generate-page .generate-load-more .generate-load-more__icon,
+[data-theme='dark'] .generate-page .studio-section .container-section .generate-load-more .generate-load-more__icon {
+  color: #de3996 !important;
+  -webkit-text-fill-color: #de3996 !important;
+  background: #ffffff !important;
+}
+
+[data-theme='dark'] .generate-page .generate-accent,
+[data-theme='dark'] .generate-page .generate-flip-word {
+  color: #de3996 !important;
+}
+
+[data-theme='dark'] .generate-page .studio-section .model-card .model-card-desc {
+  color: #666666 !important;
+}
+
+[data-theme='dark'] .generate-page .studio-section .model-card .model-card-fallback {
+  background: rgba(222, 57, 150, 0.08) !important;
+  color: #de3996 !important;
+}
+
+[data-theme='dark'] .generate-page .studio-section .model-card .model-card-fallback span {
+  color: #8a8a96 !important;
+}
+
+[data-theme='dark'] .generate-page .category-label {
+  color: #3d3c3c !important;
+}
+
+[data-theme='dark'] .generate-page .category-label.active {
+  color: #e6339a !important;
+}
+
+[data-theme='dark'] .generate-page .category-icon-circle {
+  background: #fde9f2 !important;
+}
+
+[data-theme='dark'] .generate-page .category-icon-circle.active {
+  background: #f8c6e6 !important;
+  color: inherit !important;
+}
+
+[data-theme='dark'] .generate-page .category-icon,
+[data-theme='dark'] .generate-page .category-icon-circle .category-icon {
+  filter: none !important;
+  color: #787373 !important;
+}
+
+[data-theme='dark'] .generate-page .category-icon.active,
+[data-theme='dark'] .generate-page .category-icon-circle.active .category-icon {
+  filter: invert(36%) sepia(97%) saturate(7492%) hue-rotate(312deg) brightness(97%) contrast(101%) !important;
+  color: inherit !important;
+}
+
+[data-theme='dark'] .generate-page .hero-prompt {
+  border-color: rgba(222, 57, 150, 0.16);
+  box-shadow: 0 8px 24px rgba(222, 57, 150, 0.08);
+}
+
+[data-theme='dark'] .generate-page .hero-prompt::after {
+  background: #ffffff;
+}
+
+[data-theme='dark'] .generate-page .hero-prompt-input {
+  color: #2b2b33 !important;
+}
+
+[data-theme='dark'] .generate-page .hero-prompt-input::placeholder {
+  color: #9a9aa8;
+}
+
+[data-theme='dark'] .generate-page .hero-prompt-chip {
+  border-color: #e6e6ee;
+  background: #ffffff;
+  color: #3a3a44;
+}
+
+[data-theme='dark'] .generate-page .hero-prompt-chip--guide {
+  background: #e8f7ef;
+  border-color: #b7e4c7;
+  color: #1b7a45;
+}
+
+[data-theme='dark'] .generate-page .hero-prompt-count {
+  color: #8a8a96;
+}

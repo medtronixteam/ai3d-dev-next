@@ -141,7 +141,12 @@ const HeroSection = ({ scrollContainerRef }) => {
                   <Link to="https://calendly.com/arslan-medtronix/30min" className="a3d-nav-link">
                     Schedule Meeting
                   </Link>
-                  <a href="/#3d-Sample"  className="a3d-nav-link">3D Samples</a>
+                  <Link
+                    to="/generate"
+                    className={`a3d-nav-link ${location.pathname.startsWith('/generate') ? 'active' : ''}`}
+                  >
+                    Generate
+                  </Link>
                   <a href="/#Leadership" className="a3d-nav-link">Leadership</a>
                   {/* <a href="/referral"    className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`}>
                     Referral
@@ -180,7 +185,13 @@ const HeroSection = ({ scrollContainerRef }) => {
             <nav className="d-flex flex-column gap-2 px-3 pb-3">
               <Link to="/"        className={`a3d-nav-link ${location.pathname === '/'        ? 'active' : ''}`}>Home</Link>
               <Link to="https://calendly.com/arslan-medtronix/30min" className="a3d-nav-link">Schedule Meeting</Link>
-              <a href="#3d-Sample"  className="a3d-nav-link">3D Samples</a>
+              <Link
+                to="/generate"
+                className={`a3d-nav-link ${location.pathname.startsWith('/generate') ? 'active' : ''}`}
+                onClick={() => setIsOpen(false)}
+              >
+                Generate
+              </Link>
               <a href="#Leadership" className="a3d-nav-link">Leadership</a>
               {/* <a href="/referral"   className={`a3d-nav-link ${location.pathname === '/referral' ? 'active' : ''}`}>Referral</a> */}
               <div className="d-flex flex-column gap-2">

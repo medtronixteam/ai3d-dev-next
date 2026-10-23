@@ -42,7 +42,7 @@ const CustomNavbar = () => {
               <a href="#services">Services</a>
             </li>
             <li>
-              <a href="#sample">3D Samples</a>
+              <Link to="/generate">Generate</Link>
             </li>
             <li>
               <a href="#team">Leadership</a>

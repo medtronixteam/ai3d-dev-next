@@ -230,9 +230,12 @@ const Service = () => {
                       Home
                     </Link>
 
-                    <a href="/#3d-Sample" className="a3d-nav-link">
-                      3D Samples
-                    </a>
+                    <Link
+                      to="/generate"
+                      className={`a3d-nav-link ${location.pathname.startsWith('/generate') ? 'active' : ''}`}
+                    >
+                      Generate
+                    </Link>
 
                     <a href="/#Leadership" className="a3d-nav-link">
                       Leadership
@@ -287,8 +290,12 @@ const Service = () => {
                     Home
                   </Link>
 
-                  <Link to="/#3d-Sample" className="a3d-nav-link">
-                    3D Samples
+                  <Link
+                    to="/generate"
+                    className={`a3d-nav-link ${location.pathname.startsWith('/generate') ? 'active' : ''}`}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Generate
                   </Link>
 
                   <Link to="/#Leadership" className="a3d-nav-link">

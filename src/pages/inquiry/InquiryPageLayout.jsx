@@ -158,14 +158,17 @@ const InquiryPageLayout = ({ variant, children }) => {
                     Schedule Meeting
                   </Link>
                   <Link
+                    to="/generate"
+                    className={`a3d-nav-link ${location.pathname.startsWith('/generate') ? 'active' : ''}`}
+                  >
+                    Generate
+                  </Link>
+                  <Link
                     to="/3dio/api-sdk"
                     className={`a3d-nav-link ${location.pathname === '/3dio/api-sdk' ? 'active' : ''}`}
                   >
                     API & Pricing
                   </Link>
-                  <a href="/#3d-Sample" className="a3d-nav-link">
-                    3D Samples
-                  </a>
                   <a href="/#Leadership" className="a3d-nav-link">
                     Leadership
                   </a>
@@ -201,14 +204,18 @@ const InquiryPageLayout = ({ variant, children }) => {
                 Schedule Meeting
               </Link>
               <Link
+                to="/generate"
+                className={`a3d-nav-link ${location.pathname.startsWith('/generate') ? 'active' : ''}`}
+                onClick={() => setIsOpen(false)}
+              >
+                Generate
+              </Link>
+              <Link
                 to="/3dio/api-sdk"
                 className={`a3d-nav-link ${location.pathname === '/3dio/api-sdk' ? 'active' : ''}`}
               >
                 API & Pricing
               </Link>
-              <a href="/#3d-Sample" className="a3d-nav-link">
-                3D Samples
-              </a>
               <a href="/#Leadership" className="a3d-nav-link">
                 Leadership
               </a>

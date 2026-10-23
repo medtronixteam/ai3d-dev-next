@@ -279,9 +279,12 @@ const ContributorLandingPage = () => {
                   Schedule Meeting
                 </Link>
 
-                <a href="/#3d-Sample" className="a3d-nav-link">
-                  3D Samples
-                </a>
+                <Link
+                  to="/generate"
+                  className={`a3d-nav-link ${location.pathname.startsWith('/generate') ? 'active' : ''}`}
+                >
+                  Generate
+                </Link>
 
                 <a href="/#Leadership" className="a3d-nav-link">
                   Leadership
@@ -331,9 +334,13 @@ const ContributorLandingPage = () => {
                 Schedule Meeting
               </Link>
 
-              <a href="#3d-Sample" className="a3d-nav-link">
-                3D Samples
-              </a>
+              <Link
+                to="/generate"
+                className={`a3d-nav-link ${location.pathname.startsWith('/generate') ? 'active' : ''}`}
+                onClick={() => setIsOpen(false)}
+              >
+                Generate
+              </Link>
 
               <a href="#Leadership" className="a3d-nav-link">
                 Leadership

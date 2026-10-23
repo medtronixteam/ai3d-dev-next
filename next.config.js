@@ -62,7 +62,7 @@ const nextConfig = {
       },
       {
         source: '/api/:path*',
-        destination: 'https://app.ai3dscanning.com/api/:path*',
+        destination: 'https://dev-backend.ai3dscanning.com/api/:path*',
       },
     ];
   },

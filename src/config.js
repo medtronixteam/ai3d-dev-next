@@ -1,4 +1,4 @@
-const remoteApiBaseURL = 'https://app.ai3dscanning.com/api';
+const remoteApiBaseURL = 'https://dev-backend.ai3dscanning.com/api';
 const remoteAiApiBaseURL = 'https://ai3d_api.ai3dscanning.com';
 
 const useLocalProxy = () => {

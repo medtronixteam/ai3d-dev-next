@@ -41,7 +41,7 @@
 
 .custom-sidebar .nav-link.active {
   background: white;
-  color: black;
+  color: var(--primary-color, #e91e63);
   font-weight: 600;
 }
 
@@ -59,8 +59,8 @@
 }
 
 .custom-sidebar .nav-link.active:hover {
- 
-  color: black;
+  background: white;
+  color: var(--primary-color, #e91e63);
   font-weight: 600;
 }
 
@@ -108,7 +108,7 @@
 }
 
 .custom-sidebar .nav-link.active img {
-  filter: brightness(0) ;
+  filter: brightness(0) saturate(100%) invert(72%) sepia(21%) saturate(7440%) hue-rotate(300deg) brightness(95%) contrast(101%);
 }
 
 

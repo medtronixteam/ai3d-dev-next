@@ -21,6 +21,7 @@ import Logo from '../../pages/images/logo.png';
 import SingleImgIcon from '../../pages/images/icons/single-img.svg';
 import WorkspaceSelect from '../workspace/WorkspaceSelect';
 import ImageUploadGuidelinesModal from '../popup/ImageUploadGuidelinesModal';
+import ModelDetailsCard from './ModelDetailsCard';
 import {
   markImageGuidelinesDismissed,
   shouldShowImageGuidelines,
@@ -48,6 +49,10 @@ const LeftScan = ({
   isGenerating,
   modelReady,
   generatedPrompt,
+  projectMeta,
+  projectType,
+  modelUrl,
+  modelThumbnail,
   copyPrompt,
   sharePrompt,
   isEnhancing,
@@ -341,11 +346,23 @@ const LeftScan = ({
   const showPromptBox = hasPrompt || (!hasSingleImage && !hasMultipleImages && !hasVideo);
   const showMultipleImagesBox = hasMultipleImages || (!hasSingleImage && !hasPrompt && !hasVideo);
   const showVideoBox = hasVideo || (!hasSingleImage && !hasPrompt && !hasMultipleImages);
+  const showModelDetails = modelReady || (isViewOnly && Boolean(generatedPrompt));
 
   return (
     <div className="col-lg-3 col-md-4 pe-md-3 negative-margin">
       <img src={Logo} alt="logo" className="platform-logo mb-2 mx-3" />
       <div className="side-column p-3">
+        {showModelDetails ? (
+          <ModelDetailsCard
+            projectMeta={projectMeta}
+            projectType={projectType}
+            generatedPrompt={generatedPrompt}
+            modelUrl={modelUrl}
+            thumbnail={modelThumbnail}
+            onCopy={copyPrompt}
+          />
+        ) : (
+        <>
         <h5 className="fw-bold mb-2">
           New <span className="text-pink">Model</span>
         </h5>
@@ -732,6 +749,8 @@ const LeftScan = ({
             </>
           )}
         </button>
+        )}
+        </>
         )}
       </div>
 

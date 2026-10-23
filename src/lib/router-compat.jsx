@@ -307,12 +307,23 @@ export const NavLink = forwardRef(function NavLink(
   const dest = to ?? href ?? '';
   const url = typeof dest === 'string' ? dest : toHref(dest);
   const active = isNavActive(pathname, url, end);
-  const resolvedClass = typeof className === 'function' ? className({ isActive: active, isPending: false }) : className;
-  const resolvedStyle = typeof style === 'function' ? style({ isActive: active, isPending: false }) : style;
-  const content = typeof children === 'function' ? children({ isActive: active, isPending: false }) : children;
+  const navState = { isActive: active, isPending: false };
+  const resolvedClass =
+    typeof className === 'function'
+      ? className(navState)
+      : [className, active ? 'active' : null].filter(Boolean).join(' ');
+  const resolvedStyle = typeof style === 'function' ? style(navState) : style;
+  const content = typeof children === 'function' ? children(navState) : children;
 
   return (
-    <Link ref={ref} to={dest} className={resolvedClass} style={resolvedStyle} {...rest}>
+    <Link
+      ref={ref}
+      to={dest}
+      className={resolvedClass}
+      style={resolvedStyle}
+      aria-current={active ? 'page' : undefined}
+      {...rest}
+    >
       {content}
     </Link>
   );

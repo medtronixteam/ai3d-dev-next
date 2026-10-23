@@ -152,24 +152,26 @@ const ResetPassword = () => {
             <div className="mb-3">
               <label className="form-label">Email address</label>
               <div style={{ position: 'relative' }}>
-                <FiMail 
-                  style={{ 
-                    position: 'absolute', 
-                    left: 12, 
-                    top: '50%', 
-                    transform: 'translateY(-50%)', 
-                    color: '#999',
-                    fontSize: 18
-                  }} 
+                <FiMail
+                  size={18}
+                  style={{
+                    position: 'absolute',
+                    left: 12,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: '#9a9ab0',
+                    zIndex: 2,
+                    pointerEvents: 'none',
+                  }}
                 />
               <input
                 type="email"
-                className="form-control"
+                className="form-control field-icon-input"
                 placeholder="Enter your email"
                 required
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                  style={{ paddingLeft: 40 }}
+                  style={{ paddingLeft: 42 }}
               />
             </div>
             </div>
@@ -234,19 +236,21 @@ const ResetPassword = () => {
             <div className="mb-3" style={{ position: 'relative' }}>
               <label className="form-label">New Password</label>
               <div style={{ position: 'relative' }}>
-                <FiLock 
-                  style={{ 
-                    position: 'absolute', 
-                    left: 12, 
-                    top: '50%', 
-                    transform: 'translateY(-50%)', 
-                    color: '#999',
-                    fontSize: 18
-                  }} 
+                <FiLock
+                  size={18}
+                  style={{
+                    position: 'absolute',
+                    left: 12,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: '#9a9ab0',
+                    zIndex: 2,
+                    pointerEvents: 'none',
+                  }}
                 />
               <input
                 type={showPassword ? 'text' : 'password'}
-                className="form-control"
+                className="form-control field-icon-input"
                 placeholder="New password"
                 required
                 value={password}
@@ -255,7 +259,7 @@ const ResetPassword = () => {
                 autoComplete="off"
                 onCopy={(e) => e.preventDefault()}
                 onPaste={(e) => e.preventDefault()}
-                  style={{ paddingLeft: 40,  backgroundColor: '#F9F9F9',border: 'none' }}
+                  style={{ paddingLeft: 42 }}
               />
               <span
                   style={{ 
@@ -279,20 +283,21 @@ const ResetPassword = () => {
             <div className="mb-3" style={{ position: 'relative' }}>
               <label className="form-label">Confirm Password</label>
               <div style={{ position: 'relative' }}>
-                <FiLock 
-                  style={{ 
-                    position: 'absolute', 
-                    left: 12, 
-                    top: '50%', 
-                    transform: 'translateY(-50%)', 
-                    color: '#999',
-                    fontSize: 18
-                  }} 
+                <FiLock
+                  size={18}
+                  style={{
+                    position: 'absolute',
+                    left: 12,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: '#9a9ab0',
+                    zIndex: 2,
+                    pointerEvents: 'none',
+                  }}
                 />
-                
               <input
                 type={showCPassword ? 'text' : 'password'}
-                className="form-control"
+                className="form-control field-icon-input"
                 placeholder="Confirm new password"
                 required
                 value={cPassword}
@@ -301,7 +306,7 @@ const ResetPassword = () => {
                 autoComplete="off"
                 onCopy={(e) => e.preventDefault()}
                 onPaste={(e) => e.preventDefault()}
-                  style={{ paddingLeft: 40, backgroundColor: '#F9F9F9', border: 'none' }}
+                  style={{ paddingLeft: 42 }}
               />
               <span
                   style={{ 

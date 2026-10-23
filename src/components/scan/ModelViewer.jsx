@@ -10,14 +10,28 @@ import {
   ContactShadows
 } from "@react-three/drei";
 
-const Model = ({ url , onLoaded }) => {
-  const { scene } = useGLTF(url);
+const estimateGltfBytes = (gltf) => {
+  const json = gltf?.parser?.json;
+  const bin = Number(json?.buffers?.[0]?.byteLength);
+  if (!bin) return null;
+  let jsonBytes = 0;
+  try {
+    jsonBytes = new TextEncoder().encode(JSON.stringify(json)).length;
+  } catch (err) {
+    jsonBytes = 0;
+  }
+  const paddedJson = Math.ceil(jsonBytes / 4) * 4;
+  return 12 + 8 + paddedJson + 8 + bin;
+};
+
+const Model = ({ url, onLoaded }) => {
+  const gltf = useGLTF(url);
   React.useEffect(() => {
-    if (scene) {
-      onLoaded(); 
+    if (gltf?.scene) {
+      onLoaded(estimateGltfBytes(gltf));
     }
-  }, [scene, onLoaded]);
-  return <primitive object={scene} />;
+  }, [gltf, onLoaded]);
+  return <primitive object={gltf.scene} />;
 };
 
 const ModelViewer = ({ 

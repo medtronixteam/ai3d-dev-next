@@ -1,6 +1,21 @@
-import React from 'react'
+import React from 'react';
+import { FiChevronDown, FiMoreVertical, FiSearch, FiTrash2 } from 'react-icons/fi';
+import { RxHamburgerMenu } from 'react-icons/rx';
 
-const TeamSection = () => {
+const TeamSection = ({
+  search = '',
+  onSearchChange,
+  role = '',
+  onRoleChange,
+  loading = false,
+  filteredTeams = [],
+  gradients = [],
+  dropdownOpen = null,
+  dropdownRef,
+  onDropdown,
+  onDelete,
+  onSidebarToggle,
+}) => {
   return (
     <div>
       <section className="team-section">
@@ -22,11 +37,15 @@ const TeamSection = () => {
               [data-theme='dark'] .team-search-input, .dark .team-search-input { color: #f3f3fa !important; }
             `}</style>
             <div className="team-header-inner">
-              <button className="team-sidebar-toggle" onClick={handleSidebarToggle} aria-label="Open sidebar"><RxHamburgerMenu /></button>
+              <button className="team-sidebar-toggle" onClick={onSidebarToggle} aria-label="Open sidebar"><RxHamburgerMenu /></button>
               <div className="team-search-container">
                 <FiSearch style={{ color: '#999', fontSize: 16, marginRight: 10 }} />
-                <input className="team-search-input" placeholder="Search"  />
-                {/* value={search} onChange={(e)=>setSearch(e.target.value)} */}
+                <input
+                  className="team-search-input"
+                  placeholder="Search"
+                  value={search}
+                  onChange={(e) => onSearchChange?.(e.target.value)}
+                />
               </div>
             </div>
 
@@ -43,8 +62,8 @@ const TeamSection = () => {
                     type="search"
                     className="form-control"
                     placeholder="Search teams..."
-                    // value={search}
-                    // onChange={e => setSearch(e.target.value)}
+                    value={search}
+                    onChange={(e) => onSearchChange?.(e.target.value)}
                   style={{
                    backgroundColor: 'rgba(255,237,247,1)',
                     border: '1px solid #eee',
@@ -59,6 +78,8 @@ const TeamSection = () => {
                   <select
                     className="form-control team-role-select"
                     id="role-select"
+                    value={role}
+                    onChange={(e) => onRoleChange?.(e.target.value)}
                     style={{
                       border: '1px solid #eee',
                       borderRadius: 8,
@@ -126,14 +147,14 @@ const TeamSection = () => {
                               <button
                                 className="action-btn"
                                 type="button"
-                                onClick={() => handleDropdown(team.id)}
+                                onClick={() => onDropdown?.(team.id)}
                                   style={{ background: 'none', border: 'none', padding: 0, marginLeft: 8, position: 'relative', zIndex: 201 }}
                               >
                                 <FiMoreVertical size={20} />
                               </button>
                                 {dropdownOpen === team.id && (
                                   <div ref={dropdownRef} className="dropdown-menu dropdown-menu-right show" style={{ position: 'absolute', left: '0',   transform: 'translateX(-80%)', top: '100%', marginTop: 10, zIndex: 200, minWidth: 140, background: '#f7f7f7', boxShadow: '0 4px 12px rgba(34,34,59,0.10)', borderRadius: 10, padding: '6px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0 }}>
-                                    <button className="dropdown-item delete delete-team" onClick={() => handleDelete(team.id)}
+                                    <button className="dropdown-item delete delete-team" onClick={() => onDelete?.(team.id)}
                                       style={{
                                         display: 'flex',
                                         alignItems: 'center',

@@ -1,17 +1,21 @@
 import './FooterLangCurrency.css';
-import React, { useState, useRef, useEffect } from 'react';
-import { FaChevronDown } from 'react-icons/fa';
-import world from '../../pages/images/worl.png';
-
-const LANGUAGES = [
-  { code: 'en', label: 'English' }
-];
-
-const CURRENCIES = [
-  { code: 'usd', symbol: '$', label: 'USD' }
-];
 
 const FooterLangCurrency = () => {
+  return null;
+
+  /*
+  import React, { useState, useRef, useEffect } from 'react';
+  import { FaChevronDown } from 'react-icons/fa';
+  import world from '../../pages/images/worl.png';
+
+  const LANGUAGES = [
+    { code: 'en', label: 'English' }
+  ];
+
+  const CURRENCIES = [
+    { code: 'usd', symbol: '$', label: 'USD' }
+  ];
+
   const [langOpen, setLangOpen] = useState(false);
   const [currencyOpen, setCurrencyOpen] = useState(false);
   const [selectedLang, setSelectedLang] = useState(LANGUAGES[0]);
@@ -20,7 +24,6 @@ const FooterLangCurrency = () => {
   const langRef = useRef(null);
   const currencyRef = useRef(null);
 
-  // Close on outside click
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (langRef.current && !langRef.current.contains(e.target)) {
@@ -36,8 +39,6 @@ const FooterLangCurrency = () => {
 
   return (
     <div className="d-flex gap-2 footer-select-row align-items-center">
-      
-      {/* Language Dropdown */}
       <div className="dropdown btn-wrapper footer-lang-dropdown position-relative" ref={langRef}>
         <button
           className="btn english"
@@ -91,7 +92,6 @@ const FooterLangCurrency = () => {
         )}
       </div>
 
-      {/* Currency Dropdown */}
       <div className="dropdown btn-wrapper footer-usd-dropdown position-relative" ref={currencyRef}>
         <button
           className="btn usd"
@@ -146,6 +146,7 @@ const FooterLangCurrency = () => {
       </div>
     </div>
   );
+  */
 };
 
 export default FooterLangCurrency;

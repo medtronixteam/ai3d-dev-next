@@ -178,6 +178,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
 
   const [projectToken, setProjectToken] = useState(null);
   const [projectType, setProjectType] = useState('text_to_3d');
+  const [projectMeta, setProjectMeta] = useState(null);
   const [projectStatus, setProjectStatus] = useState('pending');
   const [modelUrl, setModelUrl] = useState(null);
   const [modelLoading, setModelLoading] = useState(false);
@@ -271,6 +272,8 @@ const ModelGenerator = ({ isDarkMode = false }) => {
           progress: item.progress || 0,
           thumbnail: imgUrl,
           favorite: !!item.favorite,
+          createdAt: item.created_at || item.createdAt || item.updated_at || null,
+          fileSize: item.file_size || item.size || item.fileSize || null,
           splat_url: item.splat_url,
         };
       });
@@ -282,6 +285,29 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       setHistoryLoading(false);
     }
   }, [token]);
+
+  useEffect(() => {
+    if (!projectToken || !historyData.length) return;
+    const match = historyData.find((item) => item.token === projectToken || item.id === projectToken);
+    if (!match?.createdAt && !match?.fileSize) return;
+    setProjectMeta((prev) => {
+      const createdAt = prev?.createdAt || match.createdAt || null;
+      const fileSize = prev?.fileSize || match.fileSize || null;
+      if (prev?.createdAt === createdAt && prev?.fileSize === fileSize) return prev;
+      return {
+        name: prev?.name || match.name || '',
+        prompt: prev?.prompt || '',
+        createdAt,
+        fileSize,
+        polygons: prev?.polygons || null,
+        category: prev?.category || '',
+        fileType: prev?.fileType || '',
+        type: prev?.type || match.rawType || '',
+        status: prev?.status || match.status || '',
+        thumbnail: prev?.thumbnail || match.thumbnail || null,
+      };
+    });
+  }, [historyData, projectToken]);
 
   const handleHistoryExport = async (project) => {
     try {
@@ -665,6 +691,28 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     const applyProjectDetail = (proj) => {
       setProjectStatus(proj.status);
       setGeneratedPrompt(proj.prompt || proj.name || 'Project');
+      const createdAt =
+        proj.created_at ||
+        proj.createdAt ||
+        proj.created ||
+        proj.created_date ||
+        proj.generated_at ||
+        proj.completed_at ||
+        proj.updated_at ||
+        proj.updatedAt ||
+        null;
+      setProjectMeta((prev) => ({
+        name: proj.name || prev?.name || '',
+        prompt: proj.prompt || prev?.prompt || '',
+        createdAt: createdAt || prev?.createdAt || null,
+        fileSize: proj.file_size || proj.size || proj.fileSize || proj.content_length || prev?.fileSize || null,
+        polygons: proj.polygons || proj.polygon_count || proj.poly_count || proj.faces || prev?.polygons || null,
+        category: proj.category || proj.model_category || prev?.category || '',
+        fileType: proj.file_type || proj.format || prev?.fileType || '',
+        type: proj.type || prev?.type || '',
+        status: proj.status || prev?.status || '',
+        thumbnail: getFullImageUrl(proj.screenshot || proj.thumbnail || proj.project_thumbnail) || prev?.thumbnail || null,
+      }));
       if (proj.type) {
         setProjectType(proj.type);
       }
@@ -791,6 +839,18 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     setIsViewOnly(true);
     setIsUserOwnedProject(true);
     setProjectToken(project.token);
+    setProjectMeta((prev) => ({
+      name: project.name || prev?.name || '',
+      prompt: prev?.prompt || '',
+      createdAt: project.createdAt || prev?.createdAt || null,
+      fileSize: project.fileSize || prev?.fileSize || null,
+      polygons: prev?.polygons || null,
+      category: prev?.category || '',
+      fileType: prev?.fileType || '',
+      type: project.rawType || prev?.type || '',
+      status: project.status || prev?.status || '',
+      thumbnail: project.thumbnail || prev?.thumbnail || null,
+    }));
     if (project.rawType) {
       setProjectType(project.rawType);
     }
@@ -918,6 +978,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     setIsRedirecting(false);
     setProjectToken(null);
     loadedProjectTokenRef.current = null;
+    setProjectMeta(null);
     setProjectStatus('pending');
     setModelUrl(null);
     setModelReady(false);
@@ -1124,6 +1185,28 @@ const ModelGenerator = ({ isDarkMode = false }) => {
         console.log('URL loaded:', finalUrl);
 
         loadedProjectTokenRef.current = token_id;
+        const apiSize = Number(
+          response.data?.file_size ||
+          response.data?.size ||
+          response.data?.content_length ||
+          response.data?.data?.file_size ||
+          response.data?.data?.size ||
+          0,
+        );
+        if (apiSize > 0) {
+          setProjectMeta((prev) => (prev?.fileSize ? prev : {
+            name: prev?.name || '',
+            prompt: prev?.prompt || '',
+            createdAt: prev?.createdAt || null,
+            fileSize: apiSize,
+            polygons: prev?.polygons || null,
+            category: prev?.category || '',
+            fileType: prev?.fileType || '',
+            type: prev?.type || type || '',
+            status: prev?.status || 'completed',
+            thumbnail: prev?.thumbnail || null,
+          }));
+        }
         setModelUrl(finalUrl);
         setProjectStatus('completed');
         setShowLoadingUI(false);
@@ -1155,6 +1238,41 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       setModelLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!modelUrl) return undefined;
+    let cancelled = false;
+
+    const readFileSize = async () => {
+      try {
+        const response = await fetch(modelUrl, { method: 'HEAD' });
+        const length = Number(response.headers.get('content-length'));
+        if (cancelled || !length) return;
+        setProjectMeta((prev) => {
+          if (prev?.fileSize) return prev;
+          return {
+            name: prev?.name || '',
+            prompt: prev?.prompt || '',
+            createdAt: prev?.createdAt || null,
+            fileSize: length,
+            polygons: prev?.polygons || null,
+            category: prev?.category || '',
+            fileType: prev?.fileType || '',
+            type: prev?.type || '',
+            status: prev?.status || '',
+            thumbnail: prev?.thumbnail || null,
+          };
+        });
+      } catch (err) {
+        // The viewer reports a size after the model file finishes loading.
+      }
+    };
+
+    readFileSize();
+    return () => {
+      cancelled = true;
+    };
+  }, [modelUrl]);
 
   const takeScreenshot = async () => {
     if (screenshotTaken || !modelViewerRef.current) return;
@@ -1860,6 +1978,10 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             isGenerating={isGenerating}
             modelReady={modelReady}
             generatedPrompt={generatedPrompt}
+            projectMeta={projectMeta}
+            projectType={projectType}
+            modelUrl={modelUrl}
+            modelThumbnail={projectMeta?.thumbnail || screenshotData}
             copyPrompt={copyPrompt}
             sharePrompt={sharePrompt}
             isEnhancing={isEnhancing}
@@ -1902,6 +2024,25 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             currentStep={currentStep}
             projectStatus={projectStatus}
             onModelRendered={takeScreenshot}
+            onModelFileSize={(bytes) => {
+              const size = Number(bytes);
+              if (!size) return;
+              setProjectMeta((prev) => {
+                if (prev?.fileSize) return prev;
+                return {
+                  name: prev?.name || '',
+                  prompt: prev?.prompt || '',
+                  createdAt: prev?.createdAt || null,
+                  fileSize: size,
+                  polygons: prev?.polygons || null,
+                  category: prev?.category || '',
+                  fileType: prev?.fileType || '',
+                  type: prev?.type || '',
+                  status: prev?.status || '',
+                  thumbnail: prev?.thumbnail || null,
+                };
+              });
+            }}
             transformControls={transformControls}
             sectionRef={modelViewportRef}
             activeViewportTool={activeViewportTool}

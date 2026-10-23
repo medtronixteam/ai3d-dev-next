@@ -45,6 +45,7 @@ const CenterScan = ({
   projectStatus,
   modelViewerRef,
   onModelRendered,
+  onModelFileSize,
   transformControls,
   sectionRef,
   activeViewportTool,
@@ -97,9 +98,10 @@ const CenterScan = ({
     }
   }, [isActuallyRendered, onModelRendered]);
 
-  const handleModelLoaded = React.useCallback(() => {
+  const handleModelLoaded = React.useCallback((byteLength) => {
     setIsActuallyRendered(true);
-  }, []);
+    if (byteLength) onModelFileSize?.(byteLength);
+  }, [onModelFileSize]);
 
   const handleLeftToolClick = (toolName, additionalAction) => {
     if (additionalAction) additionalAction();

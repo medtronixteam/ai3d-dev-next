@@ -1,22 +1,18 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './Team.css';
-import '../ApiSdk.css';
 import axios from 'axios';
 import { baseURL } from '../../config';
 import { useAuth } from '../../context/AuthContext';
-import { FiMoreVertical, FiTrash2, FiMail, FiChevronDown, FiSearch, FiUsers } from 'react-icons/fi';
-import { MdApi } from 'react-icons/md';
-import { RxHamburgerMenu } from 'react-icons/rx';
 import { toast } from 'react-toastify';
 import ConfirmModal from '../../components/popup/ConfirmLogoutPopup';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import TeamSection from './TeamSection';
 
-const Team = ({ onTeamCreated, newTeam }) => {
-  /*
+const Team = ({ newTeam }) => {
   const { token } = useAuth();
-  const location = useLocation();
   const [teams, setTeams] = useState([]);
   const [search, setSearch] = useState('');
+  const [role, setRole] = useState('');
   const [dropdownOpen, setDropdownOpen] = useState(null);
   const [loading, setLoading] = useState(false);
   const [deleteTeamId, setDeleteTeamId] = useState(null);
@@ -54,8 +50,13 @@ const Team = ({ onTeamCreated, newTeam }) => {
         setLoading(false);
       }
     };
-    fetchTeams();
+    if (token) fetchTeams();
   }, [token]);
+
+  useEffect(() => {
+    if (!newTeam) return;
+    setTeams((prev) => (prev.some((team) => team.id === newTeam.id) ? prev : [newTeam, ...prev]));
+  }, [newTeam]);
 
   useEffect(() => {
     document.body.style.overflow = 'auto';
@@ -107,11 +108,15 @@ const Team = ({ onTeamCreated, newTeam }) => {
     };
   }, [dropdownOpen]);
 
-  const filteredTeams = teams.filter(
-    (team) =>
-      team.name.toLowerCase().includes(search.toLowerCase()) ||
-      team.email.toLowerCase().includes(search.toLowerCase()),
-  );
+  const filteredTeams = teams.filter((team) => {
+    const query = search.toLowerCase();
+    const name = String(team.name || '').toLowerCase();
+    const email = String(team.email || '').toLowerCase();
+    const matchesQuery = name.includes(query) || email.includes(query);
+    if (!role) return matchesQuery;
+    const teamRole = String(team.role || team.user_role || '').toLowerCase();
+    return matchesQuery && teamRole === role;
+  });
 
   const handleDropdown = (id) => {
     setDropdownOpen(dropdownOpen === id ? null : id);
@@ -146,18 +151,48 @@ const Team = ({ onTeamCreated, newTeam }) => {
       setConfirmOpen(true);
     }
   };
-  */
 
   return (
-    <div className="api-sdk-container">
-      <div className="api-sdk-card">
-        <MdApi className="api-sdk-icon" />
-        <h2 className="api-sdk-title">Coming Soon</h2>
-        <div className="api-sdk-desc">
-          Team features are launching soon. Stay tuned!
-        </div>
-      </div>
-    </div>
+    <>
+      <TeamSection
+        search={search}
+        onSearchChange={setSearch}
+        role={role}
+        onRoleChange={setRole}
+        loading={loading}
+        filteredTeams={filteredTeams}
+        gradients={gradients}
+        dropdownOpen={dropdownOpen}
+        dropdownRef={dropdownRef}
+        onDropdown={handleDropdown}
+        onDelete={handleDelete}
+        onSidebarToggle={handleSidebarToggle}
+      />
+      <ConfirmModal
+        open={confirmOpen}
+        onClose={() => {
+          setConfirmOpen(false);
+          setDeleteTeamId(null);
+          setErrorMsg('');
+        }}
+        onConfirm={confirmDelete}
+        title="Delete Team"
+        message="Are you sure you want to delete this team? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        error={errorMsg}
+      />
+      <ConfirmModal
+        open={successOpen}
+        onClose={() => setSuccessOpen(false)}
+        onConfirm={() => setSuccessOpen(false)}
+        title="Team Deleted"
+        message="Team deleted successfully!"
+        confirmText="OK"
+        cancelText=""
+        iconType="success"
+      />
+    </>
   );
 };
 

@@ -1500,6 +1500,38 @@ function ModernModal({
   );
 }
 
+function HeroStars() {
+  const [stars] = useState(() =>
+    Array.from({ length: 12 }, () => ({
+      delay: Math.random() * 5,
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      colorClass: `color-${Math.floor(Math.random() * 3) + 1}`,
+      dirX: Math.random().toFixed(2),
+      dirY: Math.random().toFixed(2),
+    })),
+  );
+
+  return (
+    <div className="star-wrapper-animation" aria-hidden="true">
+      {stars.map((star, index) => (
+        <div key={index} className="star-container">
+          <span
+            className={`star ${star.colorClass}`}
+            style={{
+              animationDelay: `${star.delay}s`,
+              left: `${star.left}%`,
+              top: `${star.top}%`,
+              '--dir-x': star.dirX,
+              '--dir-y': star.dirY,
+            }}
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 const Dashboard = () => {
   const { token, user } = useAuth();
   const navigate = useNavigate();
@@ -2097,32 +2129,7 @@ const Dashboard = () => {
           minHeight: 320,
         }}
       >
-        {/* Star Animation */}
-        <div className="star-wrapper-animation">
-          {[...Array(12)].map((_, index) => {
-            const delay = Math.random() * 5;
-            const left = Math.random() * 100;
-            const top = Math.random() * 100;
-            const colorClass = `color-${Math.floor(Math.random() * 3) + 1}`;
-            const dirX = Math.random().toFixed(2);
-            const dirY = Math.random().toFixed(2);
-
-            return (
-              <div key={index} className="star-container">
-                <span
-                  className={`star ${colorClass}`}
-                  style={{
-                    animationDelay: `${delay}s`,
-                    left: `${left}%`,
-                    top: `${top}%`,
-                    '--dir-x': dirX,
-                    '--dir-y': dirY,
-                  }}
-                ></span>
-              </div>
-            );
-          })}
-        </div>
+        <HeroStars />
 
         {!isDark && (
           <img

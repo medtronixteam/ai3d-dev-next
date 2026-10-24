@@ -2475,6 +2475,12 @@ div .bubble {
 .star.color-2 { background-color: #d3bef2; }
 .star.color-3 { background-color: #FFFFFF; }
 
+.hero-section > .star-wrapper-animation {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
 @keyframes star-float {
   0% {
     opacity: 0;

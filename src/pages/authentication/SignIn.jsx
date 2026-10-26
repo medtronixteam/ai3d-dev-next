@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
@@ -13,6 +13,7 @@ import Robot from '../../assets/images/robot-img.png';
 import Google from '../../assets/images/google.png';
 import Facebook from '../../assets/images/facebook.png';
 import { goToPostLogin, startFacebookLogin, startGoogleLogin, warmPostLoginRoute } from '../../utils/authRedirect';
+import TurnstileWidget, { verifyTurnstile } from '../../components/security/TurnstileWidget';
 // import Apple from "../../assets/images/apple-img.png";
 
 const SignIn = () => {
@@ -23,12 +24,26 @@ const SignIn = () => {
   const [updatesCheck, setUpdatesCheck] = useState(true);
   const { login, tokens, user } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const turnstileRef = useRef(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!turnstileToken) {
+      toast.error('Please complete the security check.');
+      return;
+    }
     setLoading(true);
     try {
+      const captchaOk = await verifyTurnstile(turnstileToken);
+      if (!captchaOk) {
+        toast.error('Security check failed. Please try again.');
+        setTurnstileToken('');
+        turnstileRef.current?.reset();
+        setLoading(false);
+        return;
+      }
       if (email === 'demo@demo.com' && password === 'demo123') {
         const demoUser = { email: 'demo@demo.com', name: 'Demo User' };
         login('demo-token', demoUser);
@@ -176,8 +191,9 @@ const SignIn = () => {
                     Forgot Password?
                   </Link>
                 </div>
+                <TurnstileWidget ref={turnstileRef} onToken={setTurnstileToken} />
                 <div className="text-center mb-3">
-                  <button type="submit" className="btn btn-primary" disabled={loading}>
+                  <button type="submit" className="btn btn-primary" disabled={loading || !turnstileToken}>
                     {loading ? 'Sign in...' : 'Continue'}
                   </button>
                 </div>

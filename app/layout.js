@@ -73,6 +73,7 @@ export default function RootLayout({ children }) {
           src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"
         />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y7DNQYRG5M" />
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer />
         <script
           dangerouslySetInnerHTML={{
             __html: `window.dataLayer = window.dataLayer || [];

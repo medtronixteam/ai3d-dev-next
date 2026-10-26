@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
@@ -10,6 +10,7 @@ import { FiEye, FiEyeOff } from 'react-icons/fi';
 import './SignUp.css';
 import Logo from 'pages/images/logo.png';
 import Robot from '../../assets/images/robot-img.png';
+import TurnstileWidget, { verifyTurnstile } from '../../components/security/TurnstileWidget';
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
@@ -19,6 +20,8 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showCPassword, setShowCPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const turnstileRef = useRef(null);
   const [referral, setReferral] = useState(null);
   const navigate = useNavigate();
 
@@ -34,8 +37,20 @@ const SignUp = () => {
       toast.error('Passwords do not match!');
       return;
     }
+    if (!turnstileToken) {
+      toast.error('Please complete the security check.');
+      return;
+    }
     setLoading(true);
     try {
+      const captchaOk = await verifyTurnstile(turnstileToken);
+      if (!captchaOk) {
+        toast.error('Security check failed. Please try again.');
+        setTurnstileToken('');
+        turnstileRef.current?.reset();
+        setLoading(false);
+        return;
+      }
       const res = await axios.post(`${baseURL}/signup`, {
         name: username,
         email,
@@ -187,10 +202,11 @@ const SignUp = () => {
                       {showCPassword ? <FiEye size={20} /> : <FiEyeOff size={20} />}
                     </span>
                   </div>
+                  <TurnstileWidget ref={turnstileRef} onToken={setTurnstileToken} />
                   <div className="text-center">
                     <button
                       className="btn btn-primary rounded-pill px-5 py-2 mt-2"
-                      disabled={loading}
+                      disabled={loading || !turnstileToken}
                     >
                       {loading ? 'SignUp..' : 'SignUp'}
                     </button>

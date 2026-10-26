@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { FiEye, FiEyeOff, FiX } from 'react-icons/fi';
 import './LoginPopup.css';
 import Google from "../../assets/images/google.png";
 import { goToPostLogin, startGoogleLogin } from '../../utils/authRedirect';
+import TurnstileWidget, { verifyTurnstile } from '../security/TurnstileWidget';
 
 const LoginPopup = ({ onClose, onLoginSuccess, stayOnPage = false, onBeforeSocialLogin }) => {
   const [email, setEmail] = useState('');
@@ -16,6 +17,8 @@ const LoginPopup = ({ onClose, onLoginSuccess, stayOnPage = false, onBeforeSocia
   const [rememberMe, setRememberMe] = useState(false);
   const { login, tokens, user } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const turnstileRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -29,8 +32,20 @@ const LoginPopup = ({ onClose, onLoginSuccess, stayOnPage = false, onBeforeSocia
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!turnstileToken) {
+      toast.error('Please complete the security check.');
+      return;
+    }
     setLoading(true);
     try {
+      const captchaOk = await verifyTurnstile(turnstileToken);
+      if (!captchaOk) {
+        toast.error('Security check failed. Please try again.');
+        setTurnstileToken('');
+        turnstileRef.current?.reset();
+        setLoading(false);
+        return;
+      }
       const res = await axios.post(
         `${baseURL}/login`,
         { email, password },
@@ -145,8 +160,9 @@ const LoginPopup = ({ onClose, onLoginSuccess, stayOnPage = false, onBeforeSocia
                 Forgot Password?
               </Link>
             </div>
+            <TurnstileWidget ref={turnstileRef} onToken={setTurnstileToken} theme="light" />
             <div className="text-center mb-3">
-              <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+              <button type="submit" className="btn btn-primary w-100" disabled={loading || !turnstileToken}>
                 {loading ? 'Sign in...' : 'Continue'}
               </button>
             </div>

@@ -667,12 +667,27 @@ export default function GeneratePage() {
               </div>
             </div>
             <div className="generate-search-wrap">
-              <form className="hero-prompt" onSubmit={handleGenerate}>
+              <form className={`hero-prompt${isGenerating ? ' is-building' : ''}`} onSubmit={handleGenerate}>
                 <span className="hero-prompt-shine" aria-hidden="true" />
                 <span className="hero-prompt-spark hero-prompt-spark--a" aria-hidden="true" />
                 <span className="hero-prompt-spark hero-prompt-spark--b" aria-hidden="true" />
                 <span className="hero-prompt-spark hero-prompt-spark--c" aria-hidden="true" />
-                {imageMode ? (
+                {isGenerating ? (
+                  <div className="generate-stage" role="status" aria-live="polite">
+                    <div className="generate-stage-scene" aria-hidden="true">
+                      <span className="generate-stage-ring" />
+                      <span className="generate-stage-ring generate-stage-ring--b" />
+                      <span className="generate-stage-cube">
+                        <span /><span /><span /><span /><span /><span />
+                      </span>
+                    </div>
+                    <strong>{buildLabel || 'Starting your 3D model'}</strong>
+                    <p>Stay on this page. Your model will open as soon as it is ready.</p>
+                    <div className="generate-stage-track" aria-hidden="true">
+                      <span />
+                    </div>
+                  </div>
+                ) : imageMode ? (
                   <div
                     className={`generate-drop${isDraggingImage ? ' is-over' : ''}`}
                     onDragOver={(event) => {
@@ -730,7 +745,7 @@ export default function GeneratePage() {
                     }}
                   />
                 )}
-                {!imageMode && prompt ? (
+                {!isGenerating && !imageMode && prompt ? (
                   <button
                     type="button"
                     className="hero-prompt-clear"
@@ -740,7 +755,7 @@ export default function GeneratePage() {
                     <FiX size={16} />
                   </button>
                 ) : null}
-                <div className="hero-prompt-toolbar">
+                {!isGenerating ? <div className="hero-prompt-toolbar">
                   {imageMode ? (
                     <button
                       type="button"
@@ -777,7 +792,7 @@ export default function GeneratePage() {
                       </span>
                     </>
                   )}
-                </div>
+                </div> : null}
                 <input
                   ref={imageInputRef}
                   type="file"
@@ -810,15 +825,6 @@ export default function GeneratePage() {
                   {isGenerating ? 'Generating...' : 'Generate'}
                 </button>
               </div>
-              {buildLabel ? (
-                <div className="generate-build" role="status">
-                  <span className="generate-build-dot" aria-hidden="true" />
-                  <div>
-                    <strong>{buildLabel}</strong>
-                    <p>Stay on this page. Your model will open as soon as it is ready.</p>
-                  </div>
-                </div>
-              ) : null}
             </div>
 
             <div className="category-row" style={{ justifyContent: 'center', marginBottom: 12 }}>

@@ -742,6 +742,27 @@ body {
   .ai_3d_landing .a3d-trusted {
     margin-top: 0;
   }
+
+  .ai_3d_landing .a3d-logo-item {
+    margin: 0 0.65rem;
+  }
+
+  .ai_3d_landing .a3d-logo-item img {
+    width: 100px !important;
+    height: auto !important;
+  }
+
+  .ai_3d_landing .a3d-logo-item img[alt='PITB'] {
+    width: 30px !important;
+  }
+
+  .ai_3d_landing .a3d-logo-item img[alt='Regional Plan'] {
+    width: 52px !important;
+  }
+
+  .ai_3d_landing .a3d-logo-item img[alt='Hiller Consulting'] {
+    width: 60px !important;
+  }
 }
 
 .ai_3d_landing .a3d-trusted span {

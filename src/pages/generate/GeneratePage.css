@@ -117,6 +117,114 @@
   cursor: wait;
 }
 
+.generate-page .hero-prompt.is-building::after {
+  background:
+    radial-gradient(420px 180px at 50% 28%, rgba(222, 57, 150, 0.14), transparent 68%),
+    #ffffff;
+}
+
+.generate-page .generate-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 176px;
+  padding: 16px 8px 10px;
+  text-align: center;
+}
+
+.generate-page .generate-stage strong {
+  margin-top: 12px;
+  color: #111111;
+  font-size: 15px;
+}
+
+.generate-page .generate-stage p {
+  margin: 4px 0 0;
+  max-width: 360px;
+  color: #6b6b78;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.generate-page .generate-stage-scene {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  display: grid;
+  place-items: center;
+  perspective: 280px;
+}
+
+.generate-page .generate-stage-ring {
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(222, 57, 150, 0.55);
+  animation: generate-stage-spin 9s linear infinite;
+}
+
+.generate-page .generate-stage-ring--b {
+  inset: 16px;
+  border-style: solid;
+  border-color: transparent rgba(139, 92, 246, 0.15) rgba(222, 57, 150, 0.75) transparent;
+  animation-duration: 2.8s;
+  animation-direction: reverse;
+}
+
+.generate-page .generate-stage-cube {
+  width: 28px;
+  height: 28px;
+  position: relative;
+  transform-style: preserve-3d;
+  animation: generate-stage-tumble 4.5s linear infinite;
+}
+
+.generate-page .generate-stage-cube span {
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid #de3996;
+  background: rgba(222, 57, 150, 0.18);
+}
+
+.generate-page .generate-stage-cube span:nth-child(1) { transform: translateZ(14px); }
+.generate-page .generate-stage-cube span:nth-child(2) { transform: rotateY(90deg) translateZ(14px); }
+.generate-page .generate-stage-cube span:nth-child(3) { transform: rotateY(180deg) translateZ(14px); }
+.generate-page .generate-stage-cube span:nth-child(4) { transform: rotateY(-90deg) translateZ(14px); }
+.generate-page .generate-stage-cube span:nth-child(5) { transform: rotateX(90deg) translateZ(14px); }
+.generate-page .generate-stage-cube span:nth-child(6) { transform: rotateX(-90deg) translateZ(14px); }
+
+.generate-page .generate-stage-track {
+  width: min(220px, 72%);
+  height: 4px;
+  margin-top: 14px;
+  border-radius: 99px;
+  background: #f6e3ee;
+  overflow: hidden;
+}
+
+.generate-page .generate-stage-track span {
+  display: block;
+  width: 42%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #de3996, #ff8ac4);
+  animation: generate-stage-slide 1.35s ease-in-out infinite;
+}
+
+@keyframes generate-stage-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes generate-stage-tumble {
+  from { transform: rotateX(-18deg) rotateY(0deg); }
+  to { transform: rotateX(-18deg) rotateY(360deg); }
+}
+
+@keyframes generate-stage-slide {
+  0% { transform: translateX(-130%); }
+  100% { transform: translateX(280%); }
+}
+
 .generate-page .generate-build {
   display: flex;
   align-items: flex-start;
@@ -524,7 +632,10 @@
   .generate-page .hero-prompt,
   .generate-page .hero-prompt::before,
   .generate-page .hero-prompt-shine,
-  .generate-page .hero-prompt-spark {
+  .generate-page .hero-prompt-spark,
+  .generate-page .generate-stage-ring,
+  .generate-page .generate-stage-cube,
+  .generate-page .generate-stage-track span {
     transition: none;
     animation: none;
   }

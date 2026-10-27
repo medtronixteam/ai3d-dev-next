@@ -1056,9 +1056,14 @@ svg {
     flex-wrap: nowrap !important;
     overflow-x: auto !important;
     scrollbar-width: none !important;
-    justify-content: center !important;
+    justify-content: flex-start !important;
     align-items: flex-start !important;
-    align-self: flex-start !important;
+    align-self: stretch !important;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 0 12px 4px;
+    scroll-padding-inline: 12px;
   }
 
   .hero-section .search-container {
@@ -1511,7 +1516,7 @@ svg {
   }
 
   .category-row {
-    justify-content: center !important;
+    justify-content: flex-start !important;
   }
 
   .notification-btn {
@@ -1946,7 +1951,7 @@ svg {
   }
 
   .category-row {
-    justify-content: center !important;
+    justify-content: flex-start !important;
   }
 
   .notification-btn {

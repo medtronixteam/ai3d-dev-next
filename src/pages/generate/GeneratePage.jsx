@@ -9,6 +9,8 @@ import { Image as ImageIcon, Sparkles } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../context/AuthContext';
+import { useSocket } from '../../context/SocketContext';
+import { useNotification } from '../../context/NotificationContext';
 import { baseURL } from '../../config';
 import paths from '../../routes/paths';
 import JoinPlatformCta from '../../components/landing/JoinPlatformCta';
@@ -106,6 +108,8 @@ export default function GeneratePage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { token } = useAuth();
+  const { queue_system, queueData, clearActiveQueueRegistration } = useSocket();
+  const { fcmToken } = useNotification();
   const pageRef = useRef(null);
   const promptRef = useRef(null);
   const productMenuTimer = useRef(null);
@@ -126,6 +130,7 @@ export default function GeneratePage() {
   const imagePreviewRef = useRef('');
   const pendingJobRef = useRef(null);
   const buildIdRef = useRef(0);
+  const activeProjectRef = useRef(null);
   const [buildLabel, setBuildLabel] = useState('');
   const [selectedType, setSelectedType] = useState('all');
   const [models, setModels] = useState([]);
@@ -281,6 +286,40 @@ export default function GeneratePage() {
     loadBatch(selectedType, CARDS_PER_VIEW, true);
   }, [selectedType, token, isSearching, loadBatch]);
 
+  const finishGeneration = (projectId, status) => {
+    if (String(activeProjectRef.current) !== String(projectId)) return;
+    activeProjectRef.current = null;
+    clearActiveQueueRegistration();
+    buildIdRef.current += 1;
+    if (status === 'completed') {
+      navigate('/3dio/new/scan', { state: { projectId, viewMode: true } });
+      return;
+    }
+    setIsGenerating(false);
+    setBuildLabel('');
+    if (FAILED_STATUSES.has(status)) {
+      toast.error('Model generation failed. Please try again.');
+    }
+  };
+
+  useEffect(() => {
+    const projectId = activeProjectRef.current;
+    if (!queueData || !projectId) return;
+    const socketProjectId = queueData.projectId || queueData.deviceId;
+    if (socketProjectId == null || String(socketProjectId) !== String(projectId)) return;
+
+    const status = String(queueData.status || '').toLowerCase();
+    if (status === 'processing' || status === 'submitted') {
+      setBuildLabel('Shaping your 3D model');
+    } else if (status && status !== 'completed' && !FAILED_STATUSES.has(status)) {
+      setBuildLabel('Your model is in the queue');
+    }
+
+    if (status === 'completed' || FAILED_STATUSES.has(status)) {
+      finishGeneration(projectId, status);
+    }
+  }, [queueData]);
+
   const createAndWatch = async (authToken, startRequest) => {
     const buildId = buildIdRef.current + 1;
     buildIdRef.current = buildId;
@@ -292,6 +331,8 @@ export default function GeneratePage() {
       if (!projectId) {
         throw new Error('Could not start generation.');
       }
+      activeProjectRef.current = projectId;
+      queue_system(projectId, fcmToken);
       setBuildLabel('Your model is in the queue');
       const started = Date.now();
       while (buildIdRef.current === buildId) {
@@ -315,12 +356,9 @@ export default function GeneratePage() {
         if (buildIdRef.current !== buildId) return;
         const proj = detail.data?.data || detail.data;
         const status = String(proj?.status || '').toLowerCase();
-        if (status === 'completed') {
-          navigate('/3dio/new/scan', { state: { projectId, viewMode: true } });
+        if (status === 'completed' || FAILED_STATUSES.has(status)) {
+          finishGeneration(projectId, status);
           return;
-        }
-        if (FAILED_STATUSES.has(status)) {
-          throw new Error('Model generation failed. Please try again.');
         }
         setBuildLabel(status === 'processing' ? 'Shaping your 3D model' : 'Your model is in the queue');
       }
@@ -328,6 +366,10 @@ export default function GeneratePage() {
       if (buildIdRef.current !== buildId) return;
       toast.error(err?.response?.data?.message || err?.message || 'Something went wrong. Please try again.');
       setBuildLabel('');
+      if (activeProjectRef.current) {
+        activeProjectRef.current = null;
+        clearActiveQueueRegistration();
+      }
     } finally {
       if (buildIdRef.current === buildId) setIsGenerating(false);
     }

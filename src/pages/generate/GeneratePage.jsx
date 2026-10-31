@@ -112,7 +112,6 @@ function GeneratePageContent() {
   const queue_system = socketState?.queue_system;
   const queueData = socketState?.queueData;
   const clearActiveQueueRegistration = socketState?.clearActiveQueueRegistration;
-  const connected = Boolean(socketState?.connected);
   const notification = useNotification();
   const fcmToken = notification?.fcmToken ?? null;
   const pageRef = useRef(null);
@@ -136,8 +135,6 @@ function GeneratePageContent() {
   const pendingJobRef = useRef(null);
   const buildIdRef = useRef(0);
   const activeProjectRef = useRef(null);
-  const connectedRef = useRef(false);
-  connectedRef.current = connected;
   const [buildLabel, setBuildLabel] = useState('');
   const [selectedType, setSelectedType] = useState('all');
   const [models, setModels] = useState([]);
@@ -342,15 +339,12 @@ function GeneratePageContent() {
       queue_system?.(projectId, fcmToken);
       setBuildLabel('Your model is in the queue');
       const started = Date.now();
-      let nextFallbackAt = started + 20000;
       while (buildIdRef.current === buildId) {
         if (Date.now() - started > 2 * 60 * 60 * 1000) {
           throw new Error('This is taking longer than expected. You can open it from your projects.');
         }
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 5000));
         if (buildIdRef.current !== buildId) return;
-        if (connectedRef.current || Date.now() < nextFallbackAt) continue;
-        nextFallbackAt = Date.now() + 20000;
         let detail;
         try {
           detail = await axios.get(`${baseURL}/project/detail/${projectId}`, {

@@ -25,7 +25,10 @@ export const SocketProvider = ({ children }) => {
       // Auto re-register active deviceId or videoToken upon reconnection
       if (activeDeviceIdRef.current) {
         console.log(`Auto re-registering active deviceId: ${activeDeviceIdRef.current} on reconnect`);
-        socket.emit('register-device', { deviceId: activeDeviceIdRef.current });
+        socket.emit('register-device', {
+          deviceId: activeDeviceIdRef.current,
+          projectId: activeDeviceIdRef.current,
+        });
       }
       if (activeVideoTokenRef.current) {
         console.log(`Auto re-registering active projectToken: ${activeVideoTokenRef.current} on reconnect`);

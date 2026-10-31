@@ -46,6 +46,7 @@ const CenterScan = ({
   modelViewerRef,
   onModelRendered,
   onModelFileSize,
+  onModelPolygons,
   transformControls,
   sectionRef,
   activeViewportTool,
@@ -98,10 +99,13 @@ const CenterScan = ({
     }
   }, [isActuallyRendered, onModelRendered]);
 
-  const handleModelLoaded = React.useCallback((byteLength) => {
+  const handleModelLoaded = React.useCallback((info) => {
     setIsActuallyRendered(true);
-    if (byteLength) onModelFileSize?.(byteLength);
-  }, [onModelFileSize]);
+    const bytes = typeof info === 'number' ? info : info?.bytes;
+    const polygons = typeof info === 'number' ? 0 : info?.polygons;
+    if (bytes) onModelFileSize?.(bytes);
+    if (polygons) onModelPolygons?.(polygons);
+  }, [onModelFileSize, onModelPolygons]);
 
   const handleLeftToolClick = (toolName, additionalAction) => {
     if (additionalAction) additionalAction();

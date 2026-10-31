@@ -2040,6 +2040,25 @@ const ModelGenerator = ({ isDarkMode = false }) => {
                 };
               });
             }}
+            onModelPolygons={(count) => {
+              const polygons = Number(count);
+              if (!polygons) return;
+              setProjectMeta((prev) => {
+                if (prev?.polygons) return prev;
+                return {
+                  name: prev?.name || '',
+                  prompt: prev?.prompt || '',
+                  createdAt: prev?.createdAt || null,
+                  fileSize: prev?.fileSize || null,
+                  polygons,
+                  category: prev?.category || '',
+                  fileType: prev?.fileType || '',
+                  type: prev?.type || '',
+                  status: prev?.status || '',
+                  thumbnail: prev?.thumbnail || null,
+                };
+              });
+            }}
             transformControls={transformControls}
             sectionRef={modelViewportRef}
             activeViewportTool={activeViewportTool}

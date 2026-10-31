@@ -24,11 +24,28 @@ const estimateGltfBytes = (gltf) => {
   return 12 + 8 + paddedJson + 8 + bin;
 };
 
+const countPolygons = (scene) => {
+  let triangles = 0;
+  scene?.traverse((node) => {
+    const geometry = node.geometry;
+    if (!geometry) return;
+    if (geometry.index) {
+      triangles += geometry.index.count / 3;
+    } else if (geometry.attributes?.position) {
+      triangles += geometry.attributes.position.count / 3;
+    }
+  });
+  return Math.round(triangles);
+};
+
 const Model = ({ url, onLoaded }) => {
   const gltf = useGLTF(url);
   React.useEffect(() => {
     if (gltf?.scene) {
-      onLoaded(estimateGltfBytes(gltf));
+      onLoaded({
+        bytes: estimateGltfBytes(gltf),
+        polygons: countPolygons(gltf.scene),
+      });
     }
   }, [gltf, onLoaded]);
   return <primitive object={gltf.scene} />;

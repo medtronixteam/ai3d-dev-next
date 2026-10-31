@@ -9,7 +9,7 @@ import { Image as ImageIcon, Sparkles } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../context/AuthContext';
-import { useSocket } from '../../context/SocketContext';
+import { useSocket, SocketProvider } from '../../context/SocketContext';
 import { useNotification } from '../../context/NotificationContext';
 import { baseURL } from '../../config';
 import paths from '../../routes/paths';
@@ -104,12 +104,17 @@ const isPaid = (model) =>
   model?.is_free === '0' ||
   model?.is_free === 'false';
 
-export default function GeneratePage() {
+function GeneratePageContent() {
   const location = useLocation();
   const navigate = useNavigate();
   const { token } = useAuth();
-  const { queue_system, queueData, clearActiveQueueRegistration } = useSocket();
-  const { fcmToken } = useNotification();
+  const socketState = useSocket();
+  const queue_system = socketState?.queue_system;
+  const queueData = socketState?.queueData;
+  const clearActiveQueueRegistration = socketState?.clearActiveQueueRegistration;
+  const connected = Boolean(socketState?.connected);
+  const notification = useNotification();
+  const fcmToken = notification?.fcmToken ?? null;
   const pageRef = useRef(null);
   const promptRef = useRef(null);
   const productMenuTimer = useRef(null);
@@ -131,6 +136,8 @@ export default function GeneratePage() {
   const pendingJobRef = useRef(null);
   const buildIdRef = useRef(0);
   const activeProjectRef = useRef(null);
+  const connectedRef = useRef(false);
+  connectedRef.current = connected;
   const [buildLabel, setBuildLabel] = useState('');
   const [selectedType, setSelectedType] = useState('all');
   const [models, setModels] = useState([]);
@@ -289,7 +296,7 @@ export default function GeneratePage() {
   const finishGeneration = (projectId, status) => {
     if (String(activeProjectRef.current) !== String(projectId)) return;
     activeProjectRef.current = null;
-    clearActiveQueueRegistration();
+    clearActiveQueueRegistration?.();
     buildIdRef.current += 1;
     if (status === 'completed') {
       navigate('/3dio/new/scan', { state: { projectId, viewMode: true } });
@@ -306,7 +313,7 @@ export default function GeneratePage() {
     const projectId = activeProjectRef.current;
     if (!queueData || !projectId) return;
     const socketProjectId = queueData.projectId || queueData.deviceId;
-    if (socketProjectId == null || String(socketProjectId) !== String(projectId)) return;
+    if (socketProjectId != null && String(socketProjectId) !== String(projectId)) return;
 
     const status = String(queueData.status || '').toLowerCase();
     if (status === 'processing' || status === 'submitted') {
@@ -332,15 +339,18 @@ export default function GeneratePage() {
         throw new Error('Could not start generation.');
       }
       activeProjectRef.current = projectId;
-      queue_system(projectId, fcmToken);
+      queue_system?.(projectId, fcmToken);
       setBuildLabel('Your model is in the queue');
       const started = Date.now();
+      let nextFallbackAt = started + 20000;
       while (buildIdRef.current === buildId) {
         if (Date.now() - started > 2 * 60 * 60 * 1000) {
           throw new Error('This is taking longer than expected. You can open it from your projects.');
         }
-        await new Promise((resolve) => setTimeout(resolve, 5000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         if (buildIdRef.current !== buildId) return;
+        if (connectedRef.current || Date.now() < nextFallbackAt) continue;
+        nextFallbackAt = Date.now() + 20000;
         let detail;
         try {
           detail = await axios.get(`${baseURL}/project/detail/${projectId}`, {
@@ -368,7 +378,7 @@ export default function GeneratePage() {
       setBuildLabel('');
       if (activeProjectRef.current) {
         activeProjectRef.current = null;
-        clearActiveQueueRegistration();
+        clearActiveQueueRegistration?.();
       }
     } finally {
       if (buildIdRef.current === buildId) setIsGenerating(false);
@@ -1188,5 +1198,13 @@ export default function GeneratePage() {
         />
       ) : null}
     </div>
+  );
+}
+
+export default function GeneratePage() {
+  return (
+    <SocketProvider>
+      <GeneratePageContent />
+    </SocketProvider>
   );
 }

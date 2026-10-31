@@ -72,7 +72,7 @@ export const SocketProvider = ({ children }) => {
       console.log(`FCM Token: ${fcmToken.substring(0, 20)}...`, 'info');
     }
 
-    socketRef.current.emit('register-device', { deviceId : projectId });
+    socketRef.current.emit('register-device', { deviceId: projectId, projectId });
 
     socketRef.current.off('status_update');
 

@@ -309,8 +309,8 @@ function GeneratePageContent() {
   useEffect(() => {
     const projectId = activeProjectRef.current;
     if (!queueData || !projectId) return;
-    const socketProjectId = queueData.projectId || queueData.deviceId;
-    if (socketProjectId != null && String(socketProjectId) !== String(projectId)) return;
+    const socketProjectId = queueData.projectId || queueData.deviceId || queueData.project_id;
+    if (socketProjectId == null || String(socketProjectId) !== String(projectId)) return;
 
     const status = String(queueData.status || '').toLowerCase();
     if (status === 'processing' || status === 'submitted') {
@@ -339,32 +339,39 @@ function GeneratePageContent() {
       queue_system?.(projectId, fcmToken);
       setBuildLabel('Your model is in the queue');
       const started = Date.now();
-      while (buildIdRef.current === buildId) {
-        if (Date.now() - started > 2 * 60 * 60 * 1000) {
-          throw new Error('This is taking longer than expected. You can open it from your projects.');
-        }
-        await new Promise((resolve) => setTimeout(resolve, 5000));
-        if (buildIdRef.current !== buildId) return;
-        let detail;
-        try {
-          detail = await axios.get(`${baseURL}/project/detail/${projectId}`, {
-            headers: { Authorization: `Bearer ${authToken}` },
-          });
-        } catch (err) {
-          if (err?.response?.status === 404 && Date.now() - started < 30000) {
-            setBuildLabel('Your model is in the queue');
-            continue;
-          }
-          throw err;
-        }
-        if (buildIdRef.current !== buildId) return;
+
+      const readProjectStatus = async () => {
+        const detail = await axios.get(`${baseURL}/project/detail/${projectId}`, {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            Accept: 'application/json',
+          },
+        });
         const proj = detail.data?.data || detail.data;
         const status = String(proj?.status || '').toLowerCase();
         if (status === 'completed' || FAILED_STATUSES.has(status)) {
           finishGeneration(projectId, status);
-          return;
+          return true;
         }
-        setBuildLabel(status === 'processing' ? 'Shaping your 3D model' : 'Your model is in the queue');
+        if (status === 'processing') setBuildLabel('Shaping your 3D model');
+        else if (status === 'pending' || status === 'in_queue' || status === 'submitted' || status === 'queued') {
+          setBuildLabel('Your model is in the queue');
+        }
+        return false;
+      };
+
+      while (buildIdRef.current === buildId) {
+        if (Date.now() - started > 2 * 60 * 60 * 1000) {
+          throw new Error('This is taking longer than expected. You can open it from your projects.');
+        }
+        try {
+          const finished = await readProjectStatus();
+          if (finished || buildIdRef.current !== buildId) return;
+        } catch (err) {
+          if (!(err?.response?.status === 404 && Date.now() - started < 30000)) throw err;
+        }
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+        if (buildIdRef.current !== buildId) return;
       }
     } catch (err) {
       if (buildIdRef.current !== buildId) return;
@@ -395,9 +402,16 @@ function GeneratePageContent() {
       const res = await axios.post(
         `${baseURL}/project/prompt`,
         { name: Date.now().toString(), prompt: text },
-        { headers: { Authorization: `Bearer ${authToken}` } },
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+        },
       );
-      return res.data?.token || res.data?.data?.token || res.data?.id || res.data?.data?.id;
+      const data = res.data;
+      return data?.token || data?.data?.token;
     });
   };
 

@@ -337,7 +337,7 @@ const RightScan = ({
     setIsModelLoading(false);
 
     if (url) {
-      url = url.replace(/\\\//g, '/').trim();
+      url = url.replace(/\\\//g, '/').trim().replace(/([^:]\/)\/+/g, '$1');
       if (url.includes('/storage//')) {
         url = url.replace('/storage//', '/storage/models/');
       }

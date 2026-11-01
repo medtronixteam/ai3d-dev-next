@@ -10,8 +10,14 @@ const MODEL_VIEWER_ENV =
 
 const VIEWER_BG = '#ffffff';
 
+const collapseUrlSlashes = (url) => {
+  if (!url) return url;
+  return String(url).replace(/\\\//g, '/').trim().replace(/([^:]\/)\/+/g, '$1');
+};
+
 const addCacheBuster = (url) => {
   if (!url) return url;
+  url = collapseUrlSlashes(url);
   const isSigned =
     url.includes('Signature=') ||
     url.includes('x-goog-signature=') ||
@@ -88,7 +94,7 @@ const SampleModels = ({ model, onClose }) => {
             const tempUrl =
               data.url || data.temp_url || data.model_url || data.data?.url || data.data?.temp_url;
             if (tempUrl && !cancelled) {
-              setModelUrl(addCacheBuster(tempUrl.replace(/\\\//g, '/').trim()));
+              setModelUrl(addCacheBuster(tempUrl));
               return;
             }
           }

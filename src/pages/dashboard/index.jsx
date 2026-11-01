@@ -198,8 +198,14 @@ const updateBgColor = async (modelId, bgColor) => {
   }
 };
 
+const collapseUrlSlashes = (url) => {
+  if (!url) return url;
+  return String(url).replace(/\\\//g, '/').trim().replace(/([^:]\/)\/+/g, '$1');
+};
+
 const addCacheBuster = (url) => {
   if (!url) return url;
+  url = collapseUrlSlashes(url);
   const isSigned = url.includes('Signature=') || 
                    url.includes('x-goog-signature=') || 
                    url.includes('X-Goog-Signature=') || 
@@ -627,9 +633,7 @@ export function ModelCardVideoModal({
       const data = await response.json();
       let url = data.url || data.temp_url || data.model_url || data.data?.url || data.data?.temp_url;
       if (!url) return null;
-      url = url.replace(/\\\//g, '/').trim();
-
-      return url;
+      return collapseUrlSlashes(url);
     } catch (error) {
       console.error('Error fetching 3D model URL:', error);
       return null;

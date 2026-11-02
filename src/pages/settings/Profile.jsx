@@ -887,6 +887,7 @@ const Profile = () => {
               <FiSearch style={{ color: '#999', fontSize: '18px', marginRight: '12px' }} />
               <input
                 type="text"
+                className="profile-header-search"
                 placeholder="Search in profile..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}

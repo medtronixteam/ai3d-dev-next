@@ -1030,12 +1030,12 @@ select:-webkit-autofill:focus {
   color: #fff;
 }
 
-/* Stronger dark mode for profile card inputs */
-[data-theme='dark'] .profile-main-card input:not(.profile-search-form-control),
-[data-theme='dark'] .profile-main-card .form-control,
+/* Stronger dark mode for profile card inputs. Header search keeps only the outer pill border. */
+[data-theme='dark'] .profile-main-card input:not(.profile-search-form-control):not(.profile-header-search),
+[data-theme='dark'] .profile-main-card .form-control:not(.profile-header-search),
 [data-theme='dark'] .profile-main-card .profile-input,
-.dark .profile-main-card input:not(.profile-search-form-control),
-.dark .profile-main-card .form-control,
+.dark .profile-main-card input:not(.profile-search-form-control):not(.profile-header-search),
+.dark .profile-main-card .form-control:not(.profile-header-search),
 .dark .profile-main-card .profile-input {
   background: #110e20 !important;
   color: #f3f3fa !important;
@@ -2405,6 +2405,9 @@ select:-webkit-autofill:focus {
   border: 1px solid #3a3348 !important;
 }
 
+.profile-main-card .profile-search-container input,
+[data-theme='dark'] .profile-main-card .profile-search-container input,
+.dark .profile-main-card .profile-search-container input,
 .profile-search-container input,
 [data-theme='dark'] .profile-search-container input,
 .dark .profile-search-container input {

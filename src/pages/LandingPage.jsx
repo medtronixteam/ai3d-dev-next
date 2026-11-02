@@ -102,7 +102,27 @@ import { isPreLaunchActive } from '../utils/platformLaunch';
 import { toast } from 'react-toastify';
 import SampleModels from '../Popup/SampleModels';
 
-const modelFallback = scan;
+const ModelPlaceholderArt = ({ id }) => (
+  <svg className="model_placeholder_art" viewBox="0 0 200 150" aria-hidden="true">
+    <defs>
+      <radialGradient id={`${id}-orb`} cx="36%" cy="30%" r="70%">
+        <stop offset="0%" stopColor="#ffffff" />
+        <stop offset="42%" stopColor="#ffe7f6" />
+        <stop offset="100%" stopColor="#ff7eb9" />
+      </radialGradient>
+      <linearGradient id={`${id}-ring`} x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+        <stop offset="100%" stopColor="#ffffff" stopOpacity="0.15" />
+      </linearGradient>
+    </defs>
+    <ellipse cx="100" cy="124" rx="48" ry="9" fill="rgba(255,255,255,0.28)" />
+    <ellipse cx="100" cy="74" rx="62" ry="20" fill="none" stroke={`url(#${id}-ring)`} strokeWidth="2.4" />
+    <circle cx="148" cy="58" r="4.5" fill="#ffffff" />
+    <circle cx="100" cy="70" r="36" fill={`url(#${id}-orb)`} />
+    <ellipse cx="84" cy="54" rx="13" ry="7" fill="#ffffff" opacity="0.8" />
+    <circle cx="58" cy="46" r="3" fill="#ffffff" opacity="0.85" />
+  </svg>
+);
 
 const LandingPage = () => {
   const { pathname, hash, key } = useLocation();
@@ -117,6 +137,7 @@ const LandingPage = () => {
   const [subscribeLoading, setSubscribeLoading] = useState(false);
   const [subscribeMsg, setSubscribeMsg] = useState('');
   const [selectedModel, setSelectedModel] = useState(null);
+  const [missingModelImages, setMissingModelImages] = useState({});
   const [isProductDropdownOpen, setIsProductDropdownOpen] = useState(false);
   const [isMobileProductOpen, setIsMobileProductOpen] = useState(false);
   const dropdownTimeoutRef = useRef(null);
@@ -2306,12 +2327,14 @@ const LandingPage = () => {
                 </div>
               ) : (
                 (showAllModels ? filteredModels : filteredModels.slice(0, 6)).map((card, idx) => {
+                  const cardKey = card.id || idx;
+                  const imageMissing = !card.image || missingModelImages[cardKey];
                   const imgUrl = card.image
                     ? `https://dev-backend.ai3dscanning.com/storage/${card.image.replace(/^\/+/, '')}`
-                    : modelFallback;
+                    : '';
 
                   return (
-                    <div className="col-12 col-sm-6 col-lg-4" key={card.id || idx}>
+                    <div className="col-12 col-sm-6 col-lg-4" key={cardKey}>
                       <motion.div
                         initial={{ opacity: 0, y: 50 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -2324,12 +2347,22 @@ const LandingPage = () => {
                         onClick={() => setSelectedModel(card)}
                         style={{ cursor: 'pointer' }} 
                       >
-                        <img
-                          src={imgUrl}
-                          className="model_image"
-                          alt={card.title}
-                          onError={(e) => (e.target.src = modelFallback)}
-                        />
+                        {imageMissing ? (
+                          <div className="model_placeholder">
+                            <ModelPlaceholderArt id={`model-art-${cardKey}`} />
+                          </div>
+                        ) : (
+                          <img
+                            src={imgUrl}
+                            className="model_image"
+                            alt={card.title}
+                            onError={() => {
+                              setMissingModelImages((prev) =>
+                                prev[cardKey] ? prev : { ...prev, [cardKey]: true },
+                              );
+                            }}
+                          />
+                        )}
 
                         <div className="model_footer">
                           <div className="model_label">

@@ -13,12 +13,15 @@ import { FiFacebook, FiInstagram, FiLinkedin, FiSend } from 'react-icons/fi';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { baseURL } from '../../config';
+import { useAuth } from '../../context/AuthContext';
+import CoinsPopup from '../../components/popup/CoinsPopup';
 import '../ApiSdk.css';
 import { FaCheck } from 'react-icons/fa';
 import { ChevronLeft, ChevronRight, Send, Share2 } from 'lucide-react';
 import CustomLoader from '../../components/loader/CustomLoader';
 
 const ReferralPage = () => {
+  const { token } = useAuth();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [filter, setFilter] = useState('All');
   const [referralList, setReferralList] = useState([]);
@@ -29,6 +32,8 @@ const ReferralPage = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
+  const [coins, setCoins] = useState(0);
+  const [showCoinsPopup, setShowCoinsPopup] = useState(false);
 
   // Theme detection
   useEffect(() => {
@@ -149,6 +154,28 @@ const ReferralPage = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (!token) return;
+    const fetchCoins = async () => {
+      try {
+        const response = await fetch(`${baseURL}/my/coins`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setCoins(parseInt(data['coin-balance'], 10) || 0);
+        }
+      } catch (err) {
+        console.error('Failed to fetch coins:', err);
+      }
+    };
+    fetchCoins();
+  }, [token]);
+
   const handleSendEmail = async () => {
     if (!email) return;
 
@@ -204,10 +231,10 @@ const ReferralPage = () => {
   return (
     <section>
       <div className="referal-page-main-container">
-        <div className="share-coins-button">
+        <button type="button" className="share-coins-button" onClick={() => setShowCoinsPopup(true)}>
           <Send size={18} />
           <span>Share Coins</span>
-        </div>
+        </button>
 
         <div className="position-relative">
           <span className="referal-page-star">
@@ -559,6 +586,13 @@ const ReferralPage = () => {
           )}
         </div>
       </div>
+      {showCoinsPopup && (
+        <CoinsPopup
+          onClose={() => setShowCoinsPopup(false)}
+          coins={coins}
+          onCoinsUpdate={(spent) => setCoins((prev) => Math.max(0, prev - Number(spent)))}
+        />
+      )}
     </section>
   );
 };

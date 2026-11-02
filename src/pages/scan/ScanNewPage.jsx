@@ -704,7 +704,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       setProjectMeta((prev) => ({
         name: proj.name || prev?.name || '',
         prompt: proj.prompt || prev?.prompt || '',
-        createdAt: createdAt || prev?.createdAt || null,
+        createdAt: createdAt || prev?.createdAt || new Date().toISOString(),
         fileSize: proj.file_size || proj.size || proj.fileSize || proj.content_length || prev?.fileSize || null,
         polygons: proj.polygons || proj.polygon_count || proj.poly_count || proj.faces || prev?.polygons || null,
         category: proj.category || proj.model_category || prev?.category || '',

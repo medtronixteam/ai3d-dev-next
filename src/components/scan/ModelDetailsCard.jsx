@@ -6,7 +6,6 @@ import {
   Feather,
   FileText,
   HardDrive,
-  Tag,
 } from 'lucide-react';
 
 const SOURCE_COPY = {
@@ -80,14 +79,16 @@ const ModelDetailsCard = ({
     String(projectMeta?.fileType || '').replace(/^\./, '').toUpperCase() ||
     'GLB';
   const title = fileTitle(projectMeta?.name, promptText, format);
-  const category = projectMeta?.category || '—';
+  const hidePromptField =
+    sourceKey === 'image_to_3d' ||
+    sourceKey === 'images_to_3d' ||
+    sourceKey === 'video_to_3d';
 
   const rows = [
     { icon: Calendar, label: 'Created', value: formatCreated(projectMeta?.createdAt) },
     { icon: FileText, label: 'File Format', value: format },
     { icon: HardDrive, label: 'File Size', value: formatFileSize(projectMeta?.fileSize) },
     { icon: Box, label: 'Polygons', value: formatCount(projectMeta?.polygons) },
-    { icon: Tag, label: 'Category', value: category },
   ];
 
   return (
@@ -102,7 +103,7 @@ const ModelDetailsCard = ({
         </div>
       </div>
 
-      {promptText && (
+      {promptText && !hidePromptField && (
         <div className="model-details-prompt">
           <p className="model-details-kicker">{source.created}</p>
           <div className="model-details-quote">

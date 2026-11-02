@@ -1,19 +1,12 @@
-import React from 'react';
-import './CoinsPopup.css';
-import { RxCross2 } from 'react-icons/rx';
-import { MdApi } from 'react-icons/md';
-import '../../pages/ApiSdk.css';
-
-/*
+import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
+import './CoinsPopup.css';
 import UpgradeCoin from '../../assets/images/UpgradeCoin.svg';
 import TotalCoin from '../../assets/images/TotalCoins.svg';
 import { baseURL } from '../../config';
-import { FiCheck } from 'react-icons/fi';
-*/
+import { FiCheck, FiX } from 'react-icons/fi';
 
 const CoinsPopup = ({ onClose, coins, onCoinsUpdate }) => {
-  /*
   const amounts = [50, 100, 150, 200, 250, 300, 350, 'Custom'];
   const [activeAmount, setActiveAmount] = useState(null);
   const [email, setEmail] = useState('');
@@ -40,7 +33,7 @@ const CoinsPopup = ({ onClose, coins, onCoinsUpdate }) => {
     typingTimeoutRef.current = setTimeout(() => {
       handleEmailSearch(email);
       setSearchPerformed(true);
-    }, 3000);
+    }, 400);
 
     return () => {
       if (typingTimeoutRef.current) {
@@ -57,6 +50,7 @@ const CoinsPopup = ({ onClose, coins, onCoinsUpdate }) => {
       .toUpperCase();
   }
 
+  // 🔹 Email search function
   const handleEmailSearch = async (value) => {
     if (!value) {
       setUsers([]);
@@ -80,6 +74,7 @@ const CoinsPopup = ({ onClose, coins, onCoinsUpdate }) => {
     }
   };
 
+  // 🔹 Transfer Coins
   const handleTransferCoins = async () => {
     if (!selectedEmail) {
       setMessage({ text: 'Please select an email first!', type: 'error' });
@@ -112,6 +107,7 @@ const CoinsPopup = ({ onClose, coins, onCoinsUpdate }) => {
       const isSuccess = response.status === 200 || response.status === 201;
 
       if (isSuccess) {
+        // Show success message
         setMessage({ text: 'Coins transferred successfully!', type: 'success' });
 
         if (onCoinsUpdate) {
@@ -131,6 +127,7 @@ const CoinsPopup = ({ onClose, coins, onCoinsUpdate }) => {
     } catch (error) {
       console.error('Coin transfer failed:', error);
 
+      // Check if error is related to email notification (backend issue)
       const errorMessage = error.response?.data?.message || '';
       const isEmailError =
         errorMessage.includes('htmlspecialchars') ||
@@ -138,6 +135,7 @@ const CoinsPopup = ({ onClose, coins, onCoinsUpdate }) => {
         errorMessage.includes('custom_notification.blade.php');
 
       if (isEmailError) {
+        // Coins were transferred but email notification failed
         setMessage({
           text: 'Coins transferred successfully!!',
           type: 'success',
@@ -157,6 +155,7 @@ const CoinsPopup = ({ onClose, coins, onCoinsUpdate }) => {
           setMessage({ text: '', type: '' });
         }, 2000);
       } else {
+        // Actual transfer failure
         const errorMsg =
           error.response?.data?.message || 'Failed to transfer coins. Please try again.';
         setMessage({ text: errorMsg, type: 'error' });
@@ -165,20 +164,141 @@ const CoinsPopup = ({ onClose, coins, onCoinsUpdate }) => {
       setTransferLoading(false);
     }
   };
-  */
 
   return (
     <section>
       <div className="shared-coins-overlay" onClick={onClose}>
         <div className="shared-coins-content position-relative" onClick={(e) => e.stopPropagation()}>
-          <RxCross2 onClick={onClose} className="coins-popup-cross-btn" style={{ fontSize: '12px' }} />
-          <div className="api-sdk-container" style={{ minHeight: 'auto', padding: '60px 40px' }}>
-            <div className="api-sdk-card" style={{ border: 'none', boxShadow: 'none', background: 'transparent' }}>
-              <MdApi className="api-sdk-icon" />
-              <h2 className="api-sdk-title">Coming Soon</h2>
-              <div className="api-sdk-desc">
-                Coins features are launching soon. Stay tuned!
+          <FiX onClick={onClose} size={22} className="coins-popup-cross-btn" />
+          <div className="shared-coins-header">
+            <h1>Share Coins</h1>
+            <p>Send coins to friends & family</p>
+          </div>
+
+          <div className="total-coins-img-container">
+            <img src={TotalCoin} alt="image" />
+            <div className="total-coins-text">
+              <h2>{coins.toLocaleString()}</h2>
+              <p>Available Coins</p>
+            </div>
+          </div>
+
+          <div className="shared-coins-sub-header">
+            <h3>Quick Amount</h3>
+
+            <div className="quick-amount-select">
+              {amounts.map((amt, idx) => (
+                <span
+                  key={idx}
+                  className={activeAmount === amt ? 'active' : ''}
+                  onClick={() => setActiveAmount(amt)}
+                >
+                  {amt}
+                </span>
+              ))}
+            </div>
+
+            {activeAmount === 'Custom' && (
+              <div className="d-flex flex-column mt-4">
+                <label htmlFor="amount" className="enter-amount-label">
+                  Enter Amount
+                </label>
+                <div className="coin-input-container">
+                  <img src={UpgradeCoin} alt="coin" className="coin-icon" />
+                  <input
+                    type="number"
+                    placeholder="Enter Coins to Send"
+                    value={customAmount}
+                    onChange={(e) => setCustomAmount(e.target.value)}
+                  />
+                </div>
               </div>
+            )}
+
+            {message.text && (
+              <p
+                className="mt-3"
+                style={{
+                  color: message.type === 'success' ? '#2bc155' : '#e74c3c',
+                  fontWeight: '600',
+                  margin: '0',
+                  fontSize: '14px',
+                }}
+              >
+                {message.text}
+              </p>
+            )}
+
+            {/* 🔹 Email Search */}
+            <div className="d-flex flex-column mt-2">
+              <label htmlFor="email" className="enter-amount-label">
+                Send to
+              </label>
+              <input
+                type="text"
+                placeholder="Enter email address"
+                className="email-input-container"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setSearchPerformed(false);
+                  setUsers([]);
+                }}
+                onWheel={(e) => e.target.blur()}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleEmailSearch(email);
+                    setSearchPerformed(true);
+                  }
+                }}
+              />
+            </div>
+
+            {/* 🔹 Email Suggestions */}
+            <div className="share-coin-user-list mt-2">
+              {loading && <p>Searching...</p>}
+
+              {!loading &&
+                users.length > 0 &&
+                users.map((user, index) => (
+                  <div
+                    key={index}
+                    className={`share-coin-user-item ${selectedEmail === user.email ? 'selected' : ''}`}
+                    onClick={() =>
+                      setSelectedEmail(selectedEmail === user.email ? null : user.email)
+                    }
+                  >
+                    <div className="share-coin-avatar">{getInitials(user.name)}</div>
+                    <div className="share-coin-user-info">
+                      <h4>{user.name}</h4>
+                      <p>{user.email}</p>
+                    </div>
+
+                    {selectedEmail === user.email && (
+                      <div className="selected-share-coin-icon">
+                        <FiCheck
+                          size={15}
+                          color="#fff"
+                          className="d-flex align-items-center justify-content-center"
+                        />
+                      </div>
+                    )}
+                  </div>
+                ))}
+
+              {!loading && searchPerformed && email && users.length === 0 && (
+                <p>No results found</p>
+              )}
+            </div>
+
+            <div className="d-flex align-items-center justify-content-center mb-4 mt-2">
+              <button
+                className="share-coin-send-email-btn"
+                onClick={handleTransferCoins}
+                disabled={transferLoading}
+              >
+                {transferLoading ? 'Sending...' : 'Send Coins'}
+              </button>
             </div>
           </div>
         </div>
@@ -188,4 +308,3 @@ const CoinsPopup = ({ onClose, coins, onCoinsUpdate }) => {
 };
 
 export default CoinsPopup;
-

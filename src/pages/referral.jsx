@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Service.css';
 import './LandingPage.css';
+import siteFaqs from '../data/siteFaqs';
 import logo from './images/logo.png';
 import vera from './images/vera-ai.png';
 import consulting from './images/consulting.png';
@@ -122,29 +123,7 @@ const Referral = () => {
     }
   }, [pathname, hash, key]);
 
-  // FAQ data
-  const faqs = [
-    {
-      question: 'How does the referral program works?',
-      answer:
-        ' Our referral program lets you invite friends to join. When they sign up using your unique referral link and complete a qualifying action ',
-    },
-    {
-      question: 'How  much reward can I earn?',
-      answer:
-        'You can earn up to $50 per successful referral, depending on the plan your friend chooses. There’s no limit to how many people you can refer',
-    },
-    {
-      question: 'Who can I invite?',
-      answer:
-        'You can invite anyone who isn’t already a customer—friends, family, coworkers, or followers. Just share your referral link, and as long as they’re new to the service, they can sign up and unlock rewards for both of you.',
-    },
-    {
-      question: 'Can I use more than one reward at once?',
-      answer:
-        ' No, referral rewards can typically only be used one per transaction or account, depending on the terms. They cannot be combined with other discounts or rewards unless otherwise stated',
-    },
-  ];
+  const faqs = siteFaqs.slice(0, 4);
 
   // FAQ accordion state
   const [openIndex, setOpenIndex] = useState(null);

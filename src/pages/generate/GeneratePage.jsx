@@ -12,6 +12,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useSocket, SocketProvider } from '../../context/SocketContext';
 import { useNotification } from '../../context/NotificationContext';
 import { baseURL } from '../../config';
+import { setFaviconWorking, resetTaskFavicon } from '../../utils/taskFavicon';
 import paths from '../../routes/paths';
 import JoinPlatformCta from '../../components/landing/JoinPlatformCta';
 import FooterLangCurrency from '../../components/footer/FooterLangCurrency';
@@ -137,6 +138,14 @@ function GeneratePageContent() {
   const activeProjectRef = useRef(null);
   const [buildLabel, setBuildLabel] = useState('');
   const [selectedType, setSelectedType] = useState('all');
+
+  useEffect(() => {
+    if (isGenerating) {
+      setFaviconWorking();
+      return;
+    }
+    resetTaskFavicon();
+  }, [isGenerating]);
   const [models, setModels] = useState([]);
   const [visibleCount, setVisibleCount] = useState(CARDS_PER_VIEW);
   const [hasMore, setHasMore] = useState(true);

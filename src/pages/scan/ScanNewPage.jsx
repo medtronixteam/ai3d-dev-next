@@ -6,6 +6,7 @@ import lottie from 'lottie-web';
 import { useAuth } from '../../context/AuthContext';
 import { useSocket } from '../../context/SocketContext';
 import { useNotification } from '../../context/NotificationContext';
+import { setFaviconDone, setFaviconWorking, resetTaskFavicon } from '../../utils/taskFavicon';
 import { baseURL } from '../../config';
 import loaderAnimationData from '../../assets/images/loader.json';
 import './ModelGenerator.css';
@@ -556,6 +557,16 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     showLoadingUI ||
     isArrowLoading) && !isRedirecting;
   const isCancelled = projectStatus === 'canceled' || projectStatus === 'cancelled';
+
+  useEffect(() => {
+    const working = isProcessing && !modelReady && !isCancelled;
+    if (working) {
+      setFaviconWorking();
+      return;
+    }
+    if (modelReady) setFaviconDone();
+    else if (isCancelled) resetTaskFavicon();
+  }, [isProcessing, modelReady, isCancelled]);
 
   // fetch recent projects model
   useEffect(() => {

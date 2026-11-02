@@ -2854,6 +2854,7 @@ li {
 .aithreed .dropdown .accordion-body {
   font-family: 'Poppins';
   font-style: Regular;
+  white-space: pre-line;
   line-height: 1.375rem;
   letter-spacing: 0%;
   box-shadow: none;

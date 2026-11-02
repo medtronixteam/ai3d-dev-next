@@ -101,6 +101,7 @@ import { isPreLaunchActive } from '../utils/platformLaunch';
 
 import { toast } from 'react-toastify';
 import SampleModels from '../Popup/SampleModels';
+import siteFaqs from '../data/siteFaqs';
 
 const ModelPlaceholderArt = ({ id }) => (
   <svg className="model_placeholder_art" viewBox="0 0 200 150" aria-hidden="true">
@@ -571,37 +572,7 @@ const LandingPage = () => {
     fetchModels();
   }, []);
 
-  // FAQ data
-
-  const faqs = [
-    {
-      question: 'How long does it take to transform a single model?',
-
-      answer:
-        ' With our AI powered processing, most 3D models are generated in seconds to a few minutes, depending on complexity and resolution settings.',
-    },
-
-    {
-      question: 'How do I create an account?',
-
-      answer:
-        'Simply click "Sign Up" on our website or mobile app, enter your details, and verify your email. You can start with a free trial immediately.',
-    },
-
-    {
-      question: 'How can I upgrade to the paid version?',
-
-      answer:
-        'You can upgrade anytime from your account dashboard by selecting a subscription plan and making a secure online payment.',
-    },
-
-    {
-      question: 'Do you offer discounts?',
-
-      answer:
-        ' Yes-discounts are available for annual subscriptions, educational institutions, and bulk enterprise packages. Contact our sales team for details.',
-    },
-  ];
+  const faqs = siteFaqs.slice(0, 4);
 
   const toggleFAQ = (index) => {
     setOpenIndex(openIndex === index ? null : index);

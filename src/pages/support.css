@@ -40,6 +40,50 @@
 }
 
 
+.support-ticket-system-container {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  padding: 12px 24px 40px;
+  overflow-x: hidden;
+}
+
+.support-page-intro {
+  box-sizing: border-box;
+  max-width: calc(100% - 380px);
+  padding-top: 4px;
+}
+
+@media (max-width: 1100px) {
+  .support-page-intro {
+    max-width: 100%;
+    padding-top: 72px;
+  }
+}
+
+.support-ticket-system-h1-tag {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0;
+  color: #1c1424;
+}
+
+.support-ticket-system-p-tag {
+  font-size: 18px;
+  font-weight: 400;
+  margin: 0;
+  color: #6e6278;
+  line-height: 2;
+}
+
+[data-theme='dark'] .support-ticket-system-h1-tag {
+  color: #fff;
+}
+
+[data-theme='dark'] .support-ticket-system-p-tag {
+  color: #c8c4d4;
+}
+
 /* Live Chat Banner */
 .live-chat-banner {
   display: flex;
@@ -113,11 +157,12 @@
 .search-input {
   width: 100%;
   padding: 12px 50px 12px 20px;
-  border: 1px solid #ccc;
+  border: 1px solid #e4d7e2;
   border-radius: 50px;
   font-size: 15px;
   outline: none;
-  color: #555;
+  background: #fff;
+  color: #1c1424;
 }
 
 .search-input::placeholder {
@@ -336,8 +381,8 @@
 
 /* Dark Theme Support */
 [data-theme='dark'] .live-chat-banner {
-  background-color: #4B1333;
-  border: 1px solid #DE3996;
+  background-color: rgba(222, 57, 150, 0.22);
+  border: 1px solid #de3996;
 }
 
 [data-theme='dark'] .chat-content strong {
@@ -363,9 +408,9 @@
 }
 
 [data-theme='dark'] .search-input {
-  background-color: #110E20;
+  background-color: #110e20;
   color: #fff;
-  border-color: #DE3996;
+  border-color: #3a3348;
 }
 
 [data-theme='dark'] .search-btn {
@@ -631,14 +676,18 @@
   color: #fff;
 }
 
-[data-theme='dark'] .ai3d-form .form-control,
+.ai3d-form .form-control,
 .ai3d-form .form-select,
 .upload-box {
-  background-color: #110E20;
+  background-color: #fff;
+  color: #1c1424;
 }
 
+[data-theme='dark'] .ai3d-form .form-control,
+[data-theme='dark'] .ai3d-form .form-select,
 [data-theme='dark'] .upload-box {
-  background-color: #110E20;
+  background-color: #110e20;
+  color: #fff;
 }
 
 [data-theme='dark'] .upload-box p {

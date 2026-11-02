@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiChevronDown, FiMoreVertical, FiSearch, FiTrash2 } from 'react-icons/fi';
+import { FiChevronDown, FiMoreVertical, FiTrash2 } from 'react-icons/fi';
 import { RxHamburgerMenu } from 'react-icons/rx';
 
 const TeamSection = ({
@@ -15,48 +15,20 @@ const TeamSection = ({
   onDropdown,
   onDelete,
   onSidebarToggle,
+  onCreate,
 }) => {
   return (
     <div>
       <section className="team-section">
-            <div className="team-page-header" style={{ width: '100%' }}>
-            <style>{`
-              .team-page-header { display: flex; justify-content: center; align-items: center; padding: 16px 18px 0 18px; }
-              .team-header-inner { display: flex; align-items: center; justify-content: center; width: 100%; max-width: 820px; }
-              .team-sidebar-toggle { display: none; background: #fff; color: #DE3996; border: 1px solid #eee; border-radius: 6px; width: 40px; height: 40px; align-items: center; justify-content: center; font-size: 20px; margin-right: 10px; }
-              .team-search-container { position: relative;  display: flex; align-items: center; background: rgba(255,237,247,1); border: none; border-radius: 8px; padding: 8px 14px; min-width: 260px; width: 100%; max-width: 420px; }
-              .team-search-container:focus-within{
-        box-shadow: 0 0 10px var(--primary-color) !important;
-      
-      }
-              .team-search-input { border: none; outline: none; background: transparent; font-size: 15px; color: #232334; width: 100%; }
-              @media (max-width: 992px) {.team-header-inner { justify-content: flex-start; } .team-sidebar-toggle { display: inline-flex; } .team-search-container { margin-left: 8px; max-width: none; } }
-              @media (max-width: 500px) {.team-page-header {padding: 16px 10px 0 5px;} }
-              [data-theme='dark'] .team-sidebar-toggle, .dark .team-sidebar-toggle { background: #232334 !important; color: #DE3996 !important; border: 1px solid #39395a !important; }
-              [data-theme='dark'] .team-search-container, .dark .team-search-container { background: #232334 !important; }
-              [data-theme='dark'] .team-search-input, .dark .team-search-input { color: #f3f3fa !important; }
-            `}</style>
-            <div className="team-header-inner">
+            <div className="team-page-header">
               <button className="team-sidebar-toggle" onClick={onSidebarToggle} aria-label="Open sidebar"><RxHamburgerMenu /></button>
-              <div className="team-search-container">
-                <FiSearch style={{ color: '#999', fontSize: 16, marginRight: 10 }} />
-                <input
-                  className="team-search-input"
-                  placeholder="Search"
-                  value={search}
-                  onChange={(e) => onSearchChange?.(e.target.value)}
-                />
-              </div>
             </div>
-
-          </div>
 
 
             <div className="team-section-card">
               
               {/* Header */}
-              <h2 className="font-weight-bold your-team" style={{ marginBottom: 24 }}>Your Teams</h2>
-              {/* Modern Filter Row */}
+              <h2 className="font-weight-bold your-team">Your Teams</h2>
               <div className="team-filters">
                   <input
                     type="search"
@@ -107,6 +79,9 @@ const TeamSection = ({
                     fontSize: 18,
                   }} />
                 </div>
+                <button type="button" className="team-create-btn" onClick={onCreate}>
+                  Create team
+                </button>
                 <style>{`
                   @media (max-width: 700px) {
                     .team-filters input, .team-filters .team-role-select { width: 100% !important; min-width: 0 !important; }
@@ -125,13 +100,10 @@ const TeamSection = ({
                   <div className="col-12 text-center py-5">No teams found.</div>
                 ) : (
                   filteredTeams.map((team, idx) => (
-                    <div className="col-md-6 col-lg-4 mb-4 padding" key={team.id} 
-                    // style={filteredTeams.length === 1 ? { minWidth: 300, maxWidth: 340, width: '100%' } : { maxWidth: 340 }}
-                    >
+                    <div className="col-md-6 col-lg-4 mb-4 padding" key={team.id}>
                       <div className="team-card card-gradient-1" style={{ background: 'white', position: 'relative', color: '#222', minHeight: filteredTeams.length === 1 ? 180 : undefined }}>
                         <div className="gradient-header" style={{ background: gradients[idx % gradients.length], height: 80, borderTopLeftRadius: 14, borderTopRightRadius: 14 }} />
                         <div className="card-content" style={{ display: 'flex', alignItems: 'center', padding: 20, background: 'white', borderBottomLeftRadius: 14, borderBottomRightRadius: 14 }}>
-      
                           {/* Avatar and Name */}
                           <img
                             src={team.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(team.name)}&background=DE3996&color=fff&size=128`}

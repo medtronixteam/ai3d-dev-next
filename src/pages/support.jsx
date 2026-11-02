@@ -220,10 +220,12 @@ export default function Support() {
   return (
     <div style={{ background: isDarkMode ? '#000' : '#fdf8fc' }}>
       <div className="support-ticket-system-container">
-        <h1 className="support-ticket-system-h1-tag">
-          Hi {user?.name || 'Adam'}, we’re here to help.
-        </h1>
-        <p className="support-ticket-system-p-tag">Manage and track your support requests</p>
+        <div className="support-page-intro">
+          <h1 className="support-ticket-system-h1-tag">
+            Hi {user?.name || 'Adam'}, we’re here to help.
+          </h1>
+          <p className="support-ticket-system-p-tag">Manage and track your support requests</p>
+        </div>
 
         <div className="support-tab-container mt-4">
           {['Individual', 'Team', 'Enterprise'].map((tab) => (

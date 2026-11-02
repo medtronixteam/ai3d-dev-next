@@ -8,7 +8,9 @@
   height: 100vh;
   background: #ffeef8;
   border-right: none;
-  padding: 20px 5px;
+  padding: 20px 12px;
+  flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 [data-theme='dark'] .custom-sidebar-desktop {
@@ -220,8 +222,8 @@
 
 @media (min-width: 1200px) {
   .custom-sidebar-desktop {
-    width: 200px;
-    padding: 20px 10px 20px 0px;
+    width: 220px;
+    padding: 20px 12px;
   }
 }
 

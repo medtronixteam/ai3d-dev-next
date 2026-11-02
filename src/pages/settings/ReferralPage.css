@@ -1,10 +1,13 @@
 .referal-page-main-container {
   background: #fff;
   max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   margin: 0.5rem 1.5rem;
   border-radius: 8px;
   box-shadow: 0 2px 16px #e9e9f7;
   padding: 40px 20px;
+  overflow-x: hidden;
 }
 
 [data-theme='dark'] .referal-page-main-container {
@@ -194,6 +197,9 @@
 .referal-page-header {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  min-width: 0;
 }
 
 .referal-page-main-content {
@@ -250,10 +256,14 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  padding: 30px 80px;
+  padding: 28px 24px;
   border-radius: 8px;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
   margin-top: 2rem;
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
 }
 
 [data-theme='dark'] .invite-friends-main-container {
@@ -318,16 +328,19 @@
   display: flex;
   gap: 8px;
   margin-top: 6px;
-  /* align-items: center;
-  justify-content: center; */
+  align-items: center;
+  min-width: 0;
+  width: 100%;
 }
 
 .invite-input {
   border: 1px solid #a8a8a8;
   outline: none;
   border-radius: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
   width: 100%;
-  max-width: 81%;
+  max-width: none;
   padding: 10px;
 }
 
@@ -339,8 +352,10 @@
   border: 1px solid #a8a8a8;
   outline: none;
   border-radius: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
   width: 100%;
-  max-width: 100%;
+  max-width: none;
   padding: 10px;
 }
 
@@ -351,27 +366,17 @@
 .copy-link-button {
   background-color: #de3996;
   color: #ffffff;
-  border: 1px solid #a8a8a8;
+  border: none;
   font-size: 16px;
   font-weight: 600;
-  padding: 10px;
+  padding: 10px 14px;
   display: flex;
   align-items: center;
   border-radius: 8px;
   gap: 8px;
   cursor: pointer;
-}
-
-@media (min-width : 1300px) and (max-width : 1440px) {
-  .invite-input {
-  max-width: 84.3%;
-}
-}
-
-@media (min-width : 900px) and (max-width : 1250px) {
-  .invite-input {
-  max-width: 78.5%;
-}
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 
 .copy-link-button:hover {
@@ -380,15 +385,17 @@
 
 .send-button {
   color: #ffffff;
-  border: 1px solid #a8a8a8;
+  border: none;
   font-size: 16px;
   font-weight: 600;
-  padding: 10px;
+  padding: 10px 14px;
   display: flex;
   align-items: center;
   border-radius: 8px;
   gap: 8px;
   cursor: pointer;
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 
 .send-button:hover {
@@ -406,12 +413,15 @@
 .social-media-invite-links-icons {
   background-color: #de3996;
   color: #fff;
+  border: none;
   border-radius: 9px;
   width: 30px;
   height: 30px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  padding: 0;
+  cursor: pointer;
 }
 
 .referal-page-history-container h1 {
@@ -544,10 +554,10 @@
 
 @media (max-width : 900px) {
   .invite-friends-main-container {
-    padding: 20px 40px !important;
+    padding: 20px 16px !important;
   }
   .invite-input {
-    max-width: 76.5%;
+    max-width: none;
   }
   .referal-page-main-content span {
     font-size: 12px !important;

@@ -487,8 +487,14 @@
   border-radius: 8px;
 }
 
+[data-theme='dark'] .history-plan-main-container {
+  background: #110e20;
+  border-radius: 8px;
+  padding: 16px 16px 8px;
+}
+
 [data-theme='dark'] .history-plan-table-container {
-  background: rgba(17, 14, 32, 1);
+  background: #110e20;
 }
 
 .history-plan-table-header {
@@ -1354,7 +1360,7 @@
 }
 
 [data-theme='dark'] .history-plan-table-header {
-  background-color: #DE399680 !important;
+  background-color: #de3996 !important;
   color: #fff !important;
 }
 

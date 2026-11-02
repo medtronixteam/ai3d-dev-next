@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import ConfirmModal from '../../components/popup/ConfirmLogoutPopup';
 import { useParams, useNavigate } from 'react-router-dom';
 import TeamSection from './TeamSection';
+import CreateTeamPopup from '../../components/popup/CreateTeamPopup';
 
 const Team = ({ newTeam }) => {
   const { token } = useAuth();
@@ -21,6 +22,7 @@ const Team = ({ newTeam }) => {
   const [errorMsg, setErrorMsg] = useState('');
   const dropdownRef = useRef(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showCreate, setShowCreate] = useState(false);
 
   const gradients = [
     'linear-gradient(to right, #ffe0c3, #ffc1cc)',
@@ -167,7 +169,17 @@ const Team = ({ newTeam }) => {
         onDropdown={handleDropdown}
         onDelete={handleDelete}
         onSidebarToggle={handleSidebarToggle}
+        onCreate={() => setShowCreate(true)}
       />
+      {showCreate && (
+        <CreateTeamPopup
+          onClose={() => setShowCreate(false)}
+          onTeamCreated={(team) => {
+            if (!team) return;
+            setTeams((prev) => (prev.some((item) => item.id === team.id) ? prev : [team, ...prev]));
+          }}
+        />
+      )}
       <ConfirmModal
         open={confirmOpen}
         onClose={() => {

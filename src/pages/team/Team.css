@@ -138,6 +138,69 @@
 }
 
 
+.your-team {
+  margin: 0 0 24px;
+  color: #1c1424;
+}
+
+.team-create-btn {
+  background: #de3996;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.team-create-btn:hover {
+  background: #c22f83;
+}
+
+.team-empty {
+  color: #6e6278;
+}
+
+.team-empty p {
+  margin-bottom: 12px;
+}
+
+.team-page-header {
+  display: none;
+  padding: 16px 18px 0;
+}
+
+.team-sidebar-toggle {
+  background: #fff;
+  color: #de3996;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+[data-theme='dark'] .team-sidebar-toggle {
+  background: #232334;
+  color: #de3996;
+  border: 1px solid #39395a;
+}
+
+@media (max-width: 992px) {
+  .team-page-header {
+    display: flex;
+  }
+
+  .team-sidebar-toggle {
+    display: inline-flex;
+  }
+}
+
 .team-section {
   background-color: white;
   /* width: 97%;
@@ -428,6 +491,11 @@
     min-width: 0;
     font-size: 15px;
   }
+
+  .team-filters .team-create-btn {
+    margin-left: 0;
+    width: 100%;
+  }
 }
 
 .animated-success-modal-overlay {
@@ -552,6 +620,14 @@
 }
 
 /* === Dark mode overrides for Team page === */
+[data-theme='dark'] .team-section,
+[data-theme='dark'] .team-section-card,
+[data-theme='dark'] .your-team,
+[data-theme='dark'] .team-empty {
+  background: transparent;
+  color: #fff !important;
+}
+
 [data-theme='dark'] .team-section-card {
   background: black !important;
   color: #fff !important;
@@ -566,6 +642,15 @@
   background-color: #110e20 !important;
   color: #fff !important;
   border: 1px solid #333 !important;
+}
+
+[data-theme='dark'] .team-section-card .form-control::placeholder {
+  color: #b7b3c2 !important;
+  opacity: 1;
+}
+
+[data-theme='dark'] .team-section-card .form-control::-webkit-input-placeholder {
+  color: #b7b3c2 !important;
 }
 
 [data-theme='dark'] .team-section-card .card-content,

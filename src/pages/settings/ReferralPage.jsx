@@ -6,40 +6,24 @@ import partyCard from '../../assets/images/party-card.png';
 import launching from '../../assets/images/launching.png';
 import checkCircle from '../../assets/images/check-circle.png';
 import Substars from '../../assets/images/SubStars.svg';
-import ReferalShare from '../../assets/images/referalShare.svg';
+import CopyLink from '../../assets/images/CopyLink.png';
 import Whatsapp from '../../assets/images/Whatsapp.svg';
 import Telegram from '../../assets/images/Telegram.png';
-import CopyLink from '../../assets/images/CopyLink.png';
-import { FiFacebook, FiGithub, FiInstagram, FiLink, FiLinkedin, FiSend, FiGift } from 'react-icons/fi';
-import { MdApi } from 'react-icons/md';
-import '../ApiSdk.css';
+import { FiFacebook, FiInstagram, FiLinkedin, FiSend } from 'react-icons/fi';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import { baseURL } from '../../config';
-import { GiTick } from 'react-icons/gi';
+import '../ApiSdk.css';
 import { FaCheck } from 'react-icons/fa';
-import { ChevronLeft, ChevronRight, Send, Share, Share2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Send, Share2 } from 'lucide-react';
 import CustomLoader from '../../components/loader/CustomLoader';
 
 const ReferralPage = () => {
-  return (
-    <div className="api-sdk-container">
-      <div className="api-sdk-card">
-        <MdApi className="api-sdk-icon" />
-        <h2 className="api-sdk-title">Coming Soon</h2>
-        <div className="api-sdk-desc">
-          Referral features are launching soon. Stay tuned!
-        </div>
-      </div>
-    </div>
-  );
-
-  /*
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [filter, setFilter] = useState('All');
   const [referralList, setReferralList] = useState([]);
   const [inviteLink, setInviteLink] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
   const [email, setEmail] = useState('');
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -100,17 +84,36 @@ const ReferralPage = () => {
   }, []);
 
   const handleCopy = () => {
-    if (inviteLink) {
+    if (!inviteLink) return;
+    navigator.clipboard.writeText(inviteLink);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1000);
+  };
+
+  const shareInvite = (network) => {
+    if (!inviteLink) return;
+    const text = 'Join me on AI3D Scanning';
+    const encodedLink = encodeURIComponent(inviteLink);
+    const encodedText = encodeURIComponent(text);
+    const urls = {
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedLink}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedLink}`,
+      whatsapp: `https://wa.me/?text=${encodedText}%20${encodedLink}`,
+      instagram: inviteLink,
+      telegram: `https://t.me/share/url?url=${encodedLink}&text=${encodedText}`,
+    };
+    if (network === 'instagram') {
       navigator.clipboard.writeText(inviteLink);
-      setCopied(true); // show "Copied"
-      setTimeout(() => setCopied(false), 1000); // reset after 1s
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1000);
+      return;
     }
+    window.open(urls[network], '_blank', 'noopener,noreferrer');
   };
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      setError('');
       try {
         const [listRes, linkRes] = await Promise.all([
           axios.get(`${baseURL}/referral/lists`),
@@ -134,7 +137,10 @@ const ReferralPage = () => {
         setInviteLink(rawUrl);
       } catch (err) {
         console.error('Failed to fetch referral data:', err);
-        setError('Failed to load referral data.');
+        toast.error('Failed to load referral data.', {
+          position: 'top-right',
+          autoClose: 3000,
+        });
       } finally {
         setLoading(false);
       }
@@ -148,20 +154,21 @@ const ReferralPage = () => {
 
     try {
       setLoading(true);
-      setError('');
       const response = await axios.post(`${baseURL}/referral/email`, { email });
       console.log('Email invite response:', response.data);
       setEmail('');
       const listRes = await axios.get(`${baseURL}/referral/lists`);
       setReferralList(listRes.data?.data || []);
-      console.log('Updated referral list:', listRes.data?.data);
+      toast.success(response.data?.message || 'Invite sent.', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
     } catch (err) {
       console.error('Failed to send email invite:', err);
-      if (err.response && err.response.data && err.response.data.message) {
-        setError(err.response.data.message);
-      } else {
-        setError('Something went wrong. Please try again.');
-      }
+      toast.error(err.response?.data?.message || 'Something went wrong. Please try again.', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
     } finally {
       setLoading(false);
     }
@@ -347,25 +354,23 @@ const ReferralPage = () => {
                 )}
               </div>
             </div>
-            {error && <p style={{ color: 'red', marginTop: '5px' }}>{error}</p>}
-
             <h3>Invite by Social Media</h3>
             <div className="d-flex gap-2 align-items-center justify-content-center">
-              <span className="social-media-invite-links-icons">
+              <button type="button" className="social-media-invite-links-icons" onClick={() => shareInvite('linkedin')} aria-label="Share on LinkedIn">
                 <FiLinkedin size={18} />
-              </span>
-              <span className="social-media-invite-links-icons">
+              </button>
+              <button type="button" className="social-media-invite-links-icons" onClick={() => shareInvite('facebook')} aria-label="Share on Facebook">
                 <FiFacebook size={18} />
-              </span>
-              <span className="social-media-invite-links-icons">
+              </button>
+              <button type="button" className="social-media-invite-links-icons" onClick={() => shareInvite('whatsapp')} aria-label="Share on WhatsApp">
                 <img src={Whatsapp} alt="" width={18} height={18} />
-              </span>
-              <span className="social-media-invite-links-icons">
+              </button>
+              <button type="button" className="social-media-invite-links-icons" onClick={() => shareInvite('instagram')} aria-label="Copy link for Instagram">
                 <FiInstagram size={18} />
-              </span>
-              <span className="social-media-invite-links-icons">
+              </button>
+              <button type="button" className="social-media-invite-links-icons" onClick={() => shareInvite('telegram')} aria-label="Share on Telegram">
                 <img src={Telegram} alt="" width={18} height={18} />
-              </span>
+              </button>
             </div>
           </div>
         </div>
@@ -451,7 +456,6 @@ const ReferralPage = () => {
                     </div>
                   ) : (
                     <>
-                      // Mobile View
                       <div className="referal-page-mobile-history-record">
                         <div className="referal-page-mobile-person-record">
                           <h3>{item.name}</h3>
@@ -557,7 +561,6 @@ const ReferralPage = () => {
       </div>
     </section>
   );
-  */
 };
 
 export default ReferralPage;

@@ -469,6 +469,9 @@ const Profile = () => {
           display: flex !important;
           flex-direction: column !important;
           align-items: flex-start !important;
+          min-width: 0 !important;
+          flex: 1 1 auto !important;
+          overflow: hidden !important;
         }
         
         .profile-welcome-text {
@@ -476,6 +479,10 @@ const Profile = () => {
           font-weight: 700 !important;
           color: #232334 !important;
           margin: 0 !important;
+          max-width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
         
         .profile-welcome-date {
@@ -488,6 +495,8 @@ const Profile = () => {
           display: flex !important;
           align-items: center !important;
           gap: 12px !important;
+          flex: 0 1 auto !important;
+          min-width: 0 !important;
         }
         
         /* Mobile layout */
@@ -874,40 +883,13 @@ const Profile = () => {
             </button>
 
             {/* Search Bar */}
-            <div
-              className="profile-search-container"
-              style={{
-                position: 'relative',
-                display: 'flex',
-                alignItems: 'center',
-                background: 'rgba(255, 237, 247, 1)',
-                border: 'none',
-                borderRadius: '8px',
-                padding: '8px 16px',
-                minWidth: '265px',
-                boxShadow: '0 1px 4px rgba(0, 0, 0, 0.03)',
-                flex: 1,
-                maxWidth: '360px',
-                width: '100%',
-              }}
-            >
+            <div className="profile-search-container">
               <FiSearch style={{ color: '#999', fontSize: '18px', marginRight: '12px' }} />
               <input
                 type="text"
                 placeholder="Search in profile..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                style={{
-                  border: 'none',
-                  background: 'transparent',
-                  outline: 'none',
-                  boxShadow: 'none',
-                  WebkitAppearance: 'none',
-                  appearance: 'none',
-                  fontSize: '16px',
-                  color: '#232334',
-                  width: '100%',
-                }}
               />
             </div>
 

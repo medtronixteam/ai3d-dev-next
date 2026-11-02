@@ -5,6 +5,7 @@ import axios from 'axios';
 import { baseURL } from '../../config';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../context/AuthContext';
+import { canCreateTeam } from '../../utils/teamAccess';
 import SuccessImg from '../../assets/images/success-img.png'
 
 const CreateTeamPopup = ({ onClose, onTeamCreated }) => {
@@ -28,6 +29,8 @@ const CreateTeamPopup = ({ onClose, onTeamCreated }) => {
       setLoading(true);
       setError('');
       try {
+        const allowed = await canCreateTeam(token);
+        if (!allowed) return;
         const res = await axios.post(
           `${baseURL}/team`,
           { email: teamEmail, name: teamName },
@@ -35,7 +38,9 @@ const CreateTeamPopup = ({ onClose, onTeamCreated }) => {
         );
         
         if (res.data && (res.data.status === 'error' || res.data.status !== 'success')) {
-          setError(res.data.message || 'Failed to create team!');
+          const message = res.data.message || 'Failed to create team!';
+          setError(message);
+          toast.error(message);
         } else {
           // Store the created team data
           const newTeam = res.data.team || res.data.data || { 
@@ -54,7 +59,9 @@ const CreateTeamPopup = ({ onClose, onTeamCreated }) => {
           setStep(2);
         }
       } catch (err) {
-        setError(err?.response?.data?.message || 'Failed to create team!');
+        const message = err?.response?.data?.message || 'Failed to create team!';
+        setError(message);
+        toast.error(message);
       } finally {
         setLoading(false);
       }

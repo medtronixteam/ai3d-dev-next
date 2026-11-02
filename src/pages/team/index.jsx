@@ -8,6 +8,7 @@ import ConfirmModal from '../../components/popup/ConfirmLogoutPopup';
 import { useParams, useNavigate } from 'react-router-dom';
 import TeamSection from './TeamSection';
 import CreateTeamPopup from '../../components/popup/CreateTeamPopup';
+import { canCreateTeam } from '../../utils/teamAccess';
 
 const Team = ({ newTeam }) => {
   const { token } = useAuth();
@@ -169,7 +170,9 @@ const Team = ({ newTeam }) => {
         onDropdown={handleDropdown}
         onDelete={handleDelete}
         onSidebarToggle={handleSidebarToggle}
-        onCreate={() => setShowCreate(true)}
+        onCreate={async () => {
+          if (await canCreateTeam(token)) setShowCreate(true);
+        }}
       />
       {showCreate && (
         <CreateTeamPopup

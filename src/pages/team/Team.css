@@ -143,9 +143,11 @@
   color: #1c1424;
 }
 
-.team-create-btn {
+.team-create-btn,
+[data-theme='dark'] .team-create-btn,
+.dark .team-create-btn {
   background: #de3996;
-  color: #fff;
+  color: #fff !important;
   border: none;
   border-radius: 8px;
   padding: 10px 16px;
@@ -156,8 +158,21 @@
   flex-shrink: 0;
 }
 
-.team-create-btn:hover {
+.team-create-btn:hover,
+[data-theme='dark'] .team-create-btn:hover,
+.dark .team-create-btn:hover {
   background: #c22f83;
+  color: #fff !important;
+}
+
+.team-plan-note {
+  margin: 0 0 0 auto;
+  max-width: 320px;
+  color: #de3996;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: right;
 }
 
 .team-empty {
@@ -496,6 +511,12 @@
     margin-left: 0;
     width: 100%;
   }
+
+  .team-filters .team-plan-note {
+    margin-left: 0;
+    max-width: none;
+    text-align: left;
+  }
 }
 
 .animated-success-modal-overlay {
@@ -642,6 +663,21 @@
   background-color: #110e20 !important;
   color: #fff !important;
   border: 1px solid #333 !important;
+}
+
+[data-theme='dark'] .team-role-select {
+  color-scheme: dark;
+}
+
+[data-theme='dark'] .team-role-select option {
+  background-color: #1a1528;
+  color: #ffffff;
+}
+
+[data-theme='dark'] .team-role-select option:checked,
+[data-theme='dark'] .team-role-select option:hover {
+  background-color: #de3996;
+  color: #ffffff;
 }
 
 [data-theme='dark'] .team-section-card .form-control::placeholder {

@@ -7,6 +7,8 @@ import { baseURL } from '../../config';
 import ConfirmModal from './ConfirmLogoutPopup';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
+import { toast } from 'react-toastify';
+import { canCreateTeam } from '../../utils/teamAccess';
 
 const MyTeamPopup = ({ onClose, user, teams, onTeamUpdate }) => {
   const [showDeleteFor, setShowDeleteFor] = useState(null);
@@ -216,7 +218,12 @@ const MyTeamPopup = ({ onClose, user, teams, onTeamUpdate }) => {
           <div className="teams-list-header">
             <h5>My Teams</h5>
             {!activeTeam && (
-              <button className="add-team-btn" onClick={() => setCreateTeamOpen(true)}>
+              <button
+                className="add-team-btn"
+                onClick={async () => {
+                  if (await canCreateTeam(token)) setCreateTeamOpen(true);
+                }}
+              >
                 <FiPlus />
               </button>
             )}

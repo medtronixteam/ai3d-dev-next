@@ -2372,10 +2372,37 @@ select:-webkit-autofill:focus {
   color: #c91e7b !important;
 }
 
+.profile-search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #e4d7e2;
+  border-radius: 10px;
+  padding: 0 14px;
+  height: 44px;
+  width: 280px;
+  max-width: 100%;
+  min-width: 0;
+  flex: 0 1 280px;
+  box-sizing: border-box;
+}
+
+.profile-search-container input {
+  border: none;
+  background: transparent;
+  outline: none;
+  box-shadow: none;
+  font-size: 15px;
+  color: #232334;
+  width: 100%;
+  min-width: 0;
+}
+
 [data-theme='dark'] .profile-search-container,
 .dark .profile-search-container {
   background: #110e20 !important;
-  border: 1px solid #474749 !important;
+  border: 1px solid #3a3348 !important;
 }
 
 .profile-search-container input,

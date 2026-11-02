@@ -25,6 +25,8 @@ import { baseURL } from '../../config';
 import SwitchAccountsPopup, { ManageAccountsPopup } from './SwitchAccountsPopup';
 import LoginPopup from './LoginPopup';
 import { Trash2 } from 'lucide-react';
+import { toast } from 'react-toastify';
+import { canCreateTeam } from '../../utils/teamAccess';
 
 const ProfilePopup = ({ onClose, successMessage, onAddAccount, onManageAccount }) => {
   const { token, logout, activeTeam } = useAuth();
@@ -93,7 +95,9 @@ const ProfilePopup = ({ onClose, successMessage, onAddAccount, onManageAccount }
       : `storage/${profile.image.replace(/^\//, '')}`;
   }
 
-  const handleOpenCreateTeam = () => setCreateTeamOpen(true);
+  const handleOpenCreateTeam = async () => {
+    if (await canCreateTeam(token)) setCreateTeamOpen(true);
+  };
   const handleCloseCreateTeam = () => setCreateTeamOpen(false);
 
   const handleOpenMyTeam = () => setMyTeamOpen(true);

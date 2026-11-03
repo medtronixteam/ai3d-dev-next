@@ -1640,15 +1640,12 @@ const ModelGenerator = ({ isDarkMode = false }) => {
           setShowBlackOverlay(false);
           setCurrentStep(2);
         },
-        onFrameProgress: (attempt, maxAttempts) => {
+        onFrameProgress: (attempt) => {
           setShowQueueUI(true);
           setShowLoadingUI(false);
           setShowBlackOverlay(false);
           setCurrentStep(2);
-          if (maxAttempts) {
-            const calculatedProgress = Math.min(90, Math.round((attempt / maxAttempts) * 90));
-            setProgress(calculatedProgress);
-          }
+          setProgress(Math.min(90, Math.round(12 + attempt * 1.5)));
         },
       });
 

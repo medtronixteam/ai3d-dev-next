@@ -49,25 +49,33 @@ export const parseFramesResponse = (response) => {
     };
   }
 
-  const message = String(data?.message || '').toLowerCase();
-  if (
-    message.includes('extract') ||
-    message.includes('wait') ||
-    message.includes('processing') ||
-    message.includes('queue')
-  ) {
+  const message = String(data?.message || '');
+  const lowerMessage = message.toLowerCase();
+  const apiStatus = String(data?.status || '').toLowerCase();
+  const hardFailure =
+    FAILED_STATUSES.has(apiStatus) ||
+    /\b(fail|failed|failure|error|cancelled|canceled)\b/.test(lowerMessage);
+  const stillWorking =
+    !hardFailure &&
+    (lowerMessage.includes('extract') ||
+      lowerMessage.includes('wait') ||
+      lowerMessage.includes('processing') ||
+      lowerMessage.includes('queue') ||
+      lowerMessage.includes('pending'));
+
+  if (hardFailure) {
     return {
-      status: 'pending',
+      status: 'failed',
       frames: [],
-      message: data?.message || 'Extracting frames, please wait...',
+      message: message || 'Frame extraction failed',
     };
   }
 
-  if (data?.success === false && message) {
+  if (stillWorking || (data?.success === false && message)) {
     return {
       status: 'pending',
       frames: [],
-      message: data.message,
+      message: message || 'Extracting frames, please wait...',
     };
   }
 
@@ -83,7 +91,10 @@ export const fetchProjectFramesStatus = async (projectToken, authToken) => {
     const response = await axios.post(
       `${baseURL}/projects/frames`,
       { token: projectToken },
-      { headers: authHeaders(authToken) },
+      {
+        headers: authHeaders(authToken),
+        timeout: 0,
+      },
     );
 
     return parseFramesResponse(response);
@@ -91,7 +102,11 @@ export const fetchProjectFramesStatus = async (projectToken, authToken) => {
     if (err?.response?.data) {
       return parseFramesResponse(err.response);
     }
-    throw err;
+    return {
+      status: 'pending',
+      frames: [],
+      message: null,
+    };
   }
 };
 
@@ -168,16 +183,17 @@ export const pollProjectFramesUntilReady = async (
   authToken,
   {
     intervalMs = 5000,
-    maxFrameAttempts = 72,
     onFrameProgress,
     onPending,
     onAttempt,
   } = {},
 ) => {
   const reportProgress = onFrameProgress || onAttempt;
+  let attempt = 0;
 
-  for (let attempt = 0; attempt < maxFrameAttempts; attempt += 1) {
-    reportProgress?.(attempt + 1, maxFrameAttempts);
+  while (true) {
+    attempt += 1;
+    reportProgress?.(attempt, null);
 
     const parsed = await fetchProjectFramesStatus(projectToken, authToken);
 
@@ -185,12 +201,13 @@ export const pollProjectFramesUntilReady = async (
       return parsed.frames;
     }
 
-    onPending?.(parsed.message, attempt + 1);
+    if (parsed.status === 'failed') {
+      throw new Error(parsed.message || 'Frame extraction failed');
+    }
 
+    onPending?.(parsed.message, attempt);
     await delay(intervalMs);
   }
-
-  throw new Error('Frame extraction is taking longer than expected. Please try again.');
 };
 
 export const generateVideoProject = async (projectToken, paths = [], authToken) => {

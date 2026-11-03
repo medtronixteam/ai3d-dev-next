@@ -73,8 +73,8 @@ const ScanWelcomeModal = ({ isOpen, onClose, onCreateModel, onExploreModels }) =
   return (
     <div className="scan-onboard" role="dialog" aria-modal="true" aria-label="Welcome">
       <button type="button" className="scan-onboard-close" onClick={onClose} aria-label="Close">
-        <X size={18} />
-      </button>
+          <X size={18} />
+        </button>
 
       <header className="scan-onboard-header">
         <div className="scan-onboard-logo">
@@ -140,8 +140,8 @@ const ScanWelcomeModal = ({ isOpen, onClose, onCreateModel, onExploreModels }) =
                   <span className="scan-onboard-go">Upload a video →</span>
                 </button>
               </div>
-              <button
-                type="button"
+          <button
+            type="button"
                 className="scan-onboard-link"
                 onClick={() => {
                   setMode('gallery');
@@ -179,7 +179,7 @@ const ScanWelcomeModal = ({ isOpen, onClose, onCreateModel, onExploreModels }) =
                 </button>
                 <button type="button" className="scan-onboard-btn" disabled={!useCases.length} onClick={() => setStep(3)}>
                   Continue
-                </button>
+          </button>
               </div>
             </section>
           )}
@@ -192,9 +192,9 @@ const ScanWelcomeModal = ({ isOpen, onClose, onCreateModel, onExploreModels }) =
               <p className="scan-onboard-sub">Just curious. It helps us know where to show up.</p>
               <div className="scan-onboard-chips">
                 {SOURCES.map((label) => (
-                  <button
+          <button
                     key={label}
-                    type="button"
+            type="button"
                     className={`scan-onboard-chip${source === label ? ' on' : ''}`}
                     onClick={() => setSource(label)}
                   >
@@ -285,7 +285,7 @@ const ScanWelcomeModal = ({ isOpen, onClose, onCreateModel, onExploreModels }) =
               <div className="scan-onboard-actions">
                 <button type="button" className="scan-onboard-btn" onClick={() => finish()}>
                   Start creating
-                </button>
+          </button>
               </div>
               <p className="scan-onboard-note">You have 5 free generations to start.</p>
             </section>

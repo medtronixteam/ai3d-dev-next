@@ -49,19 +49,25 @@ export const parseFramesResponse = (response) => {
     };
   }
 
-  const message = String(data?.message || '');
+  const message = String(data?.message || data?.error || '');
   const lowerMessage = message.toLowerCase();
   const apiStatus = String(data?.status || '').toLowerCase();
+  const timedOut =
+    lowerMessage.includes('taking longer') ||
+    lowerMessage.includes('timed out') ||
+    lowerMessage.includes('timeout');
   const hardFailure =
-    FAILED_STATUSES.has(apiStatus) ||
-    /\b(fail|failed|failure|error|cancelled|canceled)\b/.test(lowerMessage);
+    !timedOut &&
+    (FAILED_STATUSES.has(apiStatus) ||
+      /\b(fail|failed|failure|error|cancelled|canceled)\b/.test(lowerMessage));
   const stillWorking =
-    !hardFailure &&
-    (lowerMessage.includes('extract') ||
-      lowerMessage.includes('wait') ||
-      lowerMessage.includes('processing') ||
-      lowerMessage.includes('queue') ||
-      lowerMessage.includes('pending'));
+    timedOut ||
+    (!hardFailure &&
+      (lowerMessage.includes('extract') ||
+        lowerMessage.includes('wait') ||
+        lowerMessage.includes('processing') ||
+        lowerMessage.includes('queue') ||
+        lowerMessage.includes('pending')));
 
   if (hardFailure) {
     return {

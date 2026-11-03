@@ -82,10 +82,12 @@ export const parseFrameUrlsFromQueueItem = (item) => {
 export const pollExtractedFrameUrls = async (
   jobId,
   cloudinaryUrl,
-  { intervalMs = 5000, maxAttempts = 72, onProgress } = {},
+  { intervalMs = 5000, onProgress } = {},
 ) => {
-  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
-    onProgress?.(attempt + 1, maxAttempts);
+  let attempt = 0;
+  while (true) {
+    attempt += 1;
+    onProgress?.(attempt, null);
 
     const queueResponse = await getReconstructionQueue();
     const items = normalizeQueueItems(queueResponse);
@@ -126,8 +128,6 @@ export const pollExtractedFrameUrls = async (
 
     await new Promise((resolve) => setTimeout(resolve, intervalMs));
   }
-
-  throw new Error('Extracted frames are not available yet. Please try again.');
 };
 
 export const startReconstruction = (payload) =>
@@ -236,11 +236,13 @@ export const isProcessingLikeStatus = (status) => PROCESSING_STATUSES.has(status
 
 export const pollFrameExtractionQueueUntilDone = async (
   jobId,
-  { intervalMs = 5000, maxAttempts = 120, graceAttempts = 3, onProgress } = {},
+  { intervalMs = 5000, graceAttempts = 3, onProgress } = {},
 ) => {
   let seenInQueue = false;
+  let attempt = 0;
 
-  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+  while (true) {
+    attempt += 1;
     const response = await getReconstructionQueue();
     const items = normalizeQueueItems(response);
     const match = findQueueItemByJobId(items, jobId);
@@ -266,8 +268,6 @@ export const pollFrameExtractionQueueUntilDone = async (
 
     await new Promise((resolve) => setTimeout(resolve, intervalMs));
   }
-
-  throw new Error('Frame extraction is taking longer than expected. Please try again.');
 };
 
 const SPLAT_NOT_READY_PATTERN = /no \.splat file found/i;

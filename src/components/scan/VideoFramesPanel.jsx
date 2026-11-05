@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { ChevronLeft, ChevronRight, Film, Loader2, Plus, Sparkles, X } from 'lucide-react';
+import GenerationCoinCost from './GenerationCoinCost';
 
 const VideoFramesPanel = ({
   videoFrames,
@@ -14,6 +15,7 @@ const VideoFramesPanel = ({
   isGenerating,
   isArrowLoading,
   variant = 'center',
+  coinCost,
 }) => {
   const frameScrollRef = useRef(null);
 
@@ -173,6 +175,7 @@ const VideoFramesPanel = ({
           <>
             <Sparkles size={16} className="video-frames-generate-icon" />
             <span>Generate</span>
+            <GenerationCoinCost amount={coinCost} />
           </>
         )}
       </button>

@@ -27,6 +27,7 @@ import shadow from '../../pages/images/icons/shadow.png';
 import camera from '../../pages/images/icons/camera.png';
 import ModelViewer from './ModelViewer';
 import VideoFramesPanel from './VideoFramesPanel';
+import GenerationCoinCost from './GenerationCoinCost';
 
 const CenterScan = ({
   showLoadingUI,
@@ -78,6 +79,7 @@ const CenterScan = ({
   isArrowLoading = false,
   images = [],
   onRemoveImage,
+  coinCosts,
 }) => {
   const [isActuallyRendered, setIsActuallyRendered] = React.useState(false);
   const prevModelUrlRef = React.useRef(modelUrl);
@@ -259,6 +261,7 @@ const CenterScan = ({
               isGenerating={isGenerating}
               isArrowLoading={isArrowLoading}
               variant="center"
+              coinCost={coinCosts?.video_to_3d}
             />
           ) : modelReady && modelUrl ? (
             <div className="viewport-section w-100">
@@ -404,6 +407,7 @@ const CenterScan = ({
                 disabled={isProcessing || images.length < 10}
               >
                 {isGenerating ? 'Generating 3D Model...' : 'Generate 3D Model'}
+                {!isGenerating && <GenerationCoinCost amount={coinCosts?.images_to_3d} />}
               </button>
             </div>
           ) : (

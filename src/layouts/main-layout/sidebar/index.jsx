@@ -107,6 +107,7 @@ import Logo from 'pages/images/logo.png';
 import ProfilePopup from 'components/popup/ProfilePopup';
 import axios from 'axios';
 import { baseURL } from '../../../config';
+import { readCreditBalance } from '../../../utils/generationCoins';
 import BuyerIcon from '../../../assets/icon/buyer.svg';
 import SellerIcon from '../../../assets/icon/seller.svg';
 import HomeIcon from 'assets/images/Home.svg';
@@ -179,7 +180,7 @@ const Sidebar = ({ open = false, onClose, disableExpand = false }) => {
     if (!token) return;
     setLoadingCoinsSpinner(true);
     try {
-      const response = await fetch(`${baseURL}/my/coins`, {
+      const response = await fetch(`${baseURL}/user`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -188,8 +189,7 @@ const Sidebar = ({ open = false, onClose, disableExpand = false }) => {
       });
       if (response.ok) {
         const data = await response.json();
-        const coinValue = parseInt(data['coin-balance'], 10) || 0;
-        setCoins(coinValue);
+        setCoins(readCreditBalance(data));
       }
     } catch (err) {
       console.error('Failed to fetch coins:', err);

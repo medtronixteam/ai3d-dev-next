@@ -1,0 +1,61 @@
+.generation-coin-cost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 4px;
+  padding-left: 10px;
+  color: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.generation-coin-cost-line {
+  width: 1px;
+  height: 16px;
+  margin-right: 2px;
+  background: currentColor;
+  opacity: 0.35;
+  flex-shrink: 0;
+}
+
+.generation-coin-cost img {
+  width: 18px;
+  height: 18px;
+  display: block;
+  flex-shrink: 0;
+  transform-origin: center;
+  animation: generation-coin-wiggle 4.6s ease-in-out infinite;
+}
+
+@keyframes generation-coin-wiggle {
+  0%,
+  64%,
+  100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  72% {
+    transform: translateY(-1px) rotate(-16deg) scale(1.12);
+  }
+  80% {
+    transform: translateY(-1px) rotate(14deg) scale(1.12);
+  }
+  88% {
+    transform: translateY(0) rotate(-5deg) scale(1.04);
+  }
+  96% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .generation-coin-cost img {
+    animation: none;
+  }
+}
+
+.generation-coin-cost-value {
+  font-variant-numeric: tabular-nums;
+  min-width: 1ch;
+}

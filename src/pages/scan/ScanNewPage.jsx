@@ -26,6 +26,7 @@ import {
   pollProjectFramesUntilReady,
   submitVideoPublicUrl,
 } from '../../services/videoProjectApi';
+import { useGenerationCoinCosts } from '../../utils/generationCoins';
 
 import {
   createMultiImageProject,
@@ -143,6 +144,7 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const ModelGenerator = ({ isDarkMode = false }) => {
   const { token, user } = useAuth();
+  const coinCosts = useGenerationCoinCosts();
   const { activeCreationWorkspaceId, assignProjectToWorkspace } = useWorkspace();
   const navigate = useNavigate();
   const location = useLocation();
@@ -2006,6 +2008,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
               setComingSoonModalOpen(true);
             }}
             userEmail={user?.email}
+            coinCosts={coinCosts}
           />
           )}
 
@@ -2095,6 +2098,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             isGenerating={isGenerating}
             isArrowLoading={isArrowLoading}
             images={images}
+            coinCosts={coinCosts}
             onRemoveImage={(index) => {
               if (isProcessing || isViewOnly) return;
               setImages((prev) => prev.filter((_, i) => i !== index));

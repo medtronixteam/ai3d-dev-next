@@ -13,6 +13,7 @@ import { FiFacebook, FiInstagram, FiLinkedin, FiSend } from 'react-icons/fi';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { baseURL } from '../../config';
+import { readCreditBalance } from '../../utils/generationCoins';
 import { useAuth } from '../../context/AuthContext';
 import CoinsPopup from '../../components/popup/CoinsPopup';
 import '../ApiSdk.css';
@@ -158,7 +159,7 @@ const ReferralPage = () => {
     if (!token) return;
     const fetchCoins = async () => {
       try {
-        const response = await fetch(`${baseURL}/my/coins`, {
+        const response = await fetch(`${baseURL}/user`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -167,7 +168,7 @@ const ReferralPage = () => {
         });
         if (response.ok) {
           const data = await response.json();
-          setCoins(parseInt(data['coin-balance'], 10) || 0);
+          setCoins(readCreditBalance(data));
         }
       } catch (err) {
         console.error('Failed to fetch coins:', err);

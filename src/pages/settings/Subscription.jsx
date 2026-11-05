@@ -24,6 +24,7 @@ import modalVideo from '../../assets/images/3dModal.mp4';
 import CustomLoader from '../../components/loader/CustomLoader';
 import SubscriptionModal from '../../components/popup/SubscriptionModal';
 import { baseURL } from '../../config';
+import { readCreditBalance } from '../../utils/generationCoins';
 import { toast } from 'react-toastify';
 import {
   useStripe,
@@ -248,7 +249,7 @@ const Subscription = () => {
     if (!token) return;
     setLoadingCoinsSpinner(true);
     try {
-      const response = await fetch(`${baseURL}/my/coins`, {
+      const response = await fetch(`${baseURL}/user`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -257,9 +258,7 @@ const Subscription = () => {
       });
       if (response.ok) {
         const data = await response.json();
-        const coinValue = parseInt(data['coin-balance'], 10) || 0;
-        const formattedCoins = new Intl.NumberFormat().format(coinValue);
-        setCoins(coinValue);
+        setCoins(readCreditBalance(data));
       }
     } catch (err) {
       console.error('Failed to fetch coins:', err);

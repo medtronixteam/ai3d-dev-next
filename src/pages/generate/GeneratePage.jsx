@@ -13,6 +13,8 @@ import { useSocket, SocketProvider } from '../../context/SocketContext';
 import { useNotification } from '../../context/NotificationContext';
 import { baseURL } from '../../config';
 import { setFaviconWorking, resetTaskFavicon } from '../../utils/taskFavicon';
+import { useGenerationCoinCosts } from '../../utils/generationCoins';
+import GenerationCoinCost from '../../components/scan/GenerationCoinCost';
 import paths from '../../routes/paths';
 import JoinPlatformCta from '../../components/landing/JoinPlatformCta';
 import FooterLangCurrency from '../../components/footer/FooterLangCurrency';
@@ -109,6 +111,7 @@ function GeneratePageContent() {
   const location = useLocation();
   const navigate = useNavigate();
   const { token } = useAuth();
+  const coinCosts = useGenerationCoinCosts();
   const socketState = useSocket();
   const queue_system = socketState?.queue_system;
   const queueData = socketState?.queueData;
@@ -892,6 +895,9 @@ function GeneratePageContent() {
                 >
                   <Sparkles size={16} />
                   {isGenerating ? 'Generating...' : 'Generate'}
+                  {!isGenerating && (
+                    <GenerationCoinCost amount={coinCosts[imageMode ? 'image_to_3d' : 'text_to_3d']} />
+                  )}
                 </button>
               </div>
             </div>

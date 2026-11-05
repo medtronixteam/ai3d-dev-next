@@ -22,6 +22,7 @@ import SingleImgIcon from '../../pages/images/icons/single-img.svg';
 import WorkspaceSelect from '../workspace/WorkspaceSelect';
 import ImageUploadGuidelinesModal from '../popup/ImageUploadGuidelinesModal';
 import ModelDetailsCard from './ModelDetailsCard';
+import GenerationCoinCost from './GenerationCoinCost';
 import {
   markImageGuidelinesDismissed,
   shouldShowImageGuidelines,
@@ -69,6 +70,7 @@ const LeftScan = ({
   isExtractingFrames,
   onShowComingSoon,
   userEmail,
+  coinCosts,
 }) => {
   const singleImageInputRef = useRef(null);
   const imageInputRef = useRef(null);
@@ -339,6 +341,14 @@ const LeftScan = ({
 
   const hasSingleImage = Boolean(isSingleImageUploading || singleImageFile || singleImageName);
   const hasPrompt = Boolean(prompt.trim() || (isViewOnly && generatedPrompt) || modelReady);
+  const generationType = singleImageName
+    ? 'image_to_3d'
+    : video
+      ? 'video_to_3d'
+      : images.length
+        ? 'images_to_3d'
+        : 'text_to_3d';
+  const generationCoinCost = coinCosts?.[generationType];
   const hasMultipleImages = Boolean(images.length > 0);
   const hasVideo = Boolean(isVideoUploading || video || showVideoFrames);
 
@@ -746,6 +756,7 @@ const LeftScan = ({
           ) : (
             <>
               <Sparkles size={16} className="me-2" /> Generate
+              <GenerationCoinCost amount={generationCoinCost} />
             </>
           )}
         </button>

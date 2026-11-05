@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import '../LandingPage.css';
-import siteFaqs from '../data/siteFaqs';
+import siteFaqs from '../../data/siteFaqs';
 import './ContributorLandingPage.css';
 import { Link } from 'react-router-dom';
 import logo from '../images/logo.png';

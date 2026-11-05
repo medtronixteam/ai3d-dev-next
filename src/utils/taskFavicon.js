@@ -7,6 +7,7 @@ let logoImage = null;
 let blinkOn = true;
 let listenersReady = false;
 let donePath = '';
+let workingPath = '';
 
 const loadLogo = () => {
   if (logoImage) return Promise.resolve(logoImage);
@@ -67,9 +68,9 @@ const restore = () => {
 };
 
 const onRoute = () => {
-  if (mode === 'done' && window.location.pathname !== donePath) {
-    resetTaskFavicon();
-  }
+  const path = window.location.pathname;
+  if (mode === 'done' && path !== donePath) resetTaskFavicon();
+  if (mode === 'working' && path !== workingPath) resetTaskFavicon();
 };
 
 const ensureListeners = () => {
@@ -95,6 +96,7 @@ export const setFaviconWorking = () => {
   if (mode === 'working') return;
   mode = 'working';
   donePath = '';
+  workingPath = window.location.pathname;
   window.clearInterval(timer);
   loadLogo().then(() => {
     if (mode !== 'working') return;
@@ -125,6 +127,7 @@ export const resetTaskFavicon = () => {
   if (typeof document === 'undefined') return;
   mode = 'idle';
   donePath = '';
+  workingPath = '';
   window.clearInterval(timer);
   timer = null;
   restore();

@@ -35,6 +35,17 @@ export const readCreditBalance = (payload) => {
   return amount != null && amount >= 0 ? amount : 0;
 };
 
+export const parseCreditShortage = (message) => {
+  const text = String(message || '').trim();
+  if (!/not enough credit|insufficient credit/i.test(text)) return null;
+  const neededMatch = text.match(/need(?:s)?\s+(\d+)/i);
+  const balanceMatch = text.match(/have\s+(\d+)/i);
+  return {
+    needed: neededMatch ? Number(neededMatch[1]) : null,
+    balance: balanceMatch ? Number(balanceMatch[1]) : 0,
+  };
+};
+
 const fetchUserPayload = async (token) => {
   if (!token) return null;
 

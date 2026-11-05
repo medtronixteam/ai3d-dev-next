@@ -13,7 +13,8 @@ import { useSocket, SocketProvider } from '../../context/SocketContext';
 import { useNotification } from '../../context/NotificationContext';
 import { baseURL } from '../../config';
 import { setFaviconWorking, resetTaskFavicon } from '../../utils/taskFavicon';
-import { useGenerationCoinCosts } from '../../utils/generationCoins';
+import { parseCreditShortage, useGenerationCoinCosts } from '../../utils/generationCoins';
+import InsufficientCreditsPopup from '../../components/popup/InsufficientCreditsPopup';
 import GenerationCoinCost from '../../components/scan/GenerationCoinCost';
 import paths from '../../routes/paths';
 import JoinPlatformCta from '../../components/landing/JoinPlatformCta';
@@ -112,6 +113,7 @@ function GeneratePageContent() {
   const navigate = useNavigate();
   const { token } = useAuth();
   const coinCosts = useGenerationCoinCosts();
+  const [creditNotice, setCreditNotice] = useState(null);
   const socketState = useSocket();
   const queue_system = socketState?.queue_system;
   const queueData = socketState?.queueData;
@@ -149,6 +151,7 @@ function GeneratePageContent() {
     }
     resetTaskFavicon();
   }, [isGenerating]);
+
   const [models, setModels] = useState([]);
   const [visibleCount, setVisibleCount] = useState(CARDS_PER_VIEW);
   const [hasMore, setHasMore] = useState(true);
@@ -161,6 +164,8 @@ function GeneratePageContent() {
   const [error, setError] = useState('');
   const [selectedModel, setSelectedModel] = useState(null);
   const [failedThumbs, setFailedThumbs] = useState({});
+
+  useEffect(() => () => resetTaskFavicon(), []);
 
   const currentWord = WORDS[wordIndex];
 
@@ -387,7 +392,14 @@ function GeneratePageContent() {
       }
     } catch (err) {
       if (buildIdRef.current !== buildId) return;
-      toast.error(err?.response?.data?.message || err?.message || 'Something went wrong. Please try again.');
+      const message = err?.response?.data?.message || err?.message || 'Something went wrong. Please try again.';
+      const shortage = parseCreditShortage(message);
+      if (shortage) {
+        resetTaskFavicon();
+        setCreditNotice(shortage);
+      } else {
+        toast.error(message);
+      }
       setBuildLabel('');
       if (activeProjectRef.current) {
         activeProjectRef.current = null;
@@ -1208,6 +1220,13 @@ function GeneratePageContent() {
         onClose={() => setSelectedModel(null)}
       />
       <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
+      {creditNotice && (
+        <InsufficientCreditsPopup
+          balance={creditNotice.balance}
+          needed={creditNotice.needed}
+          onClose={() => setCreditNotice(null)}
+        />
+      )}
       {showLoginModal ? (
         <LoginPopup
           stayOnPage

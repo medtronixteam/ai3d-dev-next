@@ -26,7 +26,8 @@ import {
   pollProjectFramesUntilReady,
   submitVideoPublicUrl,
 } from '../../services/videoProjectApi';
-import { useGenerationCoinCosts } from '../../utils/generationCoins';
+import { parseCreditShortage, useGenerationCoinCosts } from '../../utils/generationCoins';
+import InsufficientCreditsPopup from '../../components/popup/InsufficientCreditsPopup';
 
 import {
   createMultiImageProject,
@@ -145,6 +146,7 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const ModelGenerator = ({ isDarkMode = false }) => {
   const { token, user } = useAuth();
   const coinCosts = useGenerationCoinCosts();
+  const [creditNotice, setCreditNotice] = useState(null);
   const { activeCreationWorkspaceId, assignProjectToWorkspace } = useWorkspace();
   const navigate = useNavigate();
   const location = useLocation();
@@ -567,8 +569,10 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       return;
     }
     if (modelReady) setFaviconDone();
-    else if (isCancelled) resetTaskFavicon();
+    else resetTaskFavicon();
   }, [isProcessing, modelReady, isCancelled]);
+
+  useEffect(() => () => resetTaskFavicon(), []);
 
   // fetch recent projects model
   useEffect(() => {
@@ -1391,6 +1395,17 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     }
   };
 
+  const showGenerationError = (err, fallback) => {
+    const message = getApiErrorMessage(err, fallback);
+    const shortage = parseCreditShortage(message);
+    if (shortage) {
+      resetTaskFavicon();
+      setCreditNotice(shortage);
+      return;
+    }
+    toast.error(message);
+  };
+
   const handleSingleImageGenerate = async () => {
     if (isProcessing || !singleImageFile || isViewOnly) return;
 
@@ -1422,7 +1437,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       }
     } catch (err) {
       console.error(err);
-      toast.error(getApiErrorMessage(err, 'Upload failed'));
+      showGenerationError(err, 'Upload failed');
       setIsArrowLoading(false);
     }
   };
@@ -1442,7 +1457,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
         await handleGenerateFromFrames();
       } catch (err) {
         console.error(err);
-        toast.error(getApiErrorMessage(err, 'Generation failed'));
+        showGenerationError(err, 'Generation failed');
         setIsGenerating(false);
       }
       return;
@@ -1568,7 +1583,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       }
     } catch (err) {
       console.error('Generation error:', err);
-      toast.error(getApiErrorMessage(err, 'Generation failed'));
+      showGenerationError(err, 'Generation failed');
       setShowLoadingUI(false);
       setShowBlackOverlay(false);
       setShowQueueUI(false);
@@ -1663,9 +1678,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       toast.success('Frames extracted! Remove unwanted frames, then click Generate.');
     } catch (err) {
       console.error(err);
-      const errMsg =
-        err?.response?.data?.message || err.message || 'Failed to extract video frames';
-      toast.error(errMsg);
+      showGenerationError(err, 'Failed to extract video frames');
       setShowQueueUI(false);
       setShowLoadingUI(false);
       setShowBlackOverlay(false);
@@ -1960,6 +1973,13 @@ const ModelGenerator = ({ isDarkMode = false }) => {
 
   return (
     <div className="main-wrapper">
+      {creditNotice && (
+        <InsufficientCreditsPopup
+          balance={creditNotice.balance}
+          needed={creditNotice.needed}
+          onClose={() => setCreditNotice(null)}
+        />
+      )}
       <div className="container-fluid pe-md-3 p-0">
         <div className={`row g-0 scan-layout-row${isPublicView ? ' scan-public-view' : ''}`}>
           {!isPublicView && (

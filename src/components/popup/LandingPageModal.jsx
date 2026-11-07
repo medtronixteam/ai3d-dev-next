@@ -22,6 +22,10 @@ const LandingPageModal = ({ open, onClose }) => {
   const [monthlyProPrice, setMonthlyProPrice] = useState(99);
   const [yearlyStarterPrice, setYearlyStarterPrice] = useState(290);
   const [yearlyProPrice, setYearlyProPrice] = useState(990);
+  const [monthlyStarterCredits, setMonthlyStarterCredits] = useState(50);
+  const [yearlyStarterCredits, setYearlyStarterCredits] = useState(490);
+  const [monthlyProCredits, setMonthlyProCredits] = useState(100);
+  const [yearlyProCredits, setYearlyProCredits] = useState(800);
   const { token, activeTeam } = useAuth(); // ✅ FIXED: added activeTeam
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loginModalVisible, setLoginModalVisible] = useState(false);
@@ -107,6 +111,11 @@ const LandingPageModal = ({ open, onClose }) => {
             setYearlyStarterPrice(Number(starterPlan.annual_price));
           else if (starterPlan.yearly_price != null)
             setYearlyStarterPrice(Number(starterPlan.yearly_price));
+
+          if (starterPlan.monthly_credits != null)
+            setMonthlyStarterCredits(Number(starterPlan.monthly_credits));
+          if (starterPlan.yearly_credits != null)
+            setYearlyStarterCredits(Number(starterPlan.yearly_credits));
         }
 
         if (premiumPlan) {
@@ -119,6 +128,11 @@ const LandingPageModal = ({ open, onClose }) => {
             setYearlyProPrice(Number(premiumPlan.annual_price));
           else if (premiumPlan.yearly_price != null)
             setYearlyProPrice(Number(premiumPlan.yearly_price));
+
+          if (premiumPlan.monthly_credits != null)
+            setMonthlyProCredits(Number(premiumPlan.monthly_credits));
+          if (premiumPlan.yearly_credits != null)
+            setYearlyProCredits(Number(premiumPlan.yearly_credits));
         }
       })
       .catch(() => {
@@ -200,7 +214,7 @@ const LandingPageModal = ({ open, onClose }) => {
                         <div className="sub-divider"></div>
                         <h4 className="sub-section-title">Features you'll get:</h4>
                         <div className="sub-feature-list">
-                          <li><img src={vectoImage} alt="" /> 30 AI scans (2D → 3D or prompt → 3D)</li>
+                          <li><img src={vectoImage} alt="" /> {monthlyStarterCredits.toLocaleString()} credits included</li>
                           <li><img src={vectoImage} alt="" /> Real-time preview and export</li>
                           <li><img src={vectoImage} alt="" /> Access to all base design tools and APIs</li>
                           <li><img src={vectoImage} alt="" /> Community access and learning hub</li>
@@ -243,7 +257,7 @@ const LandingPageModal = ({ open, onClose }) => {
                         <h4 className="sub-section-title">Features you'll get:</h4>
                         <div className="sub-feature-list">
                           <li><img src={vectoImage} alt="" /> Multi-user team access (up to 4 members)</li>
-                          <li><img src={vectoImage} alt="" /> 100 AI scans/month</li>
+                          <li><img src={vectoImage} alt="" /> {monthlyProCredits.toLocaleString()} credits included</li>
                           <li><img src={vectoImage} alt="" /> Priority processing & rendering queue</li>
                           <li><img src={vectoImage} alt="" /> Access to advanced editing tools</li>
                           <li><img src={vectoImage} alt="" /> Private 3D asset storage (up to 50GB)</li>
@@ -346,7 +360,7 @@ const LandingPageModal = ({ open, onClose }) => {
                         <div className="sub-divider"></div>
                         <h4 className="sub-section-title">Features you'll get:</h4>
                         <div className="sub-feature-list">
-                          <li><img src={vectoImage} alt="" /> 30 AI scans (2D → 3D or prompt → 3D)</li>
+                          <li><img src={vectoImage} alt="" /> {yearlyStarterCredits.toLocaleString()} credits included</li>
                           <li><img src={vectoImage} alt="" /> Real-time preview and export</li>
                           <li><img src={vectoImage} alt="" /> Access to all base design tools and APIs</li>
                           <li><img src={vectoImage} alt="" /> Community access and learning hub</li>
@@ -389,7 +403,7 @@ const LandingPageModal = ({ open, onClose }) => {
                         <h4 className="sub-section-title">Features you'll get:</h4>
                         <div className="sub-feature-list">
                           <li><img src={vectoImage} alt="" /> Multi-user team access (up to 4 members)</li>
-                          <li><img src={vectoImage} alt="" /> 100 AI scans/month</li>
+                          <li><img src={vectoImage} alt="" /> {yearlyProCredits.toLocaleString()} credits included</li>
                           <li><img src={vectoImage} alt="" /> Priority processing & rendering queue</li>
                           <li><img src={vectoImage} alt="" /> Access to advanced editing tools</li>
                           <li><img src={vectoImage} alt="" /> Private 3D asset storage (up to 50GB)</li>

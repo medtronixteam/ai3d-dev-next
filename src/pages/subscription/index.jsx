@@ -21,6 +21,10 @@ const Subscription = () => {
   const [monthlyProPrice, setMonthlyProPrice] = useState(99);
   const [yearlyStarterPrice, setYearlyStarterPrice] = useState(290);
   const [yearlyProPrice, setYearlyProPrice] = useState(990);
+  const [monthlyStarterCredits, setMonthlyStarterCredits] = useState(50);
+  const [yearlyStarterCredits, setYearlyStarterCredits] = useState(490);
+  const [monthlyProCredits, setMonthlyProCredits] = useState(100);
+  const [yearlyProCredits, setYearlyProCredits] = useState(800);
   const { token, activeTeam } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loginModalVisible, setLoginModalVisible] = useState(false);
@@ -106,6 +110,11 @@ const Subscription = () => {
             setYearlyStarterPrice(Number(starterPlan.annual_price));
           else if (starterPlan.yearly_price != null)
             setYearlyStarterPrice(Number(starterPlan.yearly_price));
+
+          if (starterPlan.monthly_credits != null)
+            setMonthlyStarterCredits(Number(starterPlan.monthly_credits));
+          if (starterPlan.yearly_credits != null)
+            setYearlyStarterCredits(Number(starterPlan.yearly_credits));
         }
 
         if (premiumPlan) {
@@ -118,6 +127,11 @@ const Subscription = () => {
             setYearlyProPrice(Number(premiumPlan.annual_price));
           else if (premiumPlan.yearly_price != null)
             setYearlyProPrice(Number(premiumPlan.yearly_price));
+
+          if (premiumPlan.monthly_credits != null)
+            setMonthlyProCredits(Number(premiumPlan.monthly_credits));
+          if (premiumPlan.yearly_credits != null)
+            setYearlyProCredits(Number(premiumPlan.yearly_credits));
         }
       })
       .catch(() => {
@@ -199,7 +213,7 @@ const Subscription = () => {
                         <h4 className="sub-section-title">Features you'll get:</h4>
                         <div className="sub-feature-list">
                           <li>
-                            <img src={vectoImage} alt="" /> 30 AI scans (2D → 3D or prompt → 3D)
+                            <img src={vectoImage} alt="" /> {monthlyStarterCredits.toLocaleString()} credits included
                           </li>
                           <li>
                             <img src={vectoImage} alt="" /> Real-time preview and export
@@ -258,7 +272,7 @@ const Subscription = () => {
                             <img src={vectoImage} alt="" /> Multi-user team access (up to 4 members)
                           </li>
                           <li>
-                            <img src={vectoImage} alt="" /> 100 AI scans/month
+                            <img src={vectoImage} alt="" /> {monthlyProCredits.toLocaleString()} credits included
                           </li>
                           <li>
                             <img src={vectoImage} alt="" /> Priority processing & rendering queue
@@ -400,7 +414,7 @@ const Subscription = () => {
                         <h4 className="sub-section-title">Features you'll get:</h4>
                         <div className="sub-feature-list">
                           <li>
-                            <img src={vectoImage} alt="" /> 30 AI scans (2D → 3D or prompt → 3D)
+                            <img src={vectoImage} alt="" /> {yearlyStarterCredits.toLocaleString()} credits included
                           </li>
                           <li>
                             <img src={vectoImage} alt="" /> Real-time preview and export
@@ -461,7 +475,7 @@ const Subscription = () => {
                             <img src={vectoImage} alt="" /> Multi-user team access (up to 4 members)
                           </li>
                           <li>
-                            <img src={vectoImage} alt="" /> 100 AI scans/month
+                            <img src={vectoImage} alt="" /> {yearlyProCredits.toLocaleString()} credits included
                           </li>
                           <li>
                             <img src={vectoImage} alt="" /> Priority processing & rendering queue

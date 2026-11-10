@@ -4,6 +4,31 @@ import { useAuth } from '../context/AuthContext';
 
 const COST_KEYS = ['text_to_3d', 'image_to_3d', 'images_to_3d', 'video_to_3d'];
 
+export const CREDIT_UPDATE_EVENT = 'appCreditUpdate';
+
+export const getActiveToken = () => {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem('tokens');
+    if (raw) {
+      const tokens = JSON.parse(raw);
+      if (Array.isArray(tokens)) {
+        const active = tokens.find((t) => t?.is_active === 1) || tokens[0];
+        if (active?.token) return active.token;
+      }
+    }
+  } catch {
+    // fallback below
+  }
+  return localStorage.getItem('token') || null;
+};
+
+export const dispatchCreditUpdate = (detail = {}) => {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent(CREDIT_UPDATE_EVENT, { detail }));
+  }
+};
+
 const toAmount = (value) => {
   if (typeof value === 'number' && Number.isFinite(value)) return value;
   if (typeof value === 'string' && value.trim() && !Number.isNaN(Number(value))) return Number(value);
@@ -46,17 +71,63 @@ export const parseCreditShortage = (message) => {
   };
 };
 
-const fetchUserPayload = async (token) => {
+let inFlightPayloadPromise = null;
+let lastPayloadTime = 0;
+let lastCachedPayload = null;
+
+const fetchUserPayload = async (explicitToken = null, force = false) => {
+  const token = explicitToken || getActiveToken();
   if (!token) return null;
 
-  const response = await fetch(`${baseURL}/user`, {
-    headers: {
-      Accept: 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  if (!response.ok) return null;
-  return response.json();
+  const now = Date.now();
+  if (!force && inFlightPayloadPromise) {
+    return inFlightPayloadPromise;
+  }
+  if (!force && now - lastPayloadTime < 400 && lastCachedPayload) {
+    return lastCachedPayload;
+  }
+
+  inFlightPayloadPromise = (async () => {
+    try {
+      const response = await fetch(`${baseURL}/user`, {
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) return lastCachedPayload;
+      const data = await response.json();
+      lastCachedPayload = data;
+      lastPayloadTime = Date.now();
+      return data;
+    } catch (err) {
+      console.error('Failed to fetch user payload:', err);
+      return lastCachedPayload;
+    } finally {
+      inFlightPayloadPromise = null;
+    }
+  })();
+
+  return inFlightPayloadPromise;
+};
+
+export const fetchUserCredits = async (explicitToken = null, { force = false } = {}) => {
+  const data = await fetchUserPayload(explicitToken, force);
+  return readCreditBalance(data);
+};
+
+export const refreshUserCredits = async (explicitToken = null, { deduct = null, force = true } = {}) => {
+  if (typeof deduct === 'number' && Number.isFinite(deduct) && deduct > 0) {
+    dispatchCreditUpdate({ deduct, refresh: false });
+  }
+
+  const token = explicitToken || getActiveToken();
+  if (!token) return null;
+
+  const credits = await fetchUserCredits(token, { force });
+  dispatchCreditUpdate({ credits, refresh: false });
+  return credits;
 };
 
 export const fetchGenerationCoinCosts = async (token) => {

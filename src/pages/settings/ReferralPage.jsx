@@ -13,7 +13,7 @@ import { FiFacebook, FiInstagram, FiLinkedin, FiSend } from 'react-icons/fi';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { baseURL } from '../../config';
-import { readCreditBalance } from '../../utils/generationCoins';
+import { readCreditBalance, fetchUserCredits, CREDIT_UPDATE_EVENT } from '../../utils/generationCoins';
 import { useAuth } from '../../context/AuthContext';
 import CoinsPopup from '../../components/popup/CoinsPopup';
 import '../ApiSdk.css';
@@ -155,26 +155,43 @@ const ReferralPage = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
+  const fetchCoins = async (force = false) => {
     if (!token) return;
-    const fetchCoins = async () => {
-      try {
-        const response = await fetch(`${baseURL}/user`, {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setCoins(readCreditBalance(data));
-        }
-      } catch (err) {
-        console.error('Failed to fetch coins:', err);
+    try {
+      const balance = await fetchUserCredits(token, { force });
+      setCoins(balance);
+    } catch (err) {
+      console.error('Failed to fetch coins:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchCoins();
+  }, [token]);
+
+  useEffect(() => {
+    const handleCreditUpdate = (event) => {
+      const { deduct, credits, refresh = true } = event.detail || {};
+      if (typeof deduct === 'number' && Number.isFinite(deduct)) {
+        setCoins((prev) => Math.max(0, prev - deduct));
+      }
+      if (typeof credits === 'number' && Number.isFinite(credits)) {
+        setCoins(credits);
+      } else if (refresh) {
+        fetchCoins(true);
       }
     };
-    fetchCoins();
+
+    const handleProjectComplete = () => {
+      fetchCoins(true);
+    };
+
+    window.addEventListener(CREDIT_UPDATE_EVENT, handleCreditUpdate);
+    window.addEventListener('projectProcessingComplete', handleProjectComplete);
+    return () => {
+      window.removeEventListener(CREDIT_UPDATE_EVENT, handleCreditUpdate);
+      window.removeEventListener('projectProcessingComplete', handleProjectComplete);
+    };
   }, [token]);
 
   const handleSendEmail = async () => {

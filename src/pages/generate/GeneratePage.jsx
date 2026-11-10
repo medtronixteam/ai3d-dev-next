@@ -13,7 +13,7 @@ import { useSocket, SocketProvider } from '../../context/SocketContext';
 import { useNotification } from '../../context/NotificationContext';
 import { baseURL } from '../../config';
 import { setFaviconWorking, resetTaskFavicon } from '../../utils/taskFavicon';
-import { parseCreditShortage, useGenerationCoinCosts } from '../../utils/generationCoins';
+import { parseCreditShortage, useGenerationCoinCosts, refreshUserCredits } from '../../utils/generationCoins';
 import InsufficientCreditsPopup from '../../components/popup/InsufficientCreditsPopup';
 import GenerationCoinCost from '../../components/scan/GenerationCoinCost';
 import paths from '../../routes/paths';
@@ -312,6 +312,7 @@ function GeneratePageContent() {
     activeProjectRef.current = null;
     clearActiveQueueRegistration?.();
     buildIdRef.current += 1;
+    refreshUserCredits(token);
     if (status === 'completed') {
       navigate('/3dio/new/scan', { state: { projectId, viewMode: true } });
       return;
@@ -435,7 +436,11 @@ function GeneratePageContent() {
         },
       );
       const data = res.data;
-      return data?.token || data?.data?.token;
+      const tokenId = data?.token || data?.data?.token;
+      if (tokenId) {
+        refreshUserCredits(authToken, { deduct: coinCosts?.text_to_3d });
+      }
+      return tokenId;
     });
   };
 
@@ -460,7 +465,11 @@ function GeneratePageContent() {
           'Content-Type': 'multipart/form-data',
         },
       });
-      return response.data?.token || response.data?.data?.token;
+      const tokenId = response.data?.token || response.data?.data?.token;
+      if (tokenId) {
+        refreshUserCredits(authToken, { deduct: coinCosts?.image_to_3d });
+      }
+      return tokenId;
     });
   };
 

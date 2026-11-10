@@ -50,6 +50,7 @@ import {
 } from 'lucide-react';
 import { useNotification } from '../../context/NotificationContext';
 import { useSocket } from '../../context/SocketContext';
+import { refreshUserCredits } from '../../utils/generationCoins';
 
 const MIN_SLOTS = 5;
 const MAX_FILE_SIZE = 3 * 1024 * 1024;
@@ -231,6 +232,7 @@ const ScanPage = () => {
       const projectToken = response.data?.token || response.data?.data?.token;
 
       if (projectToken) {
+        refreshUserCredits(token);
         window.location.href = `/3dio/preview/${projectToken}`;
       } else {
         throw new Error('Project token not returned');
@@ -664,6 +666,7 @@ const ScanPage = () => {
 
     const newToken = response.data.token;
     if (newToken) {
+      refreshUserCredits(token);
       navigate(`/3dio/preview/${newToken}`);
     } else {
       throw new Error("No token returned from generation");
@@ -1037,6 +1040,7 @@ const ScanPage = () => {
       const projectToken =
         res.data?.token || res.data?.data?.token || res.data?.id || res.data?.data?.id;
       if (res.status === 200 && projectToken) {
+        refreshUserCredits(token);
         navigate(`/3dio/preview/${projectToken}`);
       }
     } catch (err) {

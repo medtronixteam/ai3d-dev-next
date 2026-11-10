@@ -5,6 +5,7 @@ import UpgradeCoin from '../../assets/images/UpgradeCoin.svg';
 import TotalCoin from '../../assets/images/TotalCoins.svg';
 import { baseURL } from '../../config';
 import { FiCheck, FiX } from 'react-icons/fi';
+import { refreshUserCredits } from '../../utils/generationCoins';
 
 const CoinsPopup = ({ onClose, coins, onCoinsUpdate }) => {
   const amounts = [50, 100, 150, 200, 250, 300, 350, 'Custom'];
@@ -114,6 +115,7 @@ const CoinsPopup = ({ onClose, coins, onCoinsUpdate }) => {
           const amountNum = Number(amountToSend);
           onCoinsUpdate(amountNum);
         }
+        refreshUserCredits(null, { deduct: amountNum });
 
         setTimeout(() => {
           setSelectedEmail(null);
@@ -145,6 +147,7 @@ const CoinsPopup = ({ onClose, coins, onCoinsUpdate }) => {
           const amountNum = Number(amountToSend);
           onCoinsUpdate(amountNum);
         }
+        refreshUserCredits(null, { deduct: amountNum });
 
         setTimeout(() => {
           setSelectedEmail(null);

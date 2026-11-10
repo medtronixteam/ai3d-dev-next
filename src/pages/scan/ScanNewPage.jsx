@@ -26,7 +26,7 @@ import {
   pollProjectFramesUntilReady,
   submitVideoPublicUrl,
 } from '../../services/videoProjectApi';
-import { parseCreditShortage, useGenerationCoinCosts } from '../../utils/generationCoins';
+import { parseCreditShortage, useGenerationCoinCosts, refreshUserCredits } from '../../utils/generationCoins';
 import InsufficientCreditsPopup from '../../components/popup/InsufficientCreditsPopup';
 
 import {
@@ -793,6 +793,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       }
 
       if (proj.status === 'completed') {
+        refreshUserCredits(token);
         await fetchModelUrl(projectId, proj.type);
         return;
       }
@@ -824,6 +825,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       }
 
       if (status === 'completed') {
+        refreshUserCredits(token);
         await fetchModelUrl(projectId, proj?.type);
       } else {
         throw new Error('Project generation failed');
@@ -948,6 +950,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     }
 
     if (queueData.status === 'completed') {
+      refreshUserCredits(token);
       setShowQueueUI(false);
       if (!modelReady && !modelUrl) {
         setShowLoadingUI(true);
@@ -964,6 +967,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   useEffect(() => {
     const handleProjectCompleteNotification = (event) => {
       console.log('Project processing complete notification received:', event.detail);
+      refreshUserCredits(token);
       if (projectToken && (!modelReady || !modelUrl || loadedProjectTokenRef.current !== projectToken)) {
         fetchInitialProject(projectToken);
       }
@@ -1428,6 +1432,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       const token_id = response.data?.token || response.data?.data?.token;
 
       if (token_id) {
+        refreshUserCredits(token, { deduct: coinCosts?.image_to_3d });
         setProjectToken(token_id);
         setProjectType('image_to_3d');
         setGeneratedPrompt(singleImageName);
@@ -1500,6 +1505,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
           throw new Error(getApiErrorMessage(data, 'Project token not returned'));
         }
 
+        refreshUserCredits(token, { deduct: coinCosts?.text_to_3d });
         setProjectToken(token_id);
         setProjectType('text_to_3d');
         setGeneratedPrompt(trimmedPrompt);
@@ -1555,6 +1561,8 @@ const ModelGenerator = ({ isDarkMode = false }) => {
           projectToken: token_id,
           token,
         });
+
+        refreshUserCredits(token, { deduct: coinCosts?.images_to_3d });
 
         const directUrl =
           completeRes?.url ||
@@ -1706,6 +1714,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
 
     const newToken = await generateVideoProject(aiExtractJobId, removedFrames, token);
 
+    refreshUserCredits(token, { deduct: coinCosts?.video_to_3d });
     setProjectToken(newToken);
     setShowVideoFrames(false);
     setVideoFrameItems([]);

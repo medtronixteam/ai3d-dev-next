@@ -24,7 +24,7 @@ import modalVideo from '../../assets/images/3dModal.mp4';
 import CustomLoader from '../../components/loader/CustomLoader';
 import SubscriptionModal from '../../components/popup/SubscriptionModal';
 import { baseURL } from '../../config';
-import { readCreditBalance } from '../../utils/generationCoins';
+import { readCreditBalance, fetchUserCredits, refreshUserCredits, CREDIT_UPDATE_EVENT } from '../../utils/generationCoins';
 import { toast } from 'react-toastify';
 import {
   useStripe,
@@ -245,21 +245,12 @@ const Subscription = () => {
           row.StatusOrder.toLowerCase().includes(activeFilter.toLowerCase()),
         );
 
-  const fetchCoins = async () => {
+  const fetchCoins = async (force = false) => {
     if (!token) return;
     setLoadingCoinsSpinner(true);
     try {
-      const response = await fetch(`${baseURL}/user`, {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setCoins(readCreditBalance(data));
-      }
+      const balance = await fetchUserCredits(token, { force });
+      setCoins(balance);
     } catch (err) {
       console.error('Failed to fetch coins:', err);
     } finally {
@@ -273,8 +264,38 @@ const Subscription = () => {
     fetchCurrentPaymentMethod();
   }, [token]);
 
+  useEffect(() => {
+    const handleCreditUpdate = (event) => {
+      const { deduct, credits, refresh = true } = event.detail || {};
+      if (typeof deduct === 'number' && Number.isFinite(deduct)) {
+        setCoins((prev) => Math.max(0, prev - deduct));
+      }
+      if (typeof credits === 'number' && Number.isFinite(credits)) {
+        setCoins(credits);
+      } else if (refresh) {
+        fetchCoins(true);
+      }
+    };
+
+    const handleProjectComplete = () => {
+      fetchCoins(true);
+    };
+
+    window.addEventListener(CREDIT_UPDATE_EVENT, handleCreditUpdate);
+    window.addEventListener('projectProcessingComplete', handleProjectComplete);
+    return () => {
+      window.removeEventListener(CREDIT_UPDATE_EVENT, handleCreditUpdate);
+      window.removeEventListener('projectProcessingComplete', handleProjectComplete);
+    };
+  }, [token]);
+
   const handleCoinsUpdate = (spentAmount) => {
-    setCoins((prev) => prev - Number(spentAmount));
+    const num = Number(spentAmount);
+    if (Number.isFinite(num) && num > 0) {
+      refreshUserCredits(token, { deduct: num });
+    } else {
+      refreshUserCredits(token);
+    }
   };
 
    const fetchSubscriptions = async () => {

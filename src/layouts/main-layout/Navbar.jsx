@@ -17,7 +17,7 @@ import SubscriptionModal from '../../components/popup/SubscriptionModal';
 import UpgradeCoin from '../../assets/images/UpgradeCoin.svg';
 import { isPublicProjectRoute } from '../../utils/publicProjectShare';
 import { baseURL } from '../../config';
-import { readCreditBalance } from '../../utils/generationCoins';
+import { readCreditBalance, fetchUserCredits, refreshUserCredits, CREDIT_UPDATE_EVENT } from '../../utils/generationCoins';
 import CoinsPopup from '../../components/popup/CoinsPopup';
 // const VIDEO_URL = modalVideo;
 
@@ -188,21 +188,12 @@ const Navbar = ({ onSidebarToggle, sidebarOpen }) => {
   const [loadingCoinSpinner, setLoadingCoinsSpinner] = useState(false);
   const [showCoinsPopup, setShowCoinsPopup] = useState(false);
 
-  const fetchCoins = async () => {
+  const fetchCoins = async (force = false) => {
     if (!token) return;
     setLoadingCoinsSpinner(true);
     try {
-      const response = await fetch(`${baseURL}/user`, {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setCoins(readCreditBalance(data));
-      }
+      const balance = await fetchUserCredits(token, { force });
+      setCoins(balance);
     } catch (err) {
       console.error('Failed to fetch coins:', err);
     } finally {
@@ -214,8 +205,38 @@ const Navbar = ({ onSidebarToggle, sidebarOpen }) => {
     fetchCoins();
   }, [token]);
 
+  useEffect(() => {
+    const handleCreditUpdate = (event) => {
+      const { deduct, credits, refresh = true } = event.detail || {};
+      if (typeof deduct === 'number' && Number.isFinite(deduct)) {
+        setCoins((prev) => Math.max(0, prev - deduct));
+      }
+      if (typeof credits === 'number' && Number.isFinite(credits)) {
+        setCoins(credits);
+      } else if (refresh) {
+        fetchCoins(true);
+      }
+    };
+
+    const handleProjectComplete = () => {
+      fetchCoins(true);
+    };
+
+    window.addEventListener(CREDIT_UPDATE_EVENT, handleCreditUpdate);
+    window.addEventListener('projectProcessingComplete', handleProjectComplete);
+    return () => {
+      window.removeEventListener(CREDIT_UPDATE_EVENT, handleCreditUpdate);
+      window.removeEventListener('projectProcessingComplete', handleProjectComplete);
+    };
+  }, [token]);
+
   const handleCoinsUpdate = (spentAmount) => {
-    setCoins((prev) => prev - Number(spentAmount));
+    const num = Number(spentAmount);
+    if (Number.isFinite(num) && num > 0) {
+      refreshUserCredits(token, { deduct: num });
+    } else {
+      refreshUserCredits(token);
+    }
   };
 
   // Check if current route is a settings page or recent projects page

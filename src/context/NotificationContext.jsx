@@ -6,6 +6,7 @@ import { initializeApp } from 'firebase/app';
 import { toast } from 'react-toastify';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { v4 as uuidv4 } from 'uuid';
+import { refreshUserCredits } from '../utils/generationCoins';
 
 export const NotificationContext = createContext();
 export const useNotification = () => useContext(NotificationContext);
@@ -140,6 +141,7 @@ export const NotificationProvider = ({ children, fetchCoins }) => {
             }, 500);
           } 
           else if (combined.includes('coin')) {
+            refreshUserCredits(token);
             if (typeof fetchCoins === 'function') {
               await fetchCoins();
             }
@@ -158,6 +160,7 @@ export const NotificationProvider = ({ children, fetchCoins }) => {
           }
           else if (combined.includes('complete') || combined.includes('ready') || combined.includes('success') || combined.includes('generated') || combined.includes('finish') || combined.includes('done')) {
             console.log('Project completion matched, dispatching projectProcessingComplete event');
+            refreshUserCredits(token);
             window.dispatchEvent(new CustomEvent('projectProcessingComplete', {
               detail: { 
                 notification: payload.notification,

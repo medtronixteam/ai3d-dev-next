@@ -107,7 +107,7 @@ import Logo from 'pages/images/logo.png';
 import ProfilePopup from 'components/popup/ProfilePopup';
 import axios from 'axios';
 import { baseURL } from '../../../config';
-import { readCreditBalance } from '../../../utils/generationCoins';
+import { readCreditBalance, fetchUserCredits, CREDIT_UPDATE_EVENT } from '../../../utils/generationCoins';
 import BuyerIcon from '../../../assets/icon/buyer.svg';
 import SellerIcon from '../../../assets/icon/seller.svg';
 import HomeIcon from 'assets/images/Home.svg';
@@ -176,21 +176,12 @@ const Sidebar = ({ open = false, onClose, disableExpand = false }) => {
   const [contributorLoading, setContributorLoading] = useState(false);
   const [contributorError, setContributorError] = useState('');
 
-  const fetchCoins = async () => {
+  const fetchCoins = async (force = false) => {
     if (!token) return;
     setLoadingCoinsSpinner(true);
     try {
-      const response = await fetch(`${baseURL}/user`, {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setCoins(readCreditBalance(data));
-      }
+      const balance = await fetchUserCredits(token, { force });
+      setCoins(balance);
     } catch (err) {
       console.error('Failed to fetch coins:', err);
     } finally {
@@ -200,6 +191,31 @@ const Sidebar = ({ open = false, onClose, disableExpand = false }) => {
 
   useEffect(() => {
     fetchCoins();
+  }, [token]);
+
+  useEffect(() => {
+    const handleCreditUpdate = (event) => {
+      const { deduct, credits, refresh = true } = event.detail || {};
+      if (typeof deduct === 'number' && Number.isFinite(deduct)) {
+        setCoins((prev) => Math.max(0, prev - deduct));
+      }
+      if (typeof credits === 'number' && Number.isFinite(credits)) {
+        setCoins(credits);
+      } else if (refresh) {
+        fetchCoins(true);
+      }
+    };
+
+    const handleProjectComplete = () => {
+      fetchCoins(true);
+    };
+
+    window.addEventListener(CREDIT_UPDATE_EVENT, handleCreditUpdate);
+    window.addEventListener('projectProcessingComplete', handleProjectComplete);
+    return () => {
+      window.removeEventListener(CREDIT_UPDATE_EVENT, handleCreditUpdate);
+      window.removeEventListener('projectProcessingComplete', handleProjectComplete);
+    };
   }, [token]);
 
   const location = useLocation();

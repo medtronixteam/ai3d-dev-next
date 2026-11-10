@@ -1,6 +1,7 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { FiCheckCircle, FiXCircle } from 'react-icons/fi';
+import { refreshUserCredits } from '../../utils/generationCoins';
 
 const SubscriptionSuccess = () => {
   const location = useLocation();
@@ -10,6 +11,10 @@ const SubscriptionSuccess = () => {
   const message = params.get('message');
 
   const isSuccess = status === 'success' || status === 'succeeded' || status === 'ok';
+
+  useEffect(() => {
+    refreshUserCredits();
+  }, []);
 
   return (
     <div style={{ minHeight: '100vh',  }} className="d-flex align-items-center justify-content-center p-4">

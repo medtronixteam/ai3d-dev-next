@@ -15,6 +15,7 @@ import { baseURL } from '../../config';
 import { setFaviconWorking, resetTaskFavicon } from '../../utils/taskFavicon';
 import { parseCreditShortage, useGenerationCoinCosts, refreshUserCredits } from '../../utils/generationCoins';
 import InsufficientCreditsPopup from '../../components/popup/InsufficientCreditsPopup';
+import FeatureUnavailablePopup, { isFeatureUnavailableError } from '../../components/popup/FeatureUnavailablePopup';
 import GenerationCoinCost from '../../components/scan/GenerationCoinCost';
 import paths from '../../routes/paths';
 import JoinPlatformCta from '../../components/landing/JoinPlatformCta';
@@ -114,6 +115,7 @@ function GeneratePageContent() {
   const { token } = useAuth();
   const coinCosts = useGenerationCoinCosts();
   const [creditNotice, setCreditNotice] = useState(null);
+  const [featureUnavailableNotice, setFeatureUnavailableNotice] = useState(null);
   const socketState = useSocket();
   const queue_system = socketState?.queue_system;
   const queueData = socketState?.queueData;
@@ -398,6 +400,13 @@ function GeneratePageContent() {
       if (shortage) {
         resetTaskFavicon();
         setCreditNotice(shortage);
+      } else if (isFeatureUnavailableError(err) || isFeatureUnavailableError(message)) {
+        resetTaskFavicon();
+        setFeatureUnavailableNotice({
+          title: 'Feature Coming Soon',
+          message: message || 'This feature is not available yet.',
+          featureName: imageMode ? 'Image to 3D' : 'Text to 3D',
+        });
       } else {
         toast.error(message);
       }
@@ -1234,6 +1243,15 @@ function GeneratePageContent() {
           balance={creditNotice.balance}
           needed={creditNotice.needed}
           onClose={() => setCreditNotice(null)}
+        />
+      )}
+      {featureUnavailableNotice && (
+        <FeatureUnavailablePopup
+          open={Boolean(featureUnavailableNotice)}
+          title={featureUnavailableNotice.title}
+          message={featureUnavailableNotice.message}
+          featureName={featureUnavailableNotice.featureName}
+          onClose={() => setFeatureUnavailableNotice(null)}
         />
       )}
       {showLoginModal ? (

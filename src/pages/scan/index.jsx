@@ -51,6 +51,7 @@ import {
 import { useNotification } from '../../context/NotificationContext';
 import { useSocket } from '../../context/SocketContext';
 import { refreshUserCredits } from '../../utils/generationCoins';
+import FeatureUnavailablePopup, { isFeatureUnavailableError } from '../../components/popup/FeatureUnavailablePopup';
 
 const MIN_SLOTS = 5;
 const MAX_FILE_SIZE = 3 * 1024 * 1024;
@@ -75,6 +76,7 @@ const ScanPage = () => {
   const uploadSteps = ['Uploading...', 'Extracting...', 'Analysing...'];
   const [uploadStepIdx, setUploadStepIdx] = useState(0);
   const [showComingSoonModal, setShowComingSoonModal] = useState(false);
+  const [featureUnavailableNotice, setFeatureUnavailableNotice] = useState(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loginModalVisible, setLoginModalVisible] = useState(false);
   const [prompt, setPrompt] = useState('');
@@ -239,7 +241,16 @@ const ScanPage = () => {
       }
     } catch (err) {
       console.error(err);
-      toast.error(err?.response?.data?.message || 'Something went wrong. Please try again.');
+      const errMsg = err?.response?.data?.message || err?.message || 'Something went wrong. Please try again.';
+      if (isFeatureUnavailableError(err) || isFeatureUnavailableError(errMsg)) {
+        setFeatureUnavailableNotice({
+          title: 'Feature Coming Soon',
+          message: errMsg,
+          featureName: 'Single Image to 3D',
+        });
+      } else {
+        toast.error(errMsg);
+      }
     } finally {
       setSingleFileLoading(false);
     }
@@ -1044,9 +1055,17 @@ const ScanPage = () => {
         navigate(`/3dio/preview/${projectToken}`);
       }
     } catch (err) {
-      setPromptError(
-        err?.response?.data?.message || err?.message || 'Something went wrong. Please try again.',
-      );
+      const errMsg =
+        err?.response?.data?.message || err?.message || 'Something went wrong. Please try again.';
+      if (isFeatureUnavailableError(err) || isFeatureUnavailableError(errMsg)) {
+        setFeatureUnavailableNotice({
+          title: 'Feature Coming Soon',
+          message: errMsg,
+          featureName: 'Text to 3D',
+        });
+      } else {
+        setPromptError(errMsg);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -2131,6 +2150,15 @@ const ScanPage = () => {
       )}
 
       {showLoginModal && <LoginPopup onClose={() => setShowLoginModal(false)} />}
+      {featureUnavailableNotice && (
+        <FeatureUnavailablePopup
+          open={Boolean(featureUnavailableNotice)}
+          title={featureUnavailableNotice.title}
+          message={featureUnavailableNotice.message}
+          featureName={featureUnavailableNotice.featureName}
+          onClose={() => setFeatureUnavailableNotice(null)}
+        />
+      )}
     </div>
   );
 };

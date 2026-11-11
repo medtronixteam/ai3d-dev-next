@@ -28,6 +28,7 @@ import {
 } from '../../services/videoProjectApi';
 import { parseCreditShortage, useGenerationCoinCosts, refreshUserCredits } from '../../utils/generationCoins';
 import InsufficientCreditsPopup from '../../components/popup/InsufficientCreditsPopup';
+import FeatureUnavailablePopup, { isFeatureUnavailableError } from '../../components/popup/FeatureUnavailablePopup';
 
 import {
   createMultiImageProject,
@@ -147,6 +148,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   const { token, user } = useAuth();
   const coinCosts = useGenerationCoinCosts();
   const [creditNotice, setCreditNotice] = useState(null);
+  const [featureUnavailableNotice, setFeatureUnavailableNotice] = useState(null);
   const { activeCreationWorkspaceId, assignProjectToWorkspace } = useWorkspace();
   const navigate = useNavigate();
   const location = useLocation();
@@ -832,7 +834,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       }
     } catch (err) {
       console.error('Failed to fetch project:', err);
-      toast.error(err?.response?.data?.message || err.message || 'Failed to load project');
+      showGenerationError(err, 'Failed to load project');
       setShowLoadingUI(false);
       setShowBlackOverlay(false);
       setShowQueueUI(false);
@@ -1392,19 +1394,28 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       }
     } catch (err) {
       console.error('Enhancement failed:', err);
-      toast.error('Failed to enhance prompt');
+      showGenerationError(err, 'Failed to enhance prompt', 'Prompt Enhancer');
       setOriginalPrompt('');
     } finally {
       setIsEnhancing(false);
     }
   };
 
-  const showGenerationError = (err, fallback) => {
+  const showGenerationError = (err, fallback, featureContext = null) => {
     const message = getApiErrorMessage(err, fallback);
     const shortage = parseCreditShortage(message);
     if (shortage) {
       resetTaskFavicon();
       setCreditNotice(shortage);
+      return;
+    }
+    if (isFeatureUnavailableError(err) || isFeatureUnavailableError(message)) {
+      resetTaskFavicon();
+      setFeatureUnavailableNotice({
+        title: featureContext ? `${featureContext} - Coming Soon` : 'Feature Coming Soon',
+        message: message || 'This feature is not available yet.',
+        featureName: featureContext,
+      });
       return;
     }
     toast.error(message);
@@ -1442,7 +1453,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       }
     } catch (err) {
       console.error(err);
-      showGenerationError(err, 'Upload failed');
+      showGenerationError(err, 'Upload failed', 'Single Image to 3D');
       setIsArrowLoading(false);
     }
   };
@@ -1462,7 +1473,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
         await handleGenerateFromFrames();
       } catch (err) {
         console.error(err);
-        showGenerationError(err, 'Generation failed');
+        showGenerationError(err, 'Generation failed', 'Video to 3D');
         setIsGenerating(false);
       }
       return;
@@ -1591,7 +1602,15 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       }
     } catch (err) {
       console.error('Generation error:', err);
-      showGenerationError(err, 'Generation failed');
+      const featureType =
+        trimmedPrompt && images.length === 0 && !video
+          ? 'Text to 3D'
+          : images.length > 0
+          ? 'Multi-Image to 3D'
+          : video
+          ? 'Video to 3D'
+          : '3D Generation';
+      showGenerationError(err, 'Generation failed', featureType);
       setShowLoadingUI(false);
       setShowBlackOverlay(false);
       setShowQueueUI(false);
@@ -1686,7 +1705,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       toast.success('Frames extracted! Remove unwanted frames, then click Generate.');
     } catch (err) {
       console.error(err);
-      showGenerationError(err, 'Failed to extract video frames');
+      showGenerationError(err, 'Failed to extract video frames', 'Video to 3D');
       setShowQueueUI(false);
       setShowLoadingUI(false);
       setShowBlackOverlay(false);
@@ -1987,6 +2006,15 @@ const ModelGenerator = ({ isDarkMode = false }) => {
           balance={creditNotice.balance}
           needed={creditNotice.needed}
           onClose={() => setCreditNotice(null)}
+        />
+      )}
+      {featureUnavailableNotice && (
+        <FeatureUnavailablePopup
+          open={Boolean(featureUnavailableNotice)}
+          title={featureUnavailableNotice.title}
+          message={featureUnavailableNotice.message}
+          featureName={featureUnavailableNotice.featureName}
+          onClose={() => setFeatureUnavailableNotice(null)}
         />
       )}
       <div className="container-fluid pe-md-3 p-0">

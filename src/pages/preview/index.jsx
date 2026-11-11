@@ -16,6 +16,7 @@ import lottie from 'lottie-web';
 import loaderAnimationData from '../../assets/images/project_loader.json';
 import { toast } from 'react-toastify';
 import { useSocket } from '../../context/SocketContext';
+import FeatureUnavailablePopup, { isFeatureUnavailableError } from '../../components/popup/FeatureUnavailablePopup';
 
 // Stepper Component
 const Stepper = ({ currentStep, status }) => {
@@ -208,6 +209,7 @@ const ImagePreview = () => {
   const [screenshotTaken, setScreenshotTaken] = useState(false);
   const [screenshotData, setScreenshotData] = useState(null);
   const [isModelRendering, setIsModelRendering] = useState(true);
+  const [featureUnavailableNotice, setFeatureUnavailableNotice] = useState(null);
   const {
   connected,
   queue_system,
@@ -540,7 +542,20 @@ const ImagePreview = () => {
       
       window.location.href = editorUrl;
     } catch (error) {
-      console.error('Request failed');
+      console.error('Request failed', error);
+      if (isFeatureUnavailableError(error)) {
+        setFeatureUnavailableNotice({
+          title: '3D Editor - Coming Soon',
+          message:
+            error?.response?.data?.message ||
+            error?.response?.data?.error ||
+            error?.message ||
+            'This feature is not available yet.',
+          featureName: '3D Editor',
+        });
+        return;
+      }
+      toast.error(error?.response?.data?.message || error?.message || 'Failed to open editor');
     }
   };
 
@@ -1105,6 +1120,15 @@ const ImagePreview = () => {
             </>
           )}
         </div>
+      )}
+      {featureUnavailableNotice && (
+        <FeatureUnavailablePopup
+          open={Boolean(featureUnavailableNotice)}
+          title={featureUnavailableNotice.title}
+          message={featureUnavailableNotice.message}
+          featureName={featureUnavailableNotice.featureName}
+          onClose={() => setFeatureUnavailableNotice(null)}
+        />
       )}
     </div>
   );

@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { FiX } from 'react-icons/fi';
 import { Sparkles, Clock, Compass, Layers, Video, Image as ImageIcon, Type, ArrowRight } from 'lucide-react';
 import './FeatureUnavailablePopup.css';
@@ -73,6 +74,12 @@ const FeatureUnavailablePopup = ({
   message = 'This feature is not available yet.',
   featureName = null,
 }) => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     if (!open) return;
     const handleKeyDown = (e) => {
@@ -82,12 +89,22 @@ const FeatureUnavailablePopup = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [open, onClose]);
 
-  if (!open) return null;
+  // Prevent background scrolling while modal is open
+  useEffect(() => {
+    if (!open) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [open]);
+
+  if (!open || !mounted) return null;
 
   const tipText = getFeatureTip(featureName);
   const displayTitle = featureName ? `${featureName} - Coming Soon` : title;
 
-  return (
+  const modalNode = (
     <div
       className="feature-unavailable-overlay"
       onClick={onClose}
@@ -170,6 +187,8 @@ const FeatureUnavailablePopup = ({
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalNode, document.body) : null;
 };
 
 export default FeatureUnavailablePopup;

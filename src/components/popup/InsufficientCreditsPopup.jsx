@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { FiX } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import UpgradeCoin from '../../assets/images/UpgradeCoin.svg';
@@ -10,15 +11,22 @@ const PLANS = [
 ];
 
 const InsufficientCreditsPopup = ({ balance = 0, needed = null, onClose }) => {
+  const [mounted, setMounted] = useState(false);
   const navigate = useNavigate();
   const balanceLabel = Number(balance).toLocaleString();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const openPlans = () => {
     onClose?.();
     navigate('/3dio/subscription');
   };
 
-  return (
+  if (!mounted) return null;
+
+  const content = (
     <div className="credits-popup-overlay" onClick={onClose}>
       <div className="credits-popup" onClick={(event) => event.stopPropagation()} role="dialog" aria-modal="true">
         <button type="button" className="credits-popup-close" onClick={onClose} aria-label="Close">
@@ -49,6 +57,8 @@ const InsufficientCreditsPopup = ({ balance = 0, needed = null, onClose }) => {
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(content, document.body) : null;
 };
 
 export default InsufficientCreditsPopup;

@@ -43,6 +43,7 @@ import { FastAverageColor } from 'fast-average-color';
 import LoginPopup from '../../components/popup/LoginPopup';
 import ScanWelcomeModal from '../../components/popup/ScanWelcomeModal';
 import OpenInEditorModal from '../../components/popup/OpenInEditorModal';
+import FeatureUnavailablePopup, { isFeatureUnavailableError } from '../../components/popup/FeatureUnavailablePopup';
 import {
   markScanWelcomeSeen,
   shouldShowScanWelcome,
@@ -521,6 +522,7 @@ export function ModelCardVideoModal({
   const [showEditorModal, setShowEditorModal] = useState(false);
   const [isOpeningEditor, setIsOpeningEditor] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
+  const [featureUnavailableNotice, setFeatureUnavailableNotice] = useState(null);
 
   const modelViewerRef = useRef(null);
   const mediaTimeoutRef = useRef(null);
@@ -1393,6 +1395,19 @@ export function ModelCardVideoModal({
           } catch (err) {
             if (editorWindow) editorWindow.close();
             console.error('Failed to get editor auth code:', err);
+            if (isFeatureUnavailableError(err)) {
+              setShowEditorModal(false);
+              setFeatureUnavailableNotice({
+                title: '3D Editor - Coming Soon',
+                message:
+                  err?.response?.data?.message ||
+                  err?.response?.data?.error ||
+                  err?.message ||
+                  'This feature is not available yet.',
+                featureName: '3D Editor',
+              });
+              return;
+            }
             toast.error(err?.response?.data?.message || err?.message || 'Failed to open editor');
           } finally {
             setIsOpeningEditor(false);
@@ -1401,6 +1416,16 @@ export function ModelCardVideoModal({
         title="Open in 3D Editor"
         message="Do you want to open this project in the 3D Editor?"
       />
+
+      {featureUnavailableNotice && (
+        <FeatureUnavailablePopup
+          open={Boolean(featureUnavailableNotice)}
+          title={featureUnavailableNotice.title}
+          message={featureUnavailableNotice.message}
+          featureName={featureUnavailableNotice.featureName}
+          onClose={() => setFeatureUnavailableNotice(null)}
+        />
+      )}
     </>
   );
 }

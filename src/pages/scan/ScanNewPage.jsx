@@ -1906,6 +1906,19 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     } catch (err) {
       if (editorWindow) editorWindow.close();
       console.error('Failed to get editor auth code:', err);
+      if (isFeatureUnavailableError(err)) {
+        setShowEditorModal(false);
+        setFeatureUnavailableNotice({
+          title: '3D Editor - Coming Soon',
+          message:
+            err?.response?.data?.message ||
+            err?.response?.data?.error ||
+            err?.message ||
+            'This feature is not available yet.',
+          featureName: '3D Editor',
+        });
+        return;
+      }
       toast.error(err?.response?.data?.message || err?.message || 'Failed to open editor');
     } finally {
       setIsOpeningEditor(false);

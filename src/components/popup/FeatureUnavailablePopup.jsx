@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { FiX } from 'react-icons/fi';
-import { Sparkles, Clock, Compass, Layers, Video, Image as ImageIcon, Type, ArrowRight } from 'lucide-react';
+import { Sparkles, Clock, Compass, Layers, Video, Image as ImageIcon, Type, ArrowRight, Box, Edit3 } from 'lucide-react';
 import './FeatureUnavailablePopup.css';
 
 /**
@@ -13,23 +13,35 @@ export const isFeatureUnavailableError = (errOrMessage) => {
   if (typeof errOrMessage === 'string') {
     text = errOrMessage;
   } else if (typeof errOrMessage === 'object') {
-    text =
-      errOrMessage?.response?.data?.message ||
-      errOrMessage?.response?.data?.error ||
-      errOrMessage?.data?.message ||
-      errOrMessage?.message ||
-      '';
+    const data = errOrMessage?.response?.data;
+    if (typeof data === 'string') {
+      text = data;
+    } else {
+      text =
+        data?.message ||
+        data?.error ||
+        data?.detail ||
+        data?.msg ||
+        errOrMessage?.data?.message ||
+        errOrMessage?.message ||
+        '';
+    }
   }
   const str = String(text).toLowerCase().trim();
   return (
     str.includes('feature is not available') ||
     str.includes('not available yet') ||
+    str.includes('not yet available') ||
     str.includes('feature unavailable') ||
     str.includes('feature not available') ||
     str.includes('feature is unavailable') ||
     str.includes('currently unavailable') ||
     str.includes('under development') ||
-    str.includes('coming soon')
+    str.includes('under maintenance') ||
+    str.includes('coming soon') ||
+    (str.includes('editor') && str.includes('not available')) ||
+    (str.includes('feature') && str.includes('not available')) ||
+    str.includes('not available')
   );
 };
 
@@ -49,6 +61,7 @@ export const dispatchFeatureUnavailable = (detail = {}) => {
 
 const getFeatureIcon = (featureName) => {
   const name = String(featureName || '').toLowerCase();
+  if (name.includes('editor')) return <Box size={30} />;
   if (name.includes('video')) return <Video size={30} />;
   if (name.includes('image')) return <ImageIcon size={30} />;
   if (name.includes('text') || name.includes('prompt')) return <Type size={30} />;
@@ -58,6 +71,9 @@ const getFeatureIcon = (featureName) => {
 
 const getFeatureTip = (featureName) => {
   const name = String(featureName || '').toLowerCase();
+  if (name.includes('editor')) {
+    return 'You can export your 3D model (GLB, OBJ, USDZ) and inspect or edit it in external tools like Blender in the meantime!';
+  }
   if (name.includes('text') || name.includes('prompt')) {
     return 'You can try uploading a Single Image or Multiple Images to generate your 3D model in the meantime!';
   }
@@ -65,6 +81,22 @@ const getFeatureTip = (featureName) => {
     return 'You can try our Image to 3D or Multi-Image 3D reconstruction tools right now!';
   }
   return 'Explore our other available 3D generation tools while we prepare this feature!';
+};
+
+const getFeatureInfoText = (featureName) => {
+  const name = String(featureName || '').toLowerCase();
+  if (name.includes('editor')) {
+    return (
+      <>
+        <strong>Our engineering team is actively building and refining</strong> the interactive in-browser 3D Editor suite. It will be enabled in an upcoming release!
+      </>
+    );
+  }
+  return (
+    <>
+      <strong>Our engineering team is actively training and fine-tuning</strong> this AI pipeline for photorealistic 3D generation. It will be enabled in an upcoming release!
+    </>
+  );
 };
 
 const FeatureUnavailablePopup = ({
@@ -165,7 +197,7 @@ const FeatureUnavailablePopup = ({
             <Clock size={19} />
           </div>
           <div className="feature-unavailable-info-text">
-            <strong>Our engineering team is actively training and fine-tuning</strong> this AI pipeline for photorealistic 3D generation. It will be enabled in an upcoming release!
+            {getFeatureInfoText(featureName)}
           </div>
         </div>
 

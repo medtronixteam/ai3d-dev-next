@@ -71,6 +71,7 @@ const LeftScan = ({
   onShowComingSoon,
   userEmail,
   coinCosts,
+  viewerPresented = false,
 }) => {
   const singleImageInputRef = useRef(null);
   const imageInputRef = useRef(null);
@@ -340,7 +341,8 @@ const LeftScan = ({
   };
 
   const hasSingleImage = Boolean(isSingleImageUploading || singleImageFile || singleImageName);
-  const hasPrompt = Boolean(prompt.trim() || (isViewOnly && generatedPrompt) || modelReady);
+  const detailsReady = Boolean(viewerPresented && (modelReady || (isViewOnly && generatedPrompt)));
+  const hasPrompt = Boolean(prompt.trim() || detailsReady);
   const generationType = singleImageName
     ? 'image_to_3d'
     : video
@@ -356,7 +358,7 @@ const LeftScan = ({
   const showPromptBox = hasPrompt || (!hasSingleImage && !hasMultipleImages && !hasVideo);
   const showMultipleImagesBox = hasMultipleImages || (!hasSingleImage && !hasPrompt && !hasVideo);
   const showVideoBox = hasVideo || (!hasSingleImage && !hasPrompt && !hasMultipleImages);
-  const showModelDetails = modelReady || (isViewOnly && Boolean(generatedPrompt));
+  const showModelDetails = detailsReady;
 
   return (
     <div className="col-lg-3 col-md-4 pe-md-3 negative-margin">
@@ -508,7 +510,7 @@ const LeftScan = ({
         {showPromptBox && (
           <div>
             <label className="fw-bold small mb-2">Prompt</label>
-            {modelReady || (isViewOnly && generatedPrompt) ? (
+            {detailsReady ? (
               <div>
                 <div
                   className={`prompt-box border rounded-4 p-2 mb-3 d-flex ${isProcessing ? 'bg-light opacity-75' : ''

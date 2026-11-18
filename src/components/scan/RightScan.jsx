@@ -128,6 +128,7 @@ const RightScan = ({
   historyLoading = false,
   historyFilterLoading = false,
   modelReady,
+  viewerPresented = false,
   isUserOwnedProject,
   transformControls,
   handleTransformChange,
@@ -147,6 +148,7 @@ const RightScan = ({
   reviewProjectToken,
   reviewProjectType,
 }) => {
+  const sideReady = Boolean(modelReady && viewerPresented);
   const navigate = useNavigate();
   const { token } = useAuth();
   const [libraryModels, setLibraryModels] = React.useState([]);
@@ -462,7 +464,7 @@ const RightScan = ({
           100% { transform: rotate(25deg) }
         }
       `}</style>
-      <div className={`library-card-outer${activeTab === 'transform' ? ' transform-tab' : ''}${modelReady ? ' model-ready-panel' : ''}`}>
+      <div className={`library-card-outer${activeTab === 'transform' ? ' transform-tab' : ''}${sideReady ? ' model-ready-panel' : ''}`}>
         {activeTab === 'library' && !hideUpgradePromo && (
           <div className="upgrade-box p-2 rounded-4 m-3">
             <p className="text-pink x-small fw-bold mb-2">
@@ -832,7 +834,7 @@ const RightScan = ({
         </div>
 
         <div className="library-card-tabs">
-          {modelReady && isUserOwnedProject ? (
+          {sideReady && isUserOwnedProject ? (
             <div className="export-button-bar">
               <button
                 type="button"

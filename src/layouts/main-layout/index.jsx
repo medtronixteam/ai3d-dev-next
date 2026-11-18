@@ -5,14 +5,11 @@ import Sidebar from './sidebar';
 import CustomSidebar from './sidebar/CustomSidebar';
 import Navbar from './Navbar';
 import './MainLayout.css';
-import ChatIcon from '../../components/chat/ChatIcon';
-import ChatScreen from '../../components/chat/ChatScreen';
 import { useAuth } from '../../context/AuthContext';
 import BottomNavBar from 'components/base/BottomNavBar';
 
 const MainLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isChatOpen, setChatOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   
   const location = useLocation();
@@ -38,7 +35,6 @@ const MainLayout = ({ children }) => {
 
   const handleSidebarToggle = () => setSidebarOpen((open) => !open);
   const handleSidebarClose = () => setSidebarOpen(false);
-  const toggleChat = () => setChatOpen((open) => !open);
   const handleCollapseToggle = () => setIsCollapsed(prev => !prev);
   const handleAutoCollapse = () => setIsCollapsed(true);
 
@@ -152,8 +148,6 @@ const MainLayout = ({ children }) => {
         )}
         {children}
       </Box>
-      <ChatIcon onClick={toggleChat} />
-      {isChatOpen && <ChatScreen onClose={toggleChat} />}
       {isMobile992 && token && <BottomNavBar />}
     </div>
   );

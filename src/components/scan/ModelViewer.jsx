@@ -5,10 +5,15 @@ import {
   Environment,
   Grid,
   useGLTF,
+  useEnvironment,
   Center,
   MeshReflectorMaterial,
   ContactShadows
 } from "@react-three/drei";
+
+if (typeof window !== "undefined" && typeof useEnvironment.preload === "function") {
+  useEnvironment.preload({ preset: "city" });
+}
 
 const estimateGltfBytes = (gltf) => {
   const json = gltf?.parser?.json;
@@ -40,15 +45,37 @@ const countPolygons = (scene) => {
 
 const Model = ({ url, onLoaded }) => {
   const gltf = useGLTF(url);
+  const envMap = useEnvironment({ preset: "city" });
+  const onLoadedRef = React.useRef(onLoaded);
+  onLoadedRef.current = onLoaded;
+
   React.useEffect(() => {
-    if (gltf?.scene) {
-      onLoaded({
-        bytes: estimateGltfBytes(gltf),
-        polygons: countPolygons(gltf.scene),
-      });
-    }
-  }, [gltf, onLoaded]);
-  return <primitive object={gltf.scene} />;
+    if (!gltf?.scene || !envMap) return undefined;
+    let frames = 0;
+    let raf = 0;
+    const tick = () => {
+      frames += 1;
+      if (frames >= 2) {
+        onLoadedRef.current?.({
+          bytes: estimateGltfBytes(gltf),
+          polygons: countPolygons(gltf.scene),
+        });
+        return;
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [gltf, envMap]);
+
+  return (
+    <>
+      <Environment map={envMap} />
+      <Center top>
+        <primitive object={gltf.scene} />
+      </Center>
+    </>
+  );
 };
 
 const ModelViewer = ({ 
@@ -129,14 +156,8 @@ const ModelViewer = ({
           rotation={[rotX, rotY, rotZ]}
           scale={[scl, scl, scl]}
         >
-          <Center top>
-            <Model url={modelUrl} onLoaded={onModelLoaded} />
-          </Center>
+          <Model url={modelUrl} onLoaded={onModelLoaded} />
         </group>
-      </Suspense>
-
-      <Suspense fallback={null}>
-        <Environment preset="city" />
       </Suspense>
 
       <OrbitControls

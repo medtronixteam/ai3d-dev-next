@@ -177,6 +177,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   const [showBlackOverlay, setShowBlackOverlay] = useState(false);
   const [isArrowLoading, setIsArrowLoading] = useState(false);
   const [modelReady, setModelReady] = useState(false);
+  const [viewerPresented, setViewerPresented] = useState(false);
   const [generatedPrompt, setGeneratedPrompt] = useState('');
   const [isViewOnly, setIsViewOnly] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
@@ -207,6 +208,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   const [comingSoonFeature, setComingSoonFeature] = useState('');
   const [showReviewModal, setShowReviewModal] = useState(false);
   const loadedProjectTokenRef = useRef(null);
+  const presentedUrlRef = useRef(null);
   const [showEditorModal, setShowEditorModal] = useState(false);
   const [isOpeningEditor, setIsOpeningEditor] = useState(false);
   const socketRef = useRef(null);
@@ -591,9 +593,10 @@ const ModelGenerator = ({ isDarkMode = false }) => {
         shouldShowReviewRef.current = true;
       }
 
-      setIsViewOnly(true);
+      setViewerPresented(false);
+      presentedUrlRef.current = null;
+      setShowLoadingUI(true);
       setIsUserOwnedProject(true);
-      setActiveTab('transform');
       setProjectToken(projectId);
       if (ownedScanSlug) {
         slugResolveRef.current = ownedScanSlug;
@@ -616,11 +619,11 @@ const ModelGenerator = ({ isDarkMode = false }) => {
 
     const resolveOwnedProjectBySlug = async () => {
       try {
+        setViewerPresented(false);
+        presentedUrlRef.current = null;
         setShowLoadingUI(true);
         setShowBlackOverlay(true);
-        setIsViewOnly(true);
         setIsUserOwnedProject(true);
-        setActiveTab('transform');
 
         // Prefer public slug endpoint — returns project for slug from backend
         try {
@@ -748,8 +751,8 @@ const ModelGenerator = ({ isDarkMode = false }) => {
         setShowBlackOverlay(true);
       } else if (proj.status === 'completed') {
         setShowQueueUI(false);
-        setShowLoadingUI(false);
         setShowBlackOverlay(false);
+        setShowLoadingUI(true);
       }
     };
 
@@ -857,7 +860,8 @@ const ModelGenerator = ({ isDarkMode = false }) => {
 
     openedFromRecentRef.current = true;
     shouldShowReviewRef.current = false;
-    setIsViewOnly(true);
+    presentedUrlRef.current = null;
+    setViewerPresented(false);
     setIsUserOwnedProject(true);
     setProjectToken(project.token);
     setProjectMeta((prev) => ({
@@ -875,10 +879,27 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     if (project.rawType) {
       setProjectType(project.rawType);
     }
-    setActiveTab('transform');
+    setShowLoadingUI(true);
+    setShowQueueUI(false);
+    setShowSuccessUI(false);
+    setShowBlackOverlay(false);
+    setModelReady(false);
+    setModelUrl(null);
+    loadedProjectTokenRef.current = null;
     scrollToModelViewport();
     fetchInitialProject(project.token);
   };
+
+  const handleViewerPresented = useCallback((url) => {
+    if (!url || presentedUrlRef.current === url) return;
+    presentedUrlRef.current = url;
+    setViewerPresented(true);
+    setShowLoadingUI(false);
+    setShowBlackOverlay(false);
+    setShowQueueUI(false);
+    setActiveTab('transform');
+    setIsViewOnly(true);
+  }, []);
 
   const handleRouteLeave = useCallback(() => {
     console.log('[Disconnecting socket due to route change');
@@ -1005,6 +1026,8 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     setProjectStatus('pending');
     setModelUrl(null);
     setModelReady(false);
+    setViewerPresented(false);
+    presentedUrlRef.current = null;
     setIsViewOnly(false);
     setCurrentStep(1);
     setScreenshotTaken(false);
@@ -1127,9 +1150,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
         setGeneratedPrompt(project?.prompt || project?.name || 'Shared Project');
         setModelUrl(finalUrl);
         setModelReady(true);
-        setShowLoadingUI(false);
         setShowBlackOverlay(false);
-        setActiveTab('transform');
         setTransformControls(defaultTransformControls);
         setTransformHistory([defaultTransformControls]);
         setTransformHistoryIndex(0);
@@ -1229,12 +1250,9 @@ const ModelGenerator = ({ isDarkMode = false }) => {
         }
         setModelUrl(finalUrl);
         setProjectStatus('completed');
-        setShowLoadingUI(false);
-        setShowBlackOverlay(false);
         setModelReady(true);
         setShowQueueUI(false);
-        setActiveTab('transform');
-        setIsViewOnly(true);
+        setShowBlackOverlay(false);
         setTransformControls(defaultTransformControls);
         setTransformHistory([defaultTransformControls]);
         setTransformHistoryIndex(0);
@@ -2079,6 +2097,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             }}
             userEmail={user?.email}
             coinCosts={coinCosts}
+            viewerPresented={viewerPresented}
           />
           )}
 
@@ -2169,6 +2188,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             isArrowLoading={isArrowLoading}
             images={images}
             coinCosts={coinCosts}
+            onViewerPresented={handleViewerPresented}
             onRemoveImage={(index) => {
               if (isProcessing || isViewOnly) return;
               setImages((prev) => prev.filter((_, i) => i !== index));
@@ -2184,6 +2204,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             historyLoading={historyLoading}
             historyFilterLoading={historyFilterLoading}
             modelReady={modelReady}
+            viewerPresented={viewerPresented}
             isUserOwnedProject={isUserOwnedProject}
             hideUpgradePromo={isPublicGuestView}
             transformControls={transformControls}
@@ -2199,15 +2220,15 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             setHistorySearchQuery={setHistorySearchQuery}
             onSelectModel={(url) => {
               shouldShowReviewRef.current = false;
+              presentedUrlRef.current = null;
+              setViewerPresented(false);
               setIsUserOwnedProject(false);
+              setShowLoadingUI(true);
+              setShowBlackOverlay(false);
+              setShowQueueUI(false);
               setModelUrl(adjustUrlForLocalhost(url));
               setModelReady(true);
               setProjectStatus('completed');
-              setShowLoadingUI(false);
-              setShowBlackOverlay(false);
-              setShowQueueUI(false);
-              setActiveTab('transform');
-              setIsViewOnly(true);
               setTransformControls(defaultTransformControls);
               setTransformHistory([defaultTransformControls]);
               setTransformHistoryIndex(0);

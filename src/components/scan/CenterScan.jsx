@@ -29,6 +29,19 @@ import ModelViewer from './ModelViewer';
 import VideoFramesPanel from './VideoFramesPanel';
 import GenerationCoinCost from './GenerationCoinCost';
 
+const ModelLoadMark = () => (
+  <div className="a3d-load" role="status" aria-label="Loading 3D model">
+    <span className="a3d-load-halo" />
+    <span className="a3d-load-ring" />
+    <span className="a3d-load-ring a3d-load-ring-inner" />
+    <span className="a3d-load-scene">
+      <span className="a3d-load-cube">
+        <i /><i /><i /><i /><i /><i />
+      </span>
+    </span>
+  </div>
+);
+
 const CenterScan = ({
   showLoadingUI,
   showQueueUI,
@@ -80,16 +93,31 @@ const CenterScan = ({
   images = [],
   onRemoveImage,
   coinCosts,
+  onViewerPresented,
 }) => {
   const [isActuallyRendered, setIsActuallyRendered] = React.useState(false);
+  const [overlayFading, setOverlayFading] = React.useState(false);
+  const [overlayMounted, setOverlayMounted] = React.useState(true);
   const prevModelUrlRef = React.useRef(modelUrl);
+  const onViewerPresentedRef = React.useRef(onViewerPresented);
+  onViewerPresentedRef.current = onViewerPresented;
 
   React.useEffect(() => {
     if (prevModelUrlRef.current !== modelUrl) {
       prevModelUrlRef.current = modelUrl;
       setIsActuallyRendered(false);
+      setOverlayFading(false);
+      setOverlayMounted(true);
     }
   }, [modelUrl]);
+
+  React.useEffect(() => {
+    if (!isActuallyRendered) return undefined;
+    setOverlayFading(true);
+    onViewerPresentedRef.current?.(modelUrl);
+    const timer = setTimeout(() => setOverlayMounted(false), 380);
+    return () => clearTimeout(timer);
+  }, [isActuallyRendered, modelUrl]);
 
   React.useEffect(() => {
     if (isActuallyRendered && onModelRendered) {
@@ -172,35 +200,20 @@ const CenterScan = ({
         <div
           className={`d-flex align-items-center justify-content-center px-3 center-card${
             showVideoFrames && videoFrames.length > 0 ? ' center-card--frames' : ''
-          } ${modelReady ? 'center-card--no-padding' : ''}`}
+          } ${modelReady && modelUrl ? 'center-card--no-padding' : ''}`}
         >
-          {showLoadingUI ? (
+          {showLoadingUI && !(modelReady && modelUrl) ? (
             <div
               className={`model-loading-panel text-center fade-in w-100${showBlackOverlay ? ' model-loading-panel--overlay' : ''}`}
               style={{ maxWidth: '450px', position: 'relative', zIndex: 10 }}
             >
-              <div className="d-flex justify-content-center align-items-center mb-4">
-                <div
-                  className="spinner-border text-pink"
-                  role="status"
-                  style={{
-                    width: '3.75rem',
-                    height: '3.75rem',
-                    borderWidth: '4px',
-                    borderColor: '#de3996',
-                    borderRightColor: 'transparent',
-                    animation: 'spinner-border 0.8s linear infinite',
-                  }}
-                >
-                  <span className="visually-hidden">Loading...</span>
-                </div>
-              </div>
+              <ModelLoadMark />
               <div className="model-loading-copy">
                 <h3 className="model-loading-title fw-bold mb-2">
-                  Rendering 3D <span className="text-pink">Model</span>
+                  Loading your <span className="text-pink">Model</span>
                 </h3>
                 <p className="model-loading-subtitle small mb-0">
-                  Processing geometry &amp; materials, almost ready...
+                  Bringing shape, color, and lights into view...
                 </p>
               </div>
             </div>
@@ -266,10 +279,15 @@ const CenterScan = ({
           ) : modelReady && modelUrl ? (
             <div className="viewport-section w-100">
               <div className="viewport-content">
-                {!isActuallyRendered && (
-                  <div className="model-loading-overlay">
-                    <div className="spinner-border text-pink" role="status"></div>
-                    <p className="model-loading-text">Initializing 3D View...</p>
+                {overlayMounted && (
+                  <div className={`model-loading-overlay${overlayFading ? ' is-fading' : ''}`}>
+                    <ModelLoadMark />
+                    <h3 className="model-loading-title fw-bold mb-2 mt-4">
+                      Loading your <span className="text-pink">Model</span>
+                    </h3>
+                    <p className="model-loading-subtitle small mb-0">
+                      Bringing shape, color, and lights into view...
+                    </p>
                   </div>
                 )}
                 <div className="layered-background">

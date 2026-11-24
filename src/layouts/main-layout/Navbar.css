@@ -201,9 +201,9 @@
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
-    gap: 5px;
-    padding: 10px 0px 10px 0 !important;
-    /* padding: 10px 0px 10px 5px !important; */
+    gap: 10px !important;
+    top: 14px;
+    padding: 8px 14px 0 14px !important;
   }
 
   .navbar-sidebar-toggle {

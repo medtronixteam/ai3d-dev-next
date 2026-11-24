@@ -9,14 +9,16 @@
   flex-direction: row !important;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
   background-color: #E6E3DC !important;
-  /* padding: 4px 0; */
-  /* opacity: 1; */
-  height: auto;
-  overflow: visible;
-  gap: 0px;
+  width: 72px !important;
+  height: 36px;
+  margin: 8px auto 0;
   padding: 3px;
-  width: 85% !important;
+  gap: 2px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 [data-theme="dark"] .sidebar.collapsed .theme-toggle {
@@ -24,16 +26,32 @@
 }
 
 .sidebar.collapsed .theme-toggle .toggle-btn {
-  flex: none;
-  width: 35px;
-  height: 35px;
-  padding: 0 8px;
-  margin: 0px;
+  box-sizing: border-box;
+  flex: 0 0 30px;
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
+  padding: 0;
+  margin: 0;
+  gap: 0;
+  border-radius: 8px !important;
+  display: flex;
+  align-items: center;
   justify-content: center;
 }
 
 .sidebar.collapsed .theme-toggle .toggle-btn span {
   display: none;
+}
+
+.sidebar.collapsed .theme-toggle .toggle-btn .iconify,
+.sidebar.collapsed .theme-toggle .toggle-btn svg {
+  width: 16px !important;
+  height: 16px !important;
+  font-size: 16px !important;
+  display: block;
+  margin: 0;
+  line-height: 1;
 }
 
 .toggle-btn {

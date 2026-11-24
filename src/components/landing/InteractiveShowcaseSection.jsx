@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { FiArrowRight } from 'react-icons/fi';
+import { FiArrowRight, FiPlus, FiMinus } from 'react-icons/fi';
 import elipse from '../../pages/images/heading_ellipse.png';
 import './InteractiveShowcaseSection.css';
 
@@ -134,6 +134,9 @@ const InteractiveShowcaseSection = () => {
                   >
                     <div className="showcase-tab-header d-flex align-items-center justify-content-between">
                       <h3 className="showcase-tab-title mb-0">{tab.title}</h3>
+                      <span className={`showcase-tab-toggle${isActive ? ' open' : ''}`} aria-hidden="true">
+                        {isActive ? <FiMinus size={16} /> : <FiPlus size={16} />}
+                      </span>
                     </div>
 
                     <AnimatePresence initial={false}>

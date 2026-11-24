@@ -69,13 +69,12 @@ const TeamSection = ({
                     <option value="editor">Editor</option>
                     <option value="viewer">Viewer</option>
                   </select>
-                  <FiChevronDown style={{
+                  <FiChevronDown className="team-role-chevron" style={{
                     position: 'absolute',
                     right: 14,
                     top: '50%',
                     transform: 'translateY(-50%)',
                     pointerEvents: 'none',
-                    color: '#888',
                     fontSize: 18,
                   }} />
                 </div>

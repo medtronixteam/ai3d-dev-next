@@ -1685,7 +1685,12 @@
 
 @media (max-width: 768px) {
   .rp-page-head {
-    padding: 0 16px 14px;
+    padding: 12px 16px 14px;
+  }
+
+  .recent-projects-modern-container {
+    margin-top: 0 !important;
+    padding-top: 78px !important;
   }
 }
 
@@ -1697,8 +1702,8 @@
 
 @media (max-width: 600px) {
   .recent-projects-modern-container {
-    padding: 10px 0 0 0;
-    /* overflow-x: hidden; */
+    margin-top: 0 !important;
+    padding: 78px 0 0 0 !important;
   }
 
   .rp-grid {

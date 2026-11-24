@@ -12,6 +12,8 @@ import {
   Share2,
   Trash2,
   Edit3,
+  Gem,
+  Zap,
 } from 'lucide-react';
 import SingleScan from '../../assets/images/SingleScan.svg';
 import videoIcon from '../../pages/images/video-icon.svg';
@@ -73,6 +75,7 @@ const LeftScan = ({
   coinCosts,
   viewerPresented = false,
 }) => {
+  const [inputMode, setInputMode] = useState('fast');
   const singleImageInputRef = useRef(null);
   const imageInputRef = useRef(null);
   const videoInputRef = useRef(null);
@@ -343,7 +346,8 @@ const LeftScan = ({
   const hasSingleImage = Boolean(isSingleImageUploading || singleImageFile || singleImageName);
   const detailsReady = Boolean(viewerPresented && (modelReady || (isViewOnly && generatedPrompt)));
   const hasPrompt = Boolean(prompt.trim() || detailsReady);
-  const generationType = singleImageName
+  const isQualityMode = inputMode === 'quality';
+  const generationType = isQualityMode || singleImageName
     ? 'image_to_3d'
     : video
       ? 'video_to_3d'
@@ -354,10 +358,10 @@ const LeftScan = ({
   const hasMultipleImages = Boolean(images.length > 0);
   const hasVideo = Boolean(isVideoUploading || video || showVideoFrames);
 
-  const showSingleImageBox = hasSingleImage || (!hasPrompt && !hasMultipleImages && !hasVideo);
-  const showPromptBox = hasPrompt || (!hasSingleImage && !hasMultipleImages && !hasVideo);
-  const showMultipleImagesBox = hasMultipleImages || (!hasSingleImage && !hasPrompt && !hasVideo);
-  const showVideoBox = hasVideo || (!hasSingleImage && !hasPrompt && !hasMultipleImages);
+  const showSingleImageBox = isQualityMode || hasSingleImage || (!hasPrompt && !hasMultipleImages && !hasVideo);
+  const showPromptBox = !isQualityMode && (hasPrompt || (!hasSingleImage && !hasMultipleImages && !hasVideo));
+  const showMultipleImagesBox = !isQualityMode && (hasMultipleImages || (!hasSingleImage && !hasPrompt && !hasVideo));
+  const showVideoBox = !isQualityMode && (hasVideo || (!hasSingleImage && !hasPrompt && !hasMultipleImages));
   const showModelDetails = detailsReady;
 
   return (
@@ -380,6 +384,35 @@ const LeftScan = ({
         </h5>
 
         {!isViewOnly && <WorkspaceSelect disabled={isProcessing} />}
+
+        <div className="gen-mode-switch" role="tablist" aria-label="Generation mode">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={inputMode === 'fast'}
+            className={`gen-mode-btn${inputMode === 'fast' ? ' active' : ''}`}
+            onClick={() => setInputMode('fast')}
+            disabled={isProcessing}
+          >
+            <span className="gen-mode-icon" aria-hidden="true">
+              <Zap size={13} strokeWidth={2.4} />
+            </span>
+            Fast
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={inputMode === 'quality'}
+            className={`gen-mode-btn${inputMode === 'quality' ? ' active' : ''}`}
+            onClick={() => setInputMode('quality')}
+            disabled={isProcessing}
+          >
+            <span className="gen-mode-icon" aria-hidden="true">
+              <Gem size={13} strokeWidth={2.25} />
+            </span>
+            Quality
+          </button>
+        </div>
 
         {/* TOP BANNER - SINGLE IMAGE UPLOAD / PREVIEW / LOADER */}
         {showSingleImageBox && (
@@ -737,7 +770,7 @@ const LeftScan = ({
         {!showVideoFrames && (
         <button
           className="btn-generate w-100 py-2 shadow-sm fw-bold d-flex align-items-center justify-content-center"
-          onClick={() => (singleImageName ? handleSingleImageGenerate() : handleGenerate())}
+          onClick={() => (isQualityMode || singleImageName ? handleSingleImageGenerate() : handleGenerate())}
           disabled={
             isProcessing ||
             isViewOnly

@@ -669,6 +669,14 @@
   color-scheme: dark;
 }
 
+.team-role-chevron {
+  color: #888;
+}
+
+[data-theme='dark'] .team-role-chevron {
+  color: #ffffff;
+}
+
 [data-theme='dark'] .team-role-select option {
   background-color: #1a1528;
   color: #ffffff;

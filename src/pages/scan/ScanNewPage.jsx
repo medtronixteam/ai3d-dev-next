@@ -1439,7 +1439,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     toast.error(message);
   };
 
-  const handleSingleImageGenerate = async () => {
+  const handleSingleImageGenerate = async (qualityMode = false) => {
     if (isProcessing || !singleImageFile || isViewOnly) return;
 
     scrollToModelViewport();
@@ -1451,7 +1451,8 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       formData.append('name', projectName);
       formData.append('file', singleImageFile, singleImageFile.name);
 
-      const response = await axios.post(`${baseURL}/project/imageTo3d`, formData, {
+      const endpoint = qualityMode ? '/project/imageTo3dV2' : '/project/imageTo3d';
+      const response = await axios.post(`${baseURL}${endpoint}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',

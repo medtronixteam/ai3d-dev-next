@@ -770,7 +770,7 @@ const LeftScan = ({
         {!showVideoFrames && (
         <button
           className="btn-generate w-100 py-2 shadow-sm fw-bold d-flex align-items-center justify-content-center"
-          onClick={() => (isQualityMode || singleImageName ? handleSingleImageGenerate() : handleGenerate())}
+          onClick={() => (isQualityMode || singleImageName ? handleSingleImageGenerate(isQualityMode) : handleGenerate())}
           disabled={
             isProcessing ||
             isViewOnly

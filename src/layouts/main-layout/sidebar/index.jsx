@@ -127,6 +127,7 @@ import { Link } from 'react-router-dom';
 import useSidebarCollapse from '../../../hooks/useSidebarCollapse';
 import { useLocation } from 'react-router-dom';
 import { isPublicProjectRoute } from '../../../utils/publicProjectShare';
+import { isModelGeneratorPath } from '../../../routes/paths';
 import Referal from '../../../assets/images/Referal.svg';
 import ProjectIcon from '../../../assets/images/project.svg';
 import AiModel from '../../../assets/images/aimodal.svg';
@@ -149,7 +150,7 @@ const IconReferal = () => <Gift className="sidebar-svg-icon" />;
 
 const sidebarOptions = [
   { title: 'Home', icon: IconHome, path: '/3dio/' },
-  { title: 'Scan new', icon: IconScan, path: '/3dio/new/scan' },
+  { title: 'Scan new', icon: IconScan, path: '/3dio/model-generator/fast' },
   { title: 'API & SDK', icon: IconApi, path: '/3dio/api-sdk' },
   { title: 'My Models', icon: IconRecent, path: '/3dio/models' },
   { title: 'Settings', icon: IconSettings, path: '/3dio/settings/profile' },
@@ -220,7 +221,7 @@ const Sidebar = ({ open = false, onClose, disableExpand = false }) => {
 
   const location = useLocation();
   const isSettingsPage = location.pathname.startsWith('/3dio/settings');
-  const isScanNewPage = location.pathname === '/3dio/new/scan';
+  const isScanNewPage = isModelGeneratorPath(location.pathname);
   const isPublicProjectPage = isPublicProjectRoute(location.pathname);
   const isFixedCollapsedPage = isScanNewPage || isPublicProjectPage;
 

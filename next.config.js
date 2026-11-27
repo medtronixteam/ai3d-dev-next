@@ -40,6 +40,8 @@ const nextConfig = {
       { source: '/enterprise', destination: '/3dio/enterprise', permanent: false },
       { source: '/student', destination: '/student-program', permanent: false },
       { source: '/3dio/recent-projects', destination: '/3dio/models', permanent: false },
+      { source: '/3dio/new/scan', destination: '/3dio/model-generator/fast', permanent: false },
+      { source: '/3dio/model-generator', destination: '/3dio/model-generator/fast', permanent: false },
       { source: '/subscription/cancelled', destination: '/3dio/subscription', permanent: false },
       { source: '/subscription/cancel', destination: '/3dio/subscription', permanent: false },
       { source: '/3dio/subscription/cancel', destination: '/3dio/subscription', permanent: false },

@@ -74,8 +74,15 @@ const LeftScan = ({
   userEmail,
   coinCosts,
   viewerPresented = false,
+  inputMode: inputModeProp,
+  onInputModeChange,
 }) => {
-  const [inputMode, setInputMode] = useState('fast');
+  const [inputModeState, setInputModeState] = useState('fast');
+  const inputMode = inputModeProp === 'quality' || inputModeProp === 'fast' ? inputModeProp : inputModeState;
+  const setInputMode = (mode) => {
+    if (onInputModeChange) onInputModeChange(mode);
+    else setInputModeState(mode);
+  };
   const singleImageInputRef = useRef(null);
   const imageInputRef = useRef(null);
   const videoInputRef = useRef(null);

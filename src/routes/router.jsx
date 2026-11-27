@@ -241,10 +241,18 @@ const routes = [
           { path: 'scan', element: <ScanPage /> },
           {
             path: 'new/scan',
+            children: [
+              { index: true, element: <Navigate to="/3dio/model-generator/fast" replace /> },
+              { path: ':slug', element: <ScanNewPage /> },
+            ],
+          },
+          {
+            path: 'model-generator',
             element: <ScanNewPage />,
             children: [
-              { index: true, element: null },
-              { path: ':slug', element: null },
+              { index: true, element: <Navigate to="/3dio/model-generator/fast" replace /> },
+              { path: ':mode', element: null },
+              { path: ':mode/:slug', element: null },
             ],
           },
           { path: 'model/view', element: <ModelView /> },

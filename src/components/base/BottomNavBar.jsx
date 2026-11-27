@@ -3,14 +3,18 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { FiHome, FiSettings, FiClock } from 'react-icons/fi';
 import { LuCalendarRange } from 'react-icons/lu';
 import { BiScan } from 'react-icons/bi';
-import { isDashboardHomePath } from '../../routes/paths';
+import { isDashboardHomePath, isModelGeneratorPath } from '../../routes/paths';
 import './BottomNavBar.css';
 
 const BottomNavBar = () => {
   const location = useLocation();
 
+  const onGeneratorHome =
+    location.pathname === '/3dio/model-generator/fast' ||
+    location.pathname === '/3dio/model-generator/quality';
+
   const handleScanNavClick = (e) => {
-    if (location.pathname === '/3dio/new/scan') {
+    if (onGeneratorHome) {
       e.preventDefault();
       window.dispatchEvent(
         new CustomEvent('reset-scan-new', { detail: { fromSamePage: true } }),
@@ -39,9 +43,11 @@ const BottomNavBar = () => {
         <LuCalendarRange className="bottom-nav-icon" />
         <span className="bottom-nav-label">API SDK</span>
       </NavLink>
-      <NavLink 
-        to="/3dio/new/scan" 
-        className="bottom-nav-scan"
+      <NavLink
+        to="/3dio/model-generator/fast"
+        className={() =>
+          `bottom-nav-scan${isModelGeneratorPath(location.pathname) ? ' active' : ''}`
+        }
         onClick={handleScanNavClick}
       >
         <div className="scan-btn">

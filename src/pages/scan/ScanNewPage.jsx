@@ -21,6 +21,7 @@ import * as THREE from 'three';
 import { FiX, FiCheck } from 'react-icons/fi';
 import { Hourglass } from 'lucide-react';
 import { fetchPublicProject, isPublicProjectRoute } from '../../utils/publicProjectShare';
+import { generatorModeFromPath, modelGeneratorPath } from '../../routes/paths';
 import {
   generateVideoProject,
   pollProjectFramesUntilReady,
@@ -155,7 +156,16 @@ const ModelGenerator = ({ isDarkMode = false }) => {
   const { slug: routeSlug } = useParams();
   const isPublicView = isPublicProjectRoute(location.pathname) && Boolean(routeSlug);
   const ownedScanSlug =
-    !isPublicView && routeSlug ? decodeURIComponent(String(routeSlug)) : null;
+    !isPublicView && routeSlug && routeSlug !== 'fast' && routeSlug !== 'quality'
+      ? decodeURIComponent(String(routeSlug))
+      : null;
+  const generatorMode = generatorModeFromPath(location.pathname);
+
+  useEffect(() => {
+    const match = location.pathname.match(/^\/3dio\/model-generator\/([^/]+)/);
+    if (!match || match[1] === 'fast' || match[1] === 'quality') return;
+    navigate(modelGeneratorPath('fast'), { replace: true });
+  }, [location.pathname, navigate]);
   const isPublicGuestView = isPublicView && !token;
   const { queue_system, clearActiveQueueRegistration, frame_extraction } = useSocket();
   const { fcmToken } = useNotification();
@@ -608,7 +618,7 @@ const ModelGenerator = ({ isDarkMode = false }) => {
     }
   }, [location]);
 
-  // Open owned project from backend slug URL: /3dio/new/scan/{slug}
+  // Open owned project from slug URL: /3dio/model-generator/fast|quality/{slug}
   useEffect(() => {
     if (isPublicView || !ownedScanSlug || !token) return;
     if (location.state?.projectId) return; // handled by state effect
@@ -784,14 +794,15 @@ const ModelGenerator = ({ isDarkMode = false }) => {
 
       applyProjectDetail(proj);
 
-      // If backend returned a slug, keep Scan New URL in sync
+      // If backend returned a slug, keep the generator URL in sync
       const projectSlug = (proj.slug || proj.public_slug || '').toString().trim();
       if (
         projectSlug &&
-        location.pathname.startsWith('/3dio/new/scan') &&
+        (location.pathname.startsWith('/3dio/model-generator') ||
+          location.pathname.startsWith('/3dio/new/scan')) &&
         !isPublicView
       ) {
-        const targetPath = `/3dio/new/scan/${encodeURIComponent(projectSlug)}`;
+        const targetPath = modelGeneratorPath(generatorModeFromPath(location.pathname), projectSlug);
         if (location.pathname !== targetPath) {
           navigate(targetPath, { replace: true });
         }
@@ -1437,6 +1448,11 @@ const ModelGenerator = ({ isDarkMode = false }) => {
       return;
     }
     toast.error(message);
+  };
+
+  const handleInputModeChange = (mode) => {
+    const target = modelGeneratorPath(mode, ownedScanSlug || '');
+    if (location.pathname !== target) navigate(target);
   };
 
   const handleSingleImageGenerate = async (qualityMode = false) => {
@@ -2099,6 +2115,8 @@ const ModelGenerator = ({ isDarkMode = false }) => {
             userEmail={user?.email}
             coinCosts={coinCosts}
             viewerPresented={viewerPresented}
+            inputMode={generatorMode}
+            onInputModeChange={handleInputModeChange}
           />
           )}
 

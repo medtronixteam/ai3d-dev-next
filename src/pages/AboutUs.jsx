@@ -496,7 +496,7 @@ const AboutUs = () => {
                   Start turning your 2D images, videos, and text into production-ready 3D models today.
                 </p>
                 <div className="d-flex justify-content-center gap-3 mt-4 flex-wrap">
-                  <Link to="/3dio/new/scan" className="btn about-btn-primary">
+                  <Link to="/3dio/model-generator/fast" className="btn about-btn-primary">
                     Start Creating Free <FiArrowRight className="ms-1" />
                   </Link>
                   <Link to="/service" className="btn about-btn-outline">

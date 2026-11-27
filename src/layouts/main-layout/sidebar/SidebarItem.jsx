@@ -7,7 +7,7 @@ import { SidebarPopover } from './index';
 import SubscriptionImg from '../../../assets/images/subsciption.png';
 import DarkSubscriptionImg from '../../../assets/images/darkSubscription.png';
 import ActiveSubscriptionImg from '../../../assets/images/darkSubscription.png';
-import { isDashboardHomePath } from '../../../routes/paths';
+import { isDashboardHomePath, isModelGeneratorPath } from '../../../routes/paths';
 // import ActiveSubscriptionImg from '../../../assets/images/activeSubscription.png';
 
 const SidebarItem = ({ item, isCollapsed }) => {
@@ -85,12 +85,15 @@ const SidebarItem = ({ item, isCollapsed }) => {
     }
   };
 
-  const isScanNew = item.path === '/3dio/new/scan';
+  const isScanNew = item.path === '/3dio/model-generator/fast';
+  const onGeneratorHome =
+    location.pathname === '/3dio/model-generator/fast' ||
+    location.pathname === '/3dio/model-generator/quality';
 
   const handleNavClick = (e) => {
     if (!isScanNew) return;
 
-    if (location.pathname === '/3dio/new/scan') {
+    if (onGeneratorHome) {
       e.preventDefault();
       window.dispatchEvent(
         new CustomEvent('reset-scan-new', { detail: { fromSamePage: true } }),
@@ -136,6 +139,7 @@ const SidebarItem = ({ item, isCollapsed }) => {
         end={isHome}
         className={() => {
           let shouldBeActive = location.pathname === item.path;
+          if (isScanNew) shouldBeActive = isModelGeneratorPath(location.pathname);
           if (isHome) shouldBeActive = isHomeActive;
           else if (isPreview) shouldBeActive = isPreviewActive;
           else if (isSubscription) shouldBeActive = isSubscriptionActive;

@@ -1114,7 +1114,7 @@ const LandingPage = () => {
                       <div className="a3d-product-menu" role="menu">
                         <div className="a3d-product-column">
                           <Link
-                            to="/3dio/new/scan"
+                            to="/3dio/model-generator/fast"
                             className="a3d-product-item"
                             onClick={() => setIsProductDropdownOpen(false)}
                           >
@@ -1122,7 +1122,7 @@ const LandingPage = () => {
                             <span className="a3d-product-item-desc">Prompt to finished asset</span>
                           </Link>
                           <Link
-                            to="/3dio/new/scan"
+                            to="/3dio/model-generator/fast"
                             className="a3d-product-item"
                             onClick={() => setIsProductDropdownOpen(false)}
                           >
@@ -1130,7 +1130,7 @@ const LandingPage = () => {
                             <span className="a3d-product-item-desc">Multiple views fused</span>
                           </Link>
                           <Link
-                            to="/3dio/new/scan"
+                            to="/3dio/model-generator/fast"
                             className="a3d-product-item"
                             onClick={() => setIsProductDropdownOpen(false)}
                           >
@@ -1149,7 +1149,7 @@ const LandingPage = () => {
 
                         <div className="a3d-product-column">
                           <Link
-                            to="/3dio/new/scan"
+                            to="/3dio/model-generator/fast"
                             className="a3d-product-item"
                             onClick={() => setIsProductDropdownOpen(false)}
                           >
@@ -1157,7 +1157,7 @@ const LandingPage = () => {
                             <span className="a3d-product-item-desc">One photo, one model</span>
                           </Link>
                           <Link
-                            to="/3dio/new/scan"
+                            to="/3dio/model-generator/fast"
                             className="a3d-product-item"
                             onClick={() => setIsProductDropdownOpen(false)}
                           >
@@ -1254,7 +1254,7 @@ const LandingPage = () => {
                   {isMobileProductOpen && (
                     <div className="a3d-mobile-product-menu">
                       <Link
-                        to="/3dio/new/scan"
+                        to="/3dio/model-generator/fast"
                         className="a3d-mobile-product-item"
                         onClick={() => setIsOpen(false)}
                       >
@@ -1262,7 +1262,7 @@ const LandingPage = () => {
                         <span className="a3d-product-item-desc">Prompt to finished asset</span>
                       </Link>
                       <Link
-                        to="/3dio/new/scan"
+                        to="/3dio/model-generator/fast"
                         className="a3d-mobile-product-item"
                         onClick={() => setIsOpen(false)}
                       >
@@ -1270,7 +1270,7 @@ const LandingPage = () => {
                         <span className="a3d-product-item-desc">One photo, one model</span>
                       </Link>
                       <Link
-                        to="/3dio/new/scan"
+                        to="/3dio/model-generator/fast"
                         className="a3d-mobile-product-item"
                         onClick={() => setIsOpen(false)}
                       >
@@ -1278,7 +1278,7 @@ const LandingPage = () => {
                         <span className="a3d-product-item-desc">Multiple views fused</span>
                       </Link>
                       <Link
-                        to="/3dio/new/scan"
+                        to="/3dio/model-generator/fast"
                         className="a3d-mobile-product-item"
                         onClick={() => setIsOpen(false)}
                       >
@@ -1286,7 +1286,7 @@ const LandingPage = () => {
                         <span className="a3d-product-item-desc">Turntable capture</span>
                       </Link>
                       <Link
-                        to="/3dio/new/scan"
+                        to="/3dio/model-generator/fast"
                         className="a3d-mobile-product-item"
                         onClick={() => setIsOpen(false)}
                       >
@@ -1642,7 +1642,7 @@ const LandingPage = () => {
                       </div>
                       <div className="footer-wrapper mt-3">
                         <div className="service-footer">
-                          <Link to="/3dio/new/scan" className="circle-btn" aria-label="Upload Now">
+                          <Link to="/3dio/model-generator/fast" className="circle-btn" aria-label="Upload Now">
                             <svg
                               viewBox="0 0 24 24"
                               width={18}
@@ -1654,7 +1654,7 @@ const LandingPage = () => {
                               <path d="M13 6l6 6-6 6" />
                             </svg>
                           </Link>
-                          <Link to="/3dio/new/scan" style={{ textDecoration: 'none', color: 'inherit' }}>
+                          <Link to="/3dio/model-generator/fast" style={{ textDecoration: 'none', color: 'inherit' }}>
                             <div
                               className="footer-text"
                               style={{
@@ -1764,7 +1764,7 @@ const LandingPage = () => {
                       </div>
                       <div className="footer-wrapper mt-3">
                         <div className="service-footer">
-                          <Link to="/3dio/new/scan" className="circle-btn" aria-label="Start Creating">
+                          <Link to="/3dio/model-generator/fast" className="circle-btn" aria-label="Start Creating">
                             <svg
                               viewBox="0 0 24 24"
                               width={18}
@@ -1776,7 +1776,7 @@ const LandingPage = () => {
                               <path d="M13 6l6 6-6 6" />
                             </svg>
                           </Link>
-                          <Link to="/3dio/new/scan" style={{ textDecoration: 'none', color: 'inherit' }}>
+                          <Link to="/3dio/model-generator/fast" style={{ textDecoration: 'none', color: 'inherit' }}>
                             <div
                               className="footer-text"
                               style={{

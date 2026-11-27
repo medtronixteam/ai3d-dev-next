@@ -314,7 +314,7 @@ const RecentProjects = () => {
   const handleCreateModelInWorkspace = () => {
     if (!workspaceBrowseId) return;
     setActiveCreationWorkspaceId(String(workspaceBrowseId));
-    navigate('/3dio/new/scan');
+    navigate('/3dio/model-generator/fast');
   };
 
   const handleWorkspaceDeleteConfirm = async () => {
@@ -717,7 +717,7 @@ const RecentProjects = () => {
 
   // const handleViewProject = (project) => {
   //   setDropdownOpen(null);
-  //   navigate(`//3dio/new/scan/${project.id}`);
+  //   navigate(`//3dio/model-generator/fast/${project.id}`);
   // };
 
   const handleViewProject = (project) => {
@@ -734,9 +734,9 @@ const RecentProjects = () => {
     };
 
     if (slug) {
-      navigate(`/3dio/new/scan/${encodeURIComponent(slug)}`, { state });
+      navigate(`/3dio/model-generator/fast/${encodeURIComponent(slug)}`, { state });
     } else {
-      navigate('/3dio/new/scan', { state });
+      navigate('/3dio/model-generator/fast', { state });
     }
   };
 

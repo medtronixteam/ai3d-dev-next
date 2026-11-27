@@ -166,7 +166,7 @@ const InteractiveShowcaseSection = () => {
 
             {/* Bottom CTA Button (Using Project Theme Pink Color) */}
             <div className="showcase-cta-wrapper mt-4 pt-2">
-              <Link to="/3dio/new/scan" className="showcase-cta-btn">
+              <Link to="/3dio/model-generator/fast" className="showcase-cta-btn">
                 <span>Start creating with 3DIO</span>
                 <span className="showcase-cta-arrow">
                   <FiArrowRight size={18} />

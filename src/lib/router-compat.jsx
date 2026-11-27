@@ -91,6 +91,7 @@ const PARAM_PATTERNS = [
   [/^\/3dio\/asset\/([^/]+)/, 'slug'],
   [/^\/3dio\/workspace\/([^/]+)/, 'workspaceId'],
   [/^\/3dio\/team\/invite\/accept\/([^/]+)/, 'token'],
+  [/^\/3dio\/model-generator\/(?:fast|quality)\/([^/]+)/, 'slug'],
   [/^\/3dio\/new\/scan\/([^/]+)/, 'slug'],
   [/^\/3dio\/preview\/([^/]+)/, 'id'],
   [/^\/3dio\/splat-viewer\/([^/]+)/, 'id'],

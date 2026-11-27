@@ -1629,7 +1629,7 @@ const Dashboard = () => {
   const handleWelcomeCreate = () => {
     markScanWelcomeSeen(user?.email);
     setScanWelcomeOpen(false);
-    navigate('/3dio/new/scan');
+    navigate('/3dio/model-generator/fast');
   };
 
   const handleWelcomeExplore = () => {

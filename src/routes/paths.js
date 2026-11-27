@@ -8,6 +8,28 @@ export const rootPaths = {
 export const isDashboardHomePath = (pathname) =>
   pathname === '/3dio' || pathname === '/3dio/';
 
+export const MODEL_GENERATOR_FAST = '/3dio/model-generator/fast';
+export const MODEL_GENERATOR_QUALITY = '/3dio/model-generator/quality';
+
+export const modelGeneratorPath = (mode = 'fast', slug) => {
+  const base = mode === 'quality' ? MODEL_GENERATOR_QUALITY : MODEL_GENERATOR_FAST;
+  if (!slug) return base;
+  return `${base}/${encodeURIComponent(slug)}`;
+};
+
+export const generatorModeFromPath = (pathname = '') =>
+  pathname === MODEL_GENERATOR_QUALITY || pathname.startsWith(`${MODEL_GENERATOR_QUALITY}/`)
+    ? 'quality'
+    : 'fast';
+
+export const isModelGeneratorPath = (pathname = '') =>
+  pathname === MODEL_GENERATOR_FAST ||
+  pathname === MODEL_GENERATOR_QUALITY ||
+  pathname.startsWith(`${MODEL_GENERATOR_FAST}/`) ||
+  pathname.startsWith(`${MODEL_GENERATOR_QUALITY}/`) ||
+  pathname === '/3dio/new/scan' ||
+  pathname.startsWith('/3dio/new/scan/');
+
 export default {
   dashboard: '/3dio/',
   analytics: '/3dio/analytics',

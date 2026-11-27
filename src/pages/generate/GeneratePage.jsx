@@ -84,12 +84,12 @@ const CATEGORIES = [
 ];
 
 const PRODUCT_LINKS = [
-  { title: 'Text to 3D', desc: 'Prompt to finished asset', to: '/3dio/new/scan' },
-  { title: 'Multi-image to 3D', desc: 'Multiple views fused', to: '/3dio/new/scan' },
-  { title: 'Skeleton & rigging', desc: 'Auto-rig with motion presets', to: '/3dio/new/scan' },
+  { title: 'Text to 3D', desc: 'Prompt to finished asset', to: '/3dio/model-generator/fast' },
+  { title: 'Multi-image to 3D', desc: 'Multiple views fused', to: '/3dio/model-generator/fast' },
+  { title: 'Skeleton & rigging', desc: 'Auto-rig with motion presets', to: '/3dio/model-generator/fast' },
   { title: 'Workspace', desc: 'Projects, versions, library', to: '/3dio/workspace' },
-  { title: 'Image to 3D', desc: 'One photo, one model', to: '/3dio/new/scan' },
-  { title: 'Video to 3D', desc: 'Turntable capture', to: '/3dio/new/scan' },
+  { title: 'Image to 3D', desc: 'One photo, one model', to: '/3dio/model-generator/fast' },
+  { title: 'Video to 3D', desc: 'Turntable capture', to: '/3dio/model-generator/fast' },
   { title: 'Editor', desc: 'Remesh, clean, texture', to: '/3dio/' },
   { title: 'Teams', desc: 'Roles, seats, SSO', to: '/3dio/settings/team' },
 ];
@@ -316,7 +316,7 @@ function GeneratePageContent() {
     buildIdRef.current += 1;
     refreshUserCredits(token);
     if (status === 'completed') {
-      navigate('/3dio/new/scan', { state: { projectId, viewMode: true } });
+      navigate('/3dio/model-generator/fast', { state: { projectId, viewMode: true } });
       return;
     }
     setIsGenerating(false);

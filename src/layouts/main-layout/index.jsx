@@ -7,6 +7,7 @@ import Navbar from './Navbar';
 import './MainLayout.css';
 import { useAuth } from '../../context/AuthContext';
 import BottomNavBar from 'components/base/BottomNavBar';
+import { isModelGeneratorPath } from '../../routes/paths';
 
 const MainLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -71,7 +72,7 @@ const MainLayout = ({ children }) => {
     if (!isMobile992) {
       if (
         isCustomSidebarRoute ||
-        location.pathname === '/3dio/new/scan' ||
+        isModelGeneratorPath(location.pathname) ||
         location.pathname.startsWith('/public/project/') ||
         /^\/project\/[^/]+$/.test(location.pathname)
       ) {
@@ -135,7 +136,7 @@ const MainLayout = ({ children }) => {
           onAutoCollapse={handleAutoCollapse}
           disableExpand={
             !isMobile992 &&
-            (location.pathname === '/3dio/new/scan' ||
+            (isModelGeneratorPath(location.pathname) ||
               location.pathname.startsWith('/public/project/') ||
               /^\/project\/[^/]+$/.test(location.pathname))
           }
